@@ -1,0 +1,68 @@
+<header>
+
+    <!-- Header -->
+    <div class="jumbotron white border-bottom mb-0">
+        <div class="container-xl py-2">
+
+            <!-- Grid row -->
+            <div class="row align-items-center">
+
+                <!-- Grid column -->
+                <div class="col-lg-3 col-xl-2 mt-3 mt-lg-0">
+                    <a href="{% url 'olretail:index'%}">
+                        <img src="/static/mdb/img/logo_ortl.jpeg" height="60">
+                    </a>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-7 col-lg-5 col-xl-6">
+
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-5 col-lg-4 col-xl-4 mt-2 mb-1 mb-md-0 pb-2 pb-md-0">
+
+                    <!-- Icons -->
+                    <div class="d-flex justify-content-start justify-content-md-end text-center">
+                            <div class="col-md col-lg-4 col-xl-4 mt-2 mb-1 mb-md-0 pb-2 pb-md-0">
+                                {%if user.is_authenticated %}
+                                <a href="{% url 'olretail:log_out'%}">
+                                    <small class="text-dark"> Logout</small>
+                                </a>
+                                {% else %}
+                                <a href="{% url 'olretail:user_login'%}">
+                                    <small class="text-dark"> Login</small>
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="mr-4">
+                                <a href="{% url 'olretail:list'%}">
+                                    <!--  <div>
+                                        <i class="fas fa-user fa-lg text-muted"></i>
+                                                                <span
+                                                                    class="counter counter-floating counter-lg-icon position-absolute ml-n1 mt-1"><strong>3</strong></span>
+                                                            </div> -->
+                                    <small class="text-success">Welcome <strong>{{user.first_name}} {{user.last_name}}</strong> </small>
+                                </a>
+                            
+                            </div>
+                    </div>
+                    <!-- Icons -->
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+
+        </div>
+    </div>
+    <!-- Header -->
+
+    <!-- Navbar -->
+ 
+    <!-- Navbar -->
+
+</header>

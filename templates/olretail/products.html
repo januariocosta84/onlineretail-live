@@ -1,0 +1,75 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-xl">
+    <div class="card">
+        <div class="card-header text-center">Product Registration</div>
+            <form action="" method="POST"  enctype="multipart/form-data">
+                    {% csrf_token%}
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label for="" class="form-label">Name Product:</label>
+                                <input type="text" class="form-control" name="product">
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="form-outline">
+                        <label for="" class="form-label">Price:</label>
+                        <input type="text" class="form-control" name="price">
+                    </div>
+                    <div class="form-outline">
+                        <label for="" class="form-label">Category: </label>
+                        <select class="mdb-select md-form" aria-label="Default select example" name="category">
+        
+                            <option selected>Select Category</option>
+                            {% for categories in cat%}
+                            <option value="{{categories.id}}">{{categories.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Country: </label>
+                        <select class="mdb-select md-form" aria-label="Default select example" name="country">
+                            <option selected>Select country</option>
+                            {% for countries in count%}
+                            <option value="{{countries.id}}">{{countries.country}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">City: </label>
+                        <select class="mdb-select md-form" aria-label="Default select example" name="city">
+                            <option selected>Select city</option>
+                            {% for cities in city%}
+                            <option value="{{cities.id}}">{{cities.city}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Upload Image</label>
+                        <input type="file" name="image" value="" accept="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Description</label>
+                        <textarea rows="3" class="form-control" name="description"></textarea>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="" class="form-label">Condition: </label>
+                        <select class="mdb-select md-form" aria-label="Default select example" name="condition">
+                            <option selected>Select Condition</option>
+                            <option value="New">New</option>
+                            <option value="Second Hand">Second Hand</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Quantity:</label>
+                        <input type="number" class="form-control" name="quantity">
+                    </div>
+                    <button class="btn btn-primary badge-danger mb-1">Submit</button>
+                </form>        
+    </div>
+</div>
+{% endblock %}

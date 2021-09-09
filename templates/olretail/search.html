@@ -1,0 +1,44 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+        <section class="py-2 my-4">
+                <div class="row pt-4">
+                        {% for products in product%}
+                        {%if products.approved%}
+                        <div class="col-md-4 mb-4 mb-xl-0 ">
+
+                                <div class="view zoom overlay">
+                                        <img class="img-fluid w-100" src="{{products.product_image.url}}" alt="Sample">
+                                        <a href="{% url 'olretail:details' products.slug %}">
+                                                <div class="mask">
+                                                </div>
+                                        </a>
+                                </div>
+                                <div class="pt-4">
+
+                                        <p class="mb-2 text-muted text-uppercase small">{{products.name}}</p>
+                                        <!-- <h6 class="mb-0"><span class="badge badge-danger badge-pill">-20%</span></h6> -->
+                                        <span>
+                                                <strong>$ {{products.price}}</strong>
+                                        </span>
+                                        <br>
+                                        <span>
+                                                <strong>{{products.category.title}}</strong>
+                                        </span>
+                                        <br>
+                                        <!-- <span>
+                                                    Product owner: <strong>{{pr.seller.user.first_name}} {{pr.seller.user.last_name}} </strong>
+                                            </span> -->
+                                </div>
+
+                        </div>
+                        {% else %}
+                        <h2 class="text-center text-muted">No Product found</h2>
+                        {%endif%}
+
+                        {% endfor %}
+                </div>
+        </section>
+</div>
+{% endblock %}

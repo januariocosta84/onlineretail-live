@@ -1,0 +1,152 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-xl">
+        <!--Grid Row-->
+        <div class="row">
+                <div class="col-md-8 col-lg-10 col-xl-9">
+                        {% include 'shared/slider.html'%}
+                        <section class="py-2 my-4">
+                                <div class="divider-new version-2 mt-5 mb-0">
+                                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">New
+                                                arrival</h4>
+                                </div>
+                                <!--Product Section-->
+                                <div class="row pt-4">
+                                        {% for products in product%}
+                                        {%if products.approved%}
+                                        <div class="col mb-4 mb-xl-0 ">
+
+                                                <div class="view zoom overlay">
+                                                        <img class="img-fluid w-10" src="{{products.product_image.url}}"
+                                                                alt="Sample">
+                                                        <a href="{% url 'olretail:details' products.slug%}">
+                                                                <div class="mask">
+                                                                </div>
+                                                        </a>
+                                                </div>
+                                                <div class="pt-4">
+
+                                                        <p class="mb-2 text-muted text-uppercase small">
+                                                                {{products.name}}</p>
+                                                        <!-- <h6 class="mb-0"><span class="badge badge-danger badge-pill">-20%</span></h6> -->
+                                                        <span>
+                                                                <strong>$ {{products.price}}</strong>
+                                                        </span>
+                                                        <br>
+                                                        <span>
+                                                                <strong>{{products.category.title}}</strong>
+                                                        </span>
+                                                        <br>
+                                                        <!-- <span>
+                                                                Product owner: <strong>{{pr.seller.user.first_name}} {{pr.seller.user.last_name}} </strong>
+                                                        </span> -->
+                                                </div>
+
+                                        </div>
+                                        {%endif%}
+                                        {% endfor %}
+                                </div>
+                        </section>
+                        <!--Product Section-->
+
+                        <!-- Section apparel -->
+
+                        <div class="divider-new version-2 mt-5 mb-0">
+                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">Flash Deals
+                                        / Sales
+                                        On !!!</h4>
+                        </div>
+                        <!-- Section electronics -->
+                        <section class="py-2 my-4">
+
+                                <div class="row">
+                                        <div class="col-12">
+
+                                                <div class="card">
+                                                        <div class="card-body">
+
+                                                                <div
+                                                                        class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4">
+                                                                        {%for products in product%}
+                                                                        <div class="col mb-4 pb-2">
+                                                                                <div class="view zoom overlay">
+                                                                                        <h5 class="mt-0"><a href="#"
+                                                                                                        class="text-reset stretched-link">{{products.name}}</a>
+                                                                                        </h5>
+                                                                                        <img class="float-right"
+                                                                                                src="{{products.product_image.url}}"
+                                                                                                alt="Sample"
+                                                                                                width="110">
+                                                                                        <p><i class="fa fa-map-marker-alt"></i>
+                                                                                                {{products.item_location}},
+                                                                                                {{products.country}}
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+                                                                        {% endfor %}
+
+                                                                </div>
+
+                                                        </div>
+                                                </div>
+
+                                        </div>
+                                </div>
+
+                        </section>
+                        <!-- Section electronics -->
+                        <!-- Section electronics -->
+                        <div class="divider-new version-2 mt-5 mb-0">
+                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">Flash Deals
+                                        / Sales
+                                        On !!!</h4>
+                        </div>
+                        <section class="py-2 my-4">
+
+                                <div class="row">
+                                        <div class="col-12">
+
+                                                <div class="card">
+                                                        <div class="card-body">
+
+                                                                <div
+                                                                        class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4">
+
+                                                                        {%for products in product%}
+                                                                        <div class="col mb-4 pb-2">
+                                                                                <div class="view zoom overlay">
+                                                                                        <h5 class="mt-0"><a href="#"
+                                                                                                        class="text-reset stretched-link">{{products.name}}</a>
+                                                                                        </h5>
+                                                                                        <img class="float-right"
+                                                                                                src="{{products.product_image.url}}"
+                                                                                                alt="Sample"
+                                                                                                width="110">
+                                                                                        <p><i class="fa fa-map-marker-alt"></i>
+                                                                                                {{products.item_location}},
+                                                                                                Timor Leste
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+                                                                        {% endfor %}
+
+                                                                </div>
+
+                                                        </div>
+                                                </div>
+
+                                        </div>
+                                </div>
+
+                        </section>
+                        <!-- Section electronics -->
+                </div>
+                <div class="col-md-5  col-lg-2 col-xl-3">
+                        {% include 'shared/popular_category.html'%}
+                </div>
+                <!-- {% include 'shared/my_market.html' %}-->
+
+        </div>
+</div>
+{% endblock %}

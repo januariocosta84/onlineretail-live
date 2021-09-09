@@ -1,0 +1,143 @@
+<header>
+    <div class="container-xl">  <div class="row jumbotron white border-bottom mb-0">
+            <div class="col-md-2 m-1">
+                <!-- Grid column -->
+             
+                    <a href="{% url 'olretail:index'%}">
+                        <img src="/static/mdb/img/logo_ortl.jpeg" height="60">
+                    </a>
+             
+                <!-- Grid column -->
+            </div>
+            <div class="col-md-5">
+                <!-- Grid column -->
+    
+                <form action="{% url 'olretail:search' %}" method="get">
+    
+                    <div class="md-form md-outline input-group md-input-group w-100">
+    
+                        <div class="select-outline">
+                            <select class="mdb-select md-form md-outline my-0">
+                                <option value="">All type</option>
+                                <option value="codex">Special</option>
+                                <option value="comments">Only best</option>
+                                <option value="content">Latest</option>
+                            </select>
+                        </div>
+    
+                        <input type="text" class="form-control mb-0" name="search" placeholder="Search by product">
+    
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-md px-3" type="submit">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+                        </div>
+                        <div>
+    
+                        </div>
+                    </div>
+    
+                </form>
+                <!-- Grid column -->
+            </div>
+            <div class="col-md-4 mt-4 ">
+                <!-- Icons -->
+                    {%if user.is_authenticated %}
+                        
+                        <!-- <a href="{% url 'olretail:list'%}">
+                            <small class="text-success">Welcome <strong>{{user.first_name}} {{user.last_name}}</strong></small>
+                        </a>
+                        <a href="{% url 'accounts:logout'%}"><small class="text-success"> Logout</small>
+                        </a> -->
+                        {% else %}
+                        <a href="{% url 'accounts:login'%}">
+                            <small class="text-dark"> Sign in</small>
+                        </a>
+                        |
+                        <a href="{%url 'accounts:register'%}">
+                            <small class="text-dark"> Sign up</small>
+                        </a>
+                        {% endif %}
+    
+                </div>
+        </div></div>
+
+    <nav class="navbar navbar-expand-lg sticky-top navbar-light">
+
+        <div class="container-xl">
+
+            <!-- Collapse button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav1"
+                aria-controls="basicExampleNav1" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="basicExampleNav1">
+
+                <!-- Left -->
+                <ul class="navbar-nav align-items-start">
+                    {%if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'olretail:create_product'%}">Create new Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'olretail:list'%}">Your Product List</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">Welcome {{user.first_name}} {{user.last_name}} </a>
+                            <div class="dropdown-menu dropdown-menu-lg-right">
+                                <a class="dropdown-item" href="{% url 'accounts:logout'%}">Log out</a>
+                                <a class="dropdown-item" href="#">Change Password</a>
+                                <!--<a class="dropdown-item" href="#">Indonesia</a> -->
+                            </div>
+                        </li>
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><i
+                                class="fas fa-bars text-muted mr-2"></i> Categories </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'olretail:index' %}">All</a>
+                            {% for category in categories%}
+                            <a class="dropdown-item"
+                                href="{% url 'olretail:index'%}?category={{category.title}}">{{category.title}}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Busines & Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Trade shows</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    
+                </ul>
+                
+                <!-- Right -->
+                <ul class="navbar-nav ml-md-auto align-items-start">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Get the app</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">Tetum</a>
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <a class="dropdown-item" href="#">English</a>
+                            <a class="dropdown-item" href="#">Portugues</a>
+                            <a class="dropdown-item" href="#">Indonesia</a>
+                        </div>
+                    </li>
+                </ul>
+                {% endif %}
+
+            </div>
+            <!-- Links -->
+
+        </div>
+
+    </nav>
+    <!-- Navbar -->
+
+</header>

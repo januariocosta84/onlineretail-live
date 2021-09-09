@@ -1,0 +1,24 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col">
+                <h5>Create New Product</h5>
+                <hr>
+                <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                    <!-- Security token -->
+                    {% csrf_token %}
+                    {{product_form|crispy}}
+               
+                    <input type="submit" value="Submit" class="btn btn-indigo p-1">
+                    <br>
+                </form>
+        </div>
+    </div>
+     
+</div>
+
+{% endblock %}

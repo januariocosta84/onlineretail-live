@@ -1,0 +1,40 @@
+{% extends 'shared/base.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+  <div class="col">
+      <h1 class="">Sign up Form</h1>
+      <form method="post" class="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{userForm | crispy}}
+        {{sellerForm| crispy}}
+        <!-- <label for="" class="form-lable">First Name:</label>
+        {% render_field userForm.first_name class="form-control col-md-3 pt-1" placeholder="First" %}
+        <label for="" class="form-lable">First Name:</label>
+        {% render_field userForm.last_name class="form-control col-md-3 pt-1" placeholder="Last" %}
+        <label for="" class="form-lable">Username:</label>
+        {% render_field userForm.username class="form-control col-md-3 pt-1" placeholder="Username" %}
+        <label for="" class="form-lable">Password:</label>
+        {% render_field userForm.password class="form-control col-md-3 pt-1" placeholder="Password" type="password" %}
+        <label for="" class="form-lable">Address :</label>
+        {% render_field sellerForm.address class="form-control col-md-3 pt-1" placeholder="Address" %}
+        <label for="" class="form-lable">Phone Number :</label>
+        {% render_field sellerForm.mobile class="form-control col-md-3 pb-1" placeholder="Mobile" %} -->
+        <br>
+        <div class="">
+          <button type="submit" class="btn btn-indigo p-2">Sign up</button>
+        </div>
+      </form>
+      {% if registered%}
+      <p class="text-success">Registered user successfull</p>
+      {% else%}
+      <p class="text-danger">Failed</p>
+     {% endif %}
+      <br>
+      
+  </div>
+ 
+</div>
+{% endblock %}

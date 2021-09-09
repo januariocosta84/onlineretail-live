@@ -1,0 +1,79 @@
+{% extends 'shared/base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 m-1">
+
+      <div class="card">
+        <div class="card-header text-danger text-center">
+          <h2>Total Product on sale</h2>
+        </div>
+        <div class="card-body text-center">
+          <h2>Total</h2>
+          <p class="text-muted">{{count}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 m-1">
+
+      <div class="card">
+        <div class="card-header text-danger text-center">
+          <h2>Total Product sold</h2>
+        </div>
+        <div class="card-body text-center">
+          <h2>Total</h2>
+          <p class="text-muted">{{total}}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Number</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Status</th>
+        <th scope="col">Product info</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for products in product_list%}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{products.name}}</td>
+        <td>{{products.price |stringformat:".2f"}}</td>
+        {% if products.approved%}
+        <td>Already Post</td>
+        {% else %}
+        <td>Request for Approval</td>
+        {% endif %}
+        <td>{{products.condition}}</td>
+        <td><a href="{% url 'olretail:update_product' products.slug%}" class=""><i class="fas fa-edit"></i></a></td>
+      </tr>
+      {%endfor%}
+    </tbody>
+    <tfoot>
+      <tr>
+          <th colspan="2" style="text-align: center;"> <h3>Total</h3></th>
+          <td>{{total}}</td>
+          <td> </td>
+          <td></td>
+      </tr>
+  </tfoot>
+  </table>
+</div>
+
+
+<!-- Modal -->
+
+
+{% endblock %}

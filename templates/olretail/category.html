@@ -1,0 +1,8 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+ <h1>Category by Product</h1>
+ {%for pr in product %}
+ {{pr.category}}
+ {% endfor %}
+{% endblock %}
