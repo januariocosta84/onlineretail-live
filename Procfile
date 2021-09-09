@@ -1,1 +1,1 @@
-web : gunicorn TLoretail.wsgi --log-file -
+web gunicorn TLoretail.wsgi --log-file -
