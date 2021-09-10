@@ -147,4 +147,4 @@ STATICFILES_DIRS =[
     STATIC_DIR,
 ]
 
-LOGIN_URL='/olretail/user_login'
+LOGIN_URL='/accounts/login/'

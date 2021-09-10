@@ -71,7 +71,7 @@
                                                                         {%for products in product%}
                                                                         <div class="col mb-4 pb-2">
                                                                                 <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a href="#"
+                                                                                        <h5 class="mt-0"><a href="{% url 'olretail:details' products.slug%}"
                                                                                                         class="text-reset stretched-link">{{products.name}}</a>
                                                                                         </h5>
                                                                                         <img class="float-right"
@@ -116,7 +116,7 @@
                                                                         {%for products in product%}
                                                                         <div class="col mb-4 pb-2">
                                                                                 <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a href="#"
+                                                                                        <h5 class="mt-0"><a href="{% url 'olretail:details' products.slug%}"
                                                                                                         class="text-reset stretched-link">{{products.name}}</a>
                                                                                         </h5>
                                                                                         <img class="float-right"
