@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from modeltranslation.admin import TranslationAdmin
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -15,4 +16,6 @@ admin.site.register(Country)
 admin.site.register(City)
 admin.site.register(Seller)
 admin.site.register(Comment)
+
+
 
