@@ -31,7 +31,7 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 SECRET_KEY = 'x+_$tgpn^-m^8_mhrk5lmiu)==ej@%*ke_r#c&1dza(874ect&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =True
+DEBUG =False
 
 ALLOWED_HOSTS = ['onlineretails2021.herokuapp.com', 'localhost','127.0.0.1']
 
