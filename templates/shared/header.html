@@ -1,12 +1,11 @@
+{% load i18n %}
 <header>
     <div class="container-xl">  <div class="row jumbotron white border-bottom mb-0">
             <div class="col-md-2 m-1">
                 <!-- Grid column -->
-             
                     <a href="{% url 'olretail:index'%}">
                         <img src="/static/mdb/img/logo_ortl.jpeg" height="60">
                     </a>
-             
                 <!-- Grid column -->
             </div>
             <div class="col-md-5">
@@ -16,20 +15,20 @@
     
                     <div class="md-form md-outline input-group md-input-group w-100">
     
-                        <div class="select-outline">
+                        <!-- <div class="select-outline">
                             <select class="mdb-select md-form md-outline my-0">
                                 <option value="">All type</option>
                                 <option value="codex">Special</option>
                                 <option value="comments">Only best</option>
                                 <option value="content">Latest</option>
                             </select>
-                        </div>
+                        </div> -->
     
-                        <input type="text" class="form-control mb-0" name="search" placeholder="Search by product">
+                        <input type="text" class="form-control mb-0" name="search" placeholder='{%trans "Search by product"%}''>
     
                         <div class="input-group-append">
                             <button class="btn btn-primary btn-md px-3" type="submit">
-                                <i class="fa fa-search"></i> Search
+                                <i class="fa fa-search"></i>{% trans 'Search'%} 
                             </button>
                         </div>
                         <div>
@@ -51,11 +50,11 @@
                         </a> -->
                         {% else %}
                         <a href="{% url 'accounts:login'%}">
-                            <small class="text-dark"> Sign in</small>
+                            <small class="text-dark">{% trans 'Sign in'%} </small>
                         </a>
                         |
                         <a href="{%url 'accounts:register'%}">
-                            <small class="text-dark"> Sign up</small>
+                            <small class="text-dark">{%trans 'Sign up'%} </small>
                         </a>
                         {% endif %}
     
@@ -95,23 +94,23 @@
                     {% else %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><i
-                                class="fas fa-bars text-muted mr-2"></i> Categories </a>
+                                class="fas fa-bars text-muted mr-2"></i>{%trans 'Categories'%}  </a>
                         <div class="dropdown-menu">
-                            <a href="{% url 'olretail:index' %}">All</a>
+                            <a href="{% url 'olretail:index' %}">{% trans 'All'%}</a>
                             {% for category in categories%}
                             <a class="dropdown-item"
-                                href="{% url 'olretail:index'%}?category={{category.title}}">{{category.title}}</a>
+                                href="{% url 'olretail:index'%}?category={{category.slug}}">{{category.title}}</a>
                             {% endfor %}
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Busines & Services</a>
+                        <a class="nav-link" href="#">{% trans 'Busines & Services'%}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Trade shows</a>
+                        <a class="nav-link" href="#">{% trans 'Trade shows'%}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="#">{% trans 'Services'%}</a>
                     </li>
                     
                 </ul>
@@ -119,14 +118,24 @@
                 <!-- Right -->
                 <ul class="navbar-nav ml-md-auto align-items-start">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Get the app</a>
+                        <a class="nav-link" href="#">{% trans 'Get the app'%}</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">Tetum</a>
+                       
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown">{%trans 'Select Languages'%}</a>
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <a class="dropdown-item" href="#">English</a>
-                            <a class="dropdown-item" href="#">Portugues</a>
-                            <a class="dropdown-item" href="#">Indonesia</a>
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                            {%if language.code == 'tt'%}
+                            <a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">Tetum</a>
+                            {% else%}
+                            <a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">English</a>
+                            {% endif %} 
+                            {% endfor %}
+                          
+                    
                         </div>
                     </li>
                 </ul>

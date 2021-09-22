@@ -19,11 +19,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from olretail import views as core_view
 from django.views.static import serve
+from django.conf.urls.i18n import i18n_patterns
 
-urlpatterns = [
+
+urlpatterns =i18n_patterns (
     path('admin/', admin.site.urls),
     path('', include('olretail.urls')),
     #path('login', core_view.login, name='login'),
     path('accounts/', include('accounts.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('i18n/', include('django.conf.urls.i18n')),
+    prefix_default_language=False,
+
+)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

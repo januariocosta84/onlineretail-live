@@ -1,4 +1,5 @@
 {% extends 'shared/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block content %}
 <div class="container-xl">
@@ -8,8 +9,7 @@
                         {% include 'shared/slider.html'%}
                         <section class="py-2 my-4">
                                 <div class="divider-new version-2 mt-5 mb-0">
-                                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">New
-                                                arrival</h4>
+                                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{%trans 'New arrival'%}</h4>
                                 </div>
                                 <!--Product Section-->
                                 <div class="row pt-4">
@@ -51,11 +51,9 @@
                         <!--Product Section-->
 
                         <!-- Section apparel -->
-
+                        {% trans "let's transale this one"%}
                         <div class="divider-new version-2 mt-5 mb-0">
-                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">Flash Deals
-                                        / Sales
-                                        On !!!</h4>
+                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{% trans 'Flash Deals / SalesOn !!!' %}</h4>
                         </div>
                         <!-- Section electronics -->
                         <section class="py-2 my-4">
@@ -71,7 +69,8 @@
                                                                         {%for products in product%}
                                                                         <div class="col mb-4 pb-2">
                                                                                 <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a href="{% url 'olretail:details' products.slug%}"
+                                                                                        <h5 class="mt-0"><a
+                                                                                                        href="{% url 'olretail:details' products.slug%}"
                                                                                                         class="text-reset stretched-link">{{products.name}}</a>
                                                                                         </h5>
                                                                                         <img class="float-right"
@@ -98,9 +97,7 @@
                         <!-- Section electronics -->
                         <!-- Section electronics -->
                         <div class="divider-new version-2 mt-5 mb-0">
-                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">Flash Deals
-                                        / Sales
-                                        On !!!</h4>
+                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{% trans 'Discount or Promotion'%}</h4>
                         </div>
                         <section class="py-2 my-4">
 
@@ -116,7 +113,8 @@
                                                                         {%for products in product%}
                                                                         <div class="col mb-4 pb-2">
                                                                                 <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a href="{% url 'olretail:details' products.slug%}"
+                                                                                        <h5 class="mt-0"><a
+                                                                                                        href="{% url 'olretail:details' products.slug%}"
                                                                                                         class="text-reset stretched-link">{{products.name}}</a>
                                                                                         </h5>
                                                                                         <img class="float-right"

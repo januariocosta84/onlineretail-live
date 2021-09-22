@@ -31,7 +31,7 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 SECRET_KEY = 'x+_$tgpn^-m^8_mhrk5lmiu)==ej@%*ke_r#c&1dza(874ect&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =False
+DEBUG =True
 
 ALLOWED_HOSTS = ['onlineretails2021.herokuapp.com', 'localhost','127.0.0.1']
 
@@ -39,6 +39,7 @@ ALLOWED_HOSTS = ['onlineretails2021.herokuapp.com', 'localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'TLoretail.urls'
@@ -76,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -117,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+
 
 TIME_ZONE = 'UTC'
 
@@ -126,6 +129,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+LANGUAGES =[
+        
+        ('tt', 'Tartar'),
+        ('en', 'English'),
+]
+
 
 
 """"Crispy template"""

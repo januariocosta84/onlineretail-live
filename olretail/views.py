@@ -42,7 +42,7 @@ class IndexView(TemplateView):
             context['product'] = Product.objects.all().order_by('-price')
         else:
             context['product'] = Product.objects.filter(
-                category__title=category)
+                category__slug=category)
         context['categories'] = Category.objects.all().order_by('title')
         return context
 
