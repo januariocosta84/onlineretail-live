@@ -1,145 +1,533 @@
 {% extends 'shared/base.html' %}
+{% load i18n %}
 {% load static %}
-{% block content %}
-<div class="container">
-        <main class="mt-5 pt-4">
-                <div class="container dark-grey-text mt-5">
-            
-                  <!--Grid row-->
-                  <div class="row wow fadeIn">
-            
-                    <!--Grid column-->
-                    <div class="col-md-6 mb-4">
-                      <div class="view zoom overlay">
-                         <img src="{{details.product_image.url}}" class="img-fluid w-100"  alt="">
-                      </div>
-                    </div>
-                    <!--Grid column-->
-            
-                    <!--Grid column-->
-                    <div class="col-md-6 mb-4">
-            
-                      <!--Content-->
-                      <div class="p-4">
-            
-                        <div class="mb-3">
-                          <!-- <a href="">
-                            <span class="badge purple mr-1">Category 2</span>
-                          </a> -->
-                          Condition:<a href=""><span class="badge blue mr-1">
-                         
-                              {{details.condition}}
+{% load humanize %}
 
-                          </span></a>
-                          <!-- <a href="">
-                            <span class="badge red mr-1">Bestseller</span>
-                          </a> -->
-                        </div>
-                        <h4 class="my-4 h4">Customer Care</h4>
-                        <p>Contact Number</p> 
-                        <p>{{details.seller.mobile}}</p>
-                        <p>Owner</p><br>
-                         <p>{{details.seller.user.first_name}} {{details.seller.user.last_name}}</p>
-                        <p class="lead">
-                          <!-- <span class="mr-1">
-                            <del>$ {{details.price}}</del>
-                          </span> -->
-                          <span>$ {{details.price}}</span>
-                        </p>
-                        
-                        <p class="lead font-weight-bold">Description</p>
-            
-                        <p class="text-justify">{{details.description}}</p>
-            
-                        <!-- <form class="d-flex justify-content-left">
-                   
-                          <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px">
-                          <button class="btn btn-primary btn-md my-0 p waves-effect waves-light" type="submit">Add to cart
-                            <i class="fas fa-shopping-cart ml-1"></i>
-                          </button>
-            
-                        </form>
-             -->
-                      </div>
-                      <!--Content-->
-            
-                    </div>
-                    <!--Grid column-->
-            
-                  </div>
-                  <!--Grid row-->
-            
-                  <hr>
-            
-                  <!--Grid row-->
-                  <div class="row d-flex justify-content-center wow fadeIn">
-            
-                    <!--Grid column-->
-                    <div class="col-md-6 text-center">
-                      <p class="text-start text-justify">{{details.description}}</p>
-            
-                    </div>
-                    <!--Grid column-->
-            
-                  </div>
-                  <!--Grid row-->
-            
-                  <!--Grid row-->
-                  <div class="row wow fadeIn">
-            
-                    <!--Grid column-->
-                    <div class="col-lg-4 col-md-12 mb-4 view zoom overlay ">
-            
-                      <img src="{{details.product_image.url}}" class="img-fluid w-100" alt="">
-            
-                    </div>
-                    <!--Grid column-->
-            
-                    <!--Grid column-->
-                    <div class="col-lg-4 col-md-6 mb-4 view zoom overlay">
-            
-                      <img src="{{details.product_image_2.url}}" class="img-fluid w-100" alt="">
-            
-                    </div>
-                    <!--Grid column-->
-            
-                    <!--Grid column-->
-                    <div class="col-lg-4 col-md-6 mb-4 view zoom overlay">
-            
-                      <img src="{{details.product_image_3.url}}" class="img-fluid w-100" alt="">
-            
-                    </div>
-                    <!--Grid column-->
-            
-                  </div>
-                  <!--Grid row-->
-                </div>
-                <div class="row d-flex justify-content-center wow fadeIn">
-                  <div class="col">
-                    <h2 class="text-center">Comment Area</h2>
-                  </div>
-              </div>
-              <div class="row d-flex justify-content-center wow fadeIn">
-                <div class="col text-center">
-                  <div class="form-outline">
-                    <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
-                    <label class="form-label" for="textAreaExample">Message</label>
-                  </div>
-                  <a href="#" class="btn btn-indigo">Add Comment</a>
-                </div>
-                
-            </div>
-            <hr>
-            {% for comment in comments %}
-            <div class="card">
-                <div class="row text-center">
-                    <div class="col-md-1"> <h6>{{comment.commenter_name}}</h6></div>
-                    <div class="col-md-2">{{comment.coment_body }} </div>
-                  </div>
-            </div>
-           
+{% block title %}{{ product.name }} — TimorMart{% endblock %}
+{% block meta_description %}{{ product.description|truncatewords:25 }}{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Product gallery ─────────────────────────────────────────── */
+  .pg-main {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    background: #fff; border: 1px solid #e9ecef; border-radius: 8px;
+    aspect-ratio: 4 / 3; max-height: 480px; overflow: hidden; cursor: zoom-in;
+  }
+  .pg-main img {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    transition: opacity .22s ease;
+  }
+  .pg-main img.pg-fading { opacity: 0; }
+  .pg-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255,255,255,.9); border: 1px solid #dee2e6; color: #333;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15); transition: background .15s ease;
+  }
+  .pg-nav:hover { background: #fff; }
+  .pg-prev { left: 10px; }
+  .pg-next { right: 10px; }
+  .pg-expand {
+    position: absolute; right: 10px; bottom: 10px; z-index: 3;
+    width: 38px; height: 38px; border-radius: 6px;
+    background: rgba(255,255,255,.9); border: 1px solid #dee2e6; color: #333;
+    cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  }
+  .pg-thumbs {
+    display: flex; gap: .5rem; margin-top: .6rem;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px;
+  }
+  .pg-thumb {
+    flex: 0 0 auto; width: 72px; height: 72px; padding: 0;
+    border: 2px solid transparent; border-radius: 6px; overflow: hidden;
+    background: #fff; cursor: pointer; opacity: .75;
+    transition: opacity .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .pg-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pg-thumb:hover { opacity: 1; }
+  .pg-thumb.active {
+    opacity: 1; border-color: #1266f1;
+    box-shadow: 0 0 0 3px rgba(18,102,241,.2);
+  }
+  @media (max-width: 575.98px) {
+    .pg-thumb { width: 60px; height: 60px; }
+    .pg-nav { width: 38px; height: 38px; }
+  }
+
+  /* ── Lightbox ────────────────────────────────────────────────── */
+  .pg-lightbox {
+    position: fixed; inset: 0; z-index: 3000;
+    background: rgba(10,10,12,.94);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pg-lightbox[hidden] { display: none; }
+  .pg-lb-stage {
+    max-width: 94vw; max-height: 88vh; overflow: auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #pg-lb-img {
+    max-width: 92vw; max-height: 85vh; object-fit: contain;
+    cursor: zoom-in; transition: opacity .22s ease;
+  }
+  #pg-lb-img.pg-zoomed { max-width: none; max-height: none; cursor: zoom-out; }
+  #pg-lb-img.pg-fading { opacity: 0; }
+  .pg-lb-close {
+    position: absolute; top: 14px; right: 14px; z-index: 4;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35);
+    color: #fff; font-size: 1.1rem; cursor: pointer;
+  }
+  .pg-lb-close:hover { background: rgba(255,255,255,.25); }
+  .pg-lightbox .pg-nav {
+    background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); color: #fff;
+  }
+  .pg-lightbox .pg-nav:hover { background: rgba(255,255,255,.25); }
+  .pg-lb-prev { left: 14px; }
+  .pg-lb-next { right: 14px; }
+  .pg-lb-counter {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    color: #fff; font-size: .9rem; background: rgba(0,0,0,.45);
+    padding: .25rem .8rem; border-radius: 999px;
+  }
+
+  /* ── Seller contact visibility ───────────────────────────────── */
+  .contact-reveal { animation: contactFadeUp .45s ease; }
+  @keyframes contactFadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  .contact-locked { border-style: dashed; background: #fafbfc; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent px-0 mb-2">
+      <li class="breadcrumb-item"><a href="{% url 'olretail:index' %}">{% trans 'Home' %}</a></li>
+      <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  {% if not product.approved %}
+  <div class="alert {% if product.status == 'pending' %}alert-warning{% else %}alert-danger{% endif %}" role="alert">
+    <i class="fas fa-hourglass-half mr-1" aria-hidden="true"></i>
+    {% if product.status == 'pending' %}
+    {% trans 'This listing is awaiting administrator approval and is not yet visible to buyers.' %}
+    {% else %}
+    {% trans 'This listing is not visible to buyers.' %} <strong>{{ product.get_status_display }}</strong>
+    {% endif %}
+    {% if product.moderation_note %}
+    <div class="mt-1 small">{% trans 'Moderator note:' %} {{ product.moderation_note }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <!-- Gallery -->
+    <div class="col-md-6 mb-4">
+      {% if gallery_urls %}
+      {{ gallery_urls|json_script:"pg-data" }}
+      <div class="pg-gallery" id="product-gallery">
+        <div class="pg-main" id="pg-main">
+          {% if gallery_urls|length > 1 %}
+          <button type="button" class="pg-nav pg-prev" aria-label="{% trans 'Previous image' %}">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          {% endif %}
+          <img id="pg-main-img" src="{{ gallery_urls.0 }}" alt="{{ product.name }}" decoding="async">
+          {% if gallery_urls|length > 1 %}
+          <button type="button" class="pg-nav pg-next" aria-label="{% trans 'Next image' %}">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </button>
+          {% endif %}
+          <button type="button" class="pg-expand" aria-label="{% trans 'View full screen' %}">
+            <i class="fas fa-expand" aria-hidden="true"></i>
+          </button>
+        </div>
+        {% if gallery_urls|length > 1 %}
+        <div class="pg-thumbs" role="group" aria-label="{% trans 'Product images' %}">
+          {% for url in gallery_urls %}
+          <button type="button" class="pg-thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"
+                  aria-label="{{ product.name }} {{ forloop.counter }}/{{ gallery_urls|length }}"
+                  {% if forloop.first %}aria-current="true"{% endif %}>
+            <img src="{{ url }}" alt="" loading="lazy" decoding="async">
+          </button>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Lightbox -->
+      <div class="pg-lightbox" id="pg-lightbox" role="dialog" aria-modal="true"
+           aria-label="{{ product.name }}" hidden>
+        <button type="button" class="pg-lb-close" aria-label="{% trans 'Close' %}">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        {% if gallery_urls|length > 1 %}
+        <button type="button" class="pg-nav pg-lb-prev" aria-label="{% trans 'Previous image' %}">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+        <div class="pg-lb-stage">
+          <img id="pg-lb-img" src="" alt="{{ product.name }}">
+        </div>
+        {% if gallery_urls|length > 1 %}
+        <button type="button" class="pg-nav pg-lb-next" aria-label="{% trans 'Next image' %}">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+        <div class="pg-lb-counter" id="pg-lb-counter" aria-live="polite"></div>
+      </div>
+      {% else %}
+      <div class="pg-main">
+        <img src="{% static 'mdb/img/t-shirt.jpg' %}" alt="{% trans 'No image available' %}">
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div class="col-md-6 mb-4">
+      <h1 class="h3">{{ product.name }}</h1>
+      <p class="mb-2">
+        <span class="badge badge-info">{{ product.get_condition_display }}</span>
+        {% if product.in_stock %}
+        <span class="badge badge-success">{% trans 'In stock' %}: {{ product.quantity }}</span>
+        {% else %}
+        <span class="badge badge-secondary">{% trans 'Out of stock' %}</span>
+        {% endif %}
+        {% if is_owner %}
+        <span class="badge {% if product.approved %}badge-primary{% else %}badge-warning{% endif %}">
+          {{ product.get_status_display }}
+        </span>
+        {% endif %}
+      </p>
+      <p class="h4 text-danger font-weight-bold mb-3">$ {{ product.price|intcomma }}</p>
+
+      {% if can_add_to_cart %}
+      <form method="post" action="{% url 'olretail:add_to_cart' product.id %}" class="form-inline mb-3">
+        {% csrf_token %}
+        <label for="cart-qty" class="sr-only">{% trans 'Quantity' %}</label>
+        <input type="number" id="cart-qty" name="quantity" value="1" min="1" max="{{ product.quantity }}"
+               class="form-control form-control-sm mr-2" style="width: 70px;">
+        <button type="submit" class="btn btn-primary btn-sm m-0">
+          <i class="fas fa-cart-plus mr-1" aria-hidden="true"></i>{% trans 'Add to Cart' %}
+        </button>
+      </form>
+      {% elif not product.cart_purchasable and can_comment and not is_owner and product.approved %}
+      <p class="text-muted small mb-3">
+        <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+        {% trans 'Not sold through the cart — contact the seller directly to arrange this.' %}
+      </p>
+      {% endif %}
+
+      <p class="mb-1 text-muted">
+        <i class="fa fa-map-marker-alt mr-1" aria-hidden="true"></i>
+        {{ product.item_location }}, {{ product.country }}
+      </p>
+      <p class="mb-3 text-muted small">{% trans 'Listed' %} {{ product.created|date:"j M Y" }}</p>
+
+      <h2 class="h5 mt-4">{% trans 'Description' %}</h2>
+      <p class="text-justify">{{ product.description|linebreaks }}</p>
+
+      {% if can_view_contact %}
+      <div class="card mt-4 contact-reveal">
+        <div class="card-body py-3">
+          <h2 class="h6 text-uppercase text-muted mb-2">{% trans 'Seller' %}</h2>
+          <p class="mb-1"><strong>{{ product.seller.get_name }}</strong></p>
+          <p class="mb-1">
+            <i class="fas fa-phone mr-1" aria-hidden="true"></i>
+            <a href="tel:+{{ product.seller.whatsapp_number }}">{{ product.seller.mobile }}</a>
+          </p>
+          <p class="mb-2 text-muted small"><i class="fas fa-home mr-1" aria-hidden="true"></i>{{ product.seller.address }}</p>
+          {% if whatsapp_url %}
+          <a href="{{ whatsapp_url }}" target="_blank" rel="noopener" class="btn btn-sm text-white m-0"
+             style="background-color: #25D366;">
+            <i class="fab fa-whatsapp mr-1" aria-hidden="true"></i>{% trans 'Chat on WhatsApp' %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% elif user.is_authenticated %}
+      <div class="card mt-4 contact-locked text-center">
+        <div class="card-body py-4">
+          <i class="fas fa-lock fa-2x text-muted mb-3" aria-hidden="true"></i>
+          <h2 class="h6 font-weight-bold">{% trans 'Interested in this product?' %}</h2>
+          <p class="small text-muted mb-3">
+            {% trans "To view the seller's phone number and WhatsApp contact, upgrade your account to Buyer & Seller." %}
+          </p>
+          <form method="post" action="{% url 'accounts:upgrade_to_buyer' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ product.get_absolute_url }}">
+            <button type="submit" class="btn btn-primary btn-sm m-0">
+              <i class="fas fa-arrow-circle-up mr-1" aria-hidden="true"></i>{% trans 'Upgrade to Buyer & Seller' %}
+            </button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <div class="card mt-4 contact-locked text-center">
+        <div class="card-body py-4">
+          <i class="fas fa-lock fa-2x text-muted mb-3" aria-hidden="true"></i>
+          <h2 class="h6 font-weight-bold">{% trans 'Sign in to view contact information' %}</h2>
+          <p class="small text-muted mb-3">
+            {% trans "To view the seller's phone number and WhatsApp contact, please sign in or create an account." %}
+          </p>
+          <a href="{% url 'accounts:login' %}?next={{ product.get_absolute_url|urlencode }}"
+             class="btn btn-outline-primary btn-sm m-0">{% trans 'Sign in' %}</a>
+          <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm m-0">{% trans 'Sign up' %}</a>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if is_owner %}
+      <div class="mt-3">
+        <a href="{% url 'olretail:update_product' product.slug %}" class="btn btn-sm btn-outline-primary">
+          <i class="fas fa-edit mr-1" aria-hidden="true"></i>{% trans 'Edit listing' %}
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if related %}
+  <hr>
+  <section class="my-4">
+    <h2 class="h5 text-uppercase font-weight-bold page-header-bar mb-3">{% trans 'Related products' %}</h2>
+    <div class="row">
+      {% for p in related %}
+      <div class="col-6 col-md-3 mb-3">
+        <div class="card product-card">
+          {% if p.product_image %}
+          <img class="card-img-top" src="{{ p.product_image.url }}" alt="{{ p.name }}" loading="lazy">
+          {% else %}
+          <img class="card-img-top" src="{% static 'mdb/img/t-shirt.jpg' %}" alt="{% trans 'No image available' %}" loading="lazy">
+          {% endif %}
+          <div class="card-body py-2">
+            <p class="mb-1 text-truncate"><a class="text-dark" href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
+            <p class="mb-0"><strong class="text-danger">$ {{ p.price|intcomma }}</strong></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <hr>
+  <section id="comments" class="my-4">
+    <h2 class="h5 text-uppercase font-weight-bold page-header-bar mb-3">
+      {% trans 'Comments' %} ({{ comments|length }})
+      {% if sentiment_counts.positive %}
+      <span class="badge badge-success font-weight-normal">
+        <i class="far fa-smile mr-1" aria-hidden="true"></i>{{ sentiment_counts.positive }} {% trans 'Positive' %}
+      </span>
+      {% endif %}
+      {% if sentiment_counts.negative %}
+      <span class="badge badge-danger font-weight-normal">
+        <i class="far fa-frown mr-1" aria-hidden="true"></i>{{ sentiment_counts.negative }} {% trans 'Negative' %}
+      </span>
+      {% endif %}
+    </h2>
+
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        {% if can_comment %}
+        <form method="post" action="{{ product.get_absolute_url }}#comments" novalidate>
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="{{ comment_form.commenter_name.id_for_label }}">{{ comment_form.commenter_name.label }}</label>
+            {{ comment_form.commenter_name }}
+            {% for error in comment_form.commenter_name.errors %}
+            <div class="text-danger small">{{ error }}</div>
             {% endfor %}
-           
-    </main>    
+          </div>
+          <div class="form-group">
+            <label for="{{ comment_form.body.id_for_label }}">{{ comment_form.body.label }}</label>
+            {{ comment_form.body }}
+            {% for error in comment_form.body.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fas fa-comment mr-1" aria-hidden="true"></i>{% trans 'Post comment' %}
+          </button>
+        </form>
+        {% elif user.is_authenticated %}
+        <div class="card">
+          <div class="card-body text-muted small">
+            <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+            {% trans 'Comments are available to buyer accounts. Seller accounts cannot post comments.' %}
+          </div>
+        </div>
+        {% else %}
+        <div class="card">
+          <div class="card-body">
+            <p class="text-muted small mb-2">
+              <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+              {% trans 'Sign in with a buyer account to post a comment.' %}
+            </p>
+            <a href="{% url 'accounts:login' %}?next={{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary m-0">{% trans 'Sign in' %}</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-primary m-0">{% trans 'Sign up' %}</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="col-md-6">
+        {% for comment in comments %}
+        <div class="card mb-2">
+          <div class="card-body py-2">
+            <p class="mb-1"><strong>{{ comment.commenter_name }}</strong>
+              <small class="text-muted">— {{ comment.date_added|date:"j M Y H:i" }}</small>
+              {% if comment.sentiment == 'positive' %}
+              <i class="far fa-smile text-success float-right" title="{% trans 'Positive' %}"
+                 aria-label="{% trans 'Positive' %}"></i>
+              {% elif comment.sentiment == 'negative' %}
+              <i class="far fa-frown text-danger float-right" title="{% trans 'Negative' %}"
+                 aria-label="{% trans 'Negative' %}"></i>
+              {% endif %}
+            </p>
+            <p class="mb-0">{{ comment.body|linebreaksbr }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">{% trans 'No comments yet. Be the first to ask about this product!' %}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  'use strict';
+  var dataEl = document.getElementById('pg-data');
+  if (!dataEl) return;
+  var images = JSON.parse(dataEl.textContent);
+  var current = 0;
+
+  var mainWrap = document.getElementById('pg-main');
+  var mainImg = document.getElementById('pg-main-img');
+  var thumbs = Array.prototype.slice.call(document.querySelectorAll('.pg-thumb'));
+  var lightbox = document.getElementById('pg-lightbox');
+  var lbImg = document.getElementById('pg-lb-img');
+  var lbCounter = document.getElementById('pg-lb-counter');
+  var lastFocus = null;
+
+  function preload(i) {
+    if (images[i]) { var im = new Image(); im.src = images[i]; }
+  }
+
+  function fadeSwap(imgEl, src, done) {
+    imgEl.classList.add('pg-fading');
+    setTimeout(function () {
+      imgEl.onload = function () { imgEl.classList.remove('pg-fading'); if (done) done(); };
+      imgEl.src = src;
+      // Cached images may not refire onload reliably everywhere:
+      if (imgEl.complete) { imgEl.classList.remove('pg-fading'); if (done) done(); }
+    }, 160);
+  }
+
+  function show(i, skipFade) {
+    current = (i + images.length) % images.length;
+    if (skipFade) { mainImg.src = images[current]; }
+    else { fadeSwap(mainImg, images[current]); }
+    thumbs.forEach(function (t, idx) {
+      t.classList.toggle('active', idx === current);
+      if (idx === current) { t.setAttribute('aria-current', 'true'); }
+      else { t.removeAttribute('aria-current'); }
+    });
+    preload(current + 1); preload(current - 1 + images.length);
+    if (!lightbox.hidden) { syncLightbox(); }
+  }
+
+  function syncLightbox() {
+    fadeSwap(lbImg, images[current]);
+    lbImg.classList.remove('pg-zoomed');
+    if (lbCounter) { lbCounter.textContent = (current + 1) + ' / ' + images.length; }
+  }
+
+  thumbs.forEach(function (t) {
+    t.addEventListener('click', function () { show(parseInt(t.dataset.index, 10)); });
+  });
+
+  var prevBtn = mainWrap.querySelector('.pg-prev');
+  var nextBtn = mainWrap.querySelector('.pg-next');
+  if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); show(current - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); show(current + 1); });
+
+  // Swipe on the main image (touch devices)
+  var touchX = null;
+  mainWrap.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  mainWrap.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 40 && images.length > 1) { show(dx < 0 ? current + 1 : current - 1); }
+  }, { passive: true });
+
+  // ── Lightbox ──
+  function openLightbox() {
+    lastFocus = document.activeElement;
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    lbImg.src = images[current];
+    lbImg.classList.remove('pg-zoomed');
+    if (lbCounter) { lbCounter.textContent = (current + 1) + ' / ' + images.length; }
+    lightbox.querySelector('.pg-lb-close').focus();
+    document.addEventListener('keydown', onKey);
+  }
+  function closeLightbox() {
+    lightbox.hidden = true;
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+    if (lastFocus) { lastFocus.focus(); }
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') { closeLightbox(); }
+    else if (e.key === 'ArrowRight') { show(current + 1); }
+    else if (e.key === 'ArrowLeft') { show(current - 1); }
+  }
+
+  mainWrap.addEventListener('click', function (e) {
+    if (e.target.closest('.pg-nav')) return;
+    openLightbox();
+  });
+  mainWrap.setAttribute('tabindex', '0');
+  mainWrap.setAttribute('role', 'button');
+  mainWrap.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(); }
+    else if (e.key === 'ArrowRight') { show(current + 1); }
+    else if (e.key === 'ArrowLeft') { show(current - 1); }
+  });
+
+  lightbox.querySelector('.pg-lb-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) { closeLightbox(); }
+  });
+  var lbPrev = lightbox.querySelector('.pg-lb-prev');
+  var lbNext = lightbox.querySelector('.pg-lb-next');
+  if (lbPrev) lbPrev.addEventListener('click', function () { show(current - 1); });
+  if (lbNext) lbNext.addEventListener('click', function () { show(current + 1); });
+  lbImg.addEventListener('click', function () { lbImg.classList.toggle('pg-zoomed'); });
+
+  // Swipe inside the lightbox
+  var lbTouchX = null;
+  lightbox.addEventListener('touchstart', function (e) { lbTouchX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    if (lbTouchX === null || lbImg.classList.contains('pg-zoomed')) return;
+    var dx = e.changedTouches[0].clientX - lbTouchX;
+    lbTouchX = null;
+    if (Math.abs(dx) > 40 && images.length > 1) { show(dx < 0 ? current + 1 : current - 1); }
+  }, { passive: true });
+
+  preload(1); preload(images.length - 1);
+})();
+</script>
 {% endblock %}

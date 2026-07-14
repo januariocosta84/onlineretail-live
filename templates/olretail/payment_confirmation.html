@@ -1,0 +1,141 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Payment Confirmation" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- Success Message -->
+        <div class="alert alert-success alert-lg d-flex align-items-center mb-4" role="alert">
+          <div class="display-4 text-success mr-4">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div>
+            <h4 class="alert-heading mb-0">
+              {% trans "Payment Successful!" %}
+            </h4>
+            <p class="mb-0">
+              {% trans "Thank you for your order. Your payment has been received." %}
+            </p>
+          </div>
+        </div>
+
+        <!-- Primary Order -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="mb-0">
+                  {% trans "Order" %} {{ order.order_number }}
+                </h5>
+              </div>
+              <div class="col-md-6 text-right">
+                <span class="badge badge-success">{{ order.get_status_display }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h6 class="text-muted">{% trans "Product" %}</h6>
+                <p class="mb-0">
+                  <strong>{{ order.product.name }}</strong><br>
+                  <small class="text-muted">Seller: {{ order.product.seller.user.get_full_name }}</small>
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-muted">{% trans "Delivery Address" %}</h6>
+                <p class="mb-0">
+                  {{ order.delivery_address }}<br>
+                  <strong>{{ order.delivery_phone }}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <tr>
+                  <td>{% trans "Quantity" %}:</td>
+                  <td class="text-right"><strong>{{ order.quantity }}</strong></td>
+                </tr>
+                <tr>
+                  <td>{% trans "Unit Price" %}:</td>
+                  <td class="text-right">${{ order.price_per_unit }}</td>
+                </tr>
+                <tr>
+                  <td>{% trans "Subtotal" %}:</td>
+                  <td class="text-right">${{ order.subtotal }}</td>
+                </tr>
+                <tr>
+                  <td>{% trans "Commission" %}:</td>
+                  <td class="text-right">${{ order.commission_amount }}</td>
+                </tr>
+                <tr>
+                  <td>{% trans "Payment Fee" %}:</td>
+                  <td class="text-right">${{ order.payment_fee }}</td>
+                </tr>
+                <tr class="table-light">
+                  <td><strong>{% trans "Total Paid" %}:</strong></td>
+                  <td class="text-right"><strong class="h5 text-primary">${{ order.total }}</strong></td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="alert alert-info mt-4" role="alert">
+              <i class="fas fa-info-circle mr-2"></i>
+              <strong>{% trans "Next Steps:" %}</strong><br>
+              1. {% trans "Seller will contact you at" %} <strong>{{ order.delivery_phone }}</strong><br>
+              2. {% trans "You can track your order status in your" %} <a href="{% url 'olretail:buyer_orders' %}">{% trans "order history" %}</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Orders (if multiple items) -->
+        {% if related_orders|length > 1 %}
+        <h5 class="mb-3">{% trans "Other Items in Your Order" %}</h5>
+        {% for related_order in related_orders %}
+          {% if related_order.id != order.id %}
+          <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <strong>{{ related_order.product.name }}</strong><br>
+                  <small class="text-muted">Order: {{ related_order.order_number }}</small>
+                </div>
+                <div class="col-md-6 text-right">
+                  Qty: {{ related_order.quantity }} × ${{ related_order.price_per_unit }} = <strong>${{ related_order.total }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="row mt-5">
+          <div class="col-md-6">
+            <a href="{% url 'olretail:buyer_orders' %}" class="btn btn-primary btn-block">
+              <i class="fas fa-list mr-2"></i>{% trans "View My Orders" %}
+            </a>
+          </div>
+          <div class="col-md-6">
+            <a href="{% url 'olretail:index' %}" class="btn btn-outline-primary btn-block">
+              <i class="fas fa-shopping-bag mr-2"></i>{% trans "Continue Shopping" %}
+            </a>
+          </div>
+        </div>
+
+        <!-- Email Confirmation -->
+        <div class="alert alert-info mt-4">
+          <i class="fas fa-envelope mr-2"></i>
+          {% trans "A confirmation email has been sent to" %} <strong>{{ request.user.email }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

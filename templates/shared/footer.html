@@ -1,60 +1,25 @@
 <footer class="text-center text-white" style="background-color: #f1f1f1;">
+        <style>
+          /* Self-contained circles: MDB's .btn-floating clips icons when
+             combined with .btn-link (overflow:hidden + broken padding). */
+          .footer-social {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 48px; height: 48px; margin: 0 .4rem; border-radius: 50%;
+            border: 1px solid #d5d9dd; background: #fff; color: #343a40;
+            font-size: 1.2rem; line-height: 1; text-decoration: none;
+            transition: background .15s ease, color .15s ease;
+          }
+          .footer-social:hover, .footer-social:focus {
+            background: #343a40; color: #fff; text-decoration: none;
+          }
+        </style>
         <!-- Grid container -->
         <div class="container-xl pt-4">
-          <!-- Section: Social media -->
+          <!-- Section: Social media (update hrefs when accounts exist) -->
           <section class="mb-4">
-            <!-- Facebook -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-      
-            <!-- Twitter -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-twitter"></i
-            ></a>
-      
-            <!-- Google -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-google"></i
-            ></a>
-      
-            <!-- Instagram -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-instagram"></i
-            ></a>
-      
-            <!-- Linkedin -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-linkedin"></i
-            ></a>
-            <!-- Github -->
-            <a
-              class="btn btn-link btn-floating btn-lg text-dark m-1"
-              href="#!"
-              role="button"
-              data-mdb-ripple-color="dark"
-              ><i class="fab fa-github"></i
-            ></a>
+            <a class="footer-social" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+            <a class="footer-social" href="#!" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+            <a class="footer-social" href="#!" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
           </section>
           <!-- Section: Social media -->
         </div>
@@ -62,8 +27,8 @@
       
         <!-- Copyright -->
         <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-          © 2021 Copyright:
-          <a class="text-dark" href="#">Timor Leste online retail</a>
+          © {% now "Y" %}
+          <a class="text-dark" href="/">TimorMart</a>
         </div>
         <!-- Copyright -->
 </footer>

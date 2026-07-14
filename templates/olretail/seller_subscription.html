@@ -1,0 +1,155 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Subscription" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="h2 page-header-bar">
+              <i class="fas fa-crown mr-2"></i>{% trans "Subscription" %}
+            </h1>
+            <p class="text-muted">
+              {% blocktrans %}Free accounts can list up to {{ free_limit }} products, and each one is reviewed by an admin before it goes live. Subscribers can list without limit and publish instantly — no approval wait.{% endblocktrans %}
+            </p>
+          </div>
+        </div>
+
+        {% include "shared/messages.html" %}
+
+        <!-- Current status -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            {% if subscription.is_paid_active %}
+            <p class="mb-1">
+              <span class="badge badge-success">{% trans "Active" %}</span>
+              <strong>{{ subscription.get_plan_display }}</strong>
+            </p>
+            <p class="mb-0 text-muted">
+              {% blocktrans with date=subscription.expires_at|date:"j M Y" %}Unlimited listings — active until {{ date }}.{% endblocktrans %}
+            </p>
+            {% if subscription.expiring_soon %}
+            <p class="mb-0 mt-2 text-warning small">
+              <i class="fas fa-clock mr-1" aria-hidden="true"></i>
+              {% blocktrans with days=subscription.days_until_expiry %}Expires in {{ days }} day(s) — renew below to avoid losing the ability to post new products.{% endblocktrans %}
+            </p>
+            {% endif %}
+            {% elif subscription.needs_renewal %}
+            <p class="mb-1">
+              <span class="badge badge-danger">{% trans "Expired" %}</span>
+              <strong>{{ subscription.products_used }}</strong> {% trans "listings" %}
+            </p>
+            <p class="mb-0 text-danger small">
+              <i class="fas fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+              {% blocktrans with limit=free_limit %}Over the free limit of {{ limit }} — your existing listings stay live, but you can't add new ones until you renew.{% endblocktrans %}
+            </p>
+            {% else %}
+            <p class="mb-1">
+              <strong>{{ subscription.products_used }} / {{ free_limit }}</strong> {% trans "free listings used" %}
+            </p>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar {% if subscription.remaining_free_slots == 0 %}bg-danger{% elif subscription.remaining_free_slots <= 2 %}bg-warning{% else %}bg-success{% endif %}"
+                   role="progressbar" style="width: {% widthratio subscription.products_used free_limit 100 %}%"></div>
+            </div>
+            {% if subscription.remaining_free_slots == 0 %}
+            <p class="mb-0 mt-2 text-danger small">
+              <i class="fas fa-exclamation-circle mr-1" aria-hidden="true"></i>
+              {% trans "You've used all your free listings — subscribe below to post more." %}
+            </p>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        {% if pending_request %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <p class="mb-1">
+              <span class="badge badge-warning">{% trans "Awaiting confirmation" %}</span>
+              <strong>{{ pending_request.get_plan_display }}</strong> — ${{ pending_request.amount }}
+            </p>
+            <p class="mb-1 text-muted small">
+              {% trans "Submitted" %} {{ pending_request.created_at|date:"j M Y H:i" }}
+            </p>
+            <p class="mb-0 text-muted small">
+              {% trans "Your reference" %}: {{ pending_request.payment_reference }}
+            </p>
+          </div>
+        </div>
+        {% else %}
+
+        <!-- Upgrade form -->
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+              <h5 class="mb-0"><i class="fas fa-wallet mr-2"></i>{% trans "Choose a plan" %}</h5>
+            </div>
+            <div class="card-body">
+              {% for radio in form.plan %}
+              <div class="form-check mb-2">
+                {{ radio.tag }}
+                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+              </div>
+              {% endfor %}
+              {% if form.plan.errors %}<div class="text-danger small mt-1">{{ form.plan.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="alert alert-secondary">
+            <strong>{% trans "Where to pay" %}:</strong>
+            <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ platform_payment_instructions }}</pre>
+          </div>
+
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">{% trans "Payment reference" %}</h5>
+            </div>
+            <div class="card-body">
+              {{ form.payment_reference }}
+              {% if form.payment_reference.errors %}<div class="text-danger small mt-1">{{ form.payment_reference.errors }}</div>{% endif %}
+              <small class="form-text text-muted">{{ form.payment_reference.help_text }}</small>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check mr-1" aria-hidden="true"></i>{% trans "I've paid — submit for confirmation" %}
+          </button>
+        </form>
+        {% endif %}
+
+        {% if recent_requests %}
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-header bg-light">{% trans "Request history" %}</div>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0">
+              <thead>
+                <tr><th>{% trans "Date" %}</th><th>{% trans "Plan" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Status" %}</th></tr>
+              </thead>
+              <tbody>
+                {% for r in recent_requests %}
+                <tr>
+                  <td><small class="text-muted">{{ r.created_at|date:"j M Y" }}</small></td>
+                  <td>{{ r.get_plan_display }}</td>
+                  <td>${{ r.amount }}</td>
+                  <td>
+                    {% if r.status == 'pending' %}<span class="badge badge-warning">{{ r.get_status_display }}</span>
+                    {% elif r.status == 'approved' %}<span class="badge badge-success">{{ r.get_status_display }}</span>
+                    {% else %}<span class="badge badge-danger">{{ r.get_status_display }}</span>{% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

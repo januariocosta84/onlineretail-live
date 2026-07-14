@@ -1,0 +1,199 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My Earnings" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-wallet mr-2"></i>{% trans "My Earnings" %}
+        </h1>
+      </div>
+      <div class="col-md-4 text-right">
+        <a href="{% url 'olretail:seller_orders' %}" class="btn btn-outline-primary">
+          <i class="fas fa-shopping-bag mr-2"></i>{% trans "View Orders" %}
+        </a>
+      </div>
+    </div>
+
+    {% include "shared/messages.html" %}
+
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-light">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">{% trans "Total Earnings" %}</h6>
+            <h3 class="text-primary mb-0">${{ balance.total_earnings_dollars|floatformat:2 }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-light">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">{% trans "Available Balance" %}</h6>
+            <h3 class="text-success mb-0">${{ balance.available_balance_dollars|floatformat:2 }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-light">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">{% trans "Pending Payout" %}</h6>
+            <h3 class="text-warning mb-0">${{ balance.pending_payout_dollars|floatformat:2 }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-light">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">{% trans "Total Paid Out" %}</h6>
+            <h3 class="text-info mb-0">${{ balance.total_payouts_dollars|floatformat:2 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab">
+          {% trans "Recent Transactions" %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="payouts-tab" data-toggle="tab" href="#payouts" role="tab">
+          {% trans "Payouts" %}
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Transactions Tab -->
+      <div class="tab-pane fade show active" id="transactions" role="tabpanel">
+        {% if transactions %}
+          <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Order" %}</th>
+                    <th>{% trans "Type" %}</th>
+                    <th>{% trans "Description" %}</th>
+                    <th class="text-right">{% trans "Amount" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for transaction in transactions %}
+                  <tr>
+                    <td>
+                      <small>{{ transaction.created_at|date:"M d, Y" }}</small>
+                    </td>
+                    <td>
+                      <a href="{% url 'olretail:order_detail' transaction.order.id %}">
+                        {{ transaction.order.order_number }}
+                      </a>
+                    </td>
+                    <td>
+                      <span class="badge badge-light">{{ transaction.get_transaction_type_display }}</span>
+                    </td>
+                    <td>
+                      <small>{{ transaction.description }}</small>
+                    </td>
+                    <td class="text-right font-weight-bold">
+                      {% if transaction.transaction_type == 'commission' %}
+                        <span class="text-success">+${{ transaction.amount_dollars|floatformat:2 }}</span>
+                      {% else %}
+                        <span class="text-danger">-${{ transaction.amount_dollars|floatformat:2 }}</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-info">
+            {% trans "No transactions yet." %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Payouts Tab -->
+      <div class="tab-pane fade" id="payouts" role="tabpanel">
+        {% if payouts %}
+          <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>{% trans "Payout ID" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Scheduled Date" %}</th>
+                    <th>{% trans "Paid Date" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for payout in payouts %}
+                  <tr>
+                    <td>
+                      <strong>{{ payout.payout_id }}</strong>
+                    </td>
+                    <td>
+                      ${{ payout.amount_dollars|floatformat:2 }}
+                    </td>
+                    <td>
+                      {% if payout.status == 'scheduled' %}
+                        <span class="badge badge-warning">{{ payout.get_status_display }}</span>
+                      {% elif payout.status == 'processing' %}
+                        <span class="badge badge-info">{{ payout.get_status_display }}</span>
+                      {% elif payout.status == 'paid' %}
+                        <span class="badge badge-success">{{ payout.get_status_display }}</span>
+                      {% else %}
+                        <span class="badge badge-danger">{{ payout.get_status_display }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {{ payout.scheduled_date|date:"M d, Y" }}
+                    </td>
+                    <td>
+                      {% if payout.paid_date %}
+                        {{ payout.paid_date|date:"M d, Y" }}
+                      {% else %}
+                        <span class="text-muted">—</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-info">
+            {% trans "No payouts yet." %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Information -->
+    <div class="alert alert-info mt-4">
+      <i class="fas fa-info-circle mr-2"></i>
+      <strong>{% trans "How does it work?" %}</strong><br>
+      <ul class="mb-0 pl-3 mt-2">
+        <li>{% trans "You earn 85% of each sale (platform takes 15% commission)" %}</li>
+        <li>{% trans "Earnings are credited when payment is received" %}</li>
+        <li>{% trans "Payouts are processed monthly on the 1st of each month" %}</li>
+        <li>{% trans "Minimum payout amount: $500" %}</li>
+      </ul>
+    </div>
+  </div>
+</main>
+{% endblock %}

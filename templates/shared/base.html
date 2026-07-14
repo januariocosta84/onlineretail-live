@@ -1,89 +1,104 @@
 <!DOCTYPE html>
 {% load static %}
 {% load i18n %}
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>Timor Online Retail </title>
-<!-- Roboto Font -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-<!-- Bootstrap core CSS -->
-<link rel="stylesheet" href="{% static 'costumize/css/bootstrap.min.css' %}">
-<!-- Material Design Bootstrap -->
-<link rel="stylesheet" href="{% static 'costumize/css/mdb-pro.min.css' %}">
-<!-- Material Design Bootstrap Ecommerce -->
-<link rel="stylesheet" href="{% static 'costumize/css/mdb.ecommerce.min.css' %}">
-<style>
-  @media (min-width: 1100px) {
-    .container-xl {
-      max-width: 1480px;
+  <meta name="description" content="{% block meta_description %}TimorMart — buy and sell products across Timor-Leste.{% endblock %}" />
+  <title>{% block title %}TimorMart{% endblock %}</title>
+  <link rel="icon" href="{% static 'mdb/img/favicon.ico' %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://use.fontawesome.com" crossorigin>
+  <!-- Roboto Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{% static 'costumize/css/bootstrap.min.css' %}">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="{% static 'costumize/css/mdb-pro.min.css' %}">
+  <!-- Material Design Bootstrap Ecommerce -->
+  <link rel="stylesheet" href="{% static 'costumize/css/mdb.ecommerce.min.css' %}">
+  <style>
+    @media (min-width: 1100px) {
+      .container-xl { max-width: 1480px; }
     }
-  }
+    .divider-new.version-2 { justify-content: left; }
+    .divider-new.version-2:before { flex: 0; }
+    main { min-height: 60vh; }
+    .product-card { transition: box-shadow .2s ease; height: 100%; }
+    .product-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .product-card .card-img-top { object-fit: cover; height: 200px; width: 100%; }
+    .product-thumb { object-fit: cover; height: 48px; width: 48px; border-radius: 4px; }
+    .page-header-bar { border-left: 4px solid #d32f2f; padding-left: .75rem; }
 
-  .divider-new.version-2 {
-    justify-content: left;
-  }
+    /* ── Accessibility ─────────────────────────────────────────── */
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 10000;
+      background: #1266f1; color: #fff; padding: .6rem 1.2rem; border-radius: 0 0 4px 0;
+    }
+    .skip-link:focus { left: 0; }
+    a:focus-visible, button:focus-visible, input:focus-visible,
+    select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid #1266f1 !important; outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
 
-  .divider-new.version-2:before {
-    flex: 0;
-  }
-</style>
-
-</head>
-
+    /* ── Responsive & mobile ergonomics ────────────────────────── */
+    html { scroll-behavior: smooth; }
+    img { max-width: 100%; }
+    .card-body, td, .alert, .list-group-item { overflow-wrap: anywhere; }
+    .modal-content { white-space: normal; }
+    .table-responsive { -webkit-overflow-scrolling: touch; }
+    @media (pointer: coarse) {
+      .btn-sm {
+        min-height: 40px; min-width: 40px;
+        display: inline-flex; align-items: center; justify-content: center;
+      }
+      .nav-link, .dropdown-item, .page-link { padding-top: .65rem; padding-bottom: .65rem; }
+    }
+    @media (max-width: 575.98px) {
+      .product-card .card-img-top { height: 150px; }
+      .jumbotron { padding: 1rem !important; }
+      h1, .h3 { font-size: 1.35rem; }
+      #featured-carousel .view, #featured-carousel img {
+        height: 220px !important; max-height: 220px !important;
+      }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
 
 <body class="skin-light">
-  <!--Start navbar here-->
+  <a class="skip-link" href="#main-content">{% trans 'Skip to main content' %}</a>
   {% include 'shared/header.html' %}
-  
-  <!--End navbar here-->
-  <!-- Start your project here-->
-  {% block content %}
-  
 
-  {% endblock %}
-  <!-- End your project here-->
+  <main id="main-content">
+    <div class="container-xl mt-3">
+      {% include 'shared/messages.html' %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
 
-  <!-- MDB -->
-
-  <!--Start footer-->
   {% include 'shared/footer.html' %}
-  <!--End footer-->
-<!-- SCRIPTS -->
-  <!-- JQuery -->
+
+  <!-- Scripts -->
   <script type="text/javascript" src="{% static 'costumize/js/jquery-3.4.1.min.js' %}"></script>
-  <!-- Bootstrap tooltips -->
   <script type="text/javascript" src="{% static 'costumize/js/popper.min.js' %}"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="{% static 'costumize/js/bootstrap.min.js'  %}"></script>
-  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="{% static 'costumize/js/bootstrap.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'costumize/js/mdb.min.js' %}"></script>
-    <!-- MDB Ecommerce JavaScript -->
-    <script type="text/javascript" src="{% static 'costumize/js/mdb.ecommerce.min.js'%}"></script>
-  <!-- Your custom scripts (optional) -->
-  <script type="text/javascript">
-    $(function () {
-      $('.material-tooltip-main').tooltip({
-        template: '<div class="tooltip md-tooltip-main"><div class="tooltip-arrow md-arrow"></div><div class="tooltip-inner md-inner-main"></div></div>'
-      });
-    });
-
-    $(document).ready(function () {
-      $('.mdb-select').materialSelect();
-      $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
-        $(this).closest('.select-outline').find('label').toggleClass('active');
-        $(this).closest('.select-outline').find('.caret').toggleClass('active');
-      });
-    });
-  </script>
-
- 
+  <script type="text/javascript" src="{% static 'costumize/js/mdb.ecommerce.min.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
 </body>
 
 </html>

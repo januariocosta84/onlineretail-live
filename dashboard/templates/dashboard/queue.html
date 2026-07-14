@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Approval queue{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Approval queue <small class="text-muted h6">({{ products|length }} waiting)</small></h1>
+
+{% if products %}
+<form method="post" action="{% url 'dashboard:queue_bulk' %}"
+      onsubmit="return confirm('Apply this action to all selected products?');">
+  {% csrf_token %}
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th style="width:30px;"><input type="checkbox" onclick="document.querySelectorAll('.sel').forEach(c=>c.checked=this.checked)" aria-label="Select all"></th>
+            <th>Product</th>
+            <th>Seller</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td><input type="checkbox" class="sel" name="selected" value="{{ p.pk }}" aria-label="Select {{ p.name }}"></td>
+            <td>
+              {% if p.product_image %}<img src="{{ p.product_image.url }}" alt="" class="product-thumb mr-2">{% endif %}
+              {{ p.name }}
+            </td>
+            <td>{{ p.seller.get_name }}</td>
+            <td>{{ p.category.title }}</td>
+            <td>$ {{ p.price }}</td>
+            <td>{{ p.quantity }}</td>
+            <td>
+              {% if p.status == 'pending' %}<span class="badge badge-warning">Pending</span>
+              {% else %}<span class="badge badge-info">Changes requested</span>{% endif %}
+            </td>
+            <td><small class="text-muted">{{ p.created|date:"j M Y H:i" }}</small></td>
+            <td class="text-right">
+              <a href="{% url 'dashboard:product_review' p.slug %}" class="btn btn-sm btn-outline-primary my-0">Review</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-body py-3 border-top">
+      <div class="form-row align-items-end">
+        <div class="col-auto">
+          <button type="submit" name="action" value="approve" class="btn btn-success btn-sm m-0">
+            <i class="fas fa-check mr-1" aria-hidden="true"></i>Approve selected
+          </button>
+        </div>
+        <div class="col-md-5">
+          <input type="text" name="reason" class="form-control form-control-sm"
+                 placeholder="Reason (required to reject — shown to the seller)">
+        </div>
+        <div class="col-auto">
+          <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm m-0">
+            <i class="fas fa-times mr-1" aria-hidden="true"></i>Reject selected
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% else %}
+<div class="card"><div class="card-body text-center text-muted py-5">
+  <i class="fas fa-clipboard-check fa-3x mb-3" aria-hidden="true"></i>
+  <h2 class="h5">The approval queue is empty</h2>
+  <p class="mb-0">New product submissions will appear here for review.</p>
+</div></div>
+{% endif %}
+{% endblock %}

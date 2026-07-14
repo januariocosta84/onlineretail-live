@@ -1,0 +1,109 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Users{% endblock %}
+
+{% block dash_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 page-header-bar">
+  <h1 class="h4 mb-0">Users <small class="text-muted h6">({{ page_obj.paginator.count }})</small></h1>
+  <a class="btn btn-outline-secondary btn-sm m-0"
+     href="?{% if querystring %}{{ querystring }}&{% endif %}export=csv">
+    <i class="fas fa-file-csv mr-1" aria-hidden="true"></i>Export CSV
+  </a>
+</div>
+
+<form method="get" class="card mb-3">
+  <div class="card-body py-3">
+    <div class="form-row">
+      <div class="col-md-6 mb-2">
+        <input type="search" name="q" value="{{ q }}" class="form-control form-control-sm"
+               placeholder="Search username, name or email" aria-label="Search users">
+      </div>
+      <div class="col-md-4 mb-2">
+        <select name="role" class="browser-default custom-select custom-select-sm" aria-label="Filter by role">
+          <option value="">All roles</option>
+          <option value="buyer" {% if role == 'buyer' %}selected{% endif %}>Buyer only</option>
+          <option value="seller" {% if role == 'seller' %}selected{% endif %}>Seller only</option>
+          <option value="both" {% if role == 'both' %}selected{% endif %}>Buyer &amp; Seller</option>
+          <option value="staff" {% if role == 'staff' %}selected{% endif %}>Staff</option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-sm btn-block m-0">Filter</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>User</th><th>Email</th><th>Roles</th><th>Status</th>
+          <th>Joined</th><th>Last login</th><th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in page_obj.object_list %}
+        <tr>
+          <td>
+            <strong>{{ u.username }}</strong>
+            <div class="small text-muted">{{ u.get_full_name }}</div>
+          </td>
+          <td class="small">{{ u.email|default:"—" }}</td>
+          <td>
+            {% if u.is_superuser %}<span class="badge badge-dark">Superuser</span>
+            {% elif u.is_staff %}<span class="badge badge-dark">Staff</span>{% endif %}
+            {% if u.buyer %}<span class="badge badge-info">Buyer</span>{% endif %}
+            {% if u.seller %}<span class="badge badge-primary">Seller</span>{% endif %}
+            {% if u.courier %}<span class="badge badge-warning">Courier</span>{% endif %}
+          </td>
+          <td>
+            {% if u.is_active %}<span class="badge badge-success">Active</span>
+            {% else %}<span class="badge badge-danger">Suspended</span>{% endif %}
+          </td>
+          <td><small class="text-muted">{{ u.date_joined|date:"j M Y" }}</small></td>
+          <td><small class="text-muted">{{ u.last_login|date:"j M Y H:i"|default:"never" }}</small></td>
+          <td class="text-right text-nowrap">
+            {% if not u.is_staff %}
+            {% if not u.buyer %}
+            <form method="post" action="{% url 'dashboard:user_grant_role' u.pk %}" class="d-inline">
+              {% csrf_token %}<input type="hidden" name="role" value="buyer">
+              <button type="submit" class="btn btn-sm btn-outline-info my-0" title="Grant buyer role">+Buyer</button>
+            </form>
+            {% endif %}
+            {% if not u.seller %}
+            <form method="post" action="{% url 'dashboard:user_grant_role' u.pk %}" class="d-inline">
+              {% csrf_token %}<input type="hidden" name="role" value="seller">
+              <button type="submit" class="btn btn-sm btn-outline-primary my-0" title="Grant seller role">+Seller</button>
+            </form>
+            {% endif %}
+            {% if not u.courier %}
+            <form method="post" action="{% url 'dashboard:user_grant_role' u.pk %}" class="d-inline">
+              {% csrf_token %}<input type="hidden" name="role" value="courier">
+              <button type="submit" class="btn btn-sm btn-outline-warning my-0" title="Grant courier role">+Courier</button>
+            </form>
+            {% endif %}
+            {% endif %}
+            <a href="/admin/auth/user/{{ u.pk }}/password/" class="btn btn-sm btn-outline-secondary my-0"
+               title="Reset password" target="_blank" rel="noopener">
+              <i class="fas fa-key" aria-hidden="true"></i>
+            </a>
+            <form method="post" action="{% url 'dashboard:user_toggle_active' u.pk %}" class="d-inline"
+                  onsubmit="return confirm('{% if u.is_active %}Suspend{% else %}Reactivate{% endif %} account “{{ u.username }}”?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm {% if u.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %} my-0"
+                      title="{% if u.is_active %}Suspend{% else %}Activate{% endif %}">
+                <i class="fas {% if u.is_active %}fa-user-slash{% else %}fa-user-check{% endif %}" aria-hidden="true"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No users match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'shared/pagination.html' %}
+{% endblock %}

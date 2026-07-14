@@ -1,152 +1,138 @@
 {% load i18n %}
+{% load static %}
 <header>
-    <div class="container-xl">  <div class="row jumbotron white border-bottom mb-0">
-            <div class="col-md-2 m-1">
-                <!-- Grid column -->
-                    <a href="{% url 'olretail:index'%}">
-                        <img src="/static/mdb/img/logo_ortl.jpeg" height="60">
-                    </a>
-                <!-- Grid column -->
+  <div class="container-xl">
+    <div class="row jumbotron white border-bottom mb-0 py-3 align-items-center">
+      <div class="col-md-2 my-1">
+        <a href="{% url 'olretail:index' %}" aria-label="{% trans 'Home' %}">
+          <img src="{% static 'mdb/img/logo.jpg' %}" height="180" alt="TimorMart logo">
+        </a>
+      </div>
+      <div class="col-md-6 my-1">
+        <form action="{% url 'olretail:search' %}" method="get" role="search">
+          <div class="md-form md-outline input-group md-input-group w-100 my-0">
+            <input type="search" class="form-control mb-0" name="q" value="{{ query|default:'' }}"
+                   placeholder="{% trans 'Search by product' %}" aria-label="{% trans 'Search by product' %}">
+            <div class="input-group-append">
+              <button class="btn btn-primary btn-md px-3 m-0" type="submit">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline"> {% trans 'Search' %}</span>
+              </button>
             </div>
-            <div class="col-md-5">
-                <!-- Grid column -->
-    
-                <form action="{% url 'olretail:search' %}" method="get">
-    
-                    <div class="md-form md-outline input-group md-input-group w-100">
-    
-                        <!-- <div class="select-outline">
-                            <select class="mdb-select md-form md-outline my-0">
-                                <option value="">All type</option>
-                                <option value="codex">Special</option>
-                                <option value="comments">Only best</option>
-                                <option value="content">Latest</option>
-                            </select>
-                        </div> -->
-    
-                        <input type="text" class="form-control mb-0" name="search" placeholder='{%trans "Search by product"%}''>
-    
-                        <div class="input-group-append">
-                            <button class="btn btn-primary btn-md px-3" type="submit">
-                                <i class="fa fa-search"></i>{% trans 'Search'%} 
-                            </button>
-                        </div>
-                        <div>
-    
-                        </div>
-                    </div>
-    
-                </form>
-                <!-- Grid column -->
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 my-1 text-md-right">
+        {% if user.is_authenticated %}
+        <span class="text-muted small mr-2">
+          <i class="fas fa-user-circle" aria-hidden="true"></i>
+          {{ user.get_full_name|default:user.username }}
+          {% if user.is_staff %}<span class="badge badge-dark">{% trans 'Administrator' %}</span>
+          {% elif is_buyer and is_seller %}<span class="badge badge-light border">{% trans 'Buyer & Seller' %}</span>
+          {% elif is_seller %}<span class="badge badge-light border">{% trans 'Seller' %}</span>
+          {% elif is_buyer %}<span class="badge badge-light border">{% trans 'Buyer' %}</span>{% endif %}
+        </span>
+        {% if user.is_staff %}
+        <a href="{% url 'dashboard:overview' %}" class="btn btn-sm btn-dark my-0">
+          <i class="fas fa-tools mr-1" aria-hidden="true"></i>{% trans 'Admin' %}
+        </a>
+        {% endif %}
+        {% if is_seller %}
+        <a href="{% url 'olretail:list' %}" class="btn btn-sm btn-outline-primary my-0">{% trans 'My products' %}</a>
+        {% endif %}
+        <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-outline-danger my-0">{% trans 'Log out' %}</button>
+        </form>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-outline-primary my-0">{% trans 'Sign in' %}</a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-primary my-0">{% trans 'Sign up' %}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg sticky-top navbar-light white">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="{% trans 'Toggle navigation' %}">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav align-items-start">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+               aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-bars text-muted mr-2" aria-hidden="true"></i>{% trans 'Categories' %}
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'olretail:index' %}">{% trans 'All' %}</a>
+              {% for category in categories %}
+              <a class="dropdown-item" href="{% url 'olretail:index' %}?category={{ category.slug }}">{{ category.title }}</a>
+              {% endfor %}
             </div>
-            <div class="col-md-4 mt-4 ">
-                <!-- Icons -->
-                    {%if user.is_authenticated %}
-                        
-                        <!-- <a href="{% url 'olretail:list'%}">
-                            <small class="text-success">Welcome <strong>{{user.first_name}} {{user.last_name}}</strong></small>
-                        </a>
-                        <a href="{% url 'accounts:logout'%}"><small class="text-success"> Logout</small>
-                        </a> -->
-                        {% else %}
-                        <a href="{% url 'accounts:login'%}">
-                            <small class="text-dark">{% trans 'Sign in'%} </small>
-                        </a>
-                        |
-                        <a href="{%url 'accounts:register'%}">
-                            <small class="text-dark">{%trans 'Sign up'%} </small>
-                        </a>
-                        {% endif %}
-    
-                </div>
-        </div></div>
+          </li>
+          {% if is_seller %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:create_product' %}">
+              <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans 'Add product' %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:list' %}">{% trans 'My products' %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:seller_orders' %}">{% trans 'Orders' %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:seller_balance' %}">{% trans 'Earnings' %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:seller_payment_settings' %}">{% trans 'Payment Settings' %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:seller_subscription' %}">
+              <i class="fas fa-crown mr-1" aria-hidden="true"></i>{% trans 'Subscription' %}
+            </a>
+          </li>
+          {% endif %}
+          {% if is_courier %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:courier_deliveries' %}">
+              <i class="fas fa-truck mr-1" aria-hidden="true"></i>{% trans 'My Deliveries' %}
+            </a>
+          </li>
+          {% endif %}
+          {% if is_buyer %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:cart' %}">
+              <i class="fas fa-shopping-cart mr-1" aria-hidden="true"></i>{% trans 'Cart' %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'olretail:buyer_orders' %}">{% trans 'My Orders' %}</a>
+          </li>
+          {% endif %}
+        </ul>
 
-    <nav class="navbar navbar-expand-lg sticky-top navbar-light">
-
-        <div class="container-xl">
-
-            <!-- Collapse button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav1"
-                aria-controls="basicExampleNav1" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Links -->
-            <div class="collapse navbar-collapse" id="basicExampleNav1">
-
-                <!-- Left -->
-                <ul class="navbar-nav align-items-start">
-                    {%if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'olretail:create_product'%}">Create new Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'olretail:list'%}">Your Product List</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">Welcome {{user.first_name}} {{user.last_name}} </a>
-                            <div class="dropdown-menu dropdown-menu-lg-right">
-                                <a class="dropdown-item" href="{% url 'accounts:logout'%}">Log out</a>
-                                <a class="dropdown-item" href="#">Change Password</a>
-                                <!--<a class="dropdown-item" href="#">Indonesia</a> -->
-                            </div>
-                        </li>
-                    {% else %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><i
-                                class="fas fa-bars text-muted mr-2"></i>{%trans 'Categories'%}  </a>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'olretail:index' %}">{% trans 'All'%}</a>
-                            {% for category in categories%}
-                            <a class="dropdown-item"
-                                href="{% url 'olretail:index'%}?category={{category.slug}}">{{category.title}}</a>
-                            {% endfor %}
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{% trans 'Busines & Services'%}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{% trans 'Trade shows'%}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{% trans 'Services'%}</a>
-                    </li>
-                    
-                </ul>
-                
-                <!-- Right -->
-                <ul class="navbar-nav ml-md-auto align-items-start">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{% trans 'Get the app'%}</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                       
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown">{%trans 'Select Languages'%}</a>
-                        <div class="dropdown-menu dropdown-menu-lg-right">
-                            {% get_current_language as LANGUAGE_CODE %}
-                            {% get_available_languages as LANGUAGES %}
-                            {% get_language_info_list for LANGUAGES as languages %}
-                            {% for language in languages %}
-                            {%if language.code == 'tt'%}
-                            <a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">Tetum</a>
-                            {% else%}
-                            <a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">English</a>
-                            {% endif %} 
-                            {% endfor %}
-                          
-                    
-                        </div>
-                    </li>
-                </ul>
-                {% endif %}
-
+        <ul class="navbar-nav ml-md-auto align-items-start">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+               aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-globe mr-1" aria-hidden="true"></i>{% trans 'Language' %}
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg-right">
+              <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <button type="submit" name="language" value="en" class="dropdown-item">English</button>
+                <button type="submit" name="language" value="tet" class="dropdown-item">Tetum</button>
+              </form>
             </div>
-            <!-- Links -->
-
-        </div>
-
-    </nav>
-    <!-- Navbar -->
-
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </header>

@@ -1,0 +1,103 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Shopping Cart" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-shopping-cart mr-2"></i>{% trans "Shopping Cart" %}
+        </h1>
+      </div>
+    </div>
+
+    {% if cart_items %}
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>{% trans "Product" %}</th>
+                  <th class="text-center">{% trans "Price" %}</th>
+                  <th class="text-center">{% trans "Qty" %}</th>
+                  <th class="text-right">{% trans "Total" %}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <td>
+                    <a href="{{ item.product.get_absolute_url }}" class="text-dark font-weight-bold">
+                      {{ item.product.name }}
+                    </a>
+                    <br>
+                    <small class="text-muted">Seller: {{ item.product.seller.user.get_full_name }}</small>
+                  </td>
+                  <td class="text-center">${{ item.product.price }}</td>
+                  <td>
+                    <form method="post" action="{% url 'olretail:update_cart' item.id %}" class="form-inline">
+                      {% csrf_token %}
+                      <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.quantity }}" class="form-control form-control-sm" style="width: 60px;">
+                      <button type="submit" class="btn btn-sm btn-secondary ml-2">{% trans "Update" %}</button>
+                    </form>
+                  </td>
+                  <td class="text-right font-weight-bold">${{ item.line_total }}</td>
+                  <td>
+                    <form method="post" action="{% url 'olretail:remove_from_cart' item.id %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="{% trans 'Remove' %}">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+            <div class="card-body">
+              <h5 class="card-title mb-3">{% trans "Order Summary" %}</h5>
+              
+              <div class="d-flex justify-content-between mb-2">
+                <span>{% trans "Subtotal" %}:</span>
+                <span class="font-weight-bold">${{ cart_total }}</span>
+              </div>
+              
+              <small class="text-muted d-block mb-3">
+                {% trans "Commission (15%) and payment fees will be calculated at checkout." %}
+              </small>
+              
+              <div class="d-flex gap-2">
+                <a href="{% url 'olretail:checkout' %}" class="btn btn-primary btn-block">
+                  <i class="fas fa-lock mr-2"></i>{% trans "Proceed to Checkout" %}
+                </a>
+                <a href="{% url 'olretail:index' %}" class="btn btn-outline-secondary">
+                  {% trans "Continue Shopping" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <i class="fas fa-info-circle mr-3 fa-2x"></i>
+        <div>
+          <strong>{% trans "Your cart is empty." %}</strong><br>
+          <a href="{% url 'olretail:index' %}">{% trans "Start shopping now" %}</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

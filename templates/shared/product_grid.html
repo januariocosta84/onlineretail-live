@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+<div class="row">
+  {% for p in page_obj.object_list %}
+  <div class="col-6 col-md-4 col-xl-3 mb-4">
+    <div class="card product-card">
+      <div class="view zoom overlay">
+        {% if p.product_image %}
+        <img class="card-img-top" src="{{ p.product_image.url }}" alt="{{ p.name }}" loading="lazy">
+        {% else %}
+        <img class="card-img-top" src="{% static 'mdb/img/t-shirt.jpg' %}" alt="{% trans 'No image available' %}" loading="lazy">
+        {% endif %}
+        <a href="{{ p.get_absolute_url }}" aria-label="{{ p.name }}">
+          <div class="mask"></div>
+        </a>
+      </div>
+      <div class="card-body pb-2">
+        <h2 class="h6 mb-1 text-truncate">
+          <a href="{{ p.get_absolute_url }}" class="text-dark">{{ p.name }}</a>
+        </h2>
+        <p class="mb-1"><strong class="text-danger">$ {{ p.price|intcomma }}</strong></p>
+        <p class="mb-1 small text-muted">
+          <a href="{{ p.category.get_absolute_url }}" class="text-muted">{{ p.category.title }}</a>
+          · {{ p.get_condition_display }}
+        </p>
+        <p class="mb-1 small text-muted text-truncate">
+          <i class="fa fa-store" aria-hidden="true"></i>
+          {{ p.seller.get_name }}
+        </p>
+        <p class="mb-0 small text-muted">
+          <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
+          {{ p.item_location }}, {{ p.country }}
+        </p>
+        {% if not p.in_stock %}
+        <span class="badge badge-secondary mt-1">{% trans 'Out of stock' %}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="text-center text-muted py-5">
+      <i class="fas fa-box-open fa-3x mb-3" aria-hidden="true"></i>
+      <h3 class="h5">{% trans 'No products found' %}</h3>
+      <p>{% trans 'Try a different search term or category.' %}</p>
+      <a href="{% url 'olretail:index' %}" class="btn btn-outline-primary btn-sm">{% trans 'Browse all products' %}</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>

@@ -1,24 +1,52 @@
 {% extends 'shared/base.html' %}
-{% load static %}
-{% load widget_tweaks %}
-{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{{ title }} — TimorMart{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="row mt-1">
-        <div class="col">
-                <h5>Create New Product</h5>
-                <hr>
-                <form method="POST" enctype="multipart/form-data" autocomplete="off">
-                    <!-- Security token -->
-                    {% csrf_token %}
-                    {{product_form|crispy}}
-               
-                    <input type="submit" value="Submit" class="btn btn-indigo p-1">
-                    <br>
-                </form>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card my-4">
+        <div class="card-header">
+          <h1 class="h5 mb-0">{{ title }}</h1>
         </div>
+        <div class="card-body">
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+          {% if subscription.is_paid_active %}
+          <div class="alert alert-success py-2 small">
+            <i class="fas fa-crown mr-1" aria-hidden="true"></i>
+            {% trans "You're subscribed — this listing will publish immediately, no approval wait." %}
+          </div>
+          {% endif %}
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="row">
+              {% for field in form %}
+              <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %} form-group">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'olretail:list' %}" class="btn btn-outline-secondary btn-sm">{% trans 'Cancel' %}</a>
+              <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-     
+  </div>
 </div>
-
 {% endblock %}

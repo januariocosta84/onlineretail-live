@@ -1,0 +1,280 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sign Up" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- Page Header -->
+        <div class="mb-5">
+          <h1 class="h2 page-header-bar mb-2">
+            <i class="fas fa-user-plus mr-2"></i>{% trans "Create Your Account" %}
+          </h1>
+          <p class="text-muted">
+            {% trans "Join thousands of buyers and sellers on TimorMart." %}
+          </p>
+        </div>
+
+        <!-- Messages -->
+        {% include "shared/messages.html" %}
+
+        <form method="post" class="card shadow-sm border-0" novalidate>
+          {% csrf_token %}
+          <div class="card-body p-4 p-md-5">
+
+            <!-- Account Type Selection -->
+            <div class="mb-4">
+              <h5 class="mb-3 font-weight-bold">
+                {{ form.account_type.label }}
+              </h5>
+              
+              {% if form.account_type.errors %}
+                <div class="alert alert-danger alert-sm mb-3">
+                  {{ form.account_type.errors }}
+                </div>
+              {% endif %}
+
+              <div class="row">
+                {% for choice_value, choice_label in form.account_type.field.choices %}
+                <div class="col-md-6 mb-3">
+                  <label class="custom-control custom-radio cursor-pointer h-100">
+                    <input type="radio" name="account_type" value="{{ choice_value }}"
+                           class="custom-control-input"
+                           {% if form.account_type.value == choice_value %}checked{% endif %}>
+                    <div class="custom-control-label d-flex align-items-start cursor-pointer">
+                      <div class="ml-2">
+                        <div class="font-weight-bold text-dark">
+                          {{ choice_label }}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Personal Information -->
+            <h5 class="mb-3 font-weight-bold">
+              <i class="fas fa-user text-primary mr-2"></i>{% trans "Personal Information" %}
+            </h5>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="{{ form.first_name.id_for_label }}">
+                  {{ form.first_name.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.first_name.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="{{ form.last_name.id_for_label }}">
+                  {{ form.last_name.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.last_name.errors }}
+                  </small>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.email.id_for_label }}">
+                {{ form.email.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.email }}
+              <small class="form-text text-muted">
+                {% trans "We'll use this to verify your account." %}
+              </small>
+              {% if form.email.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.email.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.mobile.id_for_label }}">
+                {{ form.mobile.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.mobile }}
+              <small class="form-text text-muted">
+                {% trans "Local or international format (e.g., 7012345 or +670 7012345)." %}
+              </small>
+              {% if form.mobile.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.mobile.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.address.id_for_label }}">
+                {{ form.address.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.address }}
+              <small class="form-text text-muted">
+                {% trans "Your primary delivery or contact address." %}
+              </small>
+              {% if form.address.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.address.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Account Credentials -->
+            <h5 class="mb-3 font-weight-bold">
+              <i class="fas fa-lock text-primary mr-2"></i>{% trans "Account Credentials" %}
+            </h5>
+
+            <div class="form-group">
+              <label for="{{ form.username.id_for_label }}">
+                {{ form.username.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.username }}
+              <small class="form-text text-muted">
+                {% trans "Letters, digits and @/./+/-/_ only. 30 characters or fewer." %}
+              </small>
+              {% if form.username.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.username.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.password1.id_for_label }}">
+                {{ form.password1.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.password1 }}
+              <small class="form-text text-muted d-block mt-1">
+                {% trans "Your password must be at least 8 characters long and can't be entirely numeric." %}
+              </small>
+              {% if form.password1.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.password1.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.password2.id_for_label }}">
+                {{ form.password2.label }}
+                <span class="text-danger">*</span>
+              </label>
+              {{ form.password2 }}
+              <small class="form-text text-muted">
+                {% trans "Enter the same password to verify." %}
+              </small>
+              {% if form.password2.errors %}
+                <small class="form-text text-danger d-block mt-1">
+                  {{ form.password2.errors }}
+                </small>
+              {% endif %}
+            </div>
+
+            <!-- Help Text for Password Requirements -->
+            {% if form.help_texts.password1 %}
+            <div class="alert alert-info alert-sm mb-3" role="alert">
+              <small>
+                <strong>{% trans "Password requirements:" %}</strong>
+                <ul class="mb-0 pl-3 mt-1">
+                  <li>{% trans "At least 8 characters long" %}</li>
+                  <li>{% trans "Can't be entirely numeric" %}</li>
+                  <li>{% trans "Can't be the same as your username" %}</li>
+                </ul>
+              </small>
+            </div>
+            {% endif %}
+
+            <hr class="my-4">
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary btn-lg btn-block font-weight-bold">
+              <i class="fas fa-check mr-2"></i>{% trans "Create Account" %}
+            </button>
+
+            <!-- Non-field Errors -->
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mt-3 mb-0">
+                {% for error in form.non_field_errors %}
+                  <p class="mb-1">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </form>
+
+        <!-- Sign In Link -->
+        <div class="text-center mt-4">
+          <p class="text-muted">
+            {% trans "Already have an account?" %}
+            <a href="{% url 'accounts:login' %}" class="text-primary font-weight-bold">
+              {% trans "Sign in here" %}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  .custom-radio .custom-control-label {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .custom-radio .custom-control-input:checked ~ .custom-control-label {
+    border-color: #1266f1;
+    background-color: #f0f5ff;
+  }
+
+  .form-control {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .form-control:focus {
+    border-color: #1266f1;
+    box-shadow: 0 0 0 0.2rem rgba(18, 102, 241, 0.1);
+  }
+
+  .alert-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 1.5rem !important;
+    }
+  }
+</style>
+{% endblock %}

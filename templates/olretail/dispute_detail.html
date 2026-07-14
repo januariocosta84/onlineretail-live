@@ -1,0 +1,137 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Dispute" %} {{ dispute.dispute_id }} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-exclamation-triangle mr-2"></i>{% trans "Dispute" %} {{ dispute.dispute_id }}
+        </h1>
+      </div>
+    </div>
+
+    {% include "shared/messages.html" %}
+
+    <div class="row">
+      <div class="col-lg-8">
+        <!-- Status -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">{% trans "Status" %}</h5>
+              {% if dispute.status == 'open' %}
+                <span class="badge badge-warning">{{ dispute.get_status_display }}</span>
+              {% elif dispute.status == 'seller_response' %}
+                <span class="badge badge-info">{{ dispute.get_status_display }}</span>
+              {% elif dispute.status == 'under_review' %}
+                <span class="badge badge-primary">{{ dispute.get_status_display }}</span>
+              {% elif dispute.status == 'resolved' %}
+                <span class="badge badge-success">{{ dispute.get_status_display }}</span>
+              {% else %}
+                <span class="badge badge-secondary">{{ dispute.get_status_display }}</span>
+              {% endif %}
+            </div>
+            {% if dispute.status == 'open' %}
+            <small class="text-muted d-block mt-2">
+              {% trans "Seller response due by" %}: {{ dispute.seller_response_deadline|date:"M d, Y H:i" }}
+            </small>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Buyer's Report -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Buyer's Report" %}</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>{% trans "Reason for dispute" %}:</strong> {{ dispute.get_reason_display }}</p>
+            <p><strong>{% trans "Description" %}:</strong><br>{{ dispute.description|linebreaksbr }}</p>
+            {% if dispute.buyer_evidence %}
+            <p><strong>{% trans "Evidence (photos, messages, etc.)" %}:</strong><br>{{ dispute.buyer_evidence|linebreaksbr }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Seller's Response -->
+        {% if dispute.seller_response %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Your Response" %}</h5>
+          </div>
+          <div class="card-body">
+            <p>{{ dispute.seller_response|linebreaksbr }}</p>
+          </div>
+        </div>
+        {% elif is_seller and dispute.status == 'open' %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Provide your response with evidence..." %}</h5>
+          </div>
+          <div class="card-body">
+            {% if deadline_passed %}
+              <div class="alert alert-danger mb-0">
+                {% trans "Response deadline has passed." %}
+              </div>
+            {% else %}
+            <form method="post" action="{% url 'olretail:seller_respond_dispute' dispute.id %}" novalidate>
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="{{ form.seller_response.id_for_label }}" class="font-weight-bold">
+                  {{ form.seller_response.label }}
+                </label>
+                {{ form.seller_response }}
+                {% if form.seller_response.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.seller_response.errors }}</small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.seller_response.help_text }}</small>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane mr-2"></i>{% trans "Your Response" %}
+              </button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Resolution -->
+        {% if dispute.status == 'resolved' %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Resolution" %}</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>{{ dispute.get_resolution_display }}</strong></p>
+            {% if dispute.refund_amount %}
+            <p>{% trans "Refund Amount" %}: ${{ dispute.refund_amount }}</p>
+            {% endif %}
+            <small class="text-muted">{% trans "Resolved on" %}: {{ dispute.resolved_at|date:"M d, Y H:i" }}</small>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h6 class="mb-0">{% trans "Order" %}</h6>
+          </div>
+          <div class="card-body">
+            <p class="mb-1"><strong>{{ dispute.order.product.name }}</strong></p>
+            <p class="text-muted mb-2">{% trans "Order" %}: {{ dispute.order.order_number }}</p>
+            <a href="{% url 'olretail:order_detail' dispute.order.id %}" class="btn btn-sm btn-outline-primary btn-block">
+              {% trans "View Order" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

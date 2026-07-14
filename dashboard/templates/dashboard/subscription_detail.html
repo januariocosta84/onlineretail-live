@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Subscription request — {{ sub_request.seller.get_name }}{% endblock %}
+
+{% block dash_content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent px-0 mb-2">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard:subscriptions' %}">Subscriptions</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ sub_request.seller.get_name }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span class="font-weight-bold">{{ sub_request.get_plan_display }} — ${{ sub_request.amount }}</span>
+        {% if sub_request.status == 'pending' %}<span class="badge badge-warning">{{ sub_request.get_status_display }}</span>
+        {% elif sub_request.status == 'approved' %}<span class="badge badge-success">{{ sub_request.get_status_display }}</span>
+        {% else %}<span class="badge badge-danger">{{ sub_request.get_status_display }}</span>{% endif %}
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Seller</dt>
+          <dd class="col-sm-9">{{ sub_request.seller.get_name }} ({{ sub_request.seller.user.username }})</dd>
+          <dt class="col-sm-3">Plan</dt>
+          <dd class="col-sm-9">{{ sub_request.get_plan_display }}</dd>
+          <dt class="col-sm-3">Amount</dt>
+          <dd class="col-sm-9">${{ sub_request.amount }}</dd>
+          <dt class="col-sm-3">Payment reference</dt>
+          <dd class="col-sm-9">{{ sub_request.payment_reference|linebreaks }}</dd>
+          <dt class="col-sm-3">Submitted</dt>
+          <dd class="col-sm-9">{{ sub_request.created_at|date:"j M Y H:i" }}</dd>
+          {% if sub_request.reviewed_at %}
+          <dt class="col-sm-3">Reviewed</dt>
+          <dd class="col-sm-9">{{ sub_request.reviewed_at|date:"j M Y H:i" }} by {{ sub_request.reviewed_by }}</dd>
+          {% endif %}
+          {% if sub_request.admin_notes %}
+          <dt class="col-sm-3">Admin notes</dt>
+          <dd class="col-sm-9 text-danger">{{ sub_request.admin_notes }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-3">
+    <div class="card mb-3">
+      <div class="card-header py-2 font-weight-bold">Seller</div>
+      <div class="card-body py-3">
+        <p class="mb-1"><strong>{{ sub_request.seller.get_name }}</strong></p>
+        <p class="mb-1 small"><i class="fas fa-envelope mr-1" aria-hidden="true"></i>{{ sub_request.seller.user.email|default:"—" }}</p>
+        <p class="mb-1 small"><i class="fas fa-phone mr-1" aria-hidden="true"></i>{{ sub_request.seller.mobile }}</p>
+        <p class="mb-0 small text-muted">
+          {% if subscription.is_paid_active %}
+          Currently on {{ subscription.get_plan_display }}, active until {{ subscription.expires_at|date:"j M Y" }}.
+          {% else %}
+          Currently on the free plan — {{ subscription.products_used }} listing(s) used.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Review</div>
+      <div class="card-body py-3">
+        <p class="small text-muted">
+          This only updates records here — confirm the transfer landed in the
+          platform account yourself before approving.
+        </p>
+
+        {% if sub_request.status == 'pending' %}
+        <form method="post" action="{% url 'dashboard:subscription_action' sub_request.pk %}" class="mb-2"
+              onsubmit="return confirm('Confirm payment was received and activate this subscription?');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="approve">
+          <button type="submit" class="btn btn-success btn-sm btn-block m-0">
+            <i class="fas fa-check mr-1" aria-hidden="true"></i>Confirm payment &amp; activate
+          </button>
+        </form>
+        <form method="post" action="{% url 'dashboard:subscription_action' sub_request.pk %}"
+              onsubmit="return this.reason.value.trim() !== '' || (alert('Please provide a reason — it is kept on record.'), false);">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="reject">
+          <textarea name="reason" class="form-control form-control-sm mb-2" rows="2"
+                    placeholder="Reason for rejecting"></textarea>
+          <button type="submit" class="btn btn-outline-danger btn-sm btn-block m-0">
+            <i class="fas fa-times mr-1" aria-hidden="true"></i>Reject
+          </button>
+        </form>
+        {% elif sub_request.status == 'approved' %}
+        <p class="text-success small mb-0"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>Approved on {{ sub_request.reviewed_at|date:"j M Y" }}.</p>
+        {% else %}
+        <p class="text-danger small mb-0"><i class="fas fa-exclamation-circle mr-1" aria-hidden="true"></i>Rejected on {{ sub_request.reviewed_at|date:"j M Y" }}.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

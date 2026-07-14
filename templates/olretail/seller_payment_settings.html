@@ -1,0 +1,48 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Payment Settings" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="h2 page-header-bar">
+              <i class="fas fa-wallet mr-2"></i>{% trans "Payment Settings" %}
+            </h1>
+          </div>
+        </div>
+
+        {% include "shared/messages.html" %}
+
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <p class="text-muted">
+              {% trans "When a buyer chooses to pay by bank/mobile transfer, they'll see these details to send you the money directly. Leave this blank to disable that payment option for your products." %}
+            </p>
+            <form method="post" novalidate>
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="{{ form.payment_instructions.id_for_label }}" class="font-weight-bold">
+                  {{ form.payment_instructions.label }}
+                </label>
+                {{ form.payment_instructions }}
+                {% if form.payment_instructions.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.payment_instructions.errors }}</small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.payment_instructions.help_text }}</small>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-1"></i>{% trans "Save" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

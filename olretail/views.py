@@ -1,260 +1,316 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.urls import reverse
-from django.db.models import Sum
-from django.contrib.humanize.templatetags.humanize import intcomma
+import logging
+from urllib.parse import quote
 
-
-from .decorators import *
 from django.contrib import messages
-
-#-------Import Models
-from .models import Product, Seller, Category, Country, City, Comment
-#------------import forms
-from .forms import SellerUserForm, SellerForm, ProductForm, CommentForm
-
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
-
-from django.contrib.auth.decorators import login_required
-#--------User Group
-
-from django.contrib.auth.models import Group
-
-#--------- import Paginator
 from django.core.paginator import Paginator
+from django.db.models import DecimalField, ExpressionWrapper, F, Q, Sum
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 
-# Create your views here.
+from .decorators import seller_required
+from .forms import CommentForm, ProductForm
+from .models import Category, FREE_PRODUCT_LIMIT, Product, ProductStatus, SellerSubscription
+
+logger = logging.getLogger(__name__)
+
+PRODUCTS_PER_PAGE = 12
+
+SORT_OPTIONS = {
+    "newest": "-created",
+    "price_asc": "price",
+    "price_desc": "-price",
+    "name": "name",
+}
 
 
-class IndexView(TemplateView):
-    template_name = 'olretail/index.html'
-    paginate_by = 2
+def index(request):
+    """Catalog: approved products with category filter, search and sorting."""
+    products = Product.objects.filter(status=ProductStatus.APPROVED).select_related(
+        "category", "item_location", "country", "seller__user"
+    )
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        category = self.request.GET.get('category')
-        if category == None:
-            context['product'] = Product.objects.all().order_by('-price')
+    active_category = None
+    category_slug = request.GET.get("category")
+    if category_slug:
+        active_category = Category.objects.filter(slug=category_slug).first()
+        if active_category:
+            products = products.filter(category=active_category)
         else:
-            context['product'] = Product.objects.filter(
-                category__slug=category)
-        context['categories'] = Category.objects.all().order_by('title')
-        return context
+            messages.warning(request, _("That category does not exist."))
+
+    query = (request.GET.get("q") or request.GET.get("search") or "").strip()
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+
+    sort = request.GET.get("sort", "newest")
+    products = products.order_by(SORT_OPTIONS.get(sort, "-created"))
+
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    # Preserve filters across pagination links.
+    params = request.GET.copy()
+    params.pop("page", None)
+    querystring = params.urlencode()
+
+    # Admin-featured products headline the carousel; fall back to the page.
+    featured = [
+        p
+        for p in Product.objects.filter(status=ProductStatus.APPROVED, featured=True)
+        .exclude(product_image="")[:3]
+        if p.product_image
+    ] or [p for p in page_obj.object_list if p.product_image][:3]
+
+    return render(
+        request,
+        "olretail/index.html",
+        {
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "active_category": active_category,
+            "query": query,
+            "sort": sort,
+            "querystring": querystring,
+            "featured": featured,
+            "result_count": paginator.count,
+        },
+    )
 
 
-class DetailsView(TemplateView):
-    template_name = 'olretail/details.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = self.kwargs['slug']
-        details = Product.objects.get(slug=slug)
-        context['details'] = details
-        context['categories'] = Category.objects.all().order_by('title')
-        context['comments'] = Comment.objects.all()
-        return context
+def search(request):
+    """Legacy /search/ endpoint — same catalog view, kept for old links."""
+    return index(request)
 
 
-class CategoryView(TemplateView):
-    template_name = 'olretail/category.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        cat = Category.objects.all()
-        context['product'] = Product.objects.all()
-        return context
+def category_redirect(request, id):
+    """Legacy /category/<id> endpoint — redirect to the filtered catalog."""
+    category = get_object_or_404(Category, id=id)
+    return redirect(f"/?category={category.slug}")
 
 
-class LoginView(TemplateView):
-    template_name = 'olretail/login.html'
+def product_detail(request, slug):
+    product = get_object_or_404(
+        Product.objects.select_related("category", "item_location", "country", "seller__user"),
+        slug=slug,
+    )
+    from accounts.roles import is_seller as user_is_seller
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['product'] = Product.objects.all().order_by('-price')
-        context['categories'] = Category.objects.all().order_by('title')
-        return context
+    is_owner = user_is_seller(request.user) and product.seller_id == request.user.seller.id
+    if not product.approved and not (is_owner or request.user.is_staff):
+        # Unapproved listings are only visible to their owner and staff.
+        messages.info(request, _("That product is awaiting approval."))
+        return redirect("olretail:index")
 
+    # Commenting is a buyer capability (role-based access control).
+    from accounts.roles import is_buyer
 
-class RegisterView(TemplateView):
-    template_name = 'olretail/register.html'
+    can_comment = is_buyer(request.user)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['product'] = Product.objects.all().order_by('-price')
-        context['categories'] = Category.objects.all().order_by('title')
-        return context
-
-
-class ListaView(TemplateView):
-    template_name = 'olretail/lista.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['product'] = Product.objects.all().order_by('id')
-        context['categories'] = Category.objects.all().order_by('title')
-        return context
-
-
-def searchView(request):
-    categories = Category.objects.all().order_by('title')
-    if request.method == 'GET':
-        search_item = request.GET.get('search')
-        print(search_item)
-        if search_item:
-            product = Product.objects.filter(name__contains=search_item)
-            print(product)
-            return render(request, 'olretail/search.html', context={'product': product, 'categories': categories})
-        else:
-            print("No search found")
-            return render(request, 'olretail/search.html', {'categories': categories})
-
-
-@login_required(login_url='/accounts/login/')
-@allowed_users(allowed_roles=['Seller'])
-def listView(request):
-    categories = Category.objects.all().order_by('title')
-    product_list = request.user.seller.product_set.all()
-    count = len(product_list)
-    total_price = request.user.seller.product_set.all().aggregate(Sum('price'))['price__sum']
-    total_price = f"$ {intcomma('{:0.2f}'.format(total_price))}"
-    print(total_price)
-    return render(request, 'olretail/lista.html', context={'product_list': product_list, 'categories': categories, 'count': count, 'total': total_price})
-
-
-#-----Seller sign form
-'''''
-def SellersignupView(request):
-    categories = Category.objects.all().order_by('title')
-    registered = False
-    if request.method == 'POST':
-        userForm = SellerUserForm(data=request.POST)
-        sellerForm = SellerForm(data=request.POST)
-        if userForm.is_valid() and sellerForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
-            user.save()
-            group = Group.objects.get(name='Seller')
-            user.groups.add(group)
-            seller = sellerForm.save(commit=False)
-            seller.user = user
-            seller.save()
-            registered = True
-            login(request, user)
-            messages.success(request, "Registration user successfull.")
-            return HttpResponseRedirect('/list')
-        messages.error(
-            request, "Unsuccessful registration. Invalid Information")
-
+    if request.method == "POST":
+        if not can_comment:
+            messages.error(request, _("Only buyer accounts can post comments."))
+            return redirect(f"{product.get_absolute_url()}#comments")
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.product = product
+            comment.save()
+            messages.success(request, _("Your comment was posted."))
+            return redirect(f"{product.get_absolute_url()}#comments")
+        messages.error(request, _("Please correct the errors in your comment."))
     else:
-        userForm = SellerUserForm()
-        sellerForm = SellerForm()
+        initial = {}
+        if request.user.is_authenticated:
+            initial["commenter_name"] = request.user.get_full_name() or request.user.username
+        comment_form = CommentForm(initial=initial)
 
-    return render(request, 'olretail/signup.html', context={'userForm': userForm, 'sellerForm': sellerForm, 'categories': categories})
+    related = (
+        Product.objects.filter(status=ProductStatus.APPROVED, category=product.category)
+        .exclude(pk=product.pk)
+        .select_related("category")[:4]
+    )
 
-'''''
-#--------------------Product form
+    gallery_urls = [
+        img.url
+        for img in (product.product_image, product.product_image_2, product.product_image_3)
+        if img
+    ]
 
+    # Contact details are restricted to buyer-capable accounts. The number and
+    # WhatsApp link are only put into the template context (and therefore the
+    # HTML) when authorized — this is backend enforcement, not CSS hiding.
+    can_view_contact = is_buyer(request.user) or is_owner or request.user.is_staff
 
-@login_required(login_url='/accounts/login/')
-@allowed_users(allowed_roles=['Seller'])
-def CreateNewProduct(request):
-    cat = Category.objects.all()
-    count = Country.objects.all()
-    city = City.objects.all()
-    successfull = False
-    seller_id = request.user.id
-    print("seller name", seller_id)
-    product_form = ProductForm()
-    if request.method == 'POST':
-        print("seller within post", seller_id)
-        name = request.POST.get('product')
-        price = request.POST.get('price')
+    whatsapp_url = ""
+    if can_view_contact and product.seller.whatsapp_number:
+        wa_text = _("Hello, I am interested in “%(name)s” (%(url)s) on TimorMart.") % {
+            "name": product.name,
+            "url": request.build_absolute_uri(product.get_absolute_url()),
+        }
+        whatsapp_url = f"https://wa.me/{product.seller.whatsapp_number}?text={quote(wa_text)}"
 
-        image = request.FILES.get('image')
-        category = request.POST.get('category')
-        country = request.POST.get('country')
-        city = request.POST.get('city')
-        quantity = request.POST.get('quantity')
-        description = request.POST.get('description')
-        condition = request.POST.get('condition')
-        user_id = request.user.id
-        categ = Category.objects.get(id=category)
-        countries = Country.objects.get(id=country)
-        cities = City.objects.get(id=city)
-        seller = Seller.objects.get(user_id=user_id)
-        print("user id :", seller, "and")
+    public_comments = product.comments.filter(is_public=True)
+    sentiment_counts = {
+        "positive": public_comments.filter(sentiment="positive").count(),
+        "negative": public_comments.filter(sentiment="negative").count(),
+    }
 
-        product_form = Product.objects.create(name=name,
-                                              price=price,
-                                              product_image=image,
-                                              category=categ,
-                                              country=countries,
-                                              item_location=cities,
-                                              quantity=quantity,
-                                              description=description,
-                                              seller=seller,
-                                              condition=condition,
-                                              )
-        print("Image product", product_form.product_image)
-
-        #product_form = ProductForm(request.POST,seller, request.FILES)
-        #if product_form.is_valid():
-        product_form.save()
-        successfull = True
-        return HttpResponseRedirect('/seller')
-    else:
-        print('Error in input data', product_form)
-    return render(request, 'olretail/products.html',
-                  context={'product_form': product_form,
-                           'successfull': successfull,
-                           'cat': cat,
-                           'count': count,
-                           'city': city
-                           }
-                  )
-@login_required(login_url='/accounts/login/')
-@allowed_users(allowed_roles=['Seller'])
-def UpdateProduct(request, slug):
-    product = Product.objects.get(slug=slug)
-    print(product.name)
-    print(product.price)
-    form = ProductForm(instance=product)
-    print(product)
-    return render(request, 'olretail/products_update.html', context={'form':form})
-def comment(request):
-    form=CommentForm()
-    if request.method=='POST':
-        form = CommentForm()
-    return render(request, 'olretail/comments.html', {'form':form})
-
-'''''
-@login_required
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect('/')
+    return render(
+        request,
+        "olretail/details.html",
+        {
+            "product": product,
+            "details": product,  # backward-compat alias
+            "comments": public_comments,
+            "sentiment_counts": sentiment_counts,
+            "comment_form": comment_form,
+            "related": related,
+            "is_owner": is_owner,
+            "whatsapp_url": whatsapp_url,
+            "can_comment": can_comment,
+            "can_view_contact": can_view_contact,
+            "can_add_to_cart": (
+                can_comment and not is_owner and product.approved
+                and product.in_stock and product.cart_purchasable
+            ),
+            "gallery_urls": gallery_urls,
+        },
+    )
 
 
-def user_login(request):
-    categories = Category.objects.all().order_by('title')
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
+@seller_required
+def seller_dashboard(request):
+    seller = request.user.seller
+    products = seller.product_set.select_related("category", "item_location").order_by("-created")
 
-        if user:
-            if user.is_active:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                return HttpResponseRedirect('/seller')
+    totals = products.aggregate(
+        inventory_value=Sum(
+            ExpressionWrapper(
+                F("price") * F("quantity"),
+                output_field=DecimalField(max_digits=15, decimal_places=2),
+            )
+        )
+    )
+
+    subscription, _created = SellerSubscription.objects.get_or_create(seller=seller)
+
+    return render(
+        request,
+        "olretail/lista.html",
+        {
+            "product_list": products,
+            "count": products.count(),
+            "approved_count": products.filter(status=ProductStatus.APPROVED).count(),
+            "pending_count": products.exclude(status=ProductStatus.APPROVED).count(),
+            "inventory_value": totals["inventory_value"] or 0,
+            "subscription": subscription,
+            "free_limit": FREE_PRODUCT_LIMIT,
+        },
+    )
+
+
+@seller_required
+def product_create(request):
+    seller = request.user.seller
+    subscription, _created = SellerSubscription.objects.get_or_create(seller=seller)
+    if not subscription.can_post_product():
+        messages.warning(
+            request,
+            _(
+                "You've reached the free plan's %(limit)d listing limit. "
+                "Subscribe to post more products."
+            )
+            % {"limit": FREE_PRODUCT_LIMIT},
+        )
+        return redirect("olretail:seller_subscription")
+
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = seller
+            if subscription.is_paid_active:
+                # Subscribers publish immediately — only free-tier listings
+                # go through the admin approval queue.
+                product.status = ProductStatus.APPROVED
+            product.save()
+            if product.status == ProductStatus.APPROVED:
+                messages.success(
+                    request, _("“%(name)s” was published.") % {"name": product.name}
+                )
             else:
-                messages.error(request, 'Account is disabled or not active')
-        else:
-            messages.error(request, "Invalid username or password.")
-    return render(request, 'olretail/login.html', {'categories': categories})
-'''''
+                messages.success(
+                    request,
+                    _("“%(name)s” was created and is awaiting approval by the administrators.")
+                    % {"name": product.name},
+                )
+            return redirect("olretail:list")
+        messages.error(request, _("Please correct the errors below."))
+    else:
+        form = ProductForm()
+    return render(
+        request,
+        "olretail/product_form.html",
+        {
+            "form": form,
+            "title": _("Add a new product"),
+            "submit_label": _("Create product"),
+            "subscription": subscription,
+        },
+    )
+
+
+@seller_required
+def product_update(request, slug):
+    product = get_object_or_404(Product, slug=slug, seller=request.user.seller)
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            updated = form.save(commit=False)
+            if updated.status in (ProductStatus.REJECTED, ProductStatus.CHANGES_REQUESTED):
+                # Editing a rejected / changes-requested listing resubmits it.
+                updated.status = ProductStatus.PENDING
+                messages.success(
+                    request,
+                    _("“%(name)s” was resubmitted for approval.") % {"name": product.name},
+                )
+            else:
+                messages.success(request, _("“%(name)s” was updated.") % {"name": product.name})
+            updated.save()
+            return redirect("olretail:list")
+        messages.error(request, _("Please correct the errors below."))
+    else:
+        form = ProductForm(instance=product)
+    return render(
+        request,
+        "olretail/product_form.html",
+        {
+            "form": form,
+            "title": _("Edit “%(name)s”") % {"name": product.name},
+            "submit_label": _("Save changes"),
+            "product": product,
+        },
+    )
+
+
+@seller_required
+@require_POST
+def product_mark_sold(request, slug):
+    product = get_object_or_404(Product, slug=slug, seller=request.user.seller)
+    product.quantity = 0
+    product.save(update_fields=["quantity", "updated"])
+    messages.success(request, _("“%(name)s” is now marked as sold out.") % {"name": product.name})
+    return redirect("olretail:list")
+
+
+@seller_required
+@require_POST
+def product_delete(request, slug):
+    product = get_object_or_404(Product, slug=slug, seller=request.user.seller)
+    name = product.name
+    product.delete()
+    messages.success(request, _("“%(name)s” was deleted.") % {"name": name})
+    return redirect("olretail:list")

@@ -1,0 +1,664 @@
+# Tetum (Tetun Prasa) translation for TimorMart.
+# Language code: tet (ISO 639; the legacy "tt" code was Tatar in Django).
+msgid ""
+msgstr ""
+"Project-Id-Version: TimorMart\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-12 14:30+0000\n"
+"PO-Revision-Date: 2026-07-12 14:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: Tetum\n"
+"Language: tet\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#
+# ── Header / navigation ────────────────────────────────────────────────
+#
+
+msgid "Home"
+msgstr "Inísiu"
+
+msgid "Search by product"
+msgstr "Buka tuir produtu"
+
+msgid "Search"
+msgstr "Buka"
+
+msgid "My products"
+msgstr "Ha'u-nia produtu sira"
+
+msgid "Log out"
+msgstr "Sai"
+
+msgid "Sign in"
+msgstr "Login"
+
+msgid "Sign up"
+msgstr "Rejista"
+
+msgid "Toggle navigation"
+msgstr "Loke ka taka menu"
+
+msgid "Categories"
+msgstr "Kategoria sira"
+
+msgid "All"
+msgstr "Hotu-hotu"
+
+msgid "Add product"
+msgstr "Aumenta produtu"
+
+msgid "Language"
+msgstr "Lian"
+
+#
+# ── Catalog / product grid ─────────────────────────────────────────────
+#
+
+msgid "No image available"
+msgstr "La iha imajen"
+
+msgid "Out of stock"
+msgstr "Esgotadu"
+
+msgid "In stock"
+msgstr "Disponível"
+
+msgid "No products found"
+msgstr "La hetan produtu ida"
+
+msgid "Try a different search term or category."
+msgstr "Koko liafuan buka ka kategoria seluk."
+
+msgid "Browse all products"
+msgstr "Haree produtu hotu"
+
+msgid "Product pages"
+msgstr "Pájina produtu"
+
+msgid "Previous"
+msgstr "Anteriór"
+
+msgid "Next"
+msgstr "Tuir mai"
+
+msgid "Shop by category"
+msgstr "Sosa tuir kategoria"
+
+msgid "No categories yet."
+msgstr "Seidauk iha kategoria."
+
+msgid "Sell on TimorMart"
+msgstr "Fa'an iha TimorMart"
+
+msgid "Create a free seller account and reach buyers across Timor-Leste."
+msgstr "Kria konta fa'an-na'in grátis no hetan sosa-na'in sira iha Timor-Leste laran tomak."
+
+msgid "Add a product"
+msgstr "Aumenta produtu ida"
+
+msgid "Start selling"
+msgstr "Hahú fa'an"
+
+#, python-format
+msgid "Search results for “%(query)s”"
+msgstr "Rezultadu buka ba “%(query)s”"
+
+msgid "New arrivals"
+msgstr "Foin tama"
+
+#, python-format
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] "Produtu %(counter)s"
+
+msgid "Sort by"
+msgstr "Orden tuir"
+
+msgid "Newest"
+msgstr "Foun liu"
+
+msgid "Price: low to high"
+msgstr "Folin: ki'ik ba boot"
+
+msgid "Price: high to low"
+msgstr "Folin: boot ba ki'ik"
+
+msgid "Name"
+msgstr "Naran"
+
+#
+# ── Product detail page ────────────────────────────────────────────────
+#
+
+msgid "This listing is awaiting administrator approval and is not yet visible to buyers."
+msgstr "Anúnsiu ida-ne'e sei hein aprovasaun husi administradór no sosa-na'in sira seidauk bele haree."
+
+msgid "extra image"
+msgstr "imajen adisionál"
+
+msgid "Published"
+msgstr "Publika ona"
+
+msgid "Pending approval"
+msgstr "Hein aprovasaun"
+
+msgid "Changes requested"
+msgstr "Husu mudansa"
+
+msgid "Rejected"
+msgstr "La simu"
+
+msgid "Suspended"
+msgstr "Suspende tiha ona"
+
+msgid "This listing is not visible to buyers."
+msgstr "Anúnsiu ida-ne'e sosa-na'in sira labele haree."
+
+msgid "Moderator note:"
+msgstr "Nota husi administradór:"
+
+#, python-format
+msgid "“%(name)s” was resubmitted for approval."
+msgstr "“%(name)s” haruka fila fali ba aprovasaun."
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Administrator"
+msgstr "Administradór"
+
+msgid "Skip to main content"
+msgstr "Salta ba konteúdu prinsipál"
+
+msgid "Previous image"
+msgstr "Imajen anteriór"
+
+msgid "Next image"
+msgstr "Imajen tuir mai"
+
+msgid "View full screen"
+msgstr "Haree iha ekrã tomak"
+
+msgid "Product images"
+msgstr "Imajen produtu"
+
+msgid "Administrator accounts manage the platform and cannot buy or sell products."
+msgstr "Konta administradór jere plataforma no labele sosa ka fa'an produtu."
+
+msgid "Description"
+msgstr "Deskrisaun"
+
+msgid "Listed"
+msgstr "Hatama iha"
+
+msgid "Seller"
+msgstr "Fa'an-na'in"
+
+msgid "Edit listing"
+msgstr "Edita anúnsiu"
+
+msgid "Chat on WhatsApp"
+msgstr "Konversa iha WhatsApp"
+
+msgid "Interested in this product?"
+msgstr "Iha interese ba produtu ida-ne'e?"
+
+msgid "To view the seller's phone number and WhatsApp contact, upgrade your account to Buyer & Seller."
+msgstr "Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
+
+msgid "Upgrade to Buyer & Seller"
+msgstr "Hasa'e ba Sosa-na'in & Fa'an-na'in"
+
+msgid "Sign in to view contact information"
+msgstr "Login atu haree informasaun kontaktu"
+
+msgid "To view the seller's phone number and WhatsApp contact, please sign in or create an account."
+msgstr "Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, favór login ka kria konta ida."
+
+msgid "Your account already has the buyer role."
+msgstr "Ita-boot nia konta iha ona papel sosa-na'in."
+
+msgid "Your account is now Buyer & Seller — you can contact sellers and post comments."
+msgstr "Ita-boot nia konta agora Sosa-na'in & Fa'an-na'in — bele kontaktu fa'an-na'in sira no haruka komentáriu."
+
+#, python-format
+msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
+msgstr "Botarde, ha'u iha interese ba “%(name)s” (%(url)s) iha TimorMart."
+
+msgid "Related products"
+msgstr "Produtu relasionadu sira"
+
+msgid "Comments"
+msgstr "Komentáriu sira"
+
+msgid "Positive"
+msgstr "Pozitivu"
+
+msgid "Neutral"
+msgstr "Neutru"
+
+msgid "Negative"
+msgstr "Negativu"
+
+msgid "Post comment"
+msgstr "Haruka komentáriu"
+
+msgid "No comments yet. Be the first to ask about this product!"
+msgstr "Seidauk iha komentáriu. Sai ema dahuluk atu husu kona-ba produtu ida-ne'e!"
+
+msgid "Your name"
+msgstr "Ita-boot nia naran"
+
+msgid "Comment"
+msgstr "Komentáriu"
+
+#
+# ── Seller dashboard ───────────────────────────────────────────────────
+#
+
+msgid "Listings"
+msgstr "Anúnsiu sira"
+
+msgid "Inventory value"
+msgstr "Valór inventáriu"
+
+msgid "Product"
+msgstr "Produtu"
+
+msgid "Price"
+msgstr "Folin"
+
+msgid "Qty"
+msgstr "Kuant."
+
+msgid "Condition"
+msgstr "Kondisaun"
+
+msgid "Status"
+msgstr "Estadu"
+
+msgid "Created"
+msgstr "Kria iha"
+
+msgid "Actions"
+msgstr "Asaun"
+
+msgid "Edit"
+msgstr "Edita"
+
+msgid "Delete"
+msgstr "Apaga"
+
+msgid "Delete product"
+msgstr "Apaga produtu"
+
+msgid "Close"
+msgstr "Taka"
+
+#, python-format
+msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
+msgstr "Ita-boot hakarak duni apaga “%(name)s”? Ida-ne'e labele fila fali."
+
+msgid "Cancel"
+msgstr "Kansela"
+
+msgid "You have no products yet"
+msgstr "Ita-boot seidauk iha produtu"
+
+msgid "Create your first listing — it will appear in the store once approved."
+msgstr "Kria ita-boot nia anúnsiu dahuluk — nia sei mosu iha loja bainhira hetan aprovasaun."
+
+#
+# ── Product form ───────────────────────────────────────────────────────
+#
+
+msgid "Product name"
+msgstr "Naran produtu"
+
+msgid "Category"
+msgstr "Kategoria"
+
+msgid "Country"
+msgstr "Nasaun"
+
+msgid "City"
+msgstr "Sidade"
+
+msgid "Quantity"
+msgstr "Kuantidade"
+
+msgid "Main image"
+msgstr "Imajen prinsipál"
+
+msgid "Extra image 1"
+msgstr "Imajen adisionál 1"
+
+msgid "Extra image 2"
+msgstr "Imajen adisionál 2"
+
+msgid "Select category"
+msgstr "Hili kategoria"
+
+msgid "Select country"
+msgstr "Hili nasaun"
+
+msgid "Select city"
+msgstr "Hili sidade"
+
+msgid "Price must be greater than zero."
+msgstr "Folin tenke boot liu zero."
+
+msgid "Set to 0 when the product is sold out."
+msgstr "Tau 0 bainhira produtu fa'an hotu tiha ona."
+
+msgid "Mark as sold out"
+msgstr "Marka nu'udar esgotadu"
+
+#, python-format
+msgid "“%(name)s” is now marked as sold out."
+msgstr "“%(name)s” marka tiha ona nu'udar esgotadu."
+
+msgid "New"
+msgstr "Foun"
+
+msgid "Second Hand"
+msgstr "Uza tiha ona"
+
+#
+# ── View messages ──────────────────────────────────────────────────────
+#
+
+msgid "That category does not exist."
+msgstr "Kategoria ne'e la eziste."
+
+msgid "That product is awaiting approval."
+msgstr "Produtu ne'e sei hein aprovasaun."
+
+msgid "Your comment was posted."
+msgstr "Ita-boot nia komentáriu publika tiha ona."
+
+msgid "Please correct the errors in your comment."
+msgstr "Favór hadi'a erru sira iha ita-boot nia komentáriu."
+
+#, python-format
+msgid "“%(name)s” was created and is awaiting approval by the administrators."
+msgstr "“%(name)s” kria tiha ona no sei hein aprovasaun husi administradór sira."
+
+msgid "Please correct the errors below."
+msgstr "Favór hadi'a erru sira iha okos."
+
+msgid "Add a new product"
+msgstr "Aumenta produtu foun"
+
+msgid "Create product"
+msgstr "Kria produtu"
+
+#, python-format
+msgid "“%(name)s” was updated."
+msgstr "“%(name)s” atualiza tiha ona."
+
+#, python-format
+msgid "Edit “%(name)s”"
+msgstr "Edita “%(name)s”"
+
+msgid "Save changes"
+msgstr "Rai mudansa sira"
+
+#, python-format
+msgid "“%(name)s” was deleted."
+msgstr "“%(name)s” apaga tiha ona."
+
+msgid "You need a seller account to access that page."
+msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
+
+#
+# ── Error pages ────────────────────────────────────────────────────────
+#
+
+msgid "Page not found"
+msgstr "La hetan pájina"
+
+msgid "The page you are looking for does not exist or may have been removed."
+msgstr "Pájina ne'ebé ita-boot buka la eziste ka hasai tiha ona."
+
+msgid "Back to the store"
+msgstr "Fila ba loja"
+
+msgid "Something went wrong"
+msgstr "Iha erru ida mosu"
+
+msgid "We are sorry — an unexpected error occurred. Please try again in a moment."
+msgstr "Ami husu deskulpa — erru ida ne'ebé la espera mosu. Favór koko fali lakleur."
+
+#
+# ── Accounts: login / register ─────────────────────────────────────────
+#
+
+msgid "Username"
+msgstr "Naran uzuáriu"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Forgot password?"
+msgstr "Haluha senha?"
+
+msgid "New here?"
+msgstr "Foun iha ne'e?"
+
+msgid "Create a seller account"
+msgstr "Kria konta fa'an-na'in"
+
+msgid "Already have an account?"
+msgstr "Iha konta ona?"
+
+msgid "Account type"
+msgstr "Tipu konta"
+
+msgid "Buyer"
+msgstr "Sosa-na'in"
+
+msgid "Buyer & Seller"
+msgstr "Sosa-na'in & Fa'an-na'in"
+
+msgid "Buyer — browse products, contact sellers and post comments"
+msgstr "Sosa-na'in — haree produtu, kontaktu fa'an-na'in no haruka komentáriu"
+
+msgid "Seller — list and manage products for sale"
+msgstr "Fa'an-na'in — hatama no jere produtu atu fa'an"
+
+msgid "Buyer & Seller — everything in one account"
+msgstr "Sosa-na'in & Fa'an-na'in — hotu-hotu iha konta ida"
+
+msgid "Create an account"
+msgstr "Kria konta"
+
+#, python-format
+msgid "Welcome, %(name)s! Your account is ready — happy shopping."
+msgstr "Bem-vindu, %(name)s! Ita-boot nia konta prontu ona — sosa ho ksolok."
+
+msgid "Only buyer accounts can post comments."
+msgstr "De'it konta sosa-na'in mak bele haruka komentáriu."
+
+msgid "Comments are available to buyer accounts. Seller accounts cannot post comments."
+msgstr "Komentáriu disponivel ba konta sosa-na'in. Konta fa'an-na'in labele haruka komentáriu."
+
+msgid "Sign in with a buyer account to post a comment."
+msgstr "Login ho konta sosa-na'in atu haruka komentáriu."
+
+msgid "First name"
+msgstr "Naran dahuluk"
+
+msgid "Last name"
+msgstr "Apelidu"
+
+msgid "Email address"
+msgstr "Diresaun email"
+
+msgid "Phone number"
+msgstr "Númeru telefone"
+
+msgid "Address"
+msgstr "Diresaun"
+
+msgid "An account with this email address already exists."
+msgstr "Konta ho diresaun email ida-ne'e eziste tiha ona."
+
+#, python-format
+msgid "Welcome, %(name)s! Your seller account is ready."
+msgstr "Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona."
+
+#, python-format
+msgid "Welcome back, %(name)s!"
+msgstr "Bem-vindu fila fali, %(name)s!"
+
+msgid "Invalid username or password."
+msgstr "Naran uzuáriu ka senha la loos."
+
+msgid "You have been logged out."
+msgstr "Ita-boot sai tiha ona."
+
+#
+# ── Accounts: password reset ───────────────────────────────────────────
+#
+
+msgid "Reset password"
+msgstr "Troka senha"
+
+msgid "Reset your password"
+msgstr "Troka ita-boot nia senha"
+
+msgid "Enter the email address you registered with and we will send you a link to set a new password."
+msgstr "Hatama diresaun email ne'ebé ita-boot rejista ho nia no ami sei haruka ligasaun ida atu defini senha foun."
+
+msgid "Send reset link"
+msgstr "Haruka ligasaun"
+
+msgid "Reset link sent"
+msgstr "Ligasaun haruka tiha ona"
+
+msgid "Check your email"
+msgstr "Xeke ita-boot nia email"
+
+msgid "If an account exists with the address you entered, we have emailed a password reset link."
+msgstr "Se konta ida eziste ho diresaun ne'ebé ita-boot hatama, ami haruka tiha ona ligasaun atu troka senha."
+
+msgid "Back to sign in"
+msgstr "Fila ba login"
+
+msgid "Choose a new password"
+msgstr "Hili senha foun"
+
+msgid "Set new password"
+msgstr "Defini senha foun"
+
+msgid "This password reset link is invalid or has expired. Please request a new one."
+msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu ida foun."
+
+msgid "Request a new link"
+msgstr "Husu ligasaun foun"
+
+msgid "Password changed"
+msgstr "Senha troka tiha ona"
+
+msgid "Your password has been set. You can now sign in with your new password."
+msgstr "Ita-boot nia senha defini tiha ona. Agora bele login ho senha foun."
+
+msgid "You are receiving this email because you requested a password reset for your TimorMart account."
+msgstr "Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka senha ba ita-boot nia konta TimorMart."
+
+msgid "Please go to the following page and choose a new password:"
+msgstr "Favór bá pájina tuir mai ne'e no hili senha foun:"
+
+msgid "Your username, in case you have forgotten:"
+msgstr "Ita-boot nia naran uzuáriu, karik haluha:"
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr "Se la'ós ita-boot mak husu ida-ne'e, bele ignora email ida-ne'e."
+
+#
+# ── Django built-in form/validation strings shown in this app ─────────
+#
+
+msgid "This field is required."
+msgstr "Kampu ida-ne'e obrigatóriu."
+
+#, python-format
+msgid "Please enter a correct %(username)s and password. Note that both fields may be case-sensitive."
+msgstr "Favór hatama %(username)s no senha ne'ebé loos. Nota katak kampu rua ne'e diferensia letra boot ho ki'ik."
+
+msgid "Password confirmation"
+msgstr "Konfirma senha"
+
+msgid "Enter the same password as before, for verification."
+msgstr "Hatama senha hanesan ho uluk nian, atu verifika."
+
+msgid "A user with that username already exists."
+msgstr "Uzuáriu ho naran ne'e eziste tiha ona."
+
+msgid "The two password fields didn’t match."
+msgstr "Senha rua ne'e la hanesan."
+
+msgid "Your password can’t be too similar to your other personal information."
+msgstr "Ita-boot nia senha labele hanesan liu ho ita-boot nia informasaun pesoál seluk."
+
+msgid "Your password can’t be a commonly used password."
+msgstr "Ita-boot nia senha labele senha ne'ebé ema uza beibeik."
+
+msgid "Your password can’t be entirely numeric."
+msgstr "Ita-boot nia senha labele númeru de'it."
+
+#, python-format
+msgid "Your password must contain at least %(min_length)d character."
+msgid_plural "Your password must contain at least %(min_length)d characters."
+msgstr[0] "Ita-boot nia senha tenke iha pelu menus karakter %(min_length)d."
+
+#, python-format
+msgid "The password is too similar to the %(verbose_name)s."
+msgstr "Senha ne'e hanesan liu ho %(verbose_name)s."
+
+msgid "This password is too common."
+msgstr "Senha ida-ne'e komún liu."
+
+msgid "This password is entirely numeric."
+msgstr "Senha ida-ne'e númeru de'it."
+
+#, python-format
+msgid "This password is too short. It must contain at least %(min_length)d character."
+msgid_plural "This password is too short. It must contain at least %(min_length)d characters."
+msgstr[0] "Senha ida-ne'e badak liu. Tenke iha pelu menus karakter %(min_length)d."
+
+msgid "New password"
+msgstr "Senha foun"
+
+msgid "New password confirmation"
+msgstr "Konfirma senha foun"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "Obrigatóriu. Karakter 150 ka menus. Letra, númeru no @/./+/-/_ de'it."
+
+msgid "Enter a valid email address."
+msgstr "Hatama diresaun email ne'ebé loos."
+
+# Lowercase model verbose names (Django capitalizes them in form labels)
+msgid "username"
+msgstr "naran uzuáriu"
+
+msgid "password"
+msgstr "senha"
+
+msgid "email address"
+msgstr "diresaun email"
+
+msgid "first name"
+msgstr "naran dahuluk"
+
+msgid "last name"
+msgstr "apelidu"

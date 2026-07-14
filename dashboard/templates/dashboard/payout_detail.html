@@ -1,0 +1,125 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Payout — {{ payout.payout_id }}{% endblock %}
+
+{% block dash_content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent px-0 mb-2">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard:payouts' %}">Payouts</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ payout.payout_id }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span class="font-weight-bold">{{ payout.payout_id }}</span>
+        {% if payout.status == 'scheduled' %}<span class="badge badge-warning">{{ payout.get_status_display }}</span>
+        {% elif payout.status == 'processing' %}<span class="badge badge-info">{{ payout.get_status_display }}</span>
+        {% elif payout.status == 'paid' %}<span class="badge badge-success">{{ payout.get_status_display }}</span>
+        {% else %}<span class="badge badge-danger">{{ payout.get_status_display }}</span>{% endif %}
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Seller</dt>
+          <dd class="col-sm-9">{{ payout.seller.get_name }} ({{ payout.seller.user.username }})</dd>
+          <dt class="col-sm-3">Amount</dt>
+          <dd class="col-sm-9">${{ payout.amount_dollars|floatformat:2 }}</dd>
+          <dt class="col-sm-3">Scheduled</dt>
+          <dd class="col-sm-9">{{ payout.scheduled_date|date:"j M Y" }}</dd>
+          <dt class="col-sm-3">Paid</dt>
+          <dd class="col-sm-9">{% if payout.paid_date %}{{ payout.paid_date|date:"j M Y" }}{% else %}—{% endif %}</dd>
+          <dt class="col-sm-3">Created</dt>
+          <dd class="col-sm-9">{{ payout.created_at|date:"j M Y H:i" }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header py-2 font-weight-bold">Bank details for transfer</div>
+      <div class="card-body">
+        <form method="post" action="{% url 'dashboard:payout_action' payout.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="save_details">
+          <div class="form-group">
+            <label>Bank name</label>
+            <input type="text" name="bank_name" class="form-control form-control-sm" value="{{ payout.bank_name }}">
+          </div>
+          <div class="form-group">
+            <label>Account number</label>
+            <input type="text" name="account_number" class="form-control form-control-sm" value="{{ payout.account_number }}">
+          </div>
+          <div class="form-group">
+            <label>Account holder</label>
+            <input type="text" name="account_holder" class="form-control form-control-sm" value="{{ payout.account_holder }}">
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes" class="form-control form-control-sm" rows="2">{{ payout.notes }}</textarea>
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-primary m-0">
+            <i class="fas fa-save mr-1" aria-hidden="true"></i>Save details
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-3">
+    <div class="card mb-3">
+      <div class="card-header py-2 font-weight-bold">Seller</div>
+      <div class="card-body py-3">
+        <p class="mb-1"><strong>{{ payout.seller.get_name }}</strong></p>
+        <p class="mb-1 small"><i class="fas fa-envelope mr-1" aria-hidden="true"></i>{{ payout.seller.user.email|default:"—" }}</p>
+        <p class="mb-0 small"><i class="fas fa-phone mr-1" aria-hidden="true"></i>{{ payout.seller.mobile }}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Payout actions</div>
+      <div class="card-body py-3">
+        <p class="small text-muted">
+          These actions only update records here — the platform does not move
+          money automatically. Send the bank transfer yourself first, then
+          mark it below.
+        </p>
+
+        {% if payout.status == 'scheduled' %}
+        <form method="post" action="{% url 'dashboard:payout_action' payout.pk %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_processing">
+          <button type="submit" class="btn btn-info btn-sm btn-block m-0">
+            <i class="fas fa-clock mr-1" aria-hidden="true"></i>Mark as processing
+          </button>
+        </form>
+        {% endif %}
+
+        {% if payout.status == 'scheduled' or payout.status == 'processing' %}
+        <form method="post" action="{% url 'dashboard:payout_action' payout.pk %}" class="mb-2"
+              onsubmit="return confirm('Confirm the bank transfer was sent and mark this payout as paid?');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_paid">
+          <button type="submit" class="btn btn-success btn-sm btn-block m-0">
+            <i class="fas fa-check mr-1" aria-hidden="true"></i>Mark as paid
+          </button>
+        </form>
+        <form method="post" action="{% url 'dashboard:payout_action' payout.pk %}"
+              onsubmit="return confirm('Mark this payout as failed? The amount returns to the seller\'s available balance.');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_failed">
+          <button type="submit" class="btn btn-outline-danger btn-sm btn-block m-0">
+            <i class="fas fa-times mr-1" aria-hidden="true"></i>Mark as failed
+          </button>
+        </form>
+        {% endif %}
+
+        {% if payout.status == 'paid' %}
+        <p class="text-success small mb-0"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>Paid on {{ payout.paid_date|date:"j M Y" }}.</p>
+        {% elif payout.status == 'failed' %}
+        <p class="text-danger small mb-0"><i class="fas fa-exclamation-circle mr-1" aria-hidden="true"></i>Failed — amount was returned to the seller's available balance.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

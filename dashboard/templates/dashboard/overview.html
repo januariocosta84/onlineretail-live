@@ -1,0 +1,166 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Overview{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Platform overview</h1>
+
+<div class="row">
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Total users</p>
+      <p class="h3 mb-0">{{ stats.total_users }}</p>
+      <p class="small text-muted mb-0">+{{ stats.new_users_today }} today</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Buyers</p>
+      <p class="h3 mb-0">{{ stats.total_buyers }}</p>
+      <p class="small text-muted mb-0">{{ stats.total_both }} buyer &amp; seller</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Sellers</p>
+      <p class="h3 mb-0">{{ stats.total_sellers }}</p>
+      <p class="small text-muted mb-0">{{ stats.total_both }} buyer &amp; seller</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card warn h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Pending approvals</p>
+      <p class="h3 mb-0 text-warning">{{ stats.pending }}</p>
+      <p class="small mb-0"><a href="{% url 'dashboard:queue' %}">Open queue »</a></p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card ok h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Active products</p>
+      <p class="h3 mb-0 text-success">{{ stats.active_products }}</p>
+      <p class="small text-muted mb-0">+{{ stats.new_products_today }} today · {{ stats.featured }} featured</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card bad h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Rejected / suspended</p>
+      <p class="h3 mb-0 text-danger">{{ stats.rejected_products }} / {{ stats.suspended_products }}</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Out of stock</p>
+      <p class="h3 mb-0">{{ stats.out_of_stock }}</p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Comment sentiment</p>
+      <p class="h5 mb-1">
+        <span class="text-success"><i class="far fa-smile" aria-hidden="true"></i> {{ stats.sentiment_positive }}</span>
+        · <span class="text-muted"><i class="far fa-meh" aria-hidden="true"></i> {{ stats.sentiment_neutral }}</span>
+        · <span class="text-danger"><i class="far fa-frown" aria-hidden="true"></i> {{ stats.sentiment_negative }}</span>
+      </p>
+      <p class="small text-muted mb-0">{{ stats.comments }} total · {{ stats.hidden_comments }} hidden
+        {% if stats.sentiment_negative %} · <a href="{% url 'dashboard:comments' %}?show=negative">review negative »</a>{% endif %}
+      </p>
+    </div></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">Product listings — last 6 months</div>
+      <div class="card-body">
+        {% for m in product_series %}
+        <div class="bar-row">
+          <span class="bar-label">{{ m.label }}</span>
+          <div class="bar-track"><div class="bar-fill" style="width: {{ m.pct }}%;"></div></div>
+          <span class="bar-count">{{ m.count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">User registrations — last 6 months</div>
+      <div class="card-body">
+        {% for m in user_series %}
+        <div class="bar-row">
+          <span class="bar-label">{{ m.label }}</span>
+          <div class="bar-track"><div class="bar-fill" style="width: {{ m.pct }}%; background:#00b74a;"></div></div>
+          <span class="bar-count">{{ m.count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">Top sellers</div>
+      <div class="table-responsive"><table class="table table-sm mb-0">
+        <thead><tr><th>Seller</th><th class="text-right">Listings</th><th class="text-right">Published</th></tr></thead>
+        <tbody>
+          {% for s in top_sellers %}
+          <tr><td>{{ s.get_name }}</td><td class="text-right">{{ s.listings }}</td><td class="text-right">{{ s.published }}</td></tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-muted">No sellers yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">Listings by category</div>
+      <div class="card-body">
+        {% for c in top_categories %}
+        <div class="bar-row">
+          <span class="bar-label text-truncate">{{ c.title }}</span>
+          <div class="bar-track"><div class="bar-fill" style="width: {{ c.pct }}%; background:#9c27b0;"></div></div>
+          <span class="bar-count">{{ c.n }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">Awaiting review</div>
+      <div class="list-group list-group-flush">
+        {% for p in recent_pending %}
+        <a class="list-group-item list-group-item-action py-2 d-flex justify-content-between"
+           href="{% url 'dashboard:product_review' p.slug %}">
+          <span>{{ p.name }} <small class="text-muted">by {{ p.seller.get_name }}</small></span>
+          <small class="text-muted">{{ p.created|date:"j M" }}</small>
+        </a>
+        {% empty %}
+        <div class="list-group-item text-muted py-2">Queue is empty — nothing to review.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100">
+      <div class="card-header py-2 font-weight-bold">Recent admin activity</div>
+      <div class="list-group list-group-flush">
+        {% for log in recent_logs %}
+        <div class="list-group-item py-2 small">
+          <strong>{{ log.admin|default:"(deleted)" }}</strong> — {{ log.action }} · {{ log.target }}
+          <span class="text-muted float-right">{{ log.created|date:"j M H:i" }}</span>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-muted py-2">No administrative actions recorded yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

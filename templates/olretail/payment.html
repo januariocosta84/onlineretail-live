@@ -1,0 +1,202 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Payment" %} | TimorMart{% endblock %}
+
+{% block extra_head %}
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+  .StripeElement {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+  }
+  
+  .StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+    border-color: #1266f1;
+  }
+  
+  .StripeElement--invalid {
+    border-color: #fa755a;
+  }
+  
+  #payment-message {
+    color: #fa755a;
+  }
+  
+  .success-message {
+    color: #28a745;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="h2 page-header-bar">
+              <i class="fas fa-lock mr-2"></i>{% trans "Secure Payment" %}
+            </h1>
+          </div>
+        </div>
+
+        {% include "shared/messages.html" %}
+
+        <div class="row">
+          <div class="col-lg-7">
+            <!-- Payment Form -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h5 class="card-title mb-4">{% trans "Card Information" %}</h5>
+                
+                <form id="payment-form">
+                  {% csrf_token %}
+                  
+                  <div class="form-group">
+                    <label for="card-element" class="mb-2">{% trans "Card Details" %}</label>
+                    <div id="card-element"></div>
+                    <small class="form-text text-muted">
+                      {% trans "Your payment information is secure and never stored on our servers." %}
+                    </small>
+                  </div>
+
+                  <div id="payment-message" class="alert alert-danger d-none mt-3"></div>
+                  
+                  <button id="submit-button" type="submit" class="btn btn-primary btn-lg btn-block mt-4" disabled>
+                    <span id="button-text">
+                      {% trans "Pay" %} <strong>${{ final_total }}</strong>
+                    </span>
+                  </button>
+                </form>
+
+                <div class="alert alert-info mt-4" role="alert">
+                  <i class="fas fa-info-circle mr-2"></i>
+                  <small>
+                    <strong>{% trans "Test Card:" %}</strong> 4242 4242 4242 4242 | 
+                    {% trans "Exp" %}: 12/25 | CVC: 123
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="col-lg-5">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+              <div class="card-header bg-light">
+                <h5 class="mb-0">{% trans "Order Summary" %}</h5>
+              </div>
+              <div class="card-body">
+                <p class="mb-2">
+                  <strong>{% trans "Order #" %}:</strong> {{ order.order_number }}
+                </p>
+                
+                <div class="border-top pt-3">
+                  <h6 class="mb-3">{% trans "Items" %}:</h6>
+                  {% for o in orders %}
+                  <div class="mb-3">
+                    <small>
+                      <strong>{{ o.product.name }}</strong><br>
+                      Qty: {{ o.quantity }} × ${{ o.price_per_unit }} = ${{ o.subtotal }}
+                    </small>
+                  </div>
+                  {% endfor %}
+                </div>
+
+                <div class="border-top border-bottom py-3">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>{% trans "Subtotal" %}:</span>
+                    <span>${{ order.subtotal }}</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span><small>{% trans "Commission (15%)" %}:</small></span>
+                    <span><small>${{ order.commission_amount }}</small></span>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <span><small>{% trans "Payment fee" %}:</small></span>
+                    <span><small>${{ order.payment_fee }}</small></span>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                  <strong class="h5">{% trans "Total" %}:</strong>
+                  <strong class="h5 text-primary">${{ order.total }}</strong>
+                </div>
+
+                <div class="alert alert-success mt-3 d-none" id="success-message" role="alert">
+                  <i class="fas fa-check-circle mr-2"></i>
+                  <span>{% trans "Payment successful! Redirecting..." %}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const stripe = Stripe('{{ stripe_public_key }}');
+const elements = stripe.elements();
+const cardElement = elements.create('card');
+cardElement.mount('#card-element');
+
+const form = document.getElementById('payment-form');
+const submitButton = document.getElementById('submit-button');
+const clientSecret = '{{ client_secret }}';
+
+// Handle errors
+cardElement.addEventListener('change', (e) => {
+  const displayError = document.getElementById('payment-message');
+  if (e.error) {
+    displayError.textContent = e.error.message;
+    displayError.classList.remove('d-none');
+  } else {
+    displayError.classList.add('d-none');
+  }
+});
+
+// Handle form submission
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitButton.disabled = true;
+  submitButton.innerHTML = '<span>{% trans "Processing..." %}</span>';
+  
+  const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+    payment_method: {
+      card: cardElement,
+      billing_details: {}
+    }
+  });
+  
+  if (error) {
+    const displayError = document.getElementById('payment-message');
+    displayError.textContent = error.message;
+    displayError.classList.remove('d-none');
+    submitButton.disabled = false;
+    submitButton.innerHTML = '<span>{% trans "Pay" %} <strong>${{ final_total }}</strong></span>';
+  } else if (paymentIntent.status === 'succeeded') {
+    document.getElementById('success-message').classList.remove('d-none');
+    setTimeout(() => {
+      window.location.href = "{% url 'olretail:payment_confirmation' order.id %}";
+    }, 2000);
+  }
+});
+
+// Enable submit button only when card is complete
+cardElement.addEventListener('ready', () => {
+  submitButton.disabled = false;
+});
+</script>
+{% endblock %}

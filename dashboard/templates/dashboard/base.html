@@ -1,0 +1,62 @@
+{% extends 'shared/base.html' %}
+
+{% block title %}{% block dash_title %}Admin dashboard{% endblock %} — TimorMart{% endblock %}
+
+{% block extra_head %}
+<style>
+  .dash-sidebar .list-group-item { border: 0; border-radius: 0; padding: .65rem 1rem; }
+  .dash-sidebar .list-group-item.active { background-color: #1266f1; }
+  .stat-card { border-left: 4px solid #1266f1; }
+  .stat-card.warn { border-left-color: #fb3; }
+  .stat-card.ok { border-left-color: #00b74a; }
+  .stat-card.bad { border-left-color: #f93154; }
+  .bar-row { display: flex; align-items: center; margin-bottom: .45rem; }
+  .bar-label { flex: 0 0 90px; font-size: .8rem; color: #666; }
+  .bar-track { flex: 1; background: #eef1f5; border-radius: 4px; height: 14px; }
+  .bar-fill { background: #1266f1; height: 14px; border-radius: 4px; min-width: 2px; }
+  .bar-count { flex: 0 0 40px; text-align: right; font-size: .8rem; color: #333; }
+  /* On phones/tablets the sidebar becomes a horizontal scrollable nav bar */
+  @media (max-width: 991.98px) {
+    .dash-sidebar .list-group { flex-direction: row; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .dash-sidebar .list-group-item { flex: 0 0 auto; white-space: nowrap; border-right: 1px solid #eee; }
+    .dash-sidebar .card-header { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+  <div class="row my-3">
+    <div class="col-lg-2 mb-3">
+      <div class="card dash-sidebar">
+        <div class="card-header py-2 font-weight-bold">
+          <i class="fas fa-tools mr-1" aria-hidden="true"></i>Administration
+        </div>
+        <div class="list-group list-group-flush">
+          <a class="list-group-item list-group-item-action {% if section == 'overview' %}active text-white{% endif %}"
+             href="{% url 'dashboard:overview' %}"><i class="fas fa-chart-line mr-2" aria-hidden="true"></i>Overview</a>
+          <a class="list-group-item list-group-item-action {% if section == 'queue' %}active text-white{% endif %}"
+             href="{% url 'dashboard:queue' %}"><i class="fas fa-clipboard-check mr-2" aria-hidden="true"></i>Approval queue</a>
+          <a class="list-group-item list-group-item-action {% if section == 'products' %}active text-white{% endif %}"
+             href="{% url 'dashboard:products' %}"><i class="fas fa-box mr-2" aria-hidden="true"></i>Products</a>
+          <a class="list-group-item list-group-item-action {% if section == 'users' %}active text-white{% endif %}"
+             href="{% url 'dashboard:users' %}"><i class="fas fa-users mr-2" aria-hidden="true"></i>Users</a>
+          <a class="list-group-item list-group-item-action {% if section == 'comments' %}active text-white{% endif %}"
+             href="{% url 'dashboard:comments' %}"><i class="fas fa-comments mr-2" aria-hidden="true"></i>Comments</a>
+          <a class="list-group-item list-group-item-action {% if section == 'payouts' %}active text-white{% endif %}"
+             href="{% url 'dashboard:payouts' %}"><i class="fas fa-money-check-alt mr-2" aria-hidden="true"></i>Payouts</a>
+          <a class="list-group-item list-group-item-action {% if section == 'subscriptions' %}active text-white{% endif %}"
+             href="{% url 'dashboard:subscriptions' %}"><i class="fas fa-crown mr-2" aria-hidden="true"></i>Subscriptions</a>
+          <a class="list-group-item list-group-item-action {% if section == 'audit' %}active text-white{% endif %}"
+             href="{% url 'dashboard:audit' %}"><i class="fas fa-history mr-2" aria-hidden="true"></i>Audit log</a>
+          <a class="list-group-item list-group-item-action" href="/admin/" target="_blank" rel="noopener">
+            <i class="fas fa-cog mr-2" aria-hidden="true"></i>Django admin</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-10">
+      {% block dash_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

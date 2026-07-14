@@ -1,0 +1,108 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block dash_title %}Products{% endblock %}
+
+{% block dash_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 page-header-bar">
+  <h1 class="h4 mb-0">Products <small class="text-muted h6">({{ page_obj.paginator.count }})</small></h1>
+  <a class="btn btn-outline-secondary btn-sm m-0"
+     href="?{% if querystring %}{{ querystring }}&{% endif %}export=csv">
+    <i class="fas fa-file-csv mr-1" aria-hidden="true"></i>Export CSV
+  </a>
+</div>
+
+<form method="get" class="card mb-3">
+  <div class="card-body py-3">
+    <div class="form-row">
+      <div class="col-md-4 mb-2">
+        <input type="search" name="q" value="{{ q }}" class="form-control form-control-sm"
+               placeholder="Search name or description" aria-label="Search products">
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="status" class="browser-default custom-select custom-select-sm" aria-label="Filter by status">
+          <option value="">All statuses</option>
+          {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="category" class="browser-default custom-select custom-select-sm" aria-label="Filter by category">
+          <option value="">All categories</option>
+          {% for c in category_choices %}
+          <option value="{{ c.slug }}" {% if category == c.slug %}selected{% endif %}>{{ c.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="seller" class="browser-default custom-select custom-select-sm" aria-label="Filter by seller">
+          <option value="">All sellers</option>
+          {% for s in seller_choices %}
+          <option value="{{ s.pk }}" {% if seller == s.pk|stringformat:'s' %}selected{% endif %}>{{ s.get_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-sm btn-block m-0">Filter</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Product</th><th>Seller</th><th>Category</th><th>Price</th><th>Qty</th>
+          <th>Status</th><th>Featured</th><th>Created</th><th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in page_obj.object_list %}
+        <tr>
+          <td>
+            {% if p.product_image %}<img src="{{ p.product_image.url }}" alt="" class="product-thumb mr-2">{% endif %}
+            <a href="{% url 'dashboard:product_review' p.slug %}">{{ p.name }}</a>
+          </td>
+          <td>{{ p.seller.get_name }}</td>
+          <td>{{ p.category.title }}</td>
+          <td>$ {{ p.price|intcomma }}</td>
+          <td>{{ p.quantity }}</td>
+          <td>
+            {% if p.status == 'approved' %}<span class="badge badge-success">{{ p.get_status_display }}</span>
+            {% elif p.status == 'pending' %}<span class="badge badge-warning">{{ p.get_status_display }}</span>
+            {% elif p.status == 'changes' %}<span class="badge badge-info">{{ p.get_status_display }}</span>
+            {% else %}<span class="badge badge-danger">{{ p.get_status_display }}</span>{% endif %}
+          </td>
+          <td>
+            <form method="post" action="{% url 'dashboard:product_feature' p.slug %}" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="btn btn-sm btn-link m-0 p-0"
+                      title="{% if p.featured %}Remove from homepage{% else %}Feature on homepage{% endif %}">
+                <i class="{% if p.featured %}fas text-warning{% else %}far text-muted{% endif %} fa-star" aria-hidden="true"></i>
+              </button>
+            </form>
+          </td>
+          <td><small class="text-muted">{{ p.created|date:"j M Y" }}</small></td>
+          <td class="text-right text-nowrap">
+            <a href="{% url 'dashboard:product_review' p.slug %}" class="btn btn-sm btn-outline-primary my-0">Review</a>
+            <form method="post" action="{% url 'dashboard:product_remove' p.slug %}" class="d-inline"
+                  onsubmit="return confirm('Permanently DELETE “{{ p.name }}”? This cannot be undone.');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger my-0" title="Delete">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center text-muted py-4">No products match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'shared/pagination.html' %}
+{% endblock %}

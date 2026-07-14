@@ -1,0 +1,151 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block dash_title %}Review — {{ product.name }}{% endblock %}
+
+{% block dash_content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent px-0 mb-2">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard:queue' %}">Approval queue</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span class="font-weight-bold">{{ product.name }}</span>
+        <span>
+          {% if product.status == 'approved' %}<span class="badge badge-success">{{ product.get_status_display }}</span>
+          {% elif product.status == 'pending' %}<span class="badge badge-warning">{{ product.get_status_display }}</span>
+          {% elif product.status == 'changes' %}<span class="badge badge-info">{{ product.get_status_display }}</span>
+          {% else %}<span class="badge badge-danger">{{ product.get_status_display }}</span>{% endif %}
+          {% if product.featured %}<span class="badge badge-primary">Featured</span>{% endif %}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          {% if product.product_image %}
+          <div class="col-4"><img src="{{ product.product_image.url }}" class="img-fluid rounded" alt="{{ product.name }}"></div>
+          {% endif %}
+          {% for img in product.gallery %}
+          <div class="col-4"><img src="{{ img.url }}" class="img-fluid rounded" alt="Extra image"></div>
+          {% endfor %}
+          {% if not product.product_image and not product.gallery %}
+          <div class="col text-muted">No images uploaded.</div>
+          {% endif %}
+        </div>
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Price</dt><dd class="col-sm-9">$ {{ product.price|intcomma }}</dd>
+          <dt class="col-sm-3">Quantity</dt><dd class="col-sm-9">{{ product.quantity }}{% if not product.in_stock %} <span class="badge badge-secondary">Out of stock</span>{% endif %}</dd>
+          <dt class="col-sm-3">Category</dt><dd class="col-sm-9">{{ product.category.title }}</dd>
+          <dt class="col-sm-3">Condition</dt><dd class="col-sm-9">{{ product.get_condition_display }}</dd>
+          <dt class="col-sm-3">Location</dt><dd class="col-sm-9">{{ product.item_location }}, {{ product.country }}</dd>
+          <dt class="col-sm-3">Submitted</dt><dd class="col-sm-9">{{ product.created|date:"j M Y H:i" }} (updated {{ product.updated|date:"j M Y H:i" }})</dd>
+          <dt class="col-sm-3">Description</dt><dd class="col-sm-9">{{ product.description|linebreaks }}</dd>
+          {% if product.moderation_note %}
+          <dt class="col-sm-3">Current note</dt><dd class="col-sm-9 text-danger">{{ product.moderation_note }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+
+    {% if comments %}
+    <div class="card mt-3">
+      <div class="card-header py-2 font-weight-bold">Comments on this product ({{ comments|length }})</div>
+      <div class="list-group list-group-flush">
+        {% for c in comments %}
+        <div class="list-group-item py-2 small">
+          <strong>{{ c.commenter_name }}</strong> — {{ c.body }}
+          {% if not c.is_public %}<span class="badge badge-secondary">hidden</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-4 mb-3">
+    <div class="card mb-3">
+      <div class="card-header py-2 font-weight-bold">Seller</div>
+      <div class="card-body py-3">
+        <p class="mb-1"><strong>{{ product.seller.get_name }}</strong> ({{ product.seller.user.username }})</p>
+        <p class="mb-1 small"><i class="fas fa-envelope mr-1" aria-hidden="true"></i>{{ product.seller.user.email|default:"—" }}</p>
+        <p class="mb-1 small"><i class="fas fa-phone mr-1" aria-hidden="true"></i>{{ product.seller.mobile }}</p>
+        <p class="mb-1 small"><i class="fas fa-home mr-1" aria-hidden="true"></i>{{ product.seller.address }}</p>
+        <p class="mb-0 small text-muted">Member since {{ product.seller.user.date_joined|date:"j M Y" }} ·
+          {{ product.seller.product_set.count }} listing(s)</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Moderation actions</div>
+      <div class="card-body py-3">
+        <form method="post" action="{% url 'dashboard:product_action' product.slug %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="approve">
+          <button type="submit" class="btn btn-success btn-sm btn-block m-0"
+                  {% if product.status == 'approved' %}disabled{% endif %}>
+            <i class="fas fa-check mr-1" aria-hidden="true"></i>Approve product
+          </button>
+        </form>
+
+        <form method="post" action="{% url 'dashboard:product_action' product.slug %}" class="mb-2"
+              onsubmit="return this.reason.value.trim() !== '' || (alert('Please provide a reason — it is shown to the seller.'), false);">
+          {% csrf_token %}
+          <textarea name="reason" class="form-control form-control-sm mb-2" rows="2"
+                    placeholder="Reason (sent to the seller)">{{ product.moderation_note }}</textarea>
+          <div class="btn-group btn-block" role="group">
+            <button type="submit" name="action" value="request_changes" class="btn btn-info btn-sm m-0">
+              Request changes
+            </button>
+            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm m-0"
+                    onclick="return confirm('Reject this product? The seller will see your reason.');">
+              Reject
+            </button>
+          </div>
+        </form>
+
+        {% if product.status == 'approved' %}
+        <form method="post" action="{% url 'dashboard:product_action' product.slug %}" class="mb-2"
+              onsubmit="return confirm('Suspend this published product? It will disappear from the store.');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="suspend">
+          <button type="submit" class="btn btn-warning btn-sm btn-block m-0">
+            <i class="fas fa-pause mr-1" aria-hidden="true"></i>Suspend product
+          </button>
+        </form>
+        {% elif product.status == 'suspended' %}
+        <form method="post" action="{% url 'dashboard:product_action' product.slug %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="restore">
+          <button type="submit" class="btn btn-outline-primary btn-sm btn-block m-0">
+            <i class="fas fa-undo mr-1" aria-hidden="true"></i>Restore to pending
+          </button>
+        </form>
+        {% endif %}
+
+        <hr class="my-2">
+        <form method="post" action="{% url 'dashboard:product_feature' product.slug %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'dashboard:product_review' product.slug %}">
+          <button type="submit" class="btn btn-outline-secondary btn-sm btn-block m-0">
+            <i class="fas fa-star mr-1" aria-hidden="true"></i>
+            {% if product.featured %}Remove from homepage{% else %}Feature on homepage{% endif %}
+          </button>
+        </form>
+        <form method="post" action="{% url 'dashboard:product_remove' product.slug %}"
+              onsubmit="return confirm('Permanently DELETE this product? This cannot be undone.');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm btn-block m-0">
+            <i class="fas fa-trash-alt mr-1" aria-hidden="true"></i>Delete permanently
+          </button>
+        </form>
+        <p class="small text-muted mt-2 mb-0">
+          <a href="{{ product.get_absolute_url }}" target="_blank" rel="noopener">View in store »</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

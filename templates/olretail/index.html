@@ -1,150 +1,85 @@
 {% extends 'shared/base.html' %}
 {% load i18n %}
 {% load static %}
+
+{% block title %}{% if active_category %}{{ active_category.title }} — {% endif %}TimorMart{% endblock %}
+
 {% block content %}
 <div class="container-xl">
-        <!--Grid Row-->
-        <div class="row">
-                <div class="col-md-8 col-lg-10 col-xl-9">
-                        {% include 'shared/slider.html'%}
-                        <section class="py-2 my-4">
-                                <div class="divider-new version-2 mt-5 mb-0">
-                                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{%trans 'New arrival'%}</h4>
-                                </div>
-                                <!--Product Section-->
-                                <div class="row pt-4">
-                                        {% for products in product%}
-                                        {%if products.approved%}
-                                        <div class="col mb-4 mb-xl-0 ">
+  <div class="row">
+    <div class="col-xl-9">
 
-                                                <div class="view zoom overlay">
-                                                        <img class="img-fluid w-10" src="{{products.product_image.url}}"
-                                                                alt="Sample">
-                                                        <a href="{% url 'olretail:details' products.slug%}">
-                                                                <div class="mask">
-                                                                </div>
-                                                        </a>
-                                                </div>
-                                                <div class="pt-4">
-
-                                                        <p class="mb-2 text-muted text-uppercase small">
-                                                                {{products.name}}</p>
-                                                        <!-- <h6 class="mb-0"><span class="badge badge-danger badge-pill">-20%</span></h6> -->
-                                                        <span>
-                                                                <strong>$ {{products.price}}</strong>
-                                                        </span>
-                                                        <br>
-                                                        <span>
-                                                                <strong>{{products.category.title}}</strong>
-                                                        </span>
-                                                        <br>
-                                                        <!-- <span>
-                                                                Product owner: <strong>{{pr.seller.user.first_name}} {{pr.seller.user.last_name}} </strong>
-                                                        </span> -->
-                                                </div>
-
-                                        </div>
-                                        {%endif%}
-                                        {% endfor %}
-                                </div>
-                        </section>
-                        <!--Product Section-->
-
-                        <!-- Section apparel -->
-                        {% trans "let's transale this one"%}
-                        <div class="divider-new version-2 mt-5 mb-0">
-                                <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{% trans 'Flash Deals / SalesOn !!!' %}</h4>
-                        </div>
-                        <!-- Section electronics -->
-                        <section class="py-2 my-4">
-
-                                <div class="row">
-                                        <div class="col-12">
-
-                                                <div class="card">
-                                                        <div class="card-body">
-
-                                                                <div
-                                                                        class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4">
-                                                                        {%for products in product%}
-                                                                        <div class="col mb-4 pb-2">
-                                                                                <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a
-                                                                                                        href="{% url 'olretail:details' products.slug%}"
-                                                                                                        class="text-reset stretched-link">{{products.name}}</a>
-                                                                                        </h5>
-                                                                                        <img class="float-right"
-                                                                                                src="{{products.product_image.url}}"
-                                                                                                alt="Sample"
-                                                                                                width="110">
-                                                                                        <p><i class="fa fa-map-marker-alt"></i>
-                                                                                                {{products.item_location}},
-                                                                                                {{products.country}}
-                                                                                        </p>
-                                                                                </div>
-                                                                        </div>
-                                                                        {% endfor %}
-
-                                                                </div>
-
-                                                        </div>
-                                                </div>
-
-                                        </div>
-                                </div>
-
-                        </section>
-                        <!-- Section electronics -->
-                        <!-- Section electronics -->
-                        <div class="divider-new version-2 mt-5 mb-0">
-                        <h4 class="text-uppercase font-weight-bold deep-grey-text mr-3 text-danger">{% trans 'Discount or Promotion'%}</h4>
-                        </div>
-                        <section class="py-2 my-4">
-
-                                <div class="row">
-                                        <div class="col-12">
-
-                                                <div class="card">
-                                                        <div class="card-body">
-
-                                                                <div
-                                                                        class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4">
-
-                                                                        {%for products in product%}
-                                                                        <div class="col mb-4 pb-2">
-                                                                                <div class="view zoom overlay">
-                                                                                        <h5 class="mt-0"><a
-                                                                                                        href="{% url 'olretail:details' products.slug%}"
-                                                                                                        class="text-reset stretched-link">{{products.name}}</a>
-                                                                                        </h5>
-                                                                                        <img class="float-right"
-                                                                                                src="{{products.product_image.url}}"
-                                                                                                alt="Sample"
-                                                                                                width="110">
-                                                                                        <p><i class="fa fa-map-marker-alt"></i>
-                                                                                                {{products.item_location}},
-                                                                                                Timor Leste
-                                                                                        </p>
-                                                                                </div>
-                                                                        </div>
-                                                                        {% endfor %}
-
-                                                                </div>
-
-                                                        </div>
-                                                </div>
-
-                                        </div>
-                                </div>
-
-                        </section>
-                        <!-- Section electronics -->
-                </div>
-                <div class="col-md-5  col-lg-2 col-xl-3">
-                        {% include 'shared/popular_category.html'%}
-                </div>
-                <!-- {% include 'shared/my_market.html' %}-->
-
+      {% if not query and not active_category and featured %}
+      <div id="featured-carousel" class="carousel slide carousel-fade my-3" data-ride="carousel">
+        <ol class="carousel-indicators">
+          {% for p in featured %}
+          <li data-target="#featured-carousel" data-slide-to="{{ forloop.counter0 }}"
+              {% if forloop.first %}class="active"{% endif %}></li>
+          {% endfor %}
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          {% for p in featured %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="view" style="max-height: 380px; overflow: hidden;">
+              <img class="d-block w-100" src="{{ p.product_image.url }}" alt="{{ p.name }}"
+                   style="object-fit: cover; height: 380px;">
+              <a href="{{ p.get_absolute_url }}" aria-label="{{ p.name }}">
+                <div class="mask rgba-black-light"></div>
+              </a>
+            </div>
+            <div class="carousel-caption">
+              <h3 class="h3-responsive">{{ p.name }}</h3>
+              <p class="mb-0">$ {{ p.price }}</p>
+            </div>
+          </div>
+          {% endfor %}
         </div>
+        <a class="carousel-control-prev" href="#featured-carousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">{% trans 'Previous' %}</span>
+        </a>
+        <a class="carousel-control-next" href="#featured-carousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">{% trans 'Next' %}</span>
+        </a>
+      </div>
+      {% endif %}
+
+      <section class="py-2 my-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 page-header-bar">
+          <h1 class="h4 text-uppercase font-weight-bold mb-0">
+            {% if query %}
+              {% blocktrans %}Search results for “{{ query }}”{% endblocktrans %}
+            {% elif active_category %}
+              {{ active_category.title }}
+            {% else %}
+              {% trans 'New arrivals' %}
+            {% endif %}
+            <small class="text-muted h6">({% blocktrans count counter=result_count %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktrans %})</small>
+          </h1>
+          <form method="get" class="form-inline my-1">
+            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+            {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+            <label class="small text-muted mr-2 mb-0" for="sort">{% trans 'Sort by' %}</label>
+            <select id="sort" name="sort" class="browser-default custom-select custom-select-sm"
+                    onchange="this.form.submit()">
+              <option value="newest" {% if sort == 'newest' %}selected{% endif %}>{% trans 'Newest' %}</option>
+              <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>{% trans 'Price: low to high' %}</option>
+              <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>{% trans 'Price: high to low' %}</option>
+              <option value="name" {% if sort == 'name' %}selected{% endif %}>{% trans 'Name' %}</option>
+            </select>
+          </form>
+        </div>
+
+        {% include 'shared/product_grid.html' %}
+        {% include 'shared/pagination.html' %}
+      </section>
+    </div>
+
+    <!-- Sidebar is desktop-only; on phones/tablets categories live in the header menu -->
+    <div class="col-xl-3 d-none d-xl-block">
+      {% include 'shared/popular_category.html' %}
+    </div>
+  </div>
 </div>
 {% endblock %}

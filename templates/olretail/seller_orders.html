@@ -1,0 +1,123 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My Orders" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-shopping-bag mr-2"></i>{% trans "Seller Orders" %}
+        </h1>
+      </div>
+      <div class="col-md-4 text-right">
+        <a href="{% url 'olretail:seller_balance' %}" class="btn btn-outline-primary">
+          <i class="fas fa-wallet mr-2"></i>{% trans "My Earnings" %}
+        </a>
+      </div>
+    </div>
+
+    {% include "shared/messages.html" %}
+
+    <!-- Status Filter -->
+    <div class="mb-4">
+      <div class="btn-group" role="group">
+        <a href="{% url 'olretail:seller_orders' %}" class="btn btn-sm {% if not current_status %}btn-primary{% else %}btn-outline-primary{% endif %}">
+          {% trans "All" %} ({{ orders|length }})
+        </a>
+        {% for value, label in order_statuses %}
+        <a href="?status={{ value }}" class="btn btn-sm {% if current_status == value %}btn-primary{% else %}btn-outline-primary{% endif %}">
+          {{ label }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if orders %}
+      <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>{% trans "Order #" %}</th>
+                <th>{% trans "Product" %}</th>
+                <th>{% trans "Buyer" %}</th>
+                <th class="text-center">{% trans "Qty" %}</th>
+                <th class="text-right">{% trans "Amount" %}</th>
+                <th class="text-center">{% trans "Status" %}</th>
+                <th class="text-center">{% trans "Date" %}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td>
+                  <strong>{{ order.order_number }}</strong>
+                </td>
+                <td>
+                  <a href="{{ order.product.get_absolute_url }}">
+                    {{ order.product.name|truncatewords:3 }}
+                  </a>
+                </td>
+                <td>
+                  {{ order.buyer.get_full_name }}
+                </td>
+                <td class="text-center">
+                  {{ order.quantity }}
+                </td>
+                <td class="text-right">
+                  ${{ order.subtotal }}
+                </td>
+                <td class="text-center">
+                  {% if order.status == 'pending_payment' %}
+                    <span class="badge badge-warning">{{ order.get_status_display }}</span>
+                  {% elif order.status == 'payment_reported' %}
+                    <span class="badge badge-warning">{{ order.get_status_display }}</span>
+                  {% elif order.status == 'paid' %}
+                    <span class="badge badge-info">{{ order.get_status_display }}</span>
+                  {% elif order.status == 'shipped' %}
+                    <span class="badge badge-primary">{{ order.get_status_display }}</span>
+                  {% elif order.status == 'delivered' %}
+                    <span class="badge badge-success">{{ order.get_status_display }}</span>
+                  {% else %}
+                    <span class="badge badge-secondary">{{ order.get_status_display }}</span>
+                  {% endif %}
+                </td>
+                <td class="text-center text-muted">
+                  <small>{{ order.created_at|date:"M d, Y" }}</small>
+                </td>
+                <td class="text-right text-nowrap">
+                  {% if order.payment_method == 'bank_transfer' and order.status == 'payment_reported' %}
+                  <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}" class="d-inline"
+                        onsubmit="return confirm('{% trans "Confirm you received the buyer'\''s transfer?" %}');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success">
+                      <i class="fas fa-check mr-1"></i>{% trans "Confirm Payment" %}
+                    </button>
+                  </form>
+                  {% endif %}
+                  <a href="{% url 'olretail:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                    {% trans "View" %}
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <i class="fas fa-info-circle mr-3 fa-2x"></i>
+        <div>
+          <strong>{% trans "No orders yet." %}</strong><br>
+          <a href="{% url 'olretail:list' %}">{% trans "View your products" %}</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

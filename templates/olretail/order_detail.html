@@ -1,0 +1,367 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Order" %} {{ order.order_number }} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-box mr-2"></i>{% trans "Order" %} {{ order.order_number }}
+        </h1>
+      </div>
+    </div>
+
+    {% include "shared/messages.html" %}
+
+    <div class="row">
+      <!-- Main Details -->
+      <div class="col-lg-8">
+        <!-- Status Timeline -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">{% trans "Order Status" %}</h5>
+            
+            <div class="row text-center">
+              <div class="col">
+                <div class="status-step {% if order.status != 'pending_payment' %}completed{% endif %}">
+                  <div class="status-icon">
+                    <i class="fas fa-credit-card"></i>
+                  </div>
+                  <small>{% trans "Pending Payment" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.status in 'paid,processing,shipped,delivered' %}completed{% endif %}">
+                  <div class="status-icon">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <small>{% trans "Paid" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.status in 'shipped,delivered' %}completed{% endif %}">
+                  <div class="status-icon">
+                    <i class="fas fa-truck"></i>
+                  </div>
+                  <small>{% trans "Shipped" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.status == 'delivered' %}completed{% endif %}">
+                  <div class="status-icon">
+                    <i class="fas fa-home"></i>
+                  </div>
+                  <small>{% trans "Delivered" %}</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info mt-4">
+              <strong>{% trans "Current Status:" %}</strong> {{ order.get_status_display }}<br>
+              {% if order.paid_at %}
+              <small>{% trans "Paid on" %}: {{ order.paid_at|date:"M d, Y H:i" }}</small><br>
+              {% endif %}
+              {% if order.delivered_at %}
+              <small>{% trans "Delivered on" %}: {{ order.delivered_at|date:"M d, Y H:i" }}</small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Tracking -->
+        {% if order.status in 'paid,shipped,delivered' %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-truck mr-2"></i>{% trans "Delivery Tracking" %}</h5>
+          </div>
+          <div class="card-body">
+            {% if order.courier_name or order.tracking_number or order.assigned_courier %}
+            <p class="mb-3">
+              {% if order.assigned_courier %}<strong>{% trans "Courier" %}:</strong> {{ order.assigned_courier.get_name }} ({{ order.assigned_courier.mobile }})<br>{% endif %}
+              {% if order.courier_name %}<strong>{% trans "Courier / Delivery Service" %}:</strong> {{ order.courier_name }}<br>{% endif %}
+              {% if order.tracking_number %}<strong>{% trans "Tracking Number" %}:</strong> {{ order.tracking_number }}{% endif %}
+            </p>
+            {% endif %}
+
+            {% if delivery_updates %}
+            <ul class="list-unstyled mb-3">
+              {% for update in delivery_updates %}
+              <li class="mb-2 pb-2 border-bottom">
+                <small class="text-muted d-block">{{ update.created_at|date:"M d, Y H:i" }}</small>
+                {{ update.note }}
+              </li>
+              {% endfor %}
+            </ul>
+            {% elif not is_seller and not is_courier %}
+            <p class="text-muted mb-3">{% trans "No status updates yet." %}</p>
+            {% endif %}
+
+            {% if order.status == 'delivered' and order.delivery_photo %}
+            <div class="mb-3">
+              <strong class="d-block mb-2">{% trans "Proof of Delivery" %}:</strong>
+              <a href="{{ order.delivery_photo.url }}" target="_blank" rel="noopener">
+                <img src="{{ order.delivery_photo.url }}" alt="{% trans 'Proof of delivery' %}" class="img-fluid rounded" style="max-height: 300px;">
+              </a>
+            </div>
+            {% endif %}
+
+            {% if is_seller and ship_form %}
+            <form method="post" action="{% url 'olretail:seller_update_order_status' order.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="status" value="shipped">
+              <div class="form-group">
+                <label for="{{ ship_form.courier_name.id_for_label }}">{{ ship_form.courier_name.label }}</label>
+                {{ ship_form.courier_name }}
+              </div>
+              <div class="form-group">
+                <label for="{{ ship_form.tracking_number.id_for_label }}">{{ ship_form.tracking_number.label }}</label>
+                {{ ship_form.tracking_number }}
+              </div>
+              <div class="form-group">
+                <label for="{{ ship_form.assigned_courier.id_for_label }}">{{ ship_form.assigned_courier.label }}</label>
+                {{ ship_form.assigned_courier }}
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-truck mr-1"></i>{% trans "Mark as Shipped" %}
+              </button>
+            </form>
+            {% endif %}
+
+            {% if is_seller and order.status == 'shipped' %}
+            <form method="post" action="{% url 'olretail:add_delivery_update' order.id %}" class="form-inline mb-3">
+              {% csrf_token %}
+              {{ delivery_update_form.note }}
+              <button type="submit" class="btn btn-outline-primary btn-sm ml-2">
+                <i class="fas fa-plus mr-1"></i>{% trans "Post update" %}
+              </button>
+            </form>
+            {% endif %}
+
+            {% if delivery_proof_form %}
+            <form method="post" action="{% url 'olretail:mark_delivered' order.id %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="{{ delivery_proof_form.photo.id_for_label }}">{{ delivery_proof_form.photo.label }}</label>
+                {{ delivery_proof_form.photo }}
+                <small class="form-text text-muted">{% trans "Take a photo of the delivered item to confirm." %}</small>
+              </div>
+              <button type="submit" class="btn btn-success btn-sm">
+                <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
+              </button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if order.payment_method == 'bank_transfer' and order.status != 'paid' %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Bank / Mobile Transfer" %}</h5>
+          </div>
+          <div class="card-body">
+            {% if is_buyer %}
+            <div class="alert alert-secondary">
+              <strong>{% trans "Seller payment details" %} — {{ order.seller.get_name }}:</strong>
+              <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ order.seller.payment_instructions }}</pre>
+              <small class="text-muted d-block mt-2">{% trans "Reference" %}: <code>{{ order.order_number }}</code></small>
+            </div>
+            {% endif %}
+
+            {% if is_buyer and order.status == 'pending_payment' %}
+            <form method="post" action="{% url 'olretail:mark_payment_sent' order.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
+              </button>
+            </form>
+            {% elif is_buyer and order.status == 'payment_reported' %}
+            <p class="text-muted mb-0">
+              <i class="fas fa-hourglass-half mr-1"></i>
+              {% trans "Waiting for the seller to confirm they received your transfer." %}
+            </p>
+            {% endif %}
+
+            {% if is_seller and order.status in 'pending_payment,payment_reported' %}
+            <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}"
+                  onsubmit="return confirm('{% trans "Confirm you received the buyer'\''s transfer?" %}');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-check mr-1"></i>{% trans "Confirm payment received" %}
+              </button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Product Details -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Product Details" %}</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                {% if order.product.product_image %}
+                  <img src="{{ order.product.product_image.url }}" class="img-fluid rounded" alt="{{ order.product.name }}">
+                {% else %}
+                  <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                    <i class="fas fa-image text-muted fa-3x"></i>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-9">
+                <h5>{{ order.product.name }}</h5>
+                <p class="text-muted">
+                  {% trans "Condition" %}: 
+                  {% if order.product.condition == 'New' %}
+                    <span class="badge badge-success">{% trans "New" %}</span>
+                  {% else %}
+                    <span class="badge badge-secondary">{% trans "Second Hand" %}</span>
+                  {% endif %}
+                </p>
+                
+                <table class="table table-sm">
+                  <tr>
+                    <td>{% trans "Unit Price" %}:</td>
+                    <td class="text-right"><strong>${{ order.price_per_unit }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Quantity" %}:</td>
+                    <td class="text-right"><strong>{{ order.quantity }}</strong></td>
+                  </tr>
+                  <tr class="table-light">
+                    <td>{% trans "Line Total" %}:</td>
+                    <td class="text-right"><strong>${{ order.subtotal }}</strong></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seller Information -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Seller Information" %}</h5>
+          </div>
+          <div class="card-body">
+            <p>
+              <strong>{{ order.seller.user.get_full_name }}</strong><br>
+              <i class="fas fa-phone mr-2"></i>
+              <a href="tel:{{ order.seller.mobile }}">{{ order.seller.mobile }}</a><br>
+              <i class="fas fa-map-marker-alt mr-2"></i>{{ order.seller.address }}
+            </p>
+            
+            {% if is_buyer %}
+            <div class="alert alert-info">
+              <i class="fas fa-whatsapp mr-2"></i>
+              <a href="https://wa.me/{{ order.seller.whatsapp_number }}?text=Hi%20about%20order%20{{ order.order_number }}" target="_blank" class="btn btn-sm btn-success">
+                {% trans "Chat on WhatsApp" %}
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Sidebar -->
+      <div class="col-lg-4">
+        <!-- Order Summary -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Order Summary" %}</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>{% trans "Subtotal" %}:</span>
+              <span>${{ order.subtotal }}</span>
+            </div>
+            {% if order.payment_method == 'stripe' %}
+            <div class="d-flex justify-content-between mb-2">
+              <span><small>{% trans "Commission (15%)" %}:</small></span>
+              <span><small>${{ order.commission_amount }}</small></span>
+            </div>
+            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+              <span><small>{% trans "Payment Fee" %}:</small></span>
+              <span><small>${{ order.payment_fee }}</small></span>
+            </div>
+            {% else %}
+            <div class="mb-3 pb-3 border-bottom">
+              <small class="text-muted"><i class="fas fa-university mr-1"></i>{% trans "Paid directly to the seller — no platform fee." %}</small>
+            </div>
+            {% endif %}
+            <div class="d-flex justify-content-between">
+              <strong>{% trans "Total Paid" %}:</strong>
+              <strong class="h5 text-primary">${{ order.total }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Information -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Delivery Information" %}</h5>
+          </div>
+          <div class="card-body">
+            <p>
+              <strong>{% trans "Address" %}:</strong><br>
+              {{ order.delivery_address }}
+            </p>
+            <p>
+              <strong>{% trans "Phone" %}:</strong><br>
+              <a href="tel:{{ order.delivery_phone }}">{{ order.delivery_phone }}</a>
+            </p>
+            {% if order.buyer_notes %}
+            <p>
+              <strong>{% trans "Special Instructions" %}:</strong><br>
+              <em>{{ order.buyer_notes }}</em>
+            </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Actions -->
+        {% if is_buyer and order.status == 'delivered' and not order.dispute %}
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-body">
+            <a href="{% url 'olretail:open_dispute' order.id %}" class="btn btn-danger btn-block">
+              <i class="fas fa-exclamation-triangle mr-2"></i>{% trans "Report Issue" %}
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  .status-step {
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .status-step.completed {
+    border-color: #28a745;
+    background-color: #f0f9ff;
+  }
+  
+  .status-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #ddd;
+  }
+  
+  .status-step.completed .status-icon {
+    color: #28a745;
+  }
+</style>
+{% endblock %}

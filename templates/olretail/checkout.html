@@ -1,0 +1,201 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Checkout" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-clipboard-list mr-2"></i>{% trans "Checkout" %}
+        </h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+        <!-- Order Items Review -->
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Order Review" %}</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead class="table-light">
+                  <tr>
+                    <th>{% trans "Product" %}</th>
+                    <th class="text-center">{% trans "Qty" %}</th>
+                    <th class="text-right">{% trans "Unit Price" %}</th>
+                    <th class="text-right">{% trans "Total" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in cart_items %}
+                  <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">${{ item.product.price }}</td>
+                    <td class="text-right font-weight-bold">${{ item.line_total }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <form method="post" id="checkout-form" novalidate>
+          {% csrf_token %}
+
+          <!-- Payment Method -->
+          <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">
+                <i class="fas fa-wallet mr-2"></i>{% trans "Payment Method" %}
+              </h5>
+            </div>
+            <div class="card-body">
+              {% for radio in form.payment_method %}
+              <div class="form-check mb-2">
+                {{ radio.tag }}
+                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+              </div>
+              {% endfor %}
+              {% if sellers_missing_instructions %}
+              <small class="form-text text-muted mt-2 d-block">
+                <i class="fas fa-info-circle mr-1"></i>
+                {% blocktrans with sellers=sellers_missing_instructions|join:", " %}
+                {{ sellers }} haven't set up bank transfer details yet — choose Card if your cart includes their items.
+                {% endblocktrans %}
+              </small>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Delivery Information -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">
+                <i class="fas fa-map-marker-alt mr-2"></i>{% trans "Delivery Information" %}
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="{{ form.delivery_address.id_for_label }}" class="font-weight-bold">
+                  {{ form.delivery_address.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.delivery_address }}
+                {% if form.delivery_address.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.delivery_address.errors }}
+                  </small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.delivery_address.help_text }}</small>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.delivery_phone.id_for_label }}" class="font-weight-bold">
+                  {{ form.delivery_phone.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.delivery_phone }}
+                {% if form.delivery_phone.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.delivery_phone.errors }}
+                  </small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.delivery_phone.help_text }}</small>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.buyer_notes.id_for_label }}" class="font-weight-bold">
+                  {{ form.buyer_notes.label }}
+                </label>
+                {{ form.buyer_notes }}
+                <small class="form-text text-muted">{{ form.buyer_notes.help_text }}</small>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">
+                <span id="submit-label"><i class="fas fa-credit-card mr-2"></i>{% trans "Proceed to Payment" %}</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Summary Sidebar -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+          <div class="card-body">
+            <h5 class="card-title mb-3">{% trans "Order Summary" %}</h5>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span>{% trans "Subtotal" %}:</span>
+              <span>${{ cart_total }}</span>
+            </div>
+
+            <div id="stripe-fee-rows">
+              <div class="d-flex justify-content-between mb-2">
+                <span><small>{% trans "Platform fee (15%)" %}:</small></span>
+                <span><small>${{ platform_fee|floatformat:2 }}</small></span>
+              </div>
+
+              <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                <span><small>{% trans "Payment fee" %}:</small></span>
+                <span><small>~${{ payment_fee|floatformat:2 }}</small></span>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mb-3">
+              <strong>{% trans "Total" %}:</strong>
+              <strong class="h5 text-primary" id="checkout-total">${{ estimated_total|floatformat:2 }}</strong>
+            </div>
+
+            <div class="alert alert-info alert-sm" role="alert" id="stripe-note">
+              <i class="fas fa-lock mr-2"></i>
+              <small>{% trans "Your payment is secure and encrypted." %}</small>
+            </div>
+            <div class="alert alert-info alert-sm d-none" role="alert" id="bank-transfer-note">
+              <i class="fas fa-university mr-2"></i>
+              <small>{% trans "You'll pay the seller directly — no platform fee. The next page shows their payment details." %}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var radios = document.querySelectorAll('input[name="payment_method"]');
+  var stripeFeeRows = document.getElementById('stripe-fee-rows');
+  var stripeNote = document.getElementById('stripe-note');
+  var bankTransferNote = document.getElementById('bank-transfer-note');
+  var totalEl = document.getElementById('checkout-total');
+  var submitLabel = document.getElementById('submit-label');
+  var cartTotal = {{ cart_total }};
+  var estimatedTotal = {{ estimated_total }};
+
+  function update() {
+    var selected = document.querySelector('input[name="payment_method"]:checked');
+    var isBankTransfer = selected && selected.value === 'bank_transfer';
+    stripeFeeRows.classList.toggle('d-none', isBankTransfer);
+    stripeNote.classList.toggle('d-none', isBankTransfer);
+    bankTransferNote.classList.toggle('d-none', !isBankTransfer);
+    totalEl.textContent = '$' + (isBankTransfer ? cartTotal : estimatedTotal).toFixed(2);
+    submitLabel.innerHTML = isBankTransfer
+      ? '<i class="fas fa-university mr-2"></i>{% trans "Continue to Payment Details" %}'
+      : '<i class="fas fa-credit-card mr-2"></i>{% trans "Proceed to Payment" %}';
+  }
+
+  radios.forEach(function (r) { r.addEventListener('change', update); });
+  update();
+})();
+</script>
+{% endblock %}

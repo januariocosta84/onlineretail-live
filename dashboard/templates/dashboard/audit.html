@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Audit log{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Audit log <small class="text-muted h6">({{ page_obj.paginator.count }} entries)</small></h1>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-hover mb-0">
+      <thead>
+        <tr><th>When</th><th>Administrator</th><th>Action</th><th>Target</th><th>Detail</th><th>IP</th></tr>
+      </thead>
+      <tbody>
+        {% for log in page_obj.object_list %}
+        <tr>
+          <td class="text-nowrap"><small>{{ log.created|date:"j M Y H:i:s" }}</small></td>
+          <td>{{ log.admin|default:"(deleted)" }}</td>
+          <td><code>{{ log.action }}</code></td>
+          <td>{{ log.target }}</td>
+          <td class="small text-muted" style="max-width: 260px;">{{ log.detail|truncatechars:120 }}</td>
+          <td><small>{{ log.ip_address|default:"—" }}</small></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No administrative actions recorded yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'shared/pagination.html' %}
+{% endblock %}

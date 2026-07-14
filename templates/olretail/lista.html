@@ -1,79 +1,193 @@
 {% extends 'shared/base.html' %}
-
+{% load i18n %}
 {% load static %}
+{% load humanize %}
+
+{% block title %}{% trans 'My products' %} — TimorMart{% endblock %}
+
 {% block content %}
-
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-4 m-1">
-
-      <div class="card">
-        <div class="card-header text-danger text-center">
-          <h2>Total Product on sale</h2>
-        </div>
-        <div class="card-body text-center">
-          <h2>Total</h2>
-          <p class="text-muted">{{count}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 m-1">
-
-      <div class="card">
-        <div class="card-header text-danger text-center">
-          <h2>Total Product sold</h2>
-        </div>
-        <div class="card-body text-center">
-          <h2>Total</h2>
-          <p class="text-muted">{{total}}</p>
-        </div>
-      </div>
-    </div>
-
+<div class="container-xl">
+  <div class="d-flex flex-wrap align-items-center justify-content-between my-3 page-header-bar">
+    <h1 class="h4 mb-0">{% trans 'My products' %}</h1>
+    <a href="{% url 'olretail:create_product' %}" class="btn btn-primary btn-sm">
+      <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans 'Add product' %}
+    </a>
   </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Number</th>
-        <th scope="col">Name</th>
-        <th scope="col">Price</th>
-        <th scope="col">Status</th>
-        <th scope="col">Product info</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
+  {% if subscription %}
+  <div class="alert {% if subscription.needs_renewal %}alert-danger{% elif subscription.expiring_soon %}alert-warning{% elif subscription.is_paid_active %}alert-success{% elif subscription.remaining_free_slots == 0 %}alert-danger{% else %}alert-light border{% endif %} d-flex flex-wrap justify-content-between align-items-center mb-3">
+    <span>
+      {% if subscription.needs_renewal %}
+      <i class="fas fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+      {% blocktrans with used=subscription.products_used limit=free_limit %}Your subscription expired. You have {{ used }} listings (over the free limit of {{ limit }}) — they stay live, but you can't add new ones until you renew.{% endblocktrans %}
+      {% elif subscription.expiring_soon %}
+      <i class="fas fa-clock mr-1" aria-hidden="true"></i>
+      {% blocktrans with days=subscription.days_until_expiry date=subscription.expires_at|date:"j M Y" %}Your subscription expires in {{ days }} day(s) ({{ date }}) — renew to keep posting new products.{% endblocktrans %}
+      {% elif subscription.is_paid_active %}
+      <i class="fas fa-crown mr-1" aria-hidden="true"></i>
+      {% blocktrans with plan=subscription.get_plan_display date=subscription.expires_at|date:"j M Y" %}{{ plan }} — unlimited listings, active until {{ date }}.{% endblocktrans %}
+      {% else %}
+      <i class="fas fa-box mr-1" aria-hidden="true"></i>
+      {% blocktrans with used=subscription.products_used limit=subscription.remaining_free_slots|add:subscription.products_used %}{{ used }} / {{ limit }} free listings used.{% endblocktrans %}
+      {% endif %}
+    </span>
+    <a href="{% url 'olretail:seller_subscription' %}" class="small">{% trans 'Manage subscription' %} »</a>
+  </div>
+  {% endif %}
 
-      {% for products in product_list%}
-      <tr>
-        <th scope="row">{{forloop.counter}}</th>
-        <td>{{products.name}}</td>
-        <td>{{products.price |stringformat:".2f"}}</td>
-        {% if products.approved%}
-        <td>Already Post</td>
-        {% else %}
-        <td>Request for Approval</td>
-        {% endif %}
-        <td>{{products.condition}}</td>
-        <td><a href="{% url 'olretail:update_product' products.slug%}" class=""><i class="fas fa-edit"></i></a></td>
-      </tr>
-      {%endfor%}
-    </tbody>
-    <tfoot>
-      <tr>
-          <th colspan="2" style="text-align: center;"> <h3>Total</h3></th>
-          <td>{{total}}</td>
-          <td> </td>
-          <td></td>
-      </tr>
-  </tfoot>
-  </table>
+  <div class="row">
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center h-100">
+        <div class="card-body py-3">
+          <p class="text-muted small text-uppercase mb-1">{% trans 'Listings' %}</p>
+          <p class="h3 mb-0">{{ count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center h-100">
+        <div class="card-body py-3">
+          <p class="text-muted small text-uppercase mb-1">{% trans 'Published' %}</p>
+          <p class="h3 mb-0 text-success">{{ approved_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center h-100">
+        <div class="card-body py-3">
+          <p class="text-muted small text-uppercase mb-1">{% trans 'Pending approval' %}</p>
+          <p class="h3 mb-0 text-warning">{{ pending_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center h-100">
+        <div class="card-body py-3">
+          <p class="text-muted small text-uppercase mb-1">{% trans 'Inventory value' %}</p>
+          <p class="h3 mb-0">$ {{ inventory_value|floatformat:2|intcomma }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if product_list %}
+  <div class="card mb-4">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">{% trans 'Product' %}</th>
+            <th scope="col">{% trans 'Price' %}</th>
+            <th scope="col">{% trans 'Qty' %}</th>
+            <th scope="col">{% trans 'Condition' %}</th>
+            <th scope="col">{% trans 'Status' %}</th>
+            <th scope="col">{% trans 'Created' %}</th>
+            <th scope="col" class="text-right">{% trans 'Actions' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in product_list %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>
+              {% if p.product_image %}
+              <img src="{{ p.product_image.url }}" alt="" class="product-thumb mr-2">
+              {% endif %}
+              <a href="{{ p.get_absolute_url }}">{{ p.name }}</a>
+            </td>
+            <td>$ {{ p.price|intcomma }}</td>
+            <td>
+              {% if p.in_stock %}
+              {{ p.quantity }}
+              {% else %}
+              <span class="badge badge-secondary">{% trans 'Out of stock' %}</span>
+              {% endif %}
+            </td>
+            <td>{{ p.get_condition_display }}</td>
+            <td>
+              {% if p.status == 'approved' %}
+              <span class="badge badge-success">{{ p.get_status_display }}</span>
+              {% elif p.status == 'pending' %}
+              <span class="badge badge-warning">{{ p.get_status_display }}</span>
+              {% elif p.status == 'changes' %}
+              <span class="badge badge-info">{{ p.get_status_display }}</span>
+              {% else %}
+              <span class="badge badge-danger">{{ p.get_status_display }}</span>
+              {% endif %}
+              {% if p.moderation_note and p.status != 'approved' %}
+              <div class="small text-muted mt-1" style="max-width: 220px; white-space: normal;">
+                <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>{{ p.moderation_note }}
+              </div>
+              {% endif %}
+            </td>
+            <td><small class="text-muted">{{ p.created|date:"j M Y" }}</small></td>
+            <td class="text-right text-nowrap">
+              <a href="{% url 'olretail:update_product' p.slug %}" class="btn btn-sm btn-outline-primary my-0"
+                 title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %} {{ p.name }}">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+              </a>
+              {% if p.in_stock %}
+              <form method="post" action="{% url 'olretail:mark_sold' p.slug %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary my-0"
+                        title="{% trans 'Mark as sold out' %}"
+                        aria-label="{% trans 'Mark as sold out' %}: {{ p.name }}">
+                  <i class="fas fa-ban" aria-hidden="true"></i>
+                </button>
+              </form>
+              {% endif %}
+              <button type="button" class="btn btn-sm btn-outline-danger my-0" data-toggle="modal"
+                      data-target="#delete-modal-{{ p.pk }}" title="{% trans 'Delete' %}"
+                      aria-label="{% trans 'Delete' %} {{ p.name }}">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Delete confirmations (outside the table so text wrapping and scroll
+       containers don't affect the dialogs) -->
+  {% for p in product_list %}
+  <div class="modal fade" id="delete-modal-{{ p.pk }}" tabindex="-1" role="dialog"
+       aria-labelledby="delete-modal-label-{{ p.pk }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content text-left">
+        <div class="modal-header">
+          <h5 class="modal-title" id="delete-modal-label-{{ p.pk }}">{% trans 'Delete product' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% blocktrans with name=p.name %}Are you sure you want to delete “{{ name }}”? This cannot be undone.{% endblocktrans %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+          <form method="post" action="{% url 'olretail:delete_product' p.slug %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">{% trans 'Delete' %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="card mb-4">
+    <div class="card-body text-center text-muted py-5">
+      <i class="fas fa-store fa-3x mb-3" aria-hidden="true"></i>
+      <h2 class="h5">{% trans 'You have no products yet' %}</h2>
+      <p>{% trans 'Create your first listing — it will appear in the store once approved.' %}</p>
+      <a href="{% url 'olretail:create_product' %}" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans 'Add product' %}
+      </a>
+    </div>
+  </div>
+  {% endif %}
 </div>
-
-
-<!-- Modal -->
-
-
 {% endblock %}
