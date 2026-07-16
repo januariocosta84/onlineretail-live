@@ -8,6 +8,7 @@ activates (SellerSubscription), the same "subject to the admin" pattern
 already used for bank-transfer orders and payouts.
 """
 
+from datetime import timedelta
 from decimal import Decimal
 
 from django.conf import settings
@@ -92,6 +93,26 @@ class SellerSubscription(models.Model):
 
     def can_post_product(self):
         return self.is_paid_active or self.products_used < FREE_PRODUCT_LIMIT
+
+    def compute_renewal(self, plan, reference_date):
+        """The single source of truth for "extend vs. start fresh," used by
+        both the admin approval action and any preview UI, so the two can
+        never disagree.
+
+        `reference_date` must be when the seller actually paid/reported the
+        renewal (`SubscriptionRequest.created_at`) — NOT `timezone.now()`.
+        Admin approval can lag behind submission by days; anchoring on "now"
+        would silently strip a seller of an extension they're entitled to
+        if their old period expires while the request is still sitting in
+        the queue. Returns (new_expires_at, extended: bool).
+        """
+        still_active = (
+            self.expires_at is not None
+            and self.plan != SubscriptionPlan.FREE
+            and self.expires_at > reference_date
+        )
+        base = self.expires_at if still_active else reference_date
+        return base + timedelta(days=PLAN_DURATION_DAYS[plan]), still_active
 
 
 class SubscriptionRequestStatus(models.TextChoices):

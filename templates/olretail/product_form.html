@@ -4,7 +4,7 @@
 {% block title %}{{ title }} — TimorMart{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-8">
       <div class="card my-4">
@@ -25,7 +25,7 @@
             {% csrf_token %}
             <div class="row">
               {% for field in form %}
-              <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %} form-group">
+              <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %} form-group" data-field="{{ field.name }}">
                 <label for="{{ field.id_for_label }}">
                   {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
                 </label>
@@ -38,6 +38,12 @@
                 {% endfor %}
               </div>
               {% endfor %}
+              <div class="col-12 form-group d-none" data-service-hint>
+                <div class="alert alert-info mb-0 py-2 small">
+                  <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+                  {% trans "Services don't need a quantity or condition — instead, use the description to mention things like availability, service area, or turnaround time." %}
+                </div>
+              </div>
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <a href="{% url 'olretail:list' %}" class="btn btn-outline-secondary btn-sm">{% trans 'Cancel' %}</a>
@@ -49,4 +55,33 @@
     </div>
   </div>
 </div>
+{{ service_category_ids|json_script:"service-category-ids" }}
+<script>
+(function () {
+  var serviceCategoryIds = JSON.parse(
+    document.getElementById("service-category-ids").textContent
+  ).map(String);
+  var categorySelect = document.getElementById("{{ form.category.id_for_label }}");
+  var quantityGroup = document.querySelector('[data-field="quantity"]');
+  var conditionGroup = document.querySelector('[data-field="condition"]');
+  var serviceHint = document.querySelector("[data-service-hint]");
+  if (!categorySelect || !quantityGroup || !conditionGroup || !serviceHint) {
+    return;
+  }
+  var quantityInput = quantityGroup.querySelector("input, select");
+  var conditionInput = conditionGroup.querySelector("input, select");
+
+  function applyServiceMode() {
+    var isService = serviceCategoryIds.indexOf(categorySelect.value) !== -1;
+    quantityGroup.classList.toggle("d-none", isService);
+    conditionGroup.classList.toggle("d-none", isService);
+    serviceHint.classList.toggle("d-none", !isService);
+    if (quantityInput) quantityInput.disabled = isService;
+    if (conditionInput) conditionInput.disabled = isService;
+  }
+
+  categorySelect.addEventListener("change", applyServiceMode);
+  applyServiceMode();
+})();
+</script>
 {% endblock %}

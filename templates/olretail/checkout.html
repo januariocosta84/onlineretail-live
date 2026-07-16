@@ -5,7 +5,7 @@
 
 {% block content %}
 <main class="py-5">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row mb-4">
       <div class="col-12">
         <h1 class="h2 page-header-bar">
@@ -95,6 +95,20 @@
                   </small>
                 {% endif %}
                 <small class="form-text text-muted">{{ form.delivery_address.help_text }}</small>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.delivery_city.id_for_label }}" class="font-weight-bold">
+                  {{ form.delivery_city.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.delivery_city }}
+                {% if form.delivery_city.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.delivery_city.errors }}
+                  </small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.delivery_city.help_text }}</small>
               </div>
 
               <div class="form-group">

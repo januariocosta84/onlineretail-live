@@ -3,14 +3,22 @@ from urllib.parse import quote
 
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import DecimalField, ExpressionWrapper, F, Q, Sum
+from django.db.models import Avg, Count, DecimalField, ExpressionWrapper, F, Q, Sum
+from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .decorators import seller_required
 from .forms import CommentForm, ProductForm
-from .models import Category, FREE_PRODUCT_LIMIT, Product, ProductStatus, SellerSubscription
+from .models import (
+    SERVICE_CATEGORY_SLUG,
+    Category,
+    FREE_PRODUCT_LIMIT,
+    Product,
+    ProductStatus,
+    SellerSubscription,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +36,7 @@ def index(request):
     """Catalog: approved products with category filter, search and sorting."""
     products = Product.objects.filter(status=ProductStatus.APPROVED).select_related(
         "category", "item_location", "country", "seller__user"
-    )
+    ).annotate(avg_rating=Avg("ratings__score"), rating_count=Count("ratings"))
 
     active_category = None
     category_slug = request.GET.get("category")
@@ -78,6 +86,11 @@ def index(request):
             "result_count": paginator.count,
         },
     )
+
+
+def about(request):
+    """Public 'About Us' page — who TimorMart is and what the platform offers."""
+    return render(request, "olretail/about.html")
 
 
 def search(request):
@@ -158,6 +171,8 @@ def product_detail(request, slug):
         "negative": public_comments.filter(sentiment="negative").count(),
     }
 
+    rating_stats = product.ratings.aggregate(avg=Avg("score"), count=Count("id"))
+
     return render(
         request,
         "olretail/details.html",
@@ -177,6 +192,13 @@ def product_detail(request, slug):
                 and product.in_stock and product.cart_purchasable
             ),
             "gallery_urls": gallery_urls,
+            "avg_rating": rating_stats["avg"],
+            "rating_count": rating_stats["count"],
+            # "Seller" reads oddly for the Services category — nobody buying a
+            # haircut or a repair job thinks of the person doing it as a
+            # "seller". The template swaps in "service provider" wording,
+            # and also hides the condition/quantity badges, when this is set.
+            "is_service_category": product.is_service_category,
         },
     )
 
@@ -259,6 +281,9 @@ def product_create(request):
             "title": _("Add a new product"),
             "submit_label": _("Create product"),
             "subscription": subscription,
+            "service_category_ids": list(
+                Category.objects.filter(slug=SERVICE_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
         },
     )
 
@@ -267,6 +292,12 @@ def product_create(request):
 def product_update(request, slug):
     product = get_object_or_404(Product, slug=slug, seller=request.user.seller)
     if request.method == "POST":
+        # form.instance IS product — capture the old files before the form
+        # binding overwrites these fields in place, so a replaced or
+        # cleared image can have its old file cleaned up from disk after
+        # save (Django never does this automatically; see the pre_delete
+        # signal in models.py for the same gap on the delete side).
+        old_images = {name: getattr(product, name) for name in Product.IMAGE_FIELD_NAMES}
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             updated = form.save(commit=False)
@@ -280,6 +311,10 @@ def product_update(request, slug):
             else:
                 messages.success(request, _("“%(name)s” was updated.") % {"name": product.name})
             updated.save()
+            for name, old_file in old_images.items():
+                new_file = getattr(updated, name)
+                if old_file and old_file.name != (new_file.name if new_file else None):
+                    old_file.delete(save=False)
             return redirect("olretail:list")
         messages.error(request, _("Please correct the errors below."))
     else:
@@ -292,6 +327,9 @@ def product_update(request, slug):
             "title": _("Edit “%(name)s”") % {"name": product.name},
             "submit_label": _("Save changes"),
             "product": product,
+            "service_category_ids": list(
+                Category.objects.filter(slug=SERVICE_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
         },
     )
 
@@ -311,6 +349,14 @@ def product_mark_sold(request, slug):
 def product_delete(request, slug):
     product = get_object_or_404(Product, slug=slug, seller=request.user.seller)
     name = product.name
-    product.delete()
+    try:
+        product.delete()
+    except ProtectedError:
+        messages.error(
+            request,
+            _("“%(name)s” can't be deleted because it has order history — mark it sold out instead.")
+            % {"name": name},
+        )
+        return redirect("olretail:list")
     messages.success(request, _("“%(name)s” was deleted.") % {"name": name})
     return redirect("olretail:list")

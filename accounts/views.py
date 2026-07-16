@@ -10,8 +10,11 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from olretail.models import SellerType
+
 from .forms import RegistrationForm
-from .roles import ROLE_BUYER, assign_role, is_buyer, is_seller
+from .ratelimit import rate_limit
+from .roles import ROLE_BUYER, ROLE_BUYER_SELLER, ROLE_SELLER, assign_role, is_buyer, is_seller
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +36,7 @@ def _safe_next(request):
     return None
 
 
+@rate_limit("register", limit=10, window_seconds=300)
 def register(request):
     if request.user.is_authenticated:
         return redirect(_role_home(request.user))
@@ -49,6 +53,15 @@ def register(request):
                     address=form.cleaned_data["address"],
                     mobile=form.cleaned_data["mobile"],
                 )
+                if role in (ROLE_SELLER, ROLE_BUYER_SELLER):
+                    seller = user.seller
+                    seller.seller_type = form.cleaned_data["seller_type"] or SellerType.INDIVIDUAL
+                    if seller.seller_type == SellerType.COMPANY:
+                        seller.company_name = form.cleaned_data["company_name"]
+                        seller.company_tin = form.cleaned_data["company_tin"]
+                        seller.company_address = form.cleaned_data["company_address"]
+                        seller.company_bank_account = form.cleaned_data["company_bank_account"]
+                    seller.save()
             login(request, user)
             logger.info("New user registered: %s (role=%s)", user.username, role)
             if role == ROLE_BUYER:
@@ -71,6 +84,7 @@ def register(request):
     return render(request, "accounts/register.html", {"form": form})
 
 
+@rate_limit("login", limit=10, window_seconds=300)
 def userlogin(request):
     if request.user.is_authenticated:
         return redirect(_role_home(request.user))

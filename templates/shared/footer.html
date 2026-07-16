@@ -1,3 +1,4 @@
+{% load i18n %}
 <footer class="text-center text-white" style="background-color: #f1f1f1;">
         <style>
           /* Self-contained circles: MDB's .btn-floating clips icons when
@@ -14,7 +15,13 @@
           }
         </style>
         <!-- Grid container -->
-        <div class="container-xl pt-4">
+        <div class="container-fluid pt-4">
+          <!-- Section: Links -->
+          <section class="mb-4">
+            <a class="text-dark mx-2" href="{% url 'olretail:about' %}">{% trans 'About Us' %}</a>
+          </section>
+          <!-- Section: Links -->
+
           <!-- Section: Social media (update hrefs when accounts exist) -->
           <section class="mb-4">
             <a class="footer-social" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
@@ -22,6 +29,15 @@
             <a class="footer-social" href="#!" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
           </section>
           <!-- Section: Social media -->
+
+          <!-- Section: Payment methods -->
+          <section class="mb-4">
+            <p class="text-dark small mb-2">{% trans 'We accept' %}</p>
+            <span class="text-dark mx-2"><i class="fab fa-cc-visa fa-lg mr-1" aria-hidden="true"></i>{% trans 'VISA Card' %}</span>
+            <span class="text-dark mx-2"><i class="fas fa-university fa-lg mr-1" aria-hidden="true"></i>{% trans 'Bank Transfer' %}</span>
+            <span class="text-dark mx-2"><i class="fas fa-mobile-alt fa-lg mr-1" aria-hidden="true"></i>{% trans 'Mobile Money' %}</span>
+          </section>
+          <!-- Section: Payment methods -->
         </div>
         <!-- Grid container -->
       

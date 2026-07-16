@@ -8,11 +8,14 @@ and recorded in the AuditLog.
 
 import csv
 from datetime import timedelta
+from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
+from django.db.models.deletion import ProtectedError
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -21,18 +24,32 @@ from django.views.decorators.http import require_POST
 
 from django.db.models import F
 
-from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role
-from olretail.models import Category, Comment, Payout, PayoutStatus, Product, ProductStatus, Seller, SellerBalance
-from olretail.payouts import create_scheduled_payouts
-from olretail.subscription_models import (
-    PLAN_DURATION_DAYS, SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus,
+from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
+from olretail.models import (
+    Category, Comment, Courier, CourierVerificationStatus, Order, OrderStatus, Payout, PayoutStatus,
+    PlatformSettings, Product, ProductStatus, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
+from olretail.payouts import create_scheduled_payouts
+from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
 
 from .decorators import admin_required
 from .models import AuditLog
 from .utils import log_action
 
 PAGE_SIZE = 20
+
+# Formula-triggering characters at the start of a CSV cell (=, +, -, @) can
+# execute as a spreadsheet formula when the export is opened in Excel/Sheets
+# — neutralize by prefixing with a quote, per the standard CSV-injection fix.
+_CSV_FORMULA_PREFIXES = ("=", "+", "-", "@")
+
+
+def _csv_safe(value):
+    text = str(value)
+    if text.startswith(_CSV_FORMULA_PREFIXES):
+        return "'" + text
+    return text
+
 
 REVIEW_STATUSES = (ProductStatus.PENDING, ProductStatus.CHANGES_REQUESTED)
 
@@ -244,7 +261,7 @@ def products(request):
         writer = csv.writer(response)
         writer.writerow(["Name", "Seller", "Category", "Price", "Quantity", "Condition", "Status", "Featured", "Created"])
         for p in qs:
-            writer.writerow([p.name, p.seller.get_name, p.category.title, p.price,
+            writer.writerow([_csv_safe(p.name), _csv_safe(p.seller.get_name), p.category.title, p.price,
                              p.quantity, p.condition, p.get_status_display(), p.featured, p.created.date()])
         return response
 
@@ -298,7 +315,7 @@ def product_remove(request, slug):
 
 @admin_required
 def users(request):
-    qs = User.objects.select_related("buyer", "seller").order_by("-date_joined")
+    qs = User.objects.select_related("buyer", "seller", "courier").order_by("-date_joined")
     q = (request.GET.get("q") or "").strip()
     role = request.GET.get("role") or ""
 
@@ -313,6 +330,8 @@ def users(request):
         qs = qs.filter(seller__isnull=False, buyer__isnull=True)
     elif role == "both":
         qs = qs.filter(buyer__isnull=False, seller__isnull=False)
+    elif role == "courier":
+        qs = qs.filter(courier__isnull=False)
     elif role == "staff":
         qs = qs.filter(is_staff=True)
 
@@ -324,8 +343,8 @@ def users(request):
         writer.writerow(["Username", "First name", "Last name", "Email", "Buyer", "Seller",
                          "Staff", "Active", "Joined", "Last login"])
         for u in qs:
-            writer.writerow([u.username, u.first_name, u.last_name, u.email,
-                             hasattr(u, "buyer"), hasattr(u, "seller"), u.is_staff,
+            writer.writerow([_csv_safe(u.username), _csv_safe(u.first_name), _csv_safe(u.last_name),
+                             _csv_safe(u.email), hasattr(u, "buyer"), hasattr(u, "seller"), u.is_staff,
                              u.is_active, u.date_joined.date(),
                              u.last_login.date() if u.last_login else ""])
         return response
@@ -373,6 +392,28 @@ def user_toggle_active(request, pk):
 
 @admin_required
 @require_POST
+def user_reset_password(request, pk):
+    """Set a user's password directly from the dashboard — reuses Django's
+    own SetPasswordForm for validation, so this doesn't depend on the
+    separate Django-admin permission model the way the old /admin/ link did."""
+    target = get_object_or_404(User, pk=pk)
+    error = _guard_user_change(request, target)
+    if error:
+        messages.error(request, error)
+        return redirect("dashboard:users")
+
+    form = SetPasswordForm(target, request.POST)
+    if form.is_valid():
+        form.save()
+        log_action(request, "user_password_reset", target.username)
+        messages.success(request, f"Password for “{target.username}” was reset.")
+    else:
+        messages.error(request, " ".join(e for errs in form.errors.values() for e in errs))
+    return redirect("dashboard:users")
+
+
+@admin_required
+@require_POST
 def user_grant_role(request, pk):
     target = get_object_or_404(User, pk=pk)
     role = request.POST.get("role")
@@ -396,6 +437,55 @@ def user_grant_role(request, pk):
     )
     log_action(request, "user_role_granted", target.username, role)
     messages.success(request, f"“{target.username}” now has the {role} role.")
+    return redirect("dashboard:users")
+
+
+@admin_required
+@require_POST
+def user_revoke_role(request, pk):
+    target = get_object_or_404(User, pk=pk)
+    role = request.POST.get("role")
+    if role not in (ROLE_BUYER, ROLE_SELLER, ROLE_COURIER):
+        messages.error(request, "Unknown role.")
+        return redirect("dashboard:users")
+    error = _guard_user_change(request, target)
+    if error:
+        messages.error(request, error)
+        return redirect("dashboard:users")
+
+    if role == ROLE_SELLER and hasattr(target, "seller"):
+        seller = target.seller
+        if seller.product_set.exists():
+            messages.error(
+                request,
+                f"“{target.username}” still has listed products — remove or reassign them "
+                "before revoking the seller role.",
+            )
+            return redirect("dashboard:users")
+        balance = getattr(seller, "balance", None)
+        if balance and (
+            balance.total_earnings or balance.total_payouts
+            or balance.pending_payout or balance.available_balance
+        ):
+            messages.error(
+                request,
+                f"“{target.username}” has earnings/payout history on their account — "
+                "revoking the seller role would delete that financial record.",
+            )
+            return redirect("dashboard:users")
+
+    try:
+        revoke_role(target, role)
+    except ProtectedError:
+        messages.error(
+            request,
+            f"“{target.username}” still has orders, transactions, disputes or payouts on "
+            "record — those must be resolved before the role can be revoked.",
+        )
+        return redirect("dashboard:users")
+
+    log_action(request, "user_role_revoked", target.username, role)
+    messages.success(request, f"“{target.username}” no longer has the {role} role.")
     return redirect("dashboard:users")
 
 
@@ -573,10 +663,21 @@ def subscription_detail(request, pk):
         SubscriptionRequest.objects.select_related("seller__user"), pk=pk
     )
     subscription, _created = SellerSubscription.objects.get_or_create(seller=sub_request.seller)
+
+    preview_expiry = preview_extended = None
+    if sub_request.status == SubscriptionRequestStatus.PENDING:
+        preview_expiry, preview_extended = subscription.compute_renewal(sub_request.plan, sub_request.created_at)
+
     return render(
         request,
         "dashboard/subscription_detail.html",
-        {"section": "subscriptions", "sub_request": sub_request, "subscription": subscription},
+        {
+            "section": "subscriptions",
+            "sub_request": sub_request,
+            "subscription": subscription,
+            "preview_expiry": preview_expiry,
+            "preview_extended": preview_extended,
+        },
     )
 
 
@@ -594,9 +695,12 @@ def subscription_action(request, pk):
     if action == "approve":
         subscription, _created = SellerSubscription.objects.get_or_create(seller=sub_request.seller)
         now = timezone.now()
-        base = subscription.expires_at if subscription.is_paid_active else now
+        # Anchored on when the seller actually reported payment, not "now" —
+        # see SellerSubscription.compute_renewal for why that distinction
+        # matters (admin review can lag behind submission by days).
+        new_expiry, extended = subscription.compute_renewal(sub_request.plan, sub_request.created_at)
         subscription.plan = sub_request.plan
-        subscription.expires_at = base + timedelta(days=PLAN_DURATION_DAYS[sub_request.plan])
+        subscription.expires_at = new_expiry
         subscription.save(update_fields=["plan", "expires_at", "updated_at"])
 
         sub_request.status = SubscriptionRequestStatus.APPROVED
@@ -606,13 +710,25 @@ def subscription_action(request, pk):
 
         log_action(
             request, "subscription_approved", sub_request.seller.get_name,
-            f"{sub_request.get_plan_display()} — ${sub_request.amount}",
+            f"{sub_request.get_plan_display()} — ${sub_request.amount}"
+            f" ({'extended' if extended else 'activated'} to {new_expiry:%Y-%m-%d})",
         )
-        messages.success(
-            request,
-            f"Subscription confirmed for {sub_request.seller.get_name} — "
-            f"active until {subscription.expires_at:%d %b %Y}.",
-        )
+        if extended:
+            admin_message = (
+                f"Subscription confirmed for {sub_request.seller.get_name} — "
+                f"extended to {new_expiry:%d %b %Y}."
+            )
+            seller_message = f"Your subscription has been successfully extended until {new_expiry:%d %b %Y}."
+        else:
+            admin_message = (
+                f"Subscription confirmed for {sub_request.seller.get_name} — "
+                f"active until {new_expiry:%d %b %Y}."
+            )
+            seller_message = f"Your subscription is now active until {new_expiry:%d %b %Y}."
+        messages.success(request, admin_message)
+
+        from olretail.payment_views import _notify
+        _notify(sub_request.seller.user, seller_message)
     elif action == "reject":
         if not reason:
             messages.error(request, "A reason is required when rejecting a subscription request.")
@@ -628,3 +744,176 @@ def subscription_action(request, pk):
         messages.error(request, "Unknown action.")
 
     return redirect("dashboard:subscription_detail", pk=sub_request.pk)
+
+
+# ── Platform settings ──────────────────────────────────────────────────
+
+
+@admin_required
+def platform_settings(request):
+    """Platform's own payment details — where sellers send subscription
+    payments. Falls back to settings.PLATFORM_PAYMENT_INSTRUCTIONS until
+    an admin sets one here."""
+    settings_obj = PlatformSettings.load()
+    if request.method == "POST":
+        settings_obj.payment_instructions = (request.POST.get("payment_instructions") or "").strip()
+        settings_obj.save(update_fields=["payment_instructions", "updated_at"])
+        log_action(request, "platform_payment_instructions_updated", "")
+        messages.success(request, "Payment settings saved.")
+        return redirect("dashboard:platform_settings")
+
+    return render(
+        request,
+        "dashboard/platform_settings.html",
+        {"section": "platform_settings", "settings_obj": settings_obj},
+    )
+
+
+# ── Order courier reassignment ───────────────────────────────────────────
+
+
+@admin_required
+@require_POST
+def order_reassign_courier(request, order_id):
+    """The seller-facing 'Mark as Shipped' form only offers the courier
+    picker at the Paid→Shipped transition — this is the only supported way
+    to correct it afterward (while still Shipped, before Delivered), and
+    unlike editing the order directly in Django admin, it's audit-logged."""
+    order = get_object_or_404(Order, id=order_id)
+    if order.status != OrderStatus.SHIPPED:
+        messages.error(request, "Courier can only be reassigned while an order is Shipped (not yet Delivered).")
+        return redirect("olretail:order_detail", order_id=order.id)
+
+    courier_id = request.POST.get("courier_id") or None
+    courier = get_object_or_404(Courier, pk=courier_id) if courier_id else None
+    previous = order.assigned_courier
+    if courier == previous:
+        messages.info(request, "No change — that courier is already assigned.")
+        return redirect("olretail:order_detail", order_id=order.id)
+
+    order.assigned_courier = courier
+    order.save(update_fields=["assigned_courier"])
+    log_action(
+        request, "order_courier_reassigned", order.order_number,
+        f"{previous.get_name if previous else 'unassigned'} → {courier.get_name if courier else 'unassigned'}",
+    )
+
+    from olretail.payment_views import _notify
+    if courier:
+        _notify(courier.user, f"You've been assigned to deliver order {order.order_number}.", order=order)
+    if previous:
+        _notify(previous.user, f"You've been unassigned from order {order.order_number}.", order=order)
+
+    messages.success(request, f"Courier for {order.order_number} updated.")
+    return redirect("olretail:order_detail", order_id=order.id)
+
+
+# ── Courier verification ─────────────────────────────────────────────────
+
+
+@admin_required
+def courier_verification(request):
+    couriers = (
+        Courier.objects.filter(verification_status=CourierVerificationStatus.PENDING)
+        # Nullable ImageField: rows added via migration (or never touched)
+        # can have NULL rather than "" — exclude both, not just "".
+        .exclude(Q(id_document="") | Q(id_document__isnull=True))
+        .select_related("user")
+        .order_by("user__first_name")
+    )
+    return render(
+        request, "dashboard/courier_verification.html", {"section": "courier_verification", "couriers": couriers}
+    )
+
+
+@admin_required
+@require_POST
+def courier_verification_action(request, pk):
+    courier = get_object_or_404(Courier, pk=pk)
+    action = request.POST.get("action")
+    reason = (request.POST.get("reason") or "").strip()
+
+    if action not in ("approve", "reject"):
+        messages.error(request, "Unknown action.")
+        return redirect("dashboard:courier_verification")
+    if action == "reject" and not reason:
+        messages.error(request, "A reason is required when rejecting — it is shown to the courier.")
+        return redirect("dashboard:courier_verification")
+
+    if action == "approve":
+        deposit_raw = (request.POST.get("deposit_amount") or "").strip()
+        if deposit_raw:
+            try:
+                courier.deposit_amount = Decimal(deposit_raw)
+            except InvalidOperation:
+                messages.error(request, "Deposit amount must be a number.")
+                return redirect("dashboard:courier_verification")
+        courier.verification_status = CourierVerificationStatus.VERIFIED
+        courier.verification_note = ""
+        courier.verified_at = timezone.now()
+        courier.verified_by = request.user
+        courier.save(update_fields=[
+            "deposit_amount", "verification_status", "verification_note", "verified_at", "verified_by",
+        ])
+        log_action(request, "courier_verified", courier.get_name)
+        messages.success(request, f"{courier.get_name} is now verified.")
+    else:
+        courier.verification_status = CourierVerificationStatus.REJECTED
+        courier.verification_note = reason
+        courier.save(update_fields=["verification_status", "verification_note"])
+        log_action(request, "courier_rejected", courier.get_name, reason)
+        messages.success(request, f"{courier.get_name}'s submission was rejected.")
+
+    return redirect("dashboard:courier_verification")
+
+
+# ── Company seller verification ──────────────────────────────────────────
+# Soft trust badge only — unlike courier verification, nothing here gates
+# selling or payouts; approval just turns on a "Verified Business" badge.
+
+
+@admin_required
+def seller_verification(request):
+    sellers = (
+        Seller.objects.filter(seller_type=SellerType.COMPANY, verification_status=SellerVerificationStatus.PENDING)
+        # Nullable ImageField: rows added via migration (or never touched)
+        # can have NULL rather than "" — exclude both, not just "".
+        .exclude(Q(business_document="") | Q(business_document__isnull=True))
+        .select_related("user")
+        .order_by("company_name")
+    )
+    return render(
+        request, "dashboard/seller_verification.html", {"section": "seller_verification", "sellers": sellers}
+    )
+
+
+@admin_required
+@require_POST
+def seller_verification_action(request, pk):
+    seller = get_object_or_404(Seller, pk=pk)
+    action = request.POST.get("action")
+    reason = (request.POST.get("reason") or "").strip()
+
+    if action not in ("approve", "reject"):
+        messages.error(request, "Unknown action.")
+        return redirect("dashboard:seller_verification")
+    if action == "reject" and not reason:
+        messages.error(request, "A reason is required when rejecting — it is shown to the seller.")
+        return redirect("dashboard:seller_verification")
+
+    if action == "approve":
+        seller.verification_status = SellerVerificationStatus.VERIFIED
+        seller.verification_note = ""
+        seller.verified_at = timezone.now()
+        seller.verified_by = request.user
+        seller.save(update_fields=["verification_status", "verification_note", "verified_at", "verified_by"])
+        log_action(request, "seller_verified", seller.get_name)
+        messages.success(request, f"{seller.get_name} is now a verified business.")
+    else:
+        seller.verification_status = SellerVerificationStatus.REJECTED
+        seller.verification_note = reason
+        seller.save(update_fields=["verification_status", "verification_note"])
+        log_action(request, "seller_rejected", seller.get_name, reason)
+        messages.success(request, f"{seller.get_name}'s submission was rejected.")
+
+    return redirect("dashboard:seller_verification")

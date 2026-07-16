@@ -23,6 +23,7 @@
           <option value="buyer" {% if role == 'buyer' %}selected{% endif %}>Buyer only</option>
           <option value="seller" {% if role == 'seller' %}selected{% endif %}>Seller only</option>
           <option value="both" {% if role == 'both' %}selected{% endif %}>Buyer &amp; Seller</option>
+          <option value="courier" {% if role == 'courier' %}selected{% endif %}>Courier</option>
           <option value="staff" {% if role == 'staff' %}selected{% endif %}>Staff</option>
         </select>
       </div>
@@ -54,7 +55,14 @@
             {% if u.is_superuser %}<span class="badge badge-dark">Superuser</span>
             {% elif u.is_staff %}<span class="badge badge-dark">Staff</span>{% endif %}
             {% if u.buyer %}<span class="badge badge-info">Buyer</span>{% endif %}
-            {% if u.seller %}<span class="badge badge-primary">Seller</span>{% endif %}
+            {% if u.seller %}
+            <span class="badge badge-primary">Seller</span>
+            {% if u.seller.seller_type == 'company' %}
+            <span class="badge badge-info" title="{{ u.seller.company_name }}">
+              <i class="fas fa-building mr-1" aria-hidden="true"></i>{{ u.seller.company_name|default:"Company" }}
+            </span>
+            {% endif %}
+            {% endif %}
             {% if u.courier %}<span class="badge badge-warning">Courier</span>{% endif %}
           </td>
           <td>
@@ -70,11 +78,23 @@
               {% csrf_token %}<input type="hidden" name="role" value="buyer">
               <button type="submit" class="btn btn-sm btn-outline-info my-0" title="Grant buyer role">+Buyer</button>
             </form>
+            {% else %}
+            <form method="post" action="{% url 'dashboard:user_revoke_role' u.pk %}" class="d-inline"
+                  onsubmit="return confirm('Revoke the buyer role from “{{ u.username }}”?');">
+              {% csrf_token %}<input type="hidden" name="role" value="buyer">
+              <button type="submit" class="btn btn-sm btn-outline-info my-0" title="Revoke buyer role">-Buyer</button>
+            </form>
             {% endif %}
             {% if not u.seller %}
             <form method="post" action="{% url 'dashboard:user_grant_role' u.pk %}" class="d-inline">
               {% csrf_token %}<input type="hidden" name="role" value="seller">
               <button type="submit" class="btn btn-sm btn-outline-primary my-0" title="Grant seller role">+Seller</button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'dashboard:user_revoke_role' u.pk %}" class="d-inline"
+                  onsubmit="return confirm('Revoke the seller role from “{{ u.username }}”? This is blocked while they still have listed products.');">
+              {% csrf_token %}<input type="hidden" name="role" value="seller">
+              <button type="submit" class="btn btn-sm btn-outline-primary my-0" title="Revoke seller role">-Seller</button>
             </form>
             {% endif %}
             {% if not u.courier %}
@@ -82,12 +102,18 @@
               {% csrf_token %}<input type="hidden" name="role" value="courier">
               <button type="submit" class="btn btn-sm btn-outline-warning my-0" title="Grant courier role">+Courier</button>
             </form>
+            {% else %}
+            <form method="post" action="{% url 'dashboard:user_revoke_role' u.pk %}" class="d-inline"
+                  onsubmit="return confirm('Revoke the courier role from “{{ u.username }}”?');">
+              {% csrf_token %}<input type="hidden" name="role" value="courier">
+              <button type="submit" class="btn btn-sm btn-outline-warning my-0" title="Revoke courier role">-Courier</button>
+            </form>
             {% endif %}
             {% endif %}
-            <a href="/admin/auth/user/{{ u.pk }}/password/" class="btn btn-sm btn-outline-secondary my-0"
-               title="Reset password" target="_blank" rel="noopener">
+            <button type="button" class="btn btn-sm btn-outline-secondary my-0" title="Reset password"
+                    data-toggle="modal" data-target="#reset-password-modal-{{ u.pk }}">
               <i class="fas fa-key" aria-hidden="true"></i>
-            </a>
+            </button>
             <form method="post" action="{% url 'dashboard:user_toggle_active' u.pk %}" class="d-inline"
                   onsubmit="return confirm('{% if u.is_active %}Suspend{% else %}Reactivate{% endif %} account “{{ u.username }}”?');">
               {% csrf_token %}
@@ -105,5 +131,42 @@
     </table>
   </div>
 </div>
+
+<!-- Password-reset modals (outside the table so table layout/scroll doesn't affect the dialogs) -->
+{% for u in page_obj.object_list %}
+<div class="modal fade" id="reset-password-modal-{{ u.pk }}" tabindex="-1" role="dialog"
+     aria-labelledby="reset-password-modal-label-{{ u.pk }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form method="post" action="{% url 'dashboard:user_reset_password' u.pk %}" class="modal-content text-left">
+      {% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title" id="reset-password-modal-label-{{ u.pk }}">
+          Reset password — “{{ u.username }}”
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new_password1-{{ u.pk }}">New password</label>
+          <input type="password" name="new_password1" id="new_password1-{{ u.pk }}"
+                 class="form-control form-control-sm" autocomplete="new-password" required>
+        </div>
+        <div class="form-group mb-0">
+          <label for="new_password2-{{ u.pk }}">Confirm new password</label>
+          <input type="password" name="new_password2" id="new_password2-{{ u.pk }}"
+                 class="form-control form-control-sm" autocomplete="new-password" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Set password</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
 {% include 'shared/pagination.html' %}
 {% endblock %}

@@ -5,7 +5,7 @@
 
 {% block content %}
 <main class="py-5">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row mb-4">
       <div class="col-12">
         <h1 class="h2 page-header-bar">
@@ -15,6 +15,37 @@
     </div>
 
     {% include "shared/messages.html" %}
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        {% if courier.verification_status == 'verified' %}
+        <span class="badge badge-success"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>{% trans "Verified" %}</span>
+        <span class="text-muted small ml-2">{% trans "You're verified and can be assigned deliveries." %}</span>
+        {% elif courier.verification_status == 'pending' and courier.id_document %}
+        <span class="badge badge-warning"><i class="fas fa-clock mr-1" aria-hidden="true"></i>{% trans "Awaiting review" %}</span>
+        <span class="text-muted small ml-2">{% trans "An administrator is reviewing your ID document." %}</span>
+        {% else %}
+        {% if courier.verification_status == 'rejected' %}
+        <p class="text-danger small mb-2">
+          <i class="fas fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+          {% trans "Your ID submission was rejected" %}{% if courier.verification_note %}: {{ courier.verification_note }}{% endif %}
+        </p>
+        {% else %}
+        <p class="text-muted small mb-2">
+          {% trans "Submit a photo of your ID document to get verified — you can't be assigned deliveries until then." %}
+        </p>
+        {% endif %}
+        <form method="post" action="{% url 'olretail:courier_submit_verification' %}" enctype="multipart/form-data" class="form-inline">
+          {% csrf_token %}
+          {{ verification_form.id_document }}
+          <button type="submit" class="btn btn-primary btn-sm ml-2">{% trans "Submit" %}</button>
+          {% for error in verification_form.id_document.errors %}
+          <div class="text-danger small d-block w-100 mt-1">{{ error }}</div>
+          {% endfor %}
+        </form>
+        {% endif %}
+      </div>
+    </div>
 
     <h2 class="h5 mb-3">{% trans "Pending" %} ({{ pending|length }})</h2>
     {% if pending %}

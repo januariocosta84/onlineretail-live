@@ -2,6 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
 
 from . import views
+from .ratelimit import rate_limit
 
 app_name = "accounts"
 
@@ -13,10 +14,12 @@ urlpatterns = [
     # Password reset flow (email is printed to the console unless SMTP is configured)
     path(
         "reset/",
-        auth_views.PasswordResetView.as_view(
-            template_name="accounts/password_reset_form.html",
-            email_template_name="accounts/password_reset_email.html",
-            success_url=reverse_lazy("accounts:password_reset_done"),
+        rate_limit("password_reset", limit=10, window_seconds=300)(
+            auth_views.PasswordResetView.as_view(
+                template_name="accounts/password_reset_form.html",
+                email_template_name="accounts/password_reset_email.html",
+                success_url=reverse_lazy("accounts:password_reset_done"),
+            )
         ),
         name="reset",
     ),

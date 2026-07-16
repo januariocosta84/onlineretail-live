@@ -20,19 +20,28 @@
           <a href="{{ p.get_absolute_url }}" class="text-dark">{{ p.name }}</a>
         </h2>
         <p class="mb-1"><strong class="text-danger">$ {{ p.price|intcomma }}</strong></p>
+        {% if p.rating_count %}
+        <p class="mb-1 small text-warning" title="{{ p.avg_rating|floatformat:1 }} / 5 ({{ p.rating_count }})">
+          {% for i in "12345" %}<i class="fas fa-star {% if forloop.counter > p.avg_rating|floatformat:0|add:0 %}text-muted{% endif %}" aria-hidden="true"></i>{% endfor %}
+          <span class="text-muted">({{ p.rating_count }})</span>
+        </p>
+        {% endif %}
         <p class="mb-1 small text-muted">
           <a href="{{ p.category.get_absolute_url }}" class="text-muted">{{ p.category.title }}</a>
-          · {{ p.get_condition_display }}
+          {% if not p.is_service_category %}· {{ p.get_condition_display }}{% endif %}
         </p>
         <p class="mb-1 small text-muted text-truncate">
           <i class="fa fa-store" aria-hidden="true"></i>
           {{ p.seller.get_name }}
+          {% if p.seller.is_verified_business %}
+          <i class="fas fa-check-circle text-success" title="{% trans 'Verified Business' %}" aria-hidden="true"></i>
+          {% endif %}
         </p>
         <p class="mb-0 small text-muted">
           <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
           {{ p.item_location }}, {{ p.country }}
         </p>
-        {% if not p.in_stock %}
+        {% if not p.in_stock and not p.is_service_category %}
         <span class="badge badge-secondary mt-1">{% trans 'Out of stock' %}</span>
         {% endif %}
       </div>

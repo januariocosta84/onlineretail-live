@@ -8,6 +8,7 @@ app_name = "olretail"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("about/", views.about, name="about"),
     path("search/", views.search, name="search"),
     path("details/<slug:slug>/", views.product_detail, name="details"),
     path("category/<int:id>", views.category_redirect, name="category"),
@@ -26,6 +27,9 @@ urlpatterns = [
     # Buyer Orders
     path("orders/", payment_views.buyer_orders, name="buyer_orders"),
     path("order/<int:order_id>/", payment_views.order_detail, name="order_detail"),
+    path("order/<int:order_id>/cancel/", payment_views.cancel_order, name="cancel_order"),
+    path("order/<int:order_id>/rate/", payment_views.rate_order, name="rate_order"),
+    path("order/<int:order_id>/rate-courier/", payment_views.rate_courier, name="rate_courier"),
 
     # Bank / mobile transfer
     path("order/<int:order_id>/mark-sent/", payment_views.mark_payment_sent, name="mark_payment_sent"),
@@ -37,6 +41,7 @@ urlpatterns = [
 
     # Courier
     path("courier/deliveries/", payment_views.courier_deliveries, name="courier_deliveries"),
+    path("courier/verification/", payment_views.courier_submit_verification, name="courier_submit_verification"),
 
     # Disputes
     path("order/<int:order_id>/dispute/", payment_views.open_dispute, name="open_dispute"),
@@ -48,6 +53,8 @@ urlpatterns = [
     path("seller/orders/", payment_views.seller_orders, name="seller_orders"),
     path("seller/balance/", payment_views.seller_balance, name="seller_balance"),
     path("seller/payment-settings/", payment_views.seller_payment_settings, name="seller_payment_settings"),
+    path("seller/company-info/", payment_views.seller_company_info, name="seller_company_info"),
+    path("seller/verification/", payment_views.seller_submit_verification, name="seller_submit_verification"),
     path("seller/subscription/", payment_views.seller_subscription, name="seller_subscription"),
     path("seller/order/<int:order_id>/status/", payment_views.seller_update_order_status, name="seller_update_order_status"),
     path("seller/create-product/", views.product_create, name="create_product"),
@@ -55,6 +62,11 @@ urlpatterns = [
     path("seller/mark-sold/<slug:slug>", views.product_mark_sold, name="mark_sold"),
     path("seller/delete-product/<slug:slug>", views.product_delete, name="delete_product"),
     
+    # Notifications
+    path("notifications/", payment_views.notifications, name="notifications"),
+    path("notifications/<int:pk>/open/", payment_views.notification_open, name="notification_open"),
+    path("notifications/mark-all-read/", payment_views.notifications_mark_all_read, name="notifications_mark_all_read"),
+
     # Webhook
     path("webhook/stripe/", payment_views.stripe_webhook, name="stripe_webhook"),
     

@@ -4,7 +4,7 @@
 
 {% block content %}
 <main class="py-5">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <!-- Page Header -->
@@ -53,6 +53,97 @@
                   </label>
                 </div>
                 {% endfor %}
+              </div>
+            </div>
+
+            <!-- Seller Type Selection (sellers only) -->
+            <div class="mb-4 d-none" id="seller-type-section">
+              <h5 class="mb-3 font-weight-bold">
+                {{ form.seller_type.label }}
+              </h5>
+
+              {% if form.seller_type.errors %}
+                <div class="alert alert-danger alert-sm mb-3">
+                  {{ form.seller_type.errors }}
+                </div>
+              {% endif %}
+
+              <div class="row">
+                {% for choice_value, choice_label in form.seller_type.field.choices %}
+                <div class="col-md-6 mb-3">
+                  <label class="custom-control custom-radio cursor-pointer h-100">
+                    <input type="radio" name="seller_type" value="{{ choice_value }}"
+                           class="custom-control-input"
+                           {% if form.seller_type.value|default:"individual" == choice_value %}checked{% endif %}>
+                    <div class="custom-control-label d-flex align-items-start cursor-pointer">
+                      <div class="ml-2">
+                        <div class="font-weight-bold text-dark">
+                          {{ choice_label }}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Company Information (company sellers only) -->
+            <div class="mb-4 d-none" id="company-info-section">
+              <h5 class="mb-3 font-weight-bold">
+                <i class="fas fa-building text-primary mr-2"></i>{% trans "Company Information" %}
+              </h5>
+
+              <div class="form-group">
+                <label for="{{ form.company_name.id_for_label }}">
+                  {{ form.company_name.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.company_name }}
+                {% if form.company_name.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.company_name.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.company_tin.id_for_label }}">
+                  {{ form.company_tin.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.company_tin }}
+                {% if form.company_tin.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.company_tin.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.company_address.id_for_label }}">
+                  {{ form.company_address.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.company_address }}
+                {% if form.company_address.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.company_address.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.company_bank_account.id_for_label }}">
+                  {{ form.company_bank_account.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.company_bank_account }}
+                {% if form.company_bank_account.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.company_bank_account.errors }}
+                  </small>
+                {% endif %}
               </div>
             </div>
 
@@ -277,4 +368,32 @@
     }
   }
 </style>
+<script>
+(function () {
+  var sellerTypeSection = document.getElementById("seller-type-section");
+  var companySection = document.getElementById("company-info-section");
+
+  function accountTypeIsSeller() {
+    var checked = document.querySelector('input[name="account_type"]:checked');
+    return !!checked && (checked.value === "seller" || checked.value === "buyer_seller");
+  }
+  function sellerTypeIsCompany() {
+    var checked = document.querySelector('input[name="seller_type"]:checked');
+    return !!checked && checked.value === "company";
+  }
+  function updateVisibility() {
+    var showSellerType = accountTypeIsSeller();
+    sellerTypeSection.classList.toggle("d-none", !showSellerType);
+    companySection.classList.toggle("d-none", !(showSellerType && sellerTypeIsCompany()));
+  }
+
+  document.querySelectorAll('input[name="account_type"]').forEach(function (el) {
+    el.addEventListener("change", updateVisibility);
+  });
+  document.querySelectorAll('input[name="seller_type"]').forEach(function (el) {
+    el.addEventListener("change", updateVisibility);
+  });
+  updateVisibility();
+})();
+</script>
 {% endblock %}

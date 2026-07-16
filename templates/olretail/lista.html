@@ -6,7 +6,7 @@
 {% block title %}{% trans 'My products' %} — TimorMart{% endblock %}
 
 {% block content %}
-<div class="container-xl">
+<div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between my-3 page-header-bar">
     <h1 class="h4 mb-0">{% trans 'My products' %}</h1>
     <a href="{% url 'olretail:create_product' %}" class="btn btn-primary btn-sm">
@@ -98,13 +98,21 @@
             </td>
             <td>$ {{ p.price|intcomma }}</td>
             <td>
-              {% if p.in_stock %}
+              {% if p.is_service_category %}
+              <span class="text-muted">—</span>
+              {% elif p.in_stock %}
               {{ p.quantity }}
               {% else %}
               <span class="badge badge-secondary">{% trans 'Out of stock' %}</span>
               {% endif %}
             </td>
-            <td>{{ p.get_condition_display }}</td>
+            <td>
+              {% if p.is_service_category %}
+              <span class="text-muted">—</span>
+              {% else %}
+              {{ p.get_condition_display }}
+              {% endif %}
+            </td>
             <td>
               {% if p.status == 'approved' %}
               <span class="badge badge-success">{{ p.get_status_display }}</span>
@@ -127,7 +135,7 @@
                  title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %} {{ p.name }}">
                 <i class="fas fa-edit" aria-hidden="true"></i>
               </a>
-              {% if p.in_stock %}
+              {% if p.in_stock and not p.is_service_category %}
               <form method="post" action="{% url 'olretail:mark_sold' p.slug %}" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary my-0"

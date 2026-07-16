@@ -24,9 +24,6 @@
   <!-- Material Design Bootstrap Ecommerce -->
   <link rel="stylesheet" href="{% static 'costumize/css/mdb.ecommerce.min.css' %}">
   <style>
-    @media (min-width: 1100px) {
-      .container-xl { max-width: 1480px; }
-    }
     .divider-new.version-2 { justify-content: left; }
     .divider-new.version-2:before { flex: 0; }
     main { min-height: 60vh; }
@@ -83,8 +80,8 @@
   <a class="skip-link" href="#main-content">{% trans 'Skip to main content' %}</a>
   {% include 'shared/header.html' %}
 
-  <main id="main-content">
-    <div class="container-xl mt-3">
+  <main id="main-content" class="container-fluid">
+    <div class="container-fluid mt-3">
       {% include 'shared/messages.html' %}
     </div>
     {% block content %}{% endblock %}

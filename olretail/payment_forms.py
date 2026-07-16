@@ -1,9 +1,11 @@
 from django import forms
+from django.db.models import Avg, Count
 from django.utils.translation import gettext_lazy as _
 
-from olretail.models import Courier, Seller
+from olretail.models import City, Courier, CourierVerificationStatus, Seller
 from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod
 from .subscription_models import SubscriptionPlan
+from .validators import validate_image_size
 
 
 class CheckoutForm(forms.Form):
@@ -26,7 +28,15 @@ class CheckoutForm(forms.Form):
         label=_("Delivery Address"),
         help_text=_("Where should we deliver your order?")
     )
-    
+
+    delivery_city = forms.ModelChoiceField(
+        queryset=City.objects.select_related('country'),
+        empty_label=_("Select city"),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label=_("Delivery City"),
+        help_text=_("Couriers are matched to this city"),
+    )
+
     delivery_phone = forms.CharField(
         max_length=40,
         widget=forms.TextInput(attrs={
@@ -119,6 +129,31 @@ class ShipOrderForm(forms.Form):
         label=_("Assign Courier"),
     )
 
+    def __init__(self, *args, order=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only verified couriers are assignable — an unverified one has no
+        # ID/deposit on file yet, so there's nothing to trust them with.
+        queryset = Courier.objects.select_related('user').filter(
+            verification_status=CourierVerificationStatus.VERIFIED
+        ).annotate(avg_rating=Avg('ratings__score'), rating_count=Count('ratings'))
+        if order is not None and order.delivery_city_id is not None:
+            # Only narrow the list when at least one courier actually
+            # covers that city — an empty dropdown (besides "no courier
+            # account") would be worse than showing everyone.
+            matched = queryset.filter(service_cities=order.delivery_city_id)
+            if matched.exists():
+                queryset = matched
+        self.fields['assigned_courier'].queryset = queryset
+        self.fields['assigned_courier'].label_from_instance = self._courier_label
+
+    @staticmethod
+    def _courier_label(courier):
+        if courier.rating_count:
+            return _("%(name)s (★ %(avg).1f, %(count)d rating(s))") % {
+                'name': courier.get_name, 'avg': courier.avg_rating, 'count': courier.rating_count,
+            }
+        return _("%(name)s (no ratings yet)") % {'name': courier.get_name}
+
 
 class DeliveryProofForm(forms.Form):
     """Required photo proof when marking an order delivered."""
@@ -129,6 +164,27 @@ class DeliveryProofForm(forms.Form):
         label=_("Delivery Photo"),
         error_messages={'required': _('A delivery photo is required to confirm delivery.')},
     )
+
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        validate_image_size(photo)
+        return photo
+
+
+class CourierVerificationForm(forms.Form):
+    """ID document photo a courier submits for admin review before they can
+    be assigned any deliveries (see Courier.verification_status)."""
+
+    id_document = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file', 'accept': 'image/*'}),
+        label=_("ID Document Photo"),
+        error_messages={'required': _('Please upload a photo of your ID document.')},
+    )
+
+    def clean_id_document(self):
+        photo = self.cleaned_data.get('id_document')
+        validate_image_size(photo)
+        return photo
 
 
 class DeliveryUpdateForm(forms.ModelForm):
@@ -185,3 +241,40 @@ class SellerPaymentInstructionsForm(forms.ModelForm):
         labels = {
             'payment_instructions': _('Payment details for buyers'),
         }
+
+
+class SellerCompanyInfoForm(forms.ModelForm):
+    """Lets a company seller fix their business details after registration
+    (the registration form is the only other place these are collected)."""
+
+    class Meta:
+        model = Seller
+        fields = ['company_name', 'company_tin', 'company_address', 'company_bank_account']
+        widgets = {
+            'company_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'company_tin': forms.TextInput(attrs={'class': 'form-control'}),
+            'company_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'company_bank_account': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'company_name': _('Company name'),
+            'company_tin': _('TIN (Tax Identification Number)'),
+            'company_address': _('Company address'),
+            'company_bank_account': _('Bank account'),
+        }
+
+
+class SellerVerificationForm(forms.Form):
+    """Business registration document a company seller submits for admin
+    review — a trust badge for buyers, not a requirement to sell."""
+
+    business_document = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file', 'accept': 'image/*'}),
+        label=_("Business Registration Document"),
+        error_messages={'required': _('Please upload a photo of your business registration document.')},
+    )
+
+    def clean_business_document(self):
+        photo = self.cleaned_data.get('business_document')
+        validate_image_size(photo)
+        return photo

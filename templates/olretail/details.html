@@ -103,7 +103,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-xl">
+<div class="container-fluid">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-transparent px-0 mb-2">
       <li class="breadcrumb-item"><a href="{% url 'olretail:index' %}">{% trans 'Home' %}</a></li>
@@ -192,12 +192,22 @@
     <!-- Info -->
     <div class="col-md-6 mb-4">
       <h1 class="h3">{{ product.name }}</h1>
+      {% if rating_count %}
+      <p class="mb-1">
+        {% for i in "12345" %}
+          <i class="fas fa-star {% if forloop.counter <= avg_rating|floatformat:0|add:0 %}text-warning{% else %}text-muted{% endif %}" aria-hidden="true"></i>
+        {% endfor %}
+        <span class="text-muted small ml-1">{{ avg_rating|floatformat:1 }} ({{ rating_count }} {% trans "rating" %}{{ rating_count|pluralize }})</span>
+      </p>
+      {% endif %}
       <p class="mb-2">
+        {% if not is_service_category %}
         <span class="badge badge-info">{{ product.get_condition_display }}</span>
         {% if product.in_stock %}
         <span class="badge badge-success">{% trans 'In stock' %}: {{ product.quantity }}</span>
         {% else %}
         <span class="badge badge-secondary">{% trans 'Out of stock' %}</span>
+        {% endif %}
         {% endif %}
         {% if is_owner %}
         <span class="badge {% if product.approved %}badge-primary{% else %}badge-warning{% endif %}">
@@ -220,7 +230,11 @@
       {% elif not product.cart_purchasable and can_comment and not is_owner and product.approved %}
       <p class="text-muted small mb-3">
         <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+        {% if is_service_category %}
+        {% trans 'Not booked through the cart — contact the service provider directly to arrange this.' %}
+        {% else %}
         {% trans 'Not sold through the cart — contact the seller directly to arrange this.' %}
+        {% endif %}
       </p>
       {% endif %}
 
@@ -230,14 +244,35 @@
       </p>
       <p class="mb-3 text-muted small">{% trans 'Listed' %} {{ product.created|date:"j M Y" }}</p>
 
+      {% if product.size or product.pieces_per_unit or product.units_per_box %}
+      <div class="mb-3">
+        {% if product.size %}
+        <span class="badge badge-light border mr-2 mb-1">{% trans 'Size' %}: {{ product.size }}</span>
+        {% endif %}
+        {% if product.pieces_per_unit %}
+        <span class="badge badge-light border mr-2 mb-1">{% trans 'Pieces per unit' %}: {{ product.pieces_per_unit }}</span>
+        {% endif %}
+        {% if product.units_per_box %}
+        <span class="badge badge-light border mr-2 mb-1">{% trans 'Units per box' %}: {{ product.units_per_box }}</span>
+        {% endif %}
+      </div>
+      {% endif %}
+
       <h2 class="h5 mt-4">{% trans 'Description' %}</h2>
       <p class="text-justify">{{ product.description|linebreaks }}</p>
 
       {% if can_view_contact %}
       <div class="card mt-4 contact-reveal">
         <div class="card-body py-3">
-          <h2 class="h6 text-uppercase text-muted mb-2">{% trans 'Seller' %}</h2>
-          <p class="mb-1"><strong>{{ product.seller.get_name }}</strong></p>
+          <h2 class="h6 text-uppercase text-muted mb-2">
+            {% if is_service_category %}{% trans 'Service Provider' %}{% else %}{% trans 'Seller' %}{% endif %}
+          </h2>
+          <p class="mb-1">
+            <strong>{{ product.seller.get_name }}</strong>
+            {% if product.seller.is_verified_business %}
+            <span class="badge badge-success"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>{% trans 'Verified Business' %}</span>
+            {% endif %}
+          </p>
           <p class="mb-1">
             <i class="fas fa-phone mr-1" aria-hidden="true"></i>
             <a href="tel:+{{ product.seller.whatsapp_number }}">{{ product.seller.mobile }}</a>
@@ -255,10 +290,17 @@
       <div class="card mt-4 contact-locked text-center">
         <div class="card-body py-4">
           <i class="fas fa-lock fa-2x text-muted mb-3" aria-hidden="true"></i>
+          {% if is_service_category %}
+          <h2 class="h6 font-weight-bold">{% trans 'Interested in this service?' %}</h2>
+          <p class="small text-muted mb-3">
+            {% trans "To view the service provider's phone number and WhatsApp contact, upgrade your account to Buyer & Seller." %}
+          </p>
+          {% else %}
           <h2 class="h6 font-weight-bold">{% trans 'Interested in this product?' %}</h2>
           <p class="small text-muted mb-3">
             {% trans "To view the seller's phone number and WhatsApp contact, upgrade your account to Buyer & Seller." %}
           </p>
+          {% endif %}
           <form method="post" action="{% url 'accounts:upgrade_to_buyer' %}">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ product.get_absolute_url }}">
@@ -274,7 +316,11 @@
           <i class="fas fa-lock fa-2x text-muted mb-3" aria-hidden="true"></i>
           <h2 class="h6 font-weight-bold">{% trans 'Sign in to view contact information' %}</h2>
           <p class="small text-muted mb-3">
+            {% if is_service_category %}
+            {% trans "To view the service provider's phone number and WhatsApp contact, please sign in or create an account." %}
+            {% else %}
             {% trans "To view the seller's phone number and WhatsApp contact, please sign in or create an account." %}
+            {% endif %}
           </p>
           <a href="{% url 'accounts:login' %}?next={{ product.get_absolute_url|urlencode }}"
              class="btn btn-outline-primary btn-sm m-0">{% trans 'Sign in' %}</a>

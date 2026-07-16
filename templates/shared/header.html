@@ -1,7 +1,32 @@
 {% load i18n %}
 {% load static %}
+<style>
+  .notif-badge { position: absolute; top: -6px; right: -6px; }
+  /* Above .sticky-top's z-index (1020, from the nav below) so the open
+     dropdown isn't drawn under it. */
+  .notif-dropdown { min-width: 320px; z-index: 1030; }
+  .notif-dropdown .dropdown-item { white-space: normal; }
+  .notif-meta { font-weight: normal; }
+  /* min-width: 320px overflows the smallest common phone screens (iPhone SE
+     class, 320-375px wide) once page padding is accounted for. */
+  @media (max-width: 400px) {
+    .notif-dropdown { min-width: calc(100vw - 2rem); left: auto; right: 0; }
+  }
+</style>
 <header>
-  <div class="container-xl">
+  <div class="bg-light border-bottom py-1">
+    <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center small text-muted">
+      <div>
+        <i class="fas fa-phone-alt mr-1" aria-hidden="true"></i>
+        {% trans 'Hotline' %}: <a href="tel:+67077121173" class="text-muted">+670 7712 1173</a>
+      </div>
+      <div>
+        <i class="fas fa-dollar-sign mr-1" aria-hidden="true"></i>
+        {% trans 'Currency' %}: {% trans 'US Dollar (USD)' %}
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
     <div class="row jumbotron white border-bottom mb-0 py-3 align-items-center">
       <div class="col-md-2 my-1">
         <a href="{% url 'olretail:index' %}" aria-label="{% trans 'Home' %}">
@@ -24,6 +49,32 @@
       </div>
       <div class="col-md-4 my-1 text-md-right">
         {% if user.is_authenticated %}
+        <div class="dropdown d-inline-block mr-2">
+          <a class="btn btn-sm btn-outline-secondary my-0 position-relative" href="#" role="button"
+             id="notificationsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+             aria-label="{% trans 'Notifications' %}">
+            <i class="fas fa-bell" aria-hidden="true"></i>
+            {% if unread_notification_count %}
+            <span class="badge badge-danger notif-badge">
+              {{ unread_notification_count }}
+            </span>
+            {% endif %}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right notif-dropdown" aria-labelledby="notificationsDropdown">
+            <h6 class="dropdown-header">{% trans 'Notifications' %}</h6>
+            {% for n in recent_notifications %}
+            <a class="dropdown-item small {% if not n.is_read %}font-weight-bold{% endif %}"
+               href="{% url 'olretail:notification_open' n.pk %}">
+              {{ n.message }}
+              <div class="text-muted notif-meta">{{ n.created_at|timesince }} {% trans 'ago' %}</div>
+            </a>
+            {% empty %}
+            <span class="dropdown-item-text small text-muted">{% trans 'No notifications yet.' %}</span>
+            {% endfor %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item small text-center" href="{% url 'olretail:notifications' %}">{% trans 'View all' %}</a>
+          </div>
+        </div>
         <span class="text-muted small mr-2">
           <i class="fas fa-user-circle" aria-hidden="true"></i>
           {{ user.get_full_name|default:user.username }}
@@ -53,7 +104,7 @@
   </div>
 
   <nav class="navbar navbar-expand-lg sticky-top navbar-light white">
-    <div class="container-xl">
+    <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"
               aria-controls="mainNav" aria-expanded="false" aria-label="{% trans 'Toggle navigation' %}">
         <span class="navbar-toggler-icon"></span>

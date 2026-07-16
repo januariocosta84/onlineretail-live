@@ -1,6 +1,6 @@
 # HANDOFF — TimorMart
 
-Last updated: 2026-07-14 (evening session — subscriptions, payment fix, branding)
+Last updated: 2026-07-15 (role revocation + bugfix, full-width layout, platform payment settings, order notifications, full UAT pass + 8 launch-blocker fixes, all 11 Medium UAT fixes incl. product ratings + order cancellation, 4 dummy sidebar ads, pitch deck, subscription renewal/extension bugfix, services-category contact wording, product-delete image cleanup)
 
 ## What this is
 
@@ -196,8 +196,14 @@ Staff-only dashboard at **`/dashboard/`** (link appears in the header for
 - **Products page**: search + status/category/seller filters, CSV export,
   permanent delete (confirm dialog).
 - **Users page**: search/role filter, suspend/reactivate (guards: cannot
-  modify self; only superusers modify superusers), grant buyer/seller role,
-  password-reset link into Django admin, CSV export.
+  modify self; only superusers modify superusers), grant **and revoke**
+  buyer/seller/courier role (revoke added 2026-07-15 — see "Role revocation"
+  section below for a bug found and fixed while building it), password-reset
+  link into Django admin, CSV export.
+- **Payment settings page** (`/dashboard/payment-settings/`, added
+  2026-07-15): admin-editable platform bank/mobile-money details shown to
+  sellers paying for a subscription upgrade — see "Platform payment
+  settings" section below.
 - **Comments page**: hide/show (`Comment.is_public`) and delete; hidden
   comments disappear from the storefront.
 - **Audit log**: `dashboard.AuditLog` records every dashboard action with
@@ -205,6 +211,91 @@ Staff-only dashboard at **`/dashboard/`** (link appears in the header for
   View at `/dashboard/audit/`.
 - Dashboard UI is English-only by design; seller-facing status strings are
   translated (catalog now 179 entries).
+
+## Role revocation — and a bug found + fixed while building it (2026-07-15)
+
+The Users page could grant buyer/seller/courier roles but never revoke them.
+Added `revoke_role(user, role)` in `accounts/roles.py` (inverse of
+`assign_role` — removes the group and deletes the profile row) and a
+`-Buyer`/`-Seller`/`-Courier` button next to each granted-role badge on
+`/dashboard/users/`, wired to a new `user_revoke_role` view.
+
+**Bug found before shipping it:** `Seller` has several relationships beyond
+`Product` that weren't accounted for in the first pass —
+`Order`/`Transaction`/`Dispute`/`Payout` all FK to `Seller` with
+`on_delete=PROTECT`, and `SellerBalance`/`SellerSubscription`/
+`SubscriptionRequest` are `CASCADE`. A seller with **zero products** but any
+order/transaction/dispute/payout history would crash the revoke action with
+an unhandled `django.db.models.deletion.ProtectedError` (500 page) — and a
+seller with a non-zero `SellerBalance` (money owed/earned) but no other
+history would have that balance **silently deleted** by the cascade, no
+error at all. Reproduced both live (rolled-back DB transaction, no data
+touched) before fixing.
+
+Fix, in `dashboard/views.py user_revoke_role` and `accounts/roles.py
+revoke_role`:
+- Explicit check for a non-zero `SellerBalance` (earnings/payouts/pending)
+  before allowing the delete — blocks with a clear message instead of losing
+  the financial record silently.
+- `revoke_role`'s group-removal + profile-delete now run inside
+  `transaction.atomic()`, so a delete blocked partway through can't leave
+  the group stripped but the profile still attached.
+- The actual `revoke_role()` call in the view is wrapped in
+  `try/except ProtectedError` as a catch-all safety net — covers Order/
+  Transaction/Dispute/Payout today and any future `PROTECT` relation added
+  later without a matching dashboard update (fails safe with a message
+  instead of a 500, rather than requiring every new relation to be
+  enumerated by hand).
+- Buyer and courier revoke have no equivalent risk — nothing else FKs to
+  `Buyer`, and `Order.assigned_courier` is `SET_NULL` (just unassigns, no
+  data loss).
+
+## Full-width layout — container-fluid (2026-07-15)
+
+`templates/shared/base.html`'s `<main>` tag had a pre-existing bug —
+`id="container-fluid main-content"` — the class name had been typo'd into
+the `id` attribute, so `container-fluid` was never actually applied
+anywhere on the site despite the string being present in the file. Fixed,
+and while in there, converted the whole site from width-capped containers
+to full browser width:
+
+- `base.html`: `<main>` now correctly has `class="container-fluid"`
+  (`id="main-content"` restored for the skip-link target), the messages
+  wrapper switched from `container-xl` to `container-fluid`, and the dead
+  `.container-xl { max-width: 1480px; }` CSS override was removed.
+- Every template that wrapped its content in `container-xl` (header,
+  footer, home/details/my-products pages) or plain `container` (~17 more
+  pages — checkout, cart, orders, disputes, subscription, payment settings,
+  login/register, etc.) now uses `container-fluid`.
+- `dashboard/templates/dashboard/base.html`'s single `container-xl` wrapper
+  (shared by every admin dashboard page via `{% block dash_content %}`) is
+  also `container-fluid` now, so the change covers the storefront, auth
+  pages, and the admin dashboard.
+- Verified via the Django test client on the homepage, login/register,
+  and the dashboard overview — all render 200 with `container-fluid`
+  present and zero leftover `container-xl`/bare-`container` references.
+
+## Storefront polish — hotline, currency, payment badges, ad slot (2026-07-15)
+
+- `templates/shared/header.html`: a slim info bar above the logo/search row
+  shows a click-to-call hotline (`tel:+67077121173`, displayed as
+  `+670 7712 1173`) and "Currency: US Dollar (USD)" — both translatable.
+- `templates/shared/footer.html`: a "We accept" row with VISA Card / Bank
+  Transfer / Mobile Money icons, above the copyright bar.
+- `templates/shared/popular_category.html`: originally a single dashed-border
+  "Advertisement" placeholder at the top of the homepage's right sidebar.
+  **Replaced later the same day** with **4 dummy house-ad banners**
+  (Dili Mobile & Electronics / Ramelau Construction Supplies / Timor Auto &
+  Motos / Cristo Rei Travel & Tours), each a colored card with an "Ad" badge,
+  tagline, and a CTA linking to a real category filter (`electronics`,
+  `material-construction`, `vehicles`, `services`). CSS lives in a scoped
+  `<style>` block (`.dummy-ad-1`–`.dummy-ad-4`) in the same file — same
+  pattern `footer.html` already used for `.footer-social`. These are clearly
+  placeholder content (fictional businesses, visible "Ad" label) — swap for
+  a real ad-sales/rotation system when one exists; the class names are
+  deliberately obvious about that. Verified rendering (English + Tetum,
+  translations added to `django.po`) by actually launching the dev server
+  and screenshotting it with Playwright — not just template-string checks.
 
 ## Responsive / accessibility pass (2026-07-13)
 
@@ -441,6 +532,57 @@ Claude — `jnrdacosta_costa` and a `jmoniz` account exercising real checkout
 flows, including one completed bank-transfer purchase. These were left
 untouched; if you see orders you don't recognize creating, that's why.
 
+### Order notifications (added 2026-07-15)
+
+In-app notifications for the buyer/seller order lifecycle — requested as
+"buyer purchases → seller notified when payment transfers → seller
+confirms → buyer notified → and so on until the end of the process."
+
+- `Notification` model (`olretail/payment_models.py`, migration `0014`,
+  re-exported via `models.py` like the other payment models): `recipient`
+  (User), optional `order` FK, `message` (plain string, no i18n at the model
+  level — see gap below), `is_read`, `created_at`.
+- `_notify(user, message, order=None)` helper in `payment_views.py`, called
+  at each lifecycle transition:
+  - Bank-transfer order created → seller notified ("new order from
+    {buyer}, awaiting transfer").
+  - Buyer clicks "I've sent payment" (`mark_payment_sent`) → seller
+    notified — this is the "payment transfer" event from the request.
+  - Seller clicks "Confirm payment received" → buyer notified.
+  - Stripe path: `_mark_payment_succeeded` (shared by the webhook and the
+    confirmation-page reconciliation fallback, see "Payment confirmation
+    reconciliation" above) notifies **both** seller and buyer when a charge
+    actually succeeds — there's no separate seller-confirms step for Stripe
+    since Stripe itself is the confirmation.
+  - Seller marks Shipped → buyer notified (`seller_update_order_status`).
+  - Seller posts a delivery update → buyer notified, note text included.
+  - Order marked Delivered (photo proof) → buyer notified (`mark_delivered`).
+- UI: a bell icon + unread-count badge in the header (next to the user's
+  name, only when authenticated) with a dropdown of the 8 most recent
+  notifications, plus a full history page at `/notifications/` with a
+  "Mark all as read" button. Clicking any notification marks it read and
+  redirects to the order (`/notifications/<id>/open/`).
+- `olretail.context_processors.notifications` (registered in
+  `TLoretail/settings.py TEMPLATES`) injects `unread_notification_count` /
+  `recent_notifications` into every template — anonymous users get `0`/`[]`.
+- Registered in Django admin (`NotificationAdmin`) for debugging/audit.
+- Verified end-to-end with the Django test client (rolled-back transaction,
+  no data touched): full bank-transfer lifecycle (order → payment-sent →
+  confirmed → shipped → delivery update → delivered) produced the right
+  notification for the right recipient at every step, in order; the Stripe
+  path's `_mark_payment_succeeded` notifies both parties; header
+  dropdown/badge render; the notifications page lists everything; mark-all-
+  read and single-notification-open (with redirect + read flag) both work.
+- **Known gap:** messages are plain Python strings built with `_()` /
+  `%`-formatting at creation time in the *server's* current language, not
+  re-translated per-viewer — same limitation as `dashboard.AuditLog`'s
+  `detail` field, not a new pattern. Fine for now since the dashboard is
+  English-only and most real usage is English; revisit if Tetum-speaking
+  sellers report untranslated notification text.
+- No email/push — in-app only, same scope as the request. No dispute-
+  related notifications either (not asked for; the lifecycle covered is
+  purchase → payment → shipped → delivered, matching what was requested).
+
 ### Seller payouts — by design, still manual (added 2026-07-14)
 
 The platform charges the buyer in full into its own Stripe account (no
@@ -615,6 +757,435 @@ app). New file `olretail/subscription_models.py`, migration `0012`.
   hand (gettext isn't installed to auto-extract via `makemessages`, see
   Translations section).
 
+## Platform payment settings (2026-07-15)
+
+The platform's own bank/mobile-money details — where sellers send money for
+subscription upgrades (see Seller subscriptions section above) — used to be
+hardcoded in the `PLATFORM_PAYMENT_INSTRUCTIONS` env var/settings.py
+fallback, with **no admin UI to view or change it** at runtime. An admin
+asked "where do I see my payment settings, I also get money from sellers"
+and there genuinely wasn't a page for that (the existing seller-facing
+`/seller/payment-settings/` is deliberately seller-only — admins can't have
+a seller profile, see Roles section — and is for a *different* thing: a
+seller's own bank details shown to *buyers*).
+
+Added:
+- `PlatformSettings` singleton model (`olretail/payment_models.py`,
+  migration `0013`, re-exported via `olretail/models.py` like the other
+  payment models) — one row (`pk=1`, via `PlatformSettings.load()`
+  classmethod), single `payment_instructions` TextField.
+- `/dashboard/payment-settings/` (`dashboard/views.py platform_settings`,
+  `dashboard/templates/dashboard/platform_settings.html`) — admin-only
+  textarea, no Django form class (matches this dashboard's existing
+  convention of reading `request.POST` directly, e.g. `payout_action`).
+  Sidebar link added between Audit log and the rest.
+- `payment_views.py seller_subscription` now reads
+  `PlatformSettings.load().payment_instructions`, falling back to the old
+  `settings.PLATFORM_PAYMENT_INSTRUCTIONS` if the admin hasn't set one yet
+  — existing deployments keep working unchanged until an admin fills it in.
+- Verified end-to-end: admin saves new instructions on the dashboard page →
+  persisted → a seller visiting `/seller/subscription/` immediately sees the
+  updated text.
+
+Related, same session: the **payout bank name** field on
+`/dashboard/payouts/<id>/` (where an admin records which bank a seller's
+payout was sent to — separate from the above, this is money flowing
+*platform → seller*, not seller → platform) was a free-text input; changed
+to a `<select>` restricted to **BNCTL / BRI / BNU / Mandiri**, since those
+are the actual banks in use. Any pre-existing free-text value that doesn't
+match one of the four is still shown (as an extra selected option) so old
+payout records aren't silently blanked — `Payout.bank_name` itself is still
+a plain `CharField`, no model/migration change, so this was a
+template-only edit.
+
+## Full-system UAT pass + 8 launch-blocker fixes (2026-07-15)
+
+Ran a comprehensive UAT sweep across all five roles (Administrator, Seller,
+Buyer, Buyer & Seller, Courier) — five parallel research passes each
+combining source review with live verification via the Django test client
+(rolled-back transactions, no data left in `db.sqlite3`), covering auth/
+accounts, catalog/seller tools, cart/checkout/payments/orders, delivery/
+courier/admin RBAC, and a cross-cutting security/performance/missing-
+features sweep. Produced 41 findings total (2 Critical, 8 High, 11 Medium,
+20 Low) — full detail (including the ones *not* yet fixed) is in a
+published report artifact from that session; ask if you need the link
+re-shared, it isn't persisted anywhere in this repo.
+
+**Fixed the 2 Critical + 8 High findings (the "before launch" group) in this
+session:**
+
+- **Cart quantity crash** — `add_to_cart`/`update_cart` (`payment_views.py`)
+  raised an unhandled `ValueError` on a non-numeric `quantity` POST value
+  (500). Added `_parse_quantity()`, falls back to the existing default
+  instead of raising.
+- **Product delete crash** — `product_delete` (`olretail/views.py`) raised
+  an unhandled `ProtectedError` when deleting a product that has any order
+  against it (`Order.product` is `on_delete=PROTECT`, and Order rows exist
+  from the moment checkout starts, before payment even confirms). Now
+  caught with a clear "has order history" message; the product is kept.
+- **Dead "Forgot password?" link** — `templates/accounts/login.html` (the
+  template actually served — `TEMPLATE_DIR` wins over `APP_DIRS`) linked
+  `href="#"` instead of `{% url 'accounts:reset' %}`, while a second, dead
+  copy at `accounts/templates/accounts/login.html` had the correct link but
+  was never reachable. Fixed the live link; **deleted the shadowed
+  duplicate** so this can't drift again — the full reset flow itself was
+  already working end to end once you could reach it.
+- **No rate limiting** — new `accounts/ratelimit.py`, a small
+  cache-backed (`django.core.cache`, no new dependency) per-IP throttle:
+  10 POSTs per 5 minutes. Applied to `register`, `userlogin`, and the
+  password-reset request view (wrapped at the URL level in
+  `accounts/urls.py` since it's Django's built-in class-based
+  `PasswordResetView`). Uses the default `LocMemCache` — fine for a single
+  process; point `CACHES` at something shared (Redis) if this ever runs
+  behind multiple workers, or the limit only applies per-worker.
+- **No stock locking** — `_mark_payment_succeeded` and
+  `_mark_bank_transfer_paid` (`payment_views.py`) now re-fetch the product
+  with `Product.objects.select_for_update()` inside the atomic block before
+  decrementing quantity, and clamp at `0` (`max(product.quantity -
+  order.quantity, 0)`) instead of allowing negative stock under concurrent
+  checkouts.
+- **CSV export formula injection** — the Users and Products CSV exports
+  (`dashboard/views.py`) wrote user-controlled fields (name, email,
+  description) straight into cells; a value starting with `=+-@` could
+  execute as a spreadsheet formula when opened in Excel/Sheets. Added
+  `_csv_safe()`, prefixes any such value with a leading `'`.
+- **No upload size limit** — new `olretail/validators.py`
+  (`validate_image_size`, 5MB cap), wired into `ProductForm`'s three image
+  fields (`clean_product_image`/`_2`/`_3`) and `DeliveryProofForm.photo`.
+  Backstopped globally with `DATA_UPLOAD_MAX_MEMORY_SIZE` /
+  `FILE_UPLOAD_MAX_MEMORY_SIZE` (10MB) in `settings.py`, which didn't exist
+  before — uploads were previously bounded only by disk space.
+- **Order-number race condition** — `Order.save()`
+  (`olretail/payment_models.py`) generated `order_number` from an unlocked
+  `count() + 1`; two concurrent checkouts computing the same count would
+  collide on the `unique=True` constraint and crash with an uncaught
+  `IntegrityError` (worse for Stripe: this could happen *after* the
+  PaymentIntent was already created, leaving a buyer charged with no order
+  row). Now retries up to 5 times inside a savepoint
+  (`transaction.atomic()`), recomputing the count fresh each attempt, and
+  raises a clear error only if all 5 collide. Verified by forcing a real
+  collision via a mocked `count()` call — confirmed it recovers with a
+  different, valid number instead of crashing.
+
+**Not fixed in this pass (by explicit scope choice, not oversight)** — the
+20 Low findings, and the remaining missing-feature items (wishlist,
+buyer↔seller messaging, self-service profile management, email
+verification). All 11 Medium findings were fixed in a follow-up pass the
+same day — see next section. **profile management and email verification
+are still the two most UX-visible open gaps.**
+
+While verifying the order-number fix, ran into 5 pre-existing real
+`ORD-20260715-*` orders from genuine account activity (`jnrdacosta_costa`,
+`test_100`) already in `db.sqlite3` — consistent with the real-activity
+pattern already noted elsewhere in this doc. Left untouched, as always.
+
+## All 11 Medium UAT findings fixed (2026-07-15)
+
+Follow-up pass fixing every Medium-severity finding from the UAT report
+(the 20 Low findings and the missing-feature backlog — wishlist, buyer↔
+seller messaging, profile editing, email verification — are still open,
+by scope choice). Quick fixes first, then two feature-sized ones
+(ratings, courier reassignment):
+
+- **N+1 on the Users page** — `select_related()` in `dashboard/views.py
+  users()` was missing `"courier"`, causing one extra query per row.
+  Added.
+- **No Courier filter on the Users page** — added the missing `elif role
+  == "courier"` branch and its `<option>`.
+- **`Notification.message` could overflow on Postgres** —
+  `CharField(max_length=255)` → `TextField` (migration `0015`, bundled
+  with the `Rating` model below).
+- **Notification dropdown overflow on narrow phones** — added
+  `@media (max-width: 400px) { .notif-dropdown { min-width: calc(100vw -
+  2rem); ... } }` in `templates/shared/header.html`.
+- **Dispute response form ignored its own deadline** —
+  `dispute_detail` now also withholds `form` from context when
+  `deadline_passed` is true (the template's own `{% if deadline_passed
+  %}` check already independently hid it — this adds a second, redundant
+  guard at the view layer, matching the UAT-suggested fix).
+- **Order cancellation** — new `cancel_order` view (buyer-only, only from
+  Pending Payment/Payment Reported — no restock needed since stock isn't
+  decremented until Paid), best-effort cancels the Stripe PaymentIntent
+  too if one exists, notifies the seller. Button on `order_detail.html`.
+  `olretail:cancel_order`.
+- **Dashboard's own password-reset action** — the key icon on
+  `/dashboard/users/` used to link straight into `/admin/`, which has its
+  own separate permission model. Now a per-row modal on `users.html`
+  posts directly to a new `user_reset_password` view (reuses Django's
+  `SetPasswordForm` for validation, audit-logged like everything else in
+  the dashboard).
+- **Courier reassignment for Shipped orders** — the seller-facing "Mark
+  as Shipped" form only offers the courier picker once, at Paid→Shipped;
+  there was no supported way to fix a wrong assignment afterward except
+  raw Django admin (which isn't audit-logged). Added an admin-only
+  `order_reassign_courier` view (`dashboard:order_reassign_courier`) and
+  a small form on `order_detail.html`, visible to staff while an order is
+  Shipped — logged via `log_action`, notifies both the outgoing and
+  incoming courier.
+- **Order notifications are now also emails** — `_notify()` (added
+  earlier today, see "Order notifications" section) now also calls
+  `django.core.mail.send_mail` when the recipient has an email address,
+  `fail_silently=True` so a broken mail config never breaks the calling
+  flow. Console-only in dev (see `EMAIL_BACKEND` in settings) until
+  `EMAIL_HOST` is set. **Verification note:** `manage.py shell` scripts
+  don't get Django's automatic locmem-backend swap the way `TestCase`
+  does — testing this requires `override_settings(EMAIL_BACKEND=
+  "django.core.mail.backends.locmem.EmailBackend")` explicitly, or the
+  console backend will just print instead of populating `mail.outbox`.
+- **Product ratings** — new `Rating` model (migration `0015`): one row
+  per `Order`, so a buyer can only rate a product after actually
+  receiving it (`OneToOneField` to `Order`, not just a buyer/product
+  pair — lets the same buyer rate a repeat purchase again). 1–5 stars,
+  CSS-only star-input widget (radio buttons + `flex-direction:
+  row-reverse` + `~` sibling selector, no JS) on `order_detail.html` for
+  Delivered orders. Average + count shown on the product detail page
+  (`details.html`) and compactly on catalog cards
+  (`shared/product_grid.html`, annotated via `Avg`/`Count` in
+  `olretail/views.py index()`). `olretail:rate_order`. Registered in
+  Django admin.
+- **Tetum translations for everything added on 2026-07-15** — header
+  hotline/currency bar, notification bell/dropdown, `/notifications/`,
+  footer payment badges, sidebar ad slot, plus the cancel/rate/reassign
+  strings from this batch — ~25 new `msgid`/`msgstr` pairs appended to
+  `locale/tet/LC_MESSAGES/django.po`. **Found while doing this: the
+  entire Payments/Orders/Delivery/Dispute feature area (added
+  2026-07-14, dozens of templates — cart, checkout, order detail, buyer/
+  seller orders, disputes, etc.) was never added to the Tetum catalog at
+  all** — HANDOFF's translation gap list only ever flagged the
+  Subscriptions feature specifically. That's a much bigger, separate
+  translation effort, intentionally left out of this batch's scope — see
+  "Known gaps" below.
+  - **`polib` had to be installed into `.venv`** to run
+    `compile_translations.py` — it wasn't there despite being needed for
+    every prior translation update in this repo's history; add it to
+    the venv setup steps if recreating it (still deliberately not in
+    `requirements.txt`, per the existing convention — it's a dev-only
+    tool for compiling `.po` → `.mo`, not a runtime dependency).
+- Verified every fix live via the Django test client (rolled back, no
+  data touched): courier filter, N+1 query count, cancel flow +
+  notification, password reset + login with new password, courier
+  reassignment + audit log + both notifications, email actually sent
+  (with locmem backend forced), rate/duplicate-block/average-display,
+  dispute deadline gate (isolated — see verification note below), and a
+  500-char message saving cleanly to the widened field.
+  - **Verification pitfall hit and worth remembering:** running the
+    dispute-deadline check in the *same* script, on the *same* logged-in
+    seller `Client`, right after the password-reset check, made the
+    dispute check falsely look broken — Django invalidates a user's
+    other active sessions when their password changes
+    (`session_auth_hash` mismatch), so the reused `Client` had silently
+    become anonymous by the time it hit the dispute page, redirecting
+    away before the deadline-gate logic was ever reached. Not a bug —
+    just don't share a `Client`/session across a password-change test
+    and a later same-user test in the same script.
+
+## Pitch deck + dev tooling notes (2026-07-15)
+
+`TimorMart_Pitch_Deck.pptx` was added to the **project root** — a 14-slide
+investor/partner deck (problem, solution, product, business model, market,
+competitive landscape, go-to-market, financial projections, current status,
+roadmap, the ask), built from `BUSINESS_MODEL.md` and the platform's actual
+implemented capabilities, not aspirational claims. Tone is formal/
+investor-grade per explicit request. **Two placeholders still need filling
+in before sending it anywhere**: the contact block on the closing slide, and
+a specific funding ask amount (currently framed around what's needed —
+production payment setup, moderation staffing, Phase 1 launch — rather than
+a dollar figure, since none was given).
+
+This is a business artifact, not application code — unlike everything else
+in this doc, it has no bearing on how the app runs. Noted here only so a
+future session doesn't wonder what the `.pptx` file in the repo root is.
+
+**Tooling used to build it, installed into the machine's system Python
+(`AppData\Local\Programs\Python\Python313`), deliberately NOT the project's
+`.venv`** — these aren't app dependencies, don't add them to
+`requirements.txt`:
+- `python-pptx` — generates the `.pptx` directly (a Python script, not kept
+  in the repo — regenerate from scratch if the deck needs rebuilding rather
+  than hunting for the original generation script).
+- `playwright` (+ `python -m playwright install chromium`) — used to
+  actually launch the dev server and screenshot pages to verify UI changes
+  render correctly, rather than relying on template-string assertions
+  alone. Worth keeping in mind as an option for future visual verification
+  in this environment — no `chromium-cli` is available here, but plain
+  Playwright via Python works fine as a fallback.
+
+## Subscription renewal/extension logic — bug found and fixed (2026-07-15)
+
+Requested: renewing a subscription while one is already active should
+**extend** it from its current expiry, not create a separate/overlapping
+one; renewing after expiry should start fresh from the purchase date; only
+one active subscription record per seller, ever; a clear "extended until
+X" message shown to the user.
+
+Most of this was already right — `SellerSubscription` is a
+`OneToOneField` to `Seller` (a second row is structurally impossible), and
+`subscription_action`'s approve path already extended from the existing
+`expires_at` rather than resetting to "now" when a plan was still active.
+
+**The actual bug, found while verifying that logic:** "still active" was
+computed against `timezone.now()` **at admin-approval time**, not against
+when the seller actually submitted the renewal
+(`SubscriptionRequest.created_at`). Since this platform's subscriptions
+are approved manually (no automated billing — an admin confirms a
+reported bank/mobile transfer, sometimes days later), a seller who renews
+while still active but whose request sits in the queue past their old
+expiry date would get silently downgraded from "extend" to "fresh start,"
+losing the days between their real expiry and whenever the admin got to
+it — through no fault of their own. Reproduced directly: same renewal
+request, same original expiry, but simulating a slow admin approval after
+the old period had already lapsed in real time still produced the wrong
+(reset) result under the old code.
+
+Fixed in `olretail/subscription_models.py`:
+- New `SellerSubscription.compute_renewal(plan, reference_date)` — the
+  single source of truth for the extend-vs-fresh-start decision, anchored
+  on `reference_date` (always `SubscriptionRequest.created_at` in
+  practice) instead of `timezone.now()`. Returns `(new_expires_at,
+  extended: bool)`.
+- `dashboard/views.py subscription_action` now calls this instead of
+  duplicating the math inline; the now-unused `PLAN_DURATION_DAYS` import
+  there was removed.
+- `dashboard/views.py subscription_detail` computes the same preview for
+  pending requests and passes it to the template — the admin sees
+  "Approving will extend the current subscription to X" (or "activate a
+  new period until X") *before* clicking confirm, not just after.
+- The seller now gets an actual notification (in-app bell + email, via
+  the existing `_notify()` from the Order notifications feature) when
+  their request is approved: **"Your subscription has been successfully
+  extended until [date]"** when extending, or "Your subscription is now
+  active until [date]" for a fresh activation — previously the confirm
+  action only flashed a message in the *admin's* own dashboard session,
+  which the seller never saw.
+- `templates/olretail/seller_subscription.html` shows an info banner when
+  a seller with an active subscription opens the renewal form, explaining
+  up front that submitting now will extend their current period rather
+  than start a separate one — translated into Tetum along with everything
+  else new today.
+- Verified live: the spec's own worked example (active 1–31 Aug 2026,
+  renewed 20 Aug → new expiry 30 Sep 2026, exact date); the delayed-
+  approval bug specifically, confirmed fixed; expired-subscription renewal
+  correctly starting from the request's `created_at` rather than expiry or
+  approval time; the seller notification firing with the exact requested
+  wording; duplicate-pending-request submission still blocked; and the
+  admin preview text matching what actually gets applied on confirm.
+
+## Services-category contact wording (2026-07-15)
+
+"Seller" reads oddly for the Services category — nobody hiring a repair
+job or a cleaner thinks of them as a "seller." `olretail/views.py
+product_detail` now computes `is_service_category` (`product.category.slug
+== "services"`) and passes it to `details.html`, which branches every
+seller-referencing string in the contact-gating flow for that category
+only — every other category (Electronics, Vehicles, Housing, etc.) is
+unchanged:
+
+- "Seller" heading → "Service Provider"
+- "Interested in this product?" → "Interested in this service?"
+- Both contact-gate messages ("To view the seller's phone number...")
+  → "...the service provider's phone number..."
+- "Not sold through the cart — contact the seller directly..." →
+  "Not booked through the cart — contact the service provider directly..."
+
+New Tetum translations added — "service provider" is **"servisu-na'in"**,
+following the same `-na'in` occupational suffix already used for
+`fa'an-na'in` (seller) and `sosa-na'in` (buyer), so it reads as a natural
+parallel term rather than a bolted-on loanword. Also translated the
+previously-missing "Not sold through the cart..." string while in there
+(it predates this session but had no Tetum entry). Verified live: a
+Services-category product shows the new wording for anonymous and
+logged-in-non-buyer visitors, in both English and Tetum; an Electronics-
+category product still shows the original "seller" wording, confirming
+the change doesn't leak into other categories.
+
+## Product delete now cleans up its images (2026-07-15)
+
+Django doesn't delete the underlying file when an `ImageField`'s row is
+deleted — `product.delete()` only ever removed the DB row, leaving every
+uploaded product photo behind on disk forever. Over time (unlimited
+seller listings on paid plans, up to 3 images each) this is a real,
+unbounded server-storage leak with no cleanup path at all.
+
+Fixed with a `pre_delete` signal on `Product`
+(`olretail/models.py _delete_product_images`), not an overridden
+`.delete()` — deliberately, because there's a real bulk-delete call site
+in this codebase (`seed_demo_users.py --reset` does
+`Product.objects.filter(...).delete()`), and Django's queryset bulk
+delete bypasses an instance's overridden `.delete()` method entirely but
+still fires `pre_delete`/`post_delete` signals per object. A signal is
+the only approach that correctly covers all three deletion paths with one
+implementation:
+- Seller's own `olretail:delete_product`
+- Admin's permanent `dashboard:product_remove`
+- Bulk `QuerySet.delete()` (demo-data resets, and any future bulk delete)
+
+Verified live for all three paths (rolled-back DB transaction, but file
+writes aren't covered by that — force-verified no leftover files remained
+on disk regardless of test outcome): uploaded a real image via
+`SimpleUploadedFile`, confirmed the file existed on disk, deleted the
+product through each path, and confirmed the file was actually gone
+afterward — not just the DB row.
+
+~~**Not covered by this fix**: replacing an image during product *edit*~~
+— **fixed in a same-day follow-up.** `olretail/views.py product_update`
+now captures each of the three image fields' old `FieldFile`s *before*
+`ProductForm(instance=product)` binds and overwrites them in place (the
+form's `instance` *is* `product` — by the time `form.save(commit=False)`
+returns, the old value is already gone unless captured first), then after
+`updated.save()` compares old vs. new `.name` per field and deletes the
+old file whenever it changed — covers both "replaced with a new upload"
+and "cleared via the ClearableFileInput checkbox." A field left untouched
+in the edit form is correctly left alone (`old_file.name == new_file.name`
+skips deletion). `Product.IMAGE_FIELD_NAMES` is now a shared class
+constant so the delete-side signal and this edit-side cleanup don't
+duplicate the three field names. Verified live: replace one image (old
+file gone, new file present, DB points to the new path), clear a second
+image (old file gone, field now empty), leave a third completely
+untouched in the same edit (file still there, unchanged) — all three in
+a single request, matching a realistic edit form submission.
+
+## Leaked Stripe secret key — found and fixed (2026-07-14 evening)
+
+The first `git push origin master` was **rejected by GitHub push
+protection**: `TLoretail/settings.py` had a real Stripe **test-mode secret
+key** hardcoded as the env-var fallback (`STRIPE_SECRET_KEY =
+os.environ.get("STRIPE_SECRET_KEY", "sk_test_...")` — a real, working key,
+not a placeholder). Traced it to a single local commit that had never
+reached GitHub (push protection caught it on the first attempt), so nothing
+was ever actually exposed publicly.
+
+Fixed:
+- Replaced both `STRIPE_SECRET_KEY` and `STRIPE_PUBLIC_KEY` fallbacks with
+  non-functional placeholders (`"sk_test_demo"` / `"pk_test_demo"`, matching
+  the pattern `STRIPE_WEBHOOK_SECRET` already used) — real keys must now be
+  set as actual environment variables (`$env:STRIPE_SECRET_KEY = "..."`,
+  same pattern as `$env:DJANGO_DEBUG`), never committed. **No `.env`-file
+  loader exists in this project** (no python-dotenv/django-environ) — env
+  vars have to be set in the shell each session, or wired into a proper
+  secrets manager for deployment.
+- The offending commit was still unpushed and local-only, so `git commit
+  --amend` was safe (nothing else had it) — no rebase/force-push needed.
+  Verified the secret string is gone from history (`git log -S`), then
+  expired the reflog and ran `git gc --prune=now` to purge the orphaned
+  commit object from disk too.
+- Push succeeded afterward — local `master` and `origin/master` are in sync.
+- The Django `SECRET_KEY` fallback (`"django-insecure-dev-only-..."`) and
+  the Stripe **publishable** key are not security issues — Django's own
+  "insecure" naming convention and Stripe publishable keys are meant to be
+  public, respectively. Only the Stripe *secret* key was ever a problem.
+
+**Still recommended, not done (needs the Stripe dashboard, not code):**
+rotate that key at dashboard.stripe.com → Developers → API keys. It was
+included in data this local repo sent to GitHub's servers during the
+rejected push attempt, so treat it as seen even though it never landed in
+public history.
+
+**Separately noticed, not fixed:** there's no `.gitignore` in this repo —
+134 `__pycache__/*.pyc` files are currently tracked in git (harmless, just
+noisy/bloaty, causes spurious diffs on every Python run). Worth adding a
+standard Python `.gitignore` (and `git rm -r --cached **/__pycache__`) next
+time someone's making a commit anyway.
+
 ## Cart-restricted categories (added 2026-07-14 evening)
 
 **Housing, Vehicles, Motorcycles, and Services** never show an "Add to Cart"
@@ -705,14 +1276,17 @@ platform), not bought through checkout.
     typed by the seller, delivery photo taken by whoever delivers) — no
     courier API integration, no buyer-facing map, no automated "out for
     delivery" notifications, no way for a courier to reject an order once
-    assigned. Reassigning a courier after Shipped isn't possible from the
-    seller-facing UI (that form only appears at Paid→Shipped) — use
-    `/admin/olretail/order/<id>/change/` → `Assigned courier` instead
-    (Order is now registered in Django admin).
-12. No admin UI to manage courier accounts beyond the dashboard's "+Courier"
-    grant button — no list of couriers, no way to revoke the role short of
-    removing them from the `Courier` Django group/deleting the profile via
-    admin.
+    assigned. ~~Reassigning a courier after Shipped isn't possible from the
+    seller-facing UI... use `/admin/olretail/order/<id>/change/` instead~~ —
+    **fixed 2026-07-15**: `/dashboard/orders/<id>/reassign-courier/`
+    (admin-only, shown on `order_detail.html` while Shipped) is now the
+    supported, audit-logged path — see "All 11 Medium UAT findings fixed".
+12. ~~No admin UI to manage courier accounts beyond the dashboard's
+    "+Courier" grant button... no way to revoke the role~~ — **revoke buttons
+    added 2026-07-15** for buyer/seller/courier on `/dashboard/users/` (see
+    "Role revocation" section). ~~Still no dedicated courier list/filter
+    view~~ — **the Users page role filter got a "Courier" option
+    2026-07-15 too**, closing this the rest of the way.
 13. Subscription plan prices/durations ($11/mo, $100/yr, 30/365 days) are
     hardcoded in `olretail/subscription_models.py` (`PLAN_PRICES`,
     `PLAN_DURATION_DAYS`) — fine for now, move to DB-configurable if pricing
@@ -721,7 +1295,17 @@ platform), not bought through checkout.
     subscription/payout request is approved/rejected — seller only finds out
     by visiting the relevant page (banners are in-app only).
 15. New Subscriptions feature strings aren't in the Tetum `.po` catalog yet
-    (see Translations section).
+    (see Translations section). ~~2026-07-15's own new UI strings
+    (notifications, header info bar, etc.)~~ **were added to the catalog
+    2026-07-15** (see "All 11 Medium UAT findings fixed") — but doing that
+    surfaced a **much bigger, previously-undocumented gap**: the entire
+    Payments/Orders/Delivery/Dispute feature area from 2026-07-14 (cart,
+    checkout, order detail, buyer/seller orders, disputes — dozens of
+    templates, likely 150+ strings) was **never added to the Tetum catalog
+    at all**, not just Subscriptions. Confirmed via direct `.po` lookups
+    for strings like "My Orders"/"Cart"/"Courier" — genuinely absent, not
+    a false negative. This is a substantial standalone translation effort,
+    intentionally out of scope for the UAT fix batch.
 
 ## File map (the parts that matter)
 
@@ -732,12 +1316,17 @@ platform), not bought through checkout.
   `Product.cart_purchasable`), views, forms, urls, `admin.py` (includes
   `OrderAdmin` — full order visibility/edit at `/admin/olretail/order/`),
   `context_processors.py` (categories + roles in every template),
-  migrations 0001–0012
+  `validators.py` (`validate_image_size`, added 2026-07-15), migrations
+  0001–0015
 - `olretail/payment_models.py` / `payment_views.py` / `payment_forms.py` —
   cart/checkout/orders/payments/disputes/delivery tracking (courier
   assignment + required delivery photo), both Stripe (now correctly handles
   multi-seller carts — see Multi-seller Stripe checkout fix) and direct
-  bank/mobile transfer (re-exported into `models.py`, see Payments section)
+  bank/mobile transfer (re-exported into `models.py`, see Payments section);
+  also `PlatformSettings` (migration `0013`), `Notification` (migration
+  `0014`, widened to `TextField` in `0015`), and `Rating` (migration
+  `0015`) — see "Platform payment settings", "Order notifications", and
+  "All 11 Medium UAT findings fixed" sections
 - `olretail/subscription_models.py` — `SellerSubscription` /
   `SubscriptionRequest` (seller listing-limit + paid plan tracking, re-
   exported into `models.py`), `seller_subscription` view lives in
@@ -747,13 +1336,25 @@ platform), not bought through checkout.
 - `olretail/management/commands/seed_demo_users.py` — demo/QA data generator
   (see Demo/seed data section)
 - `dashboard/views.py` (`payouts`/`payouts_run`/`payout_detail`/
-  `payout_action`, `subscriptions`/`subscription_detail`/`subscription_action`)
-  — staff review/confirm UI at `/dashboard/payouts/` and `/dashboard/subscriptions/`
+  `payout_action`, `subscriptions`/`subscription_detail`/`subscription_action`,
+  `user_revoke_role`, `platform_settings`) — staff review/confirm UI at
+  `/dashboard/payouts/`, `/dashboard/subscriptions/`, `/dashboard/users/`,
+  and `/dashboard/payment-settings/` (last two added 2026-07-15)
 - `accounts/` — register/login/logout + password-reset URLs and templates;
-  `roles.py` is the role registry (groups + profiles per account type)
-- `templates/shared/` — base (favicon), header (logo, seller nav incl.
-  Subscription link), footer, messages, product_grid, pagination,
-  popular_category partials
+  `roles.py` is the role registry (groups + profiles per account type);
+  `ratelimit.py` (added 2026-07-15) is the per-IP throttle used on register/
+  login/password-reset. Note: `accounts/templates/accounts/login.html` was
+  a dead, shadowed duplicate of `templates/accounts/login.html` — deleted
+  2026-07-15 (see "Full-system UAT pass" section).
+- `olretail/validators.py` (added 2026-07-15) — shared `validate_image_size`
+  used by `ProductForm` and `DeliveryProofForm`.
+- `templates/shared/` — base (favicon, full-width `container-fluid` layout),
+  header (logo, seller nav incl. Subscription link, hotline/currency info
+  bar and notification bell dropdown added 2026-07-15), footer (payment
+  method badges added 2026-07-15), messages, product_grid, pagination,
+  popular_category (sidebar ad-slot placeholder added 2026-07-15) partials
+- `templates/olretail/notifications.html` — full notification history page,
+  added 2026-07-15 (see "Order notifications" section)
 - `templates/olretail/` — index, details (cart-purchasable gating), lista
   (seller dashboard, subscription usage banner), product_form
   (subscriber "publishes instantly" note), cart/checkout/payment/orders/
@@ -761,4 +1362,7 @@ platform), not bought through checkout.
   `seller_subscription.html`, `courier_deliveries.html`
 - `dashboard/templates/dashboard/subscriptions.html` /
   `subscription_detail.html` — admin subscription review UI
+- `dashboard/templates/dashboard/platform_settings.html` — admin platform
+  payment-instructions editor, added 2026-07-15 (see "Platform payment
+  settings" section)
 - `compile_translations.py` — .po → .mo compiler (no gettext needed)

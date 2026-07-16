@@ -5,7 +5,7 @@
 
 {% block content %}
 <main class="py-5">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row mb-4">
       <div class="col-12">
         <h1 class="h2 page-header-bar">
@@ -153,6 +153,21 @@
               </button>
             </form>
             {% endif %}
+
+            {% if is_admin and couriers is not None %}
+            <hr>
+            <form method="post" action="{% url 'dashboard:order_reassign_courier' order.id %}" class="form-inline">
+              {% csrf_token %}
+              <label class="mr-2 mb-0" for="courier_id">{% trans "Reassign courier" %}</label>
+              <select name="courier_id" id="courier_id" class="browser-default custom-select custom-select-sm mr-2">
+                <option value="">{% trans "Unassigned (self-delivery)" %}</option>
+                {% for c in couriers %}
+                <option value="{{ c.pk }}" {% if order.assigned_courier_id == c.pk %}selected{% endif %}>{{ c.get_name }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-outline-secondary btn-sm">{% trans "Save" %}</button>
+            </form>
+            {% endif %}
           </div>
         </div>
         {% endif %}
@@ -260,7 +275,7 @@
             {% if is_buyer %}
             <div class="alert alert-info">
               <i class="fas fa-whatsapp mr-2"></i>
-              <a href="https://wa.me/{{ order.seller.whatsapp_number }}?text=Hi%20about%20order%20{{ order.order_number }}" target="_blank" class="btn btn-sm btn-success">
+              <a href="https://wa.me/{{ order.seller.whatsapp_number }}?text=Hi%20about%20order%20{{ order.order_number }}" target="_blank" rel="noopener" class="btn btn-sm btn-success">
                 {% trans "Chat on WhatsApp" %}
               </a>
             </div>
@@ -326,12 +341,84 @@
         </div>
 
         <!-- Actions -->
+        {% if is_buyer and order.status in 'pending_payment,payment_reported' %}
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-body">
+            <form method="post" action="{% url 'olretail:cancel_order' order.id %}"
+                  onsubmit="return confirm('{% trans "Cancel this order?" %}');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger btn-block">
+                <i class="fas fa-times mr-2"></i>{% trans "Cancel Order" %}
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+
         {% if is_buyer and order.status == 'delivered' and not order.dispute %}
         <div class="card border-0 shadow-sm mt-3">
           <div class="card-body">
             <a href="{% url 'olretail:open_dispute' order.id %}" class="btn btn-danger btn-block">
               <i class="fas fa-exclamation-triangle mr-2"></i>{% trans "Report Issue" %}
             </a>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if is_buyer and order.status == 'delivered' %}
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Rate this product" %}</h5>
+          </div>
+          <div class="card-body">
+            {% if rating %}
+            <p class="mb-0">
+              {% for i in "12345" %}
+                <i class="fas fa-star {% if forloop.counter <= rating.score %}text-warning{% else %}text-muted{% endif %}"></i>
+              {% endfor %}
+              <span class="text-muted small ml-1">{% trans "Thanks for rating this purchase." %}</span>
+            </p>
+            {% else %}
+            <form method="post" action="{% url 'olretail:rate_order' order.id %}">
+              {% csrf_token %}
+              <fieldset class="star-rating">
+                {% for i in "54321" %}
+                <input type="radio" id="rate-star{{ i }}" name="score" value="{{ i }}" required>
+                <label for="rate-star{{ i }}" title="{{ i }}"><i class="fas fa-star"></i></label>
+                {% endfor %}
+              </fieldset>
+              <button type="submit" class="btn btn-outline-primary btn-sm mt-2">{% trans "Submit rating" %}</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if is_buyer and order.status == 'delivered' and order.assigned_courier_id %}
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Rate the courier" %}</h5>
+          </div>
+          <div class="card-body">
+            {% if courier_rating %}
+            <p class="mb-0">
+              {% for i in "12345" %}
+                <i class="fas fa-star {% if forloop.counter <= courier_rating.score %}text-warning{% else %}text-muted{% endif %}"></i>
+              {% endfor %}
+              <span class="text-muted small ml-1">{% trans "Thanks for rating this courier." %}</span>
+            </p>
+            {% else %}
+            <form method="post" action="{% url 'olretail:rate_courier' order.id %}">
+              {% csrf_token %}
+              <fieldset class="star-rating">
+                {% for i in "54321" %}
+                <input type="radio" id="rate-courier-star{{ i }}" name="score" value="{{ i }}" required>
+                <label for="rate-courier-star{{ i }}" title="{{ i }}"><i class="fas fa-star"></i></label>
+                {% endfor %}
+              </fieldset>
+              <button type="submit" class="btn btn-outline-primary btn-sm mt-2">{% trans "Submit rating" %}</button>
+            </form>
+            {% endif %}
           </div>
         </div>
         {% endif %}
@@ -362,6 +449,35 @@
   
   .status-step.completed .status-icon {
     color: #28a745;
+  }
+
+  /* Star-rating input: DOM order 5..1 + row-reverse makes the CSS ~
+     sibling-hover/checked trick highlight "this star and everything to its
+     left" without JS. */
+  .star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+  }
+  .star-rating input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .star-rating label {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+    padding: 0 .1rem;
+  }
+  .star-rating input:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #ffc107;
   }
 </style>
 {% endblock %}

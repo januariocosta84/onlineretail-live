@@ -83,6 +83,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "olretail.context_processors.categories",
                 "olretail.context_processors.roles",
+                "olretail.context_processors.notifications",
             ],
         },
     },
@@ -156,6 +157,11 @@ WHITENOISE_USE_FINDERS = True  # serve from static/ even before collectstatic
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Backstop behind the per-form 5MB image-size validators (olretail/validators.py)
+# — rejects oversized uploads before they're even fully read into memory.
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Authentication flow
 

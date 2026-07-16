@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Payment settings{% endblock %}
+
+{% block dash_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 page-header-bar">
+  <h1 class="h4 mb-0">Payment settings</h1>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Platform payment details</div>
+      <div class="card-body">
+        <p class="text-muted small">
+          Shown to sellers when they pay the platform directly for a subscription
+          upgrade (see <a href="{% url 'dashboard:subscriptions' %}">Subscriptions</a>).
+          Leave blank to fall back to the default configured in settings.
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_payment_instructions" class="font-weight-bold">Payment instructions</label>
+            <textarea id="id_payment_instructions" name="payment_instructions" rows="4"
+                      class="form-control form-control-sm"
+                      placeholder="e.g. BNCTL — Account name: TimorMart, Account #: 000-000-0000. Or mobile money to +670 7000-0000.">{{ settings_obj.payment_instructions }}</textarea>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary m-0">
+            <i class="fas fa-save mr-1" aria-hidden="true"></i>Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

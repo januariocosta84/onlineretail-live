@@ -69,6 +69,17 @@
         </p>
 
         {% if sub_request.status == 'pending' %}
+        <p class="small mb-2">
+          {% if preview_extended %}
+          <i class="fas fa-forward mr-1 text-success" aria-hidden="true"></i>
+          Approving will <strong>extend</strong> the current subscription to
+          <strong>{{ preview_expiry|date:"j M Y" }}</strong>.
+          {% else %}
+          <i class="fas fa-play mr-1 text-success" aria-hidden="true"></i>
+          Approving will activate a new period until
+          <strong>{{ preview_expiry|date:"j M Y" }}</strong>.
+          {% endif %}
+        </p>
         <form method="post" action="{% url 'dashboard:subscription_action' sub_request.pk %}" class="mb-2"
               onsubmit="return confirm('Confirm payment was received and activate this subscription?');">
           {% csrf_token %}

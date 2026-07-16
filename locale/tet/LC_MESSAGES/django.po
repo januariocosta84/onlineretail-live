@@ -662,3 +662,143 @@ msgstr "naran dahuluk"
 
 msgid "last name"
 msgstr "apelidu"
+
+#
+# ── Header info bar, notifications, footer, orders (added 2026-07-15) ──
+#
+
+msgid "Hotline"
+msgstr "Linha diretu"
+
+msgid "Currency"
+msgstr "Moeda"
+
+msgid "US Dollar (USD)"
+msgstr "Dólar Amerikanu (USD)"
+
+msgid "Notifications"
+msgstr "Avizu sira"
+
+msgid "No notifications yet."
+msgstr "Seidauk iha avizu."
+
+msgid "View all"
+msgstr "Haree hotu"
+
+msgid "ago"
+msgstr "liu ba"
+
+msgid "We accept"
+msgstr "Ami simu"
+
+msgid "VISA Card"
+msgstr "Kartaun VISA"
+
+msgid "Bank Transfer"
+msgstr "Transferénsia Banku"
+
+msgid "Mobile Money"
+msgstr "Osan Movel"
+
+msgid "Advertisement"
+msgstr "Anúnsiu"
+
+msgid "Mark all as read"
+msgstr "Marka hotu hanesan lidu ona"
+
+msgid "Order"
+msgstr "Enkomenda"
+
+msgid "Payment Settings"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "My Deliveries"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Cancel Order"
+msgstr "Kansela Enkomenda"
+
+msgid "Cancel this order?"
+msgstr "Kansela enkomenda ida-ne'e?"
+
+msgid "Rate this product"
+msgstr "Fó klasifikasaun ba produtu ida-ne'e"
+
+msgid "Submit rating"
+msgstr "Haruka klasifikasaun"
+
+msgid "Thanks for rating this purchase."
+msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
+
+msgid "Reassign courier"
+msgstr "Troka entregador"
+
+msgid "Unassigned (self-delivery)"
+msgstr "La marka (entrega rasik)"
+
+msgid "Save"
+msgstr "Rai"
+
+msgid "rating"
+msgstr "klasifikasaun"
+
+#
+# ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
+#
+
+msgid "Ad"
+msgstr "Anúnsiu"
+
+msgid "Shop Electronics"
+msgstr "Sosa Elektrónika"
+
+msgid "Browse Materials"
+msgstr "Haree Materiál"
+
+msgid "Browse Vehicles"
+msgstr "Haree Veíkulu"
+
+msgid "Learn More"
+msgstr "Hatene Liu Tan"
+
+msgid "Latest phones, laptops and accessories — in stock now."
+msgstr "Telefone, laptop no asesóriu foun sira — disponível ona."
+
+msgid "Cement, tools and building materials for every project."
+msgstr "Simentu, ferramenta no materiál konstrusaun ba projetu hotu-hotu."
+
+msgid "Quality used vehicles and motorcycles, inspected."
+msgstr "Veíkulu no motór uza kualidade di'ak, ho inspesaun."
+
+msgid "Explore Timor-Leste — book a local tour today."
+msgstr "Esplora Timor-Leste — reserva tour lokál ohin."
+
+#
+# ── Subscription renewal/extension logic (added 2026-07-15) ────────────
+#
+
+#, python-format
+msgid "You already have an active subscription until %(date)s. Submitting a new request won't start a separate subscription — once confirmed, it extends your current one from that date instead."
+msgstr "Ita-boot iha ona subskrisaun ativu to'o %(date)s. Haruka pedidu foun labele hahú subskrisaun separadu — bainhira konfirma ona, nia sei estende ita-boot nia subskrisaun atuál husi data ne'e."
+
+#
+# ── Service-category contact wording (added 2026-07-15) ─────────────────
+#
+
+msgid "Not sold through the cart — contact the seller directly to arrange this."
+msgstr "La fa'an liu husi karrinu — kontaktu fa'an-na'in diretamente atu kombina ida-ne'e."
+
+msgid "Not booked through the cart — contact the service provider directly to arrange this."
+msgstr "La book liu husi karrinu — kontaktu servisu-na'in diretamente atu kombina ida-ne'e."
+
+msgid "Service Provider"
+msgstr "Servisu-na'in"
+
+msgid "Interested in this service?"
+msgstr "Iha interese ba servisu ida-ne'e?"
+
+msgid "To view the service provider's phone number and WhatsApp contact, upgrade your account to Buyer & Seller."
+msgstr "Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
+
+msgid "To view the service provider's phone number and WhatsApp contact, please sign in or create an account."
+msgstr "Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, favór login ka kria konta ida."

@@ -1,7 +1,10 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Buyer, Category, City, Comment, Country, Courier, Order, Product, ProductStatus, Seller
+from .models import (
+    Buyer, Category, City, Comment, Country, Courier, CourierRating, Notification, Order, Product, ProductStatus,
+    Rating, Seller,
+)
 
 admin.site.site_header = "TimorMart administration"
 admin.site.site_title = "TimorMart"
@@ -45,8 +48,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
-    list_display = ["get_name", "mobile", "address"]
-    search_fields = ["user__username", "user__first_name", "user__last_name", "mobile"]
+    list_display = ["get_name", "mobile", "address", "seller_type", "company_name"]
+    list_filter = ["seller_type"]
+    search_fields = ["user__username", "user__first_name", "user__last_name", "mobile", "company_name", "company_tin"]
 
 
 @admin.register(Buyer)
@@ -56,8 +60,10 @@ class BuyerAdmin(admin.ModelAdmin):
 
 @admin.register(Courier)
 class CourierAdmin(admin.ModelAdmin):
-    list_display = ["get_name", "mobile"]
+    list_display = ["get_name", "mobile", "verification_status", "deposit_amount"]
+    list_filter = ["verification_status"]
     search_fields = ["user__username", "user__first_name", "user__last_name", "mobile"]
+    filter_horizontal = ["service_cities"]
 
 
 @admin.register(Order)
@@ -75,6 +81,33 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ["commenter_name", "product", "sentiment", "is_public", "date_added"]
     search_fields = ["commenter_name", "body"]
     list_filter = ["sentiment", "is_public", "date_added"]
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ["recipient", "message", "order", "is_read", "created_at"]
+    list_filter = ["is_read", "created_at"]
+    search_fields = ["recipient__username", "message", "order__order_number"]
+    list_select_related = ["recipient", "order"]
+    date_hierarchy = "created_at"
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ["buyer", "product", "score", "order", "created_at"]
+    list_filter = ["score", "created_at"]
+    search_fields = ["buyer__username", "product__name", "order__order_number"]
+    list_select_related = ["buyer", "product", "order"]
+    date_hierarchy = "created_at"
+
+
+@admin.register(CourierRating)
+class CourierRatingAdmin(admin.ModelAdmin):
+    list_display = ["buyer", "courier", "score", "order", "created_at"]
+    list_filter = ["score", "created_at"]
+    search_fields = ["buyer__username", "courier__user__username", "order__order_number"]
+    list_select_related = ["buyer", "courier__user", "order"]
+    date_hierarchy = "created_at"
 
 
 admin.site.register(Country)

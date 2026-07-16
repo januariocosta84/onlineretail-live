@@ -1,0 +1,117 @@
+{% extends 'shared/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "About Us" %} — TimorMart{% endblock %}
+{% block meta_description %}{% trans "TimorMart is Timor-Leste's local online marketplace connecting buyers and sellers across the country." %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-9 text-center py-4">
+      <h1 class="h3 font-weight-bold mb-3">{% trans "About TimorMart" %}</h1>
+      <p class="lead text-muted">
+        {% blocktrans %}TimorMart is Timor-Leste's own online marketplace — a place for people across the country
+        to buy and sell directly with each other, without needing a physical shop or a big budget to get started.{% endblocktrans %}
+      </p>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-9">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">{% trans "Why we built this" %}</h2>
+          <p class="text-justify mb-0">
+            {% blocktrans %}Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —
+            great for community, but hard for a buyer to compare options or for a small seller to reach
+            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling
+            online: a single, trusted place where anyone can list a product and anyone can find it, whether
+            it's brand new or a good second-hand find.{% endblocktrans %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-4 mb-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">{% trans "For Buyers" %}</h2>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Browse products from home, across every municipality" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Clear pricing and condition (new vs. second-hand) on every listing" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Ratings and comments from other buyers" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Contact sellers directly, including by WhatsApp" %}</li>
+            <li class="mb-0"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Use the site in English or Tetum" %}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">{% trans "For Sellers" %}</h2>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Reach buyers across the country without renting a storefront" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "List, edit and track products from a simple dashboard" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Get paid by card, bank transfer or mobile money" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Build a reputation through buyer ratings and reviews" %}</li>
+            <li class="mb-0"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Start free — upgrade only once you're ready to grow" %}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">{% trans "Trust & Safety" %}</h2>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Every listing is reviewed before it goes live" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Couriers submit ID and are verified before they can deliver an order" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Photo proof of delivery on every shipped order" %}</li>
+            <li class="mb-2"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "A dispute process if something goes wrong" %}</li>
+            <li class="mb-0"><i class="fas fa-check text-success mr-2" aria-hidden="true"></i>{% trans "Buyers and couriers can both be rated after delivery" %}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-9">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">{% trans "What makes TimorMart different" %}</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mb-2"><i class="fas fa-map-marker-alt text-danger mr-2" aria-hidden="true"></i>{% trans "Built for Timor-Leste — local cities, local languages, local payment options" %}</p>
+              <p class="mb-2"><i class="fas fa-recycle text-danger mr-2" aria-hidden="true"></i>{% trans "New and second-hand items side by side, so buying affordably is easy" %}</p>
+              <p class="mb-0"><i class="fas fa-language text-danger mr-2" aria-hidden="true"></i>{% trans "Full English and Tetum support throughout the site" %}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-2"><i class="fab fa-whatsapp text-danger mr-2" aria-hidden="true"></i>{% trans "Direct WhatsApp contact between buyers and sellers" %}</p>
+              <p class="mb-2"><i class="fas fa-truck text-danger mr-2" aria-hidden="true"></i>{% trans "Delivery matched to the buyer's city, with verified couriers" %}</p>
+              <p class="mb-0"><i class="fas fa-shield-alt text-danger mr-2" aria-hidden="true"></i>{% trans "Moderation and dispute resolution to keep the marketplace trustworthy" %}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-9 text-center">
+      <p class="mb-4">{% trans "Ready to get started?" %}</p>
+      <a href="{% url 'olretail:index' %}" class="btn btn-primary mx-2 mb-2">
+        <i class="fas fa-store mr-1" aria-hidden="true"></i>{% trans "Browse products" %}
+      </a>
+      <a href="{% url 'olretail:create_product' %}" class="btn btn-outline-primary mx-2 mb-2">
+        <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans "Start selling" %}
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

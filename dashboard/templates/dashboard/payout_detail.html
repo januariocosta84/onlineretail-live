@@ -42,8 +42,17 @@
           {% csrf_token %}
           <input type="hidden" name="action" value="save_details">
           <div class="form-group">
-            <label>Bank name</label>
-            <input type="text" name="bank_name" class="form-control form-control-sm" value="{{ payout.bank_name }}">
+            <label for="id_bank_name">Bank name</label>
+            <select id="id_bank_name" name="bank_name" class="browser-default custom-select custom-select-sm">
+              <option value="" {% if not payout.bank_name %}selected{% endif %}>Select bank…</option>
+              <option value="BNCTL" {% if payout.bank_name == "BNCTL" %}selected{% endif %}>BNCTL</option>
+              <option value="BRI" {% if payout.bank_name == "BRI" %}selected{% endif %}>BRI</option>
+              <option value="BNU" {% if payout.bank_name == "BNU" %}selected{% endif %}>BNU</option>
+              <option value="Mandiri" {% if payout.bank_name == "Mandiri" %}selected{% endif %}>Mandiri Bank</option>
+              {% if payout.bank_name and payout.bank_name != "BNCTL" and payout.bank_name != "BRI" and payout.bank_name != "BNU" and payout.bank_name != "Mandiri" %}
+              <option value="{{ payout.bank_name }}" selected>{{ payout.bank_name }}</option>
+              {% endif %}
+            </select>
           </div>
           <div class="form-group">
             <label>Account number</label>

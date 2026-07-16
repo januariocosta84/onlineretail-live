@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,15 +13,19 @@ from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.db import transaction
 
-from olretail.models import Product, Seller, Buyer, Courier
+from olretail.models import (
+    Product, Seller, SellerType, SellerVerificationStatus, Buyer, Courier, CourierVerificationStatus,
+)
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
     Cart, Order, Payment, OrderStatus, PaymentMethod, PaymentStatus, Transaction,
-    TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate
+    TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate,
+    PlatformSettings, Notification, Rating, CourierRating,
 )
 from .payment_forms import (
     CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
+    CourierVerificationForm, SellerCompanyInfoForm, SellerVerificationForm,
 )
 from .subscription_models import (
     FREE_PRODUCT_LIMIT, PLAN_PRICES, SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus,
@@ -28,6 +33,35 @@ from .subscription_models import (
 
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+def _notify(user, message, order=None):
+    """Create an in-app notification for `user` (bell icon in the header —
+    see context_processors.notifications and the /notifications/ page),
+    and email the same message so it reaches someone who isn't actively
+    checking the site (console-only in dev unless EMAIL_HOST is set — see
+    settings.py). Email failures never break the calling flow."""
+    Notification.objects.create(recipient=user, order=order, message=message)
+    if user.email:
+        subject = (
+            _('TimorMart — order %(order)s') % {'order': order.order_number}
+            if order else _('TimorMart notification')
+        )
+        try:
+            send_mail(subject, message, None, [user.email], fail_silently=True)
+        except Exception:
+            logger.warning(f"Failed to email notification to {user.email}", exc_info=True)
+
+
+def _parse_int(raw, default=1):
+    """Parse an integer POST value (cart quantity, rating score), tolerating
+    non-numeric input (e.g. a hand-crafted or garbled request) instead of
+    raising."""
+    try:
+        return int(raw)
+    except (TypeError, ValueError):
+        return default
+
 
 # ──────────────────────────────────────────────────────────────────
 # CART VIEWS
@@ -60,12 +94,12 @@ def add_to_cart(request, product_id):
         messages.error(request, _('This product is out of stock.'))
         return redirect(product.get_absolute_url())
     
-    quantity = int(request.POST.get('quantity', 1))
+    quantity = _parse_int(request.POST.get('quantity'), default=1)
     if quantity < 1:
         quantity = 1
     if quantity > product.quantity:
         quantity = product.quantity
-    
+
     cart_item, created = Cart.objects.get_or_create(
         buyer=request.user,
         product=product,
@@ -93,8 +127,8 @@ def add_to_cart(request, product_id):
 def update_cart(request, cart_id):
     """Update cart item quantity."""
     cart_item = get_object_or_404(Cart, id=cart_id, buyer=request.user)
-    quantity = int(request.POST.get('quantity', 1))
-    
+    quantity = _parse_int(request.POST.get('quantity'), default=1)
+
     if quantity > 0 and quantity <= cart_item.product.quantity:
         cart_item.quantity = quantity
         cart_item.save()
@@ -239,10 +273,18 @@ def _process_bank_transfer_checkout(request, form, cart_items):
                 status=OrderStatus.PENDING_PAYMENT,
                 payment_method=PaymentMethod.BANK_TRANSFER,
                 delivery_address=form.cleaned_data['delivery_address'],
+                delivery_city=form.cleaned_data['delivery_city'],
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
             orders.append(order)
+            _notify(
+                order.seller.user,
+                _('New order %(order)s from %(buyer)s for “%(product)s” — awaiting their bank/mobile transfer.')
+                % {'order': order.order_number, 'buyer': request.user.get_full_name() or request.user.username,
+                   'product': order.product.name},
+                order=order,
+            )
 
     return render(request, 'olretail/bank_transfer_instructions.html', {'orders': orders})
 
@@ -304,6 +346,7 @@ def _process_stripe_checkout(request, form, cart_items):
                 status=OrderStatus.PENDING_PAYMENT,
                 payment_method=PaymentMethod.STRIPE,
                 delivery_address=form.cleaned_data['delivery_address'],
+                delivery_city=form.cleaned_data['delivery_city'],
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -385,11 +428,25 @@ def _mark_payment_succeeded(payment, charge_id, source):
             seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
             seller_balance.add_commission(int(order.commission_amount * 100))
 
-            order.product.quantity -= order.quantity
-            order.product.save()
+            product = Product.objects.select_for_update().get(pk=order.product_id)
+            product.quantity = max(product.quantity - order.quantity, 0)
+            product.save(update_fields=['quantity'])
 
             Cart.objects.filter(buyer=order.buyer, product=order.product).delete()
             order_numbers.append(order.order_number)
+
+            _notify(
+                order.seller.user,
+                _('Payment received for order %(order)s from %(buyer)s — “%(product)s”.')
+                % {'order': order.order_number, 'buyer': order.buyer.get_full_name() or order.buyer.username,
+                   'product': order.product.name},
+                order=order,
+            )
+            _notify(
+                order.buyer,
+                _('Your payment for order %(order)s was successful.') % {'order': order.order_number},
+                order=order,
+            )
 
     logger.info(f"Payment succeeded for order(s) {', '.join(order_numbers)} (via {source})")
 
@@ -452,8 +509,9 @@ def _mark_bank_transfer_paid(order):
         order.paid_at = timezone.now()
         order.save()
 
-        order.product.quantity -= order.quantity
-        order.product.save()
+        product = Product.objects.select_for_update().get(pk=order.product_id)
+        product.quantity = max(product.quantity - order.quantity, 0)
+        product.save(update_fields=['quantity'])
 
         Cart.objects.filter(buyer=order.buyer, product=order.product).delete()
 
@@ -474,6 +532,12 @@ def mark_payment_sent(request, order_id):
     order.status = OrderStatus.PAYMENT_REPORTED
     order.payment_reported_at = timezone.now()
     order.save(update_fields=['status', 'payment_reported_at'])
+    _notify(
+        order.seller.user,
+        _('%(buyer)s says they\'ve sent payment for order %(order)s — please confirm receipt.')
+        % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
+        order=order,
+    )
     messages.success(request, _('Thanks — the seller has been notified to confirm receipt.'))
     return redirect('olretail:order_detail', order_id=order.id)
 
@@ -496,13 +560,21 @@ def confirm_payment_received(request, order_id):
         return redirect('olretail:order_detail', order_id=order.id)
 
     _mark_bank_transfer_paid(order)
+    _notify(
+        order.buyer,
+        _('%(seller)s confirmed your payment for order %(order)s.')
+        % {'seller': order.seller.get_name, 'order': order.order_number},
+        order=order,
+    )
     messages.success(request, _('Payment confirmed — the order is now marked as paid.'))
     return redirect('olretail:order_detail', order_id=order.id)
 
 
 @seller_required
 def seller_payment_settings(request):
-    """Seller's bank/mobile money details shown to buyers who pay by direct transfer."""
+    """Seller's bank/mobile money details shown to buyers who pay by direct
+    transfer, plus (for company sellers) editable company info and business
+    verification — all three live on this one settings page."""
     seller = request.user.seller
     if request.method == 'POST':
         form = SellerPaymentInstructionsForm(request.POST, instance=seller)
@@ -511,8 +583,72 @@ def seller_payment_settings(request):
             messages.success(request, _('Payment details saved.'))
             return redirect('olretail:seller_payment_settings')
     else:
-        form = SellerPaymentInstructionsForm(instance=seller)
-    return render(request, 'olretail/seller_payment_settings.html', {'form': form})
+        # Nudge a first-time value from the company bank account collected
+        # at registration — never overwrites anything a seller already typed
+        # here themselves.
+        initial = {}
+        if not seller.payment_instructions and seller.company_bank_account:
+            initial['payment_instructions'] = seller.company_bank_account
+        form = SellerPaymentInstructionsForm(instance=seller, initial=initial)
+
+    context = {'form': form, 'seller': seller}
+    if seller.seller_type == SellerType.COMPANY:
+        context['company_form'] = SellerCompanyInfoForm(instance=seller)
+        context['verification_form'] = SellerVerificationForm()
+    return render(request, 'olretail/seller_payment_settings.html', context)
+
+
+@seller_required
+@require_POST
+def seller_company_info(request):
+    """Company seller edits their business details after registration.
+    Changing the identity fields (name/TIN/address) voids an existing
+    verification — the approved document no longer matches what's on file."""
+    seller = request.user.seller
+    if seller.seller_type != SellerType.COMPANY:
+        messages.error(request, _('Company info only applies to company seller accounts.'))
+        return redirect('olretail:seller_payment_settings')
+
+    identity_fields = ('company_name', 'company_tin', 'company_address')
+    before = {name: getattr(seller, name) for name in identity_fields}
+
+    form = SellerCompanyInfoForm(request.POST, instance=seller)
+    if form.is_valid():
+        updated = form.save(commit=False)
+        identity_changed = any(form.cleaned_data[name] != before[name] for name in identity_fields)
+        if identity_changed and updated.verification_status == SellerVerificationStatus.VERIFIED:
+            updated.verification_status = SellerVerificationStatus.PENDING
+            updated.verification_note = ''
+            updated.verified_at = None
+            updated.verified_by = None
+        updated.save()
+        messages.success(request, _('Company information saved.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_submit_verification(request):
+    """Company seller submits (or resubmits) a business registration
+    document for admin review — a trust badge for buyers, not a
+    requirement to keep selling."""
+    seller = request.user.seller
+    if seller.seller_type != SellerType.COMPANY:
+        messages.error(request, _('Business verification only applies to company seller accounts.'))
+        return redirect('olretail:seller_payment_settings')
+
+    form = SellerVerificationForm(request.POST, request.FILES)
+    if form.is_valid():
+        seller.business_document = form.cleaned_data['business_document']
+        seller.verification_status = SellerVerificationStatus.PENDING
+        seller.verification_note = ''
+        seller.save(update_fields=['business_document', 'verification_status', 'verification_note'])
+        messages.success(request, _('Document submitted — an administrator will review it shortly.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
 
 
 @seller_required
@@ -557,7 +693,9 @@ def seller_subscription(request):
             'form': form,
             'plan_prices': PLAN_PRICES,
             'free_limit': FREE_PRODUCT_LIMIT,
-            'platform_payment_instructions': settings.PLATFORM_PAYMENT_INSTRUCTIONS,
+            'platform_payment_instructions': (
+                PlatformSettings.load().payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS
+            ),
             'recent_requests': SubscriptionRequest.objects.filter(seller=seller)[:5],
         },
     )
@@ -588,6 +726,35 @@ def buyer_orders(request):
 
 
 @login_required
+@require_POST
+def cancel_order(request, order_id):
+    """Buyer cancels an order before it's been paid — nothing to restock
+    since stock is only decremented once an order reaches Paid."""
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+
+    if order.status not in (OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_REPORTED):
+        messages.error(request, _('This order can no longer be cancelled — it has already been paid or is past that stage.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if order.payment_id and order.payment.stripe_payment_intent_id:
+        try:
+            stripe.PaymentIntent.cancel(order.payment.stripe_payment_intent_id)
+        except stripe.error.StripeError as e:
+            logger.warning(f"Could not cancel Stripe PaymentIntent for order {order.order_number}: {e}")
+
+    order.status = OrderStatus.CANCELLED
+    order.save(update_fields=['status'])
+    _notify(
+        order.seller.user,
+        _('%(buyer)s cancelled order %(order)s before paying.')
+        % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
+        order=order,
+    )
+    messages.success(request, _('Order %(order)s was cancelled.') % {'order': order.order_number})
+    return redirect('olretail:buyer_orders')
+
+
+@login_required
 def order_detail(request, order_id):
     """View order detail."""
     order = get_object_or_404(Order, id=order_id)
@@ -615,12 +782,72 @@ def order_detail(request, order_id):
         'delivery_updates': order.delivery_updates.all(),
     }
     if is_seller and order.status == OrderStatus.PAID:
-        context['ship_form'] = ShipOrderForm()
+        context['ship_form'] = ShipOrderForm(order=order)
     if is_seller and order.status == OrderStatus.SHIPPED:
         context['delivery_update_form'] = DeliveryUpdateForm()
     if (is_seller or is_courier) and order.status == OrderStatus.SHIPPED:
         context['delivery_proof_form'] = DeliveryProofForm()
+    if is_admin and order.status == OrderStatus.SHIPPED:
+        context['couriers'] = Courier.objects.select_related('user').order_by('user__first_name')
+    if is_buyer and order.status == OrderStatus.DELIVERED:
+        context['rating'] = getattr(order, 'rating', None)
+        context['courier_rating'] = getattr(order, 'courier_rating', None)
     return render(request, 'olretail/order_detail.html', context)
+
+
+@login_required
+@require_POST
+def rate_order(request, order_id):
+    """Buyer rates the product on a Delivered order — one rating per order
+    (a repeat purchase can be rated again, a duplicate submission on the
+    same order can't)."""
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+
+    if order.status != OrderStatus.DELIVERED:
+        messages.error(request, _('You can only rate a product after it has been delivered.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if hasattr(order, 'rating'):
+        messages.error(request, _('You already rated this order.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    score = _parse_int(request.POST.get('score'), default=0)
+    if score not in dict(Rating.SCORE_CHOICES):
+        messages.error(request, _('Please choose a rating from 1 to 5 stars.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    Rating.objects.create(buyer=request.user, product=order.product, order=order, score=score)
+    messages.success(request, _('Thanks for your rating!'))
+    return redirect('olretail:order_detail', order_id=order.id)
+
+
+@login_required
+@require_POST
+def rate_courier(request, order_id):
+    """Buyer rates the courier who delivered a Delivered order — one rating
+    per order, independent of the product Rating above."""
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+
+    if order.status != OrderStatus.DELIVERED:
+        messages.error(request, _('You can only rate a courier after the order has been delivered.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if not order.assigned_courier_id:
+        messages.error(request, _('This order has no assigned courier to rate.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if hasattr(order, 'courier_rating'):
+        messages.error(request, _('You already rated this courier.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    score = _parse_int(request.POST.get('score'), default=0)
+    if score not in dict(CourierRating.SCORE_CHOICES):
+        messages.error(request, _('Please choose a rating from 1 to 5 stars.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    CourierRating.objects.create(buyer=request.user, courier=order.assigned_courier, order=order, score=score)
+    messages.success(request, _('Thanks for rating the courier!'))
+    return redirect('olretail:order_detail', order_id=order.id)
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -700,7 +927,7 @@ def seller_update_order_status(request, order_id):
         messages.error(request, _('Only paid orders can be marked as shipped.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
-    form = ShipOrderForm(request.POST)
+    form = ShipOrderForm(request.POST, order=order)
     if form.is_valid():
         order.status = OrderStatus.SHIPPED
         order.shipped_at = timezone.now()
@@ -708,6 +935,11 @@ def seller_update_order_status(request, order_id):
         order.tracking_number = form.cleaned_data['tracking_number']
         order.assigned_courier = form.cleaned_data['assigned_courier']
         order.save()
+        _notify(
+            order.buyer,
+            _('Your order %(order)s has shipped.') % {'order': order.order_number},
+            order=order,
+        )
         messages.success(request, _('Order marked as shipped.'))
     else:
         messages.error(request, _('Please correct the errors below.'))
@@ -742,6 +974,11 @@ def mark_delivered(request, order_id):
         order.delivered_at = timezone.now()
         order.delivery_photo = form.cleaned_data['photo']
         order.save()
+        _notify(
+            order.buyer,
+            _('Your order %(order)s has been delivered.') % {'order': order.order_number},
+            order=order,
+        )
         messages.success(request, _('Order marked as delivered.'))
         if is_assigned_courier:
             return redirect('olretail:courier_deliveries')
@@ -759,8 +996,28 @@ def courier_deliveries(request):
     context = {
         'pending': orders.filter(status=OrderStatus.SHIPPED).order_by('-shipped_at'),
         'delivered': orders.filter(status=OrderStatus.DELIVERED).order_by('-delivered_at')[:20],
+        'courier': courier,
+        'verification_form': CourierVerificationForm(),
     }
     return render(request, 'olretail/courier_deliveries.html', context)
+
+
+@courier_required
+@require_POST
+def courier_submit_verification(request):
+    """Courier submits (or resubmits) their ID document photo for admin
+    review — required before they can be assigned any deliveries."""
+    courier = request.user.courier
+    form = CourierVerificationForm(request.POST, request.FILES)
+    if form.is_valid():
+        courier.id_document = form.cleaned_data['id_document']
+        courier.verification_status = CourierVerificationStatus.PENDING
+        courier.verification_note = ''
+        courier.save(update_fields=['id_document', 'verification_status', 'verification_note'])
+        messages.success(request, _('ID submitted — an administrator will review it shortly.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:courier_deliveries')
 
 
 @login_required
@@ -782,6 +1039,11 @@ def add_delivery_update(request, order_id):
         update = form.save(commit=False)
         update.order = order
         update.save()
+        _notify(
+            order.buyer,
+            _('Delivery update for order %(order)s: %(note)s') % {'order': order.order_number, 'note': update.note},
+            order=order,
+        )
         messages.success(request, _('Update posted.'))
     else:
         messages.error(request, _('Please enter a status update.'))
@@ -899,14 +1161,15 @@ def dispute_detail(request, dispute_id):
         messages.error(request, _('You do not have permission to view this dispute.'))
         return redirect('olretail:index')
     
+    deadline_passed = timezone.now() > dispute.seller_response_deadline
     context = {
         'dispute': dispute,
         'is_buyer': is_buyer,
         'is_seller': is_seller,
         'is_admin': is_admin,
-        'deadline_passed': timezone.now() > dispute.seller_response_deadline,
+        'deadline_passed': deadline_passed,
     }
-    if is_seller and dispute.status == DisputeStatus.OPEN and not dispute.seller_response:
+    if is_seller and dispute.status == DisputeStatus.OPEN and not dispute.seller_response and not deadline_passed:
         context['form'] = SellerDisputeResponseForm()
     return render(request, 'olretail/dispute_detail.html', context)
 
@@ -945,3 +1208,34 @@ def seller_respond_dispute(request, dispute_id):
         'form': form,
     }
     return render(request, 'olretail/seller_respond_dispute.html', context)
+
+
+# ──────────────────────────────────────────────────────────────────
+# NOTIFICATIONS
+# ──────────────────────────────────────────────────────────────────
+
+@login_required
+def notifications(request):
+    """Full notification list — the header bell only shows the most recent
+    few (see context_processors.notifications)."""
+    notification_list = Notification.objects.filter(recipient=request.user).select_related('order')[:100]
+    return render(request, 'olretail/notifications.html', {'notification_list': notification_list})
+
+
+@login_required
+def notification_open(request, pk):
+    """Mark one notification read and send the user to what it's about."""
+    notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
+    if not notification.is_read:
+        notification.is_read = True
+        notification.save(update_fields=['is_read'])
+    if notification.order_id:
+        return redirect('olretail:order_detail', order_id=notification.order_id)
+    return redirect('olretail:notifications')
+
+
+@login_required
+@require_POST
+def notifications_mark_all_read(request):
+    Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+    return redirect(request.POST.get('next') or 'olretail:notifications')

@@ -40,6 +40,9 @@
           <dt class="col-sm-3">Quantity</dt><dd class="col-sm-9">{{ product.quantity }}{% if not product.in_stock %} <span class="badge badge-secondary">Out of stock</span>{% endif %}</dd>
           <dt class="col-sm-3">Category</dt><dd class="col-sm-9">{{ product.category.title }}</dd>
           <dt class="col-sm-3">Condition</dt><dd class="col-sm-9">{{ product.get_condition_display }}</dd>
+          {% if product.size %}<dt class="col-sm-3">Size</dt><dd class="col-sm-9">{{ product.size }}</dd>{% endif %}
+          {% if product.pieces_per_unit %}<dt class="col-sm-3">Pieces per unit</dt><dd class="col-sm-9">{{ product.pieces_per_unit }}</dd>{% endif %}
+          {% if product.units_per_box %}<dt class="col-sm-3">Units per box</dt><dd class="col-sm-9">{{ product.units_per_box }}</dd>{% endif %}
           <dt class="col-sm-3">Location</dt><dd class="col-sm-9">{{ product.item_location }}, {{ product.country }}</dd>
           <dt class="col-sm-3">Submitted</dt><dd class="col-sm-9">{{ product.created|date:"j M Y H:i" }} (updated {{ product.updated|date:"j M Y H:i" }})</dd>
           <dt class="col-sm-3">Description</dt><dd class="col-sm-9">{{ product.description|linebreaks }}</dd>

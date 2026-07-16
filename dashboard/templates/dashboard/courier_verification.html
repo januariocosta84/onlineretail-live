@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Courier verification{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Courier verification <small class="text-muted h6">({{ couriers|length }} waiting)</small></h1>
+
+{% if couriers %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Courier</th>
+          <th>Mobile</th>
+          <th>ID document</th>
+          <th style="width:160px;">Deposit received</th>
+          <th style="width:340px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in couriers %}
+        <tr>
+          <td>{{ c.get_name }}</td>
+          <td>{{ c.mobile }}</td>
+          <td>
+            <a href="{{ c.id_document.url }}" target="_blank" rel="noopener">
+              <img src="{{ c.id_document.url }}" alt="ID document for {{ c.get_name }}" style="max-height:80px; max-width:120px;" class="rounded border">
+            </a>
+          </td>
+          <td colspan="2">
+            <form method="post" action="{% url 'dashboard:courier_verification_action' c.pk %}" class="form-row align-items-center">
+              {% csrf_token %}
+              <div class="col-auto">
+                <input type="number" name="deposit_amount" step="0.01" min="0" class="form-control form-control-sm"
+                       placeholder="Amount" style="width:110px;">
+              </div>
+              <div class="col-auto">
+                <button type="submit" name="action" value="approve" class="btn btn-success btn-sm m-0">
+                  <i class="fas fa-check mr-1" aria-hidden="true"></i>Approve
+                </button>
+              </div>
+              <div class="col-auto">
+                <input type="text" name="reason" class="form-control form-control-sm"
+                       placeholder="Reason (required to reject)" style="width:200px;">
+              </div>
+              <div class="col-auto">
+                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm m-0"
+                        onclick="return confirm('Reject {{ c.get_name }}\'s ID submission? They will see your reason.');">
+                  <i class="fas fa-times mr-1" aria-hidden="true"></i>Reject
+                </button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body text-center text-muted py-5">
+  <i class="fas fa-id-card fa-3x mb-3" aria-hidden="true"></i>
+  <h2 class="h5">No couriers waiting for review</h2>
+  <p class="mb-0">ID submissions from couriers will appear here.</p>
+</div></div>
+{% endif %}
+{% endblock %}

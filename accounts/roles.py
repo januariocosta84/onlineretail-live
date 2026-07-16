@@ -7,6 +7,7 @@ nothing else in the codebase needs to change.
 """
 
 from django.contrib.auth.models import Group
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from olretail.models import Buyer, Courier, Seller
@@ -49,6 +50,21 @@ def assign_role(user, role, *, address, mobile):
         profile_model.objects.get_or_create(
             user=user, defaults={"address": address, "mobile": mobile}
         )
+
+
+def revoke_role(user, role):
+    """Detach the groups and profiles for `role` from `user` (idempotent).
+
+    Atomic so a profile delete blocked by a protected FK (e.g. a seller
+    with orders on record) can't leave the group removed but the profile
+    still attached.
+    """
+    definition = ROLE_DEFINITIONS[role]
+    with transaction.atomic():
+        groups = Group.objects.filter(name__in=definition["groups"])
+        user.groups.remove(*groups)
+        for profile_model in definition["profiles"]:
+            profile_model.objects.filter(user=user).delete()
 
 
 def is_buyer(user):

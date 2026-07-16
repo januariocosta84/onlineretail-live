@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -99,6 +99,9 @@ class Order(models.Model):
 
     # Delivery Info
     delivery_address = models.TextField()
+    delivery_city = models.ForeignKey(
+        'olretail.City', on_delete=models.PROTECT, null=True, blank=True, related_name='deliveries',
+    )
     delivery_phone = models.CharField(max_length=40)
     estimated_delivery = models.DateField(null=True, blank=True)
     courier_name = models.CharField(max_length=100, blank=True)
@@ -124,12 +127,26 @@ class Order(models.Model):
         return f"{self.order_number} - {self.buyer.username} - ${self.total}"
     
     def save(self, *args, **kwargs):
-        # Auto-generate order number on creation
-        if not self.order_number:
+        # Auto-generate order number on creation. Wrapped in its own
+        # savepoint with a retry: two concurrent checkouts can compute the
+        # same count() and collide on the unique constraint — recomputing
+        # and retrying (rather than letting IntegrityError bubble up as a
+        # 500) keeps this safe under real concurrency.
+        if self.order_number:
+            super().save(*args, **kwargs)
+            return
+
+        for _attempt in range(5):
             date_str = timezone.now().strftime('%Y%m%d')
             count = Order.objects.filter(order_number__startswith=f'ORD-{date_str}').count()
             self.order_number = f'ORD-{date_str}-{count + 1:03d}'
-        super().save(*args, **kwargs)
+            try:
+                with transaction.atomic():
+                    super().save(*args, **kwargs)
+                return
+            except IntegrityError:
+                self.order_number = ''
+        raise IntegrityError('Could not generate a unique order_number after 5 attempts')
 
 
 class DeliveryUpdate(models.Model):
@@ -146,6 +163,71 @@ class DeliveryUpdate(models.Model):
 
     def __str__(self):
         return f"{self.order.order_number}: {self.note[:40]}"
+
+
+class Notification(models.Model):
+    """In-app notification for one user, optionally tied to an order —
+    e.g. 'buyer sent payment', 'seller confirmed payment', 'order shipped'.
+    Read via the bell icon in the header (see context_processors.notifications)
+    or the full list at /notifications/."""
+
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    order = models.ForeignKey(
+        'olretail.Order', on_delete=models.CASCADE, null=True, blank=True, related_name='notifications'
+    )
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['recipient', 'is_read', '-created_at']),
+        ]
+
+    def __str__(self):
+        return f"{self.recipient.username}: {self.message}"
+
+
+class Rating(models.Model):
+    """A buyer's 1-5 star rating for a product, tied to the specific
+    Delivered order that earned them the right to rate it — one rating per
+    order, so a buyer can't rate a product they haven't actually received
+    (and can rate again on a repeat purchase)."""
+
+    SCORE_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
+    product = models.ForeignKey('olretail.Product', on_delete=models.CASCADE, related_name='ratings')
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='rating')
+    score = models.PositiveSmallIntegerField(choices=SCORE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.buyer.username} rated {self.product.name}: {self.score}/5"
+
+
+class CourierRating(models.Model):
+    """A buyer's 1-5 star rating for the courier who delivered their order —
+    separate from the product Rating above, since a slow/rude courier is a
+    different problem than a bad product. One rating per order."""
+
+    SCORE_CHOICES = Rating.SCORE_CHOICES
+
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courier_ratings_given')
+    courier = models.ForeignKey('olretail.Courier', on_delete=models.CASCADE, related_name='ratings')
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='courier_rating')
+    score = models.PositiveSmallIntegerField(choices=SCORE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.buyer.username} rated courier {self.courier.get_name}: {self.score}/5"
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -480,5 +562,35 @@ class Dispute(models.Model):
         if not self.seller_response_deadline:
             from datetime import timedelta
             self.seller_response_deadline = timezone.now() + timedelta(days=3)
-        
+
         super().save(*args, **kwargs)
+
+
+# ──────────────────────────────────────────────────────────────────
+# PLATFORM SETTINGS (singleton, admin-editable)
+# ──────────────────────────────────────────────────────────────────
+
+class PlatformSettings(models.Model):
+    """Single row of platform-level config editable from the admin
+    dashboard — currently just where sellers send subscription payments
+    (falls back to settings.PLATFORM_PAYMENT_INSTRUCTIONS until set)."""
+
+    payment_instructions = models.TextField(
+        blank=True,
+        help_text=_(
+            "Bank or mobile money details shown to sellers when they pay the "
+            "platform for a subscription upgrade."
+        ),
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Platform settings'
+
+    def __str__(self):
+        return 'Platform settings'
+
+    @classmethod
+    def load(cls):
+        obj, _created = cls.objects.get_or_create(pk=1)
+        return obj

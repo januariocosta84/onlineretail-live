@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +11,12 @@ CONDITION_CHOICES = (
     ("New", _("New")),
     ("Second Hand", _("Second Hand")),
 )
+
+
+class CourierVerificationStatus(models.TextChoices):
+    PENDING = "pending", _("Pending Verification")
+    VERIFIED = "verified", _("Verified")
+    REJECTED = "rejected", _("Rejected")
 
 
 class Buyer(models.Model):
@@ -35,6 +43,28 @@ class Courier(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=255, blank=True)
     mobile = models.CharField(max_length=40)
+    service_cities = models.ManyToManyField(
+        "City",
+        blank=True,
+        related_name="couriers",
+        help_text=_(
+            "Cities this courier delivers to. Leave empty if not yet configured "
+            "(order dropdowns will show all couriers until this is set)."
+        ),
+    )
+    id_document = models.ImageField(upload_to="courier_ids/", null=True, blank=True)
+    deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    verification_status = models.CharField(
+        max_length=20,
+        choices=CourierVerificationStatus.choices,
+        default=CourierVerificationStatus.PENDING,
+    )
+    # Admin's reason when rejecting — mirrors Product.moderation_note.
+    verification_note = models.TextField(blank=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    verified_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="couriers_verified"
+    )
 
     @property
     def get_name(self):
@@ -42,6 +72,17 @@ class Courier(models.Model):
 
     def __str__(self):
         return self.get_name
+
+
+class SellerType(models.TextChoices):
+    INDIVIDUAL = "individual", _("Individual")
+    COMPANY = "company", _("Company")
+
+
+class SellerVerificationStatus(models.TextChoices):
+    PENDING = "pending", _("Pending Verification")
+    VERIFIED = "verified", _("Verified")
+    REJECTED = "rejected", _("Rejected")
 
 
 class Seller(models.Model):
@@ -55,14 +96,48 @@ class Seller(models.Model):
             "(e.g. bank name, account number, account holder name)."
         ),
     )
+    seller_type = models.CharField(
+        max_length=20, choices=SellerType.choices, default=SellerType.INDIVIDUAL,
+    )
+    # Only populated for SellerType.COMPANY — collected at registration, and
+    # editable afterward on the seller payment-settings page.
+    company_name = models.CharField(max_length=200, blank=True)
+    company_tin = models.CharField(max_length=50, blank=True, verbose_name="TIN")
+    company_address = models.CharField(max_length=255, blank=True)
+    company_bank_account = models.CharField(max_length=100, blank=True)
+    # Business verification — a trust badge for buyers, not a gate: an
+    # unverified company can still sell and get paid exactly the same as a
+    # verified one (contrast Courier.verification_status, which does gate
+    # delivery assignment).
+    business_document = models.ImageField(upload_to="seller_business_docs/", null=True, blank=True)
+    verification_status = models.CharField(
+        max_length=20, choices=SellerVerificationStatus.choices, default=SellerVerificationStatus.PENDING,
+    )
+    verification_note = models.TextField(blank=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    verified_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="sellers_verified"
+    )
 
     @property
     def get_name(self):
+        # Company sellers trade under their business name everywhere they're
+        # shown as "the seller" — product listings, order confirmations,
+        # payouts, etc. — not the individual account holder's personal name.
+        if self.seller_type == SellerType.COMPANY and self.company_name:
+            return self.company_name
         return self.user.get_full_name() or self.user.username
 
     @property
     def get_id(self):
         return self.user.id
+
+    @property
+    def is_verified_business(self):
+        return (
+            self.seller_type == SellerType.COMPANY
+            and self.verification_status == SellerVerificationStatus.VERIFIED
+        )
 
     @property
     def whatsapp_number(self):
@@ -127,6 +202,10 @@ class Category(models.Model):
 # translated and slugs aren't.
 NON_CART_CATEGORY_SLUGS = {"housing", "vehicles", "motorcycles", "services"}
 
+# Services have no physical stock or condition — matched by slug, not title,
+# for the same reason as above.
+SERVICE_CATEGORY_SLUG = "services"
+
 
 class ProductStatus(models.TextChoices):
     PENDING = "pending", _("Pending approval")
@@ -137,6 +216,8 @@ class ProductStatus(models.TextChoices):
 
 
 class Product(models.Model):
+    IMAGE_FIELD_NAMES = ("product_image", "product_image_2", "product_image_3")
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     product_image = models.ImageField(upload_to="product_image", null=True, blank=True)
@@ -162,6 +243,15 @@ class Product(models.Model):
     moderation_note = models.TextField(blank=True)
     featured = models.BooleanField(default=False)
     condition = models.CharField(max_length=40, choices=CONDITION_CHOICES, default="New")
+    # Packaging details — all optional since they don't apply to every
+    # product (e.g. a single electronics item has no "box").
+    size = models.CharField(max_length=50, blank=True, help_text=_("e.g. L, 42, 500ml"))
+    pieces_per_unit = models.PositiveIntegerField(
+        null=True, blank=True, help_text=_("e.g. 12 pens in a pack")
+    )
+    units_per_box = models.PositiveIntegerField(
+        null=True, blank=True, help_text=_("e.g. 24 packs in a box")
+    )
 
     class Meta:
         ordering = ["-created"]
@@ -200,12 +290,32 @@ class Product(models.Model):
         return self.category_id is not None and self.category.slug not in NON_CART_CATEGORY_SLUGS
 
     @property
+    def is_service_category(self):
+        """True for service listings, which have no physical stock or
+        condition to show (quantity/condition are just placeholder defaults)."""
+        return self.category_id is not None and self.category.slug == SERVICE_CATEGORY_SLUG
+
+    @property
     def gallery(self):
         """Non-empty extra images for the detail page."""
         return [img for img in (self.product_image_2, self.product_image_3) if img]
 
     def __str__(self):
         return self.name
+
+
+@receiver(pre_delete, sender=Product)
+def _delete_product_images(sender, instance, **kwargs):
+    """Deleting a Product row doesn't automatically remove its uploaded
+    image files from disk (Django's default behavior) — clean them up here
+    so a delete doesn't leave orphaned files taking up server storage.
+    A signal (not an overridden .delete()) so this fires for every deletion
+    path: a seller deleting their own listing, an admin's permanent
+    removal, and bulk QuerySet deletes (e.g. seed_demo_users --reset)."""
+    for name in Product.IMAGE_FIELD_NAMES:
+        field = getattr(instance, name)
+        if field:
+            field.delete(save=False)
 
 
 class SentimentLabel(models.TextChoices):
@@ -246,7 +356,8 @@ class Comment(models.Model):
 from .payment_models import (  # noqa: E402, F401
     Cart, Order, OrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
-    DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate,
+    DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings,
+    Notification, Rating, CourierRating,
 )
 from .subscription_models import (  # noqa: E402, F401
     FREE_PRODUCT_LIMIT, PLAN_PRICES, PLAN_DURATION_DAYS, SubscriptionPlan,

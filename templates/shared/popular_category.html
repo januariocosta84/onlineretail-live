@@ -1,4 +1,66 @@
 {% load i18n %}
+<style>
+  /* Sponsored banner slots: dummy house ads until a real ad-sales/rotation
+     system exists — swap these four cards for real advertiser content or a
+     server-driven rotation later. */
+  .dummy-ad { border: none; }
+  .dummy-ad .card-body { padding: 1rem 1.1rem; }
+  .dummy-ad .badge-ad {
+    background: rgba(255,255,255,.85); color: #1a1a1a; font-weight: 700;
+    letter-spacing: .04em;
+  }
+  .dummy-ad-1 { background: #D2232A; }
+  .dummy-ad-2 { background: #1A1A1A; }
+  .dummy-ad-3 { background: #F2C44D; }
+  .dummy-ad-3 .card-title, .dummy-ad-3 p { color: #1a1a1a; }
+  .dummy-ad-3 .badge-ad { background: rgba(0,0,0,.08); color: #1a1a1a; }
+  .dummy-ad-4 { background: #1B6E76; }
+</style>
+
+<div class="card my-3 text-white dummy-ad dummy-ad-1">
+  <div class="card-body">
+    <span class="badge badge-ad text-uppercase small mb-2">{% trans 'Ad' %}</span>
+    <h6 class="card-title font-weight-bold mb-1">Dili Mobile &amp; Electronics</h6>
+    <p class="small mb-2">{% trans 'Latest phones, laptops and accessories — in stock now.' %}</p>
+    <a href="{% url 'olretail:index' %}?category=electronics" class="btn btn-light btn-sm">
+      {% trans 'Shop Electronics' %}
+    </a>
+  </div>
+</div>
+
+<div class="card my-3 text-white dummy-ad dummy-ad-2">
+  <div class="card-body">
+    <span class="badge badge-ad text-uppercase small mb-2">{% trans 'Ad' %}</span>
+    <h6 class="card-title font-weight-bold mb-1">Ramelau Construction Supplies</h6>
+    <p class="small mb-2">{% trans 'Cement, tools and building materials for every project.' %}</p>
+    <a href="{% url 'olretail:index' %}?category=material-construction" class="btn btn-light btn-sm">
+      {% trans 'Browse Materials' %}
+    </a>
+  </div>
+</div>
+
+<div class="card my-3 dummy-ad dummy-ad-3">
+  <div class="card-body">
+    <span class="badge badge-ad text-uppercase small mb-2">{% trans 'Ad' %}</span>
+    <h6 class="card-title font-weight-bold mb-1">Timor Auto &amp; Motos</h6>
+    <p class="small mb-2">{% trans 'Quality used vehicles and motorcycles, inspected.' %}</p>
+    <a href="{% url 'olretail:index' %}?category=vehicles" class="btn btn-dark btn-sm">
+      {% trans 'Browse Vehicles' %}
+    </a>
+  </div>
+</div>
+
+<div class="card my-3 text-white dummy-ad dummy-ad-4">
+  <div class="card-body">
+    <span class="badge badge-ad text-uppercase small mb-2">{% trans 'Ad' %}</span>
+    <h6 class="card-title font-weight-bold mb-1">Cristo Rei Travel &amp; Tours</h6>
+    <p class="small mb-2">{% trans 'Explore Timor-Leste — book a local tour today.' %}</p>
+    <a href="{% url 'olretail:index' %}?category=services" class="btn btn-light btn-sm">
+      {% trans 'Learn More' %}
+    </a>
+  </div>
+</div>
+
 <div class="card my-3">
   <div class="card-header text-center font-weight-bold">
     {% trans 'Shop by category' %}
