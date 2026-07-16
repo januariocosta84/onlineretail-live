@@ -1,0 +1,61 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Restaurants{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Restaurants <small class="text-muted h6">({{ restaurants|length }})</small></h1>
+
+<form method="get" class="card mb-3">
+  <div class="card-body py-3">
+    <div class="form-row">
+      <div class="col-md-6 mb-2">
+        <input type="search" name="q" value="{{ request.GET.q }}" class="form-control form-control-sm"
+               placeholder="Search by name" aria-label="Search restaurants">
+      </div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-sm btn-block m-0">Filter</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% if restaurants %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Restaurant</th><th>Mobile</th><th>Address</th><th>Menu items</th>
+          <th>Verification</th><th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in restaurants %}
+        <tr>
+          <td>{{ r.get_name }}</td>
+          <td>{{ r.mobile }}</td>
+          <td>{{ r.address }}</td>
+          <td>{{ r.product_count }}</td>
+          <td>
+            {% if r.verification_status == 'verified' %}<span class="badge badge-success">Verified</span>
+            {% elif r.verification_status == 'rejected' %}<span class="badge badge-danger">Rejected</span>
+            {% else %}<span class="badge badge-warning">Pending</span>{% endif %}
+          </td>
+          <td class="text-right">
+            <a href="{% url 'dashboard:products' %}?seller={{ r.pk }}" class="btn btn-sm btn-outline-primary my-0">
+              View menu
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body text-center text-muted py-5">
+  <i class="fas fa-store fa-3x mb-3" aria-hidden="true"></i>
+  <h2 class="h5">No restaurants yet</h2>
+  <p class="mb-0">Restaurant sellers will appear here once they register.</p>
+</div></div>
+{% endif %}
+{% endblock %}

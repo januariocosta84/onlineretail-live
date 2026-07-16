@@ -30,9 +30,11 @@ urlpatterns = [
     path("subscriptions/<int:pk>/action/", views.subscription_action, name="subscription_action"),
     path("audit/", views.audit, name="audit"),
     path("payment-settings/", views.platform_settings, name="platform_settings"),
+    path("orders/", views.orders, name="orders"),
     path("orders/<int:order_id>/reassign-courier/", views.order_reassign_courier, name="order_reassign_courier"),
     path("couriers/", views.courier_verification, name="courier_verification"),
     path("couriers/<int:pk>/action/", views.courier_verification_action, name="courier_verification_action"),
     path("sellers/verification/", views.seller_verification, name="seller_verification"),
     path("sellers/verification/<int:pk>/action/", views.seller_verification_action, name="seller_verification_action"),
+    path("restaurants/", views.restaurants, name="restaurants"),
 ]

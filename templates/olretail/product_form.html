@@ -8,8 +8,13 @@
   <div class="row justify-content-center">
     <div class="col-lg-8">
       <div class="card my-4">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
           <h1 class="h5 mb-0">{{ title }}</h1>
+          {% if is_restaurant_seller %}
+          <a href="{% url 'olretail:menu_categories' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-list mr-1" aria-hidden="true"></i>{% trans 'Manage menu sections' %}
+          </a>
+          {% endif %}
         </div>
         <div class="card-body">
           {% if form.non_field_errors %}
@@ -26,10 +31,17 @@
             <div class="row">
               {% for field in form %}
               <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %} form-group" data-field="{{ field.name }}">
+                {% if field.name == 'is_available' %}
+                <div class="custom-control custom-checkbox mt-4">
+                  {{ field }}
+                  <label class="custom-control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+                {% else %}
                 <label for="{{ field.id_for_label }}">
                   {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
                 </label>
                 {{ field }}
+                {% endif %}
                 {% if field.help_text %}
                 <small class="form-text text-muted">{{ field.help_text }}</small>
                 {% endif %}
@@ -44,6 +56,12 @@
                   {% trans "Services don't need a quantity or condition — instead, use the description to mention things like availability, service area, or turnaround time." %}
                 </div>
               </div>
+              <div class="col-12 form-group d-none" data-restaurant-hint>
+                <div class="alert alert-info mb-0 py-2 small">
+                  <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+                  {% trans "Menu items don't need a quantity or condition — use Menu section, Available, and Prep time instead." %}
+                </div>
+              </div>
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <a href="{% url 'olretail:list' %}" class="btn btn-outline-secondary btn-sm">{% trans 'Cancel' %}</a>
@@ -56,32 +74,52 @@
   </div>
 </div>
 {{ service_category_ids|json_script:"service-category-ids" }}
+{{ restaurant_category_ids|json_script:"restaurant-category-ids" }}
 <script>
 (function () {
   var serviceCategoryIds = JSON.parse(
     document.getElementById("service-category-ids").textContent
   ).map(String);
+  var restaurantCategoryIds = JSON.parse(
+    document.getElementById("restaurant-category-ids").textContent
+  ).map(String);
   var categorySelect = document.getElementById("{{ form.category.id_for_label }}");
   var quantityGroup = document.querySelector('[data-field="quantity"]');
   var conditionGroup = document.querySelector('[data-field="condition"]');
   var serviceHint = document.querySelector("[data-service-hint]");
+  var restaurantHint = document.querySelector("[data-restaurant-hint]");
+  var menuCategoryGroup = document.querySelector('[data-field="menu_category"]');
+  var isAvailableGroup = document.querySelector('[data-field="is_available"]');
+  var prepTimeGroup = document.querySelector('[data-field="prep_time_minutes"]');
   if (!categorySelect || !quantityGroup || !conditionGroup || !serviceHint) {
     return;
   }
   var quantityInput = quantityGroup.querySelector("input, select");
   var conditionInput = conditionGroup.querySelector("input, select");
+  var restaurantOnlyGroups = [menuCategoryGroup, isAvailableGroup, prepTimeGroup].filter(Boolean);
 
-  function applyServiceMode() {
+  function applyCategoryMode() {
     var isService = serviceCategoryIds.indexOf(categorySelect.value) !== -1;
-    quantityGroup.classList.toggle("d-none", isService);
-    conditionGroup.classList.toggle("d-none", isService);
+    var isRestaurant = restaurantCategoryIds.indexOf(categorySelect.value) !== -1;
+    var hideQuantityCondition = isService || isRestaurant;
+
+    quantityGroup.classList.toggle("d-none", hideQuantityCondition);
+    conditionGroup.classList.toggle("d-none", hideQuantityCondition);
+    if (quantityInput) quantityInput.disabled = hideQuantityCondition;
+    if (conditionInput) conditionInput.disabled = hideQuantityCondition;
+
     serviceHint.classList.toggle("d-none", !isService);
-    if (quantityInput) quantityInput.disabled = isService;
-    if (conditionInput) conditionInput.disabled = isService;
+    restaurantHint.classList.toggle("d-none", !isRestaurant);
+
+    restaurantOnlyGroups.forEach(function (group) {
+      group.classList.toggle("d-none", !isRestaurant);
+      var input = group.querySelector("input, select");
+      if (input) input.disabled = !isRestaurant;
+    });
   }
 
-  categorySelect.addEventListener("change", applyServiceMode);
-  applyServiceMode();
+  categorySelect.addEventListener("change", applyCategoryMode);
+  applyCategoryMode();
 })();
 </script>
 {% endblock %}

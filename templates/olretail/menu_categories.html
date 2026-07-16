@@ -1,0 +1,92 @@
+{% extends 'shared/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Menu Sections" %} — TimorMart{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+          <h1 class="h4 page-header-bar mb-0">{% trans "Menu Sections" %}</h1>
+          <a href="{% url 'olretail:create_product' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{% trans 'Back to products' %}
+          </a>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">{% trans "Add a section" %}</div>
+        <div class="card-body">
+          <form method="post" class="form-row align-items-end">
+            {% csrf_token %}
+            <div class="col-md-6 form-group mb-0">
+              <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+              {{ form.name }}
+              {% for error in form.name.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-3 form-group mb-0">
+              <label for="{{ form.display_order.id_for_label }}">{{ form.display_order.label }}</label>
+              {{ form.display_order }}
+              {% for error in form.display_order.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans 'Add' %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {% if sections %}
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>{% trans 'Section' %}</th>
+                <th>{% trans 'Display order' %}</th>
+                <th>{% trans 'Items' %}</th>
+                <th class="text-right">{% trans 'Actions' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for section in sections %}
+              <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.display_order }}</td>
+                <td>{{ section.items.count }}</td>
+                <td class="text-right">
+                  <form method="post" action="{% url 'olretail:menu_category_delete' section.pk %}" class="d-inline"
+                        onsubmit="return confirm('{% trans "Remove this menu section?" %}');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger my-0">
+                      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="card-body text-center text-muted py-5">
+          <i class="fas fa-utensils fa-3x mb-3" aria-hidden="true"></i>
+          <h2 class="h5">{% trans 'No menu sections yet' %}</h2>
+          <p class="mb-0">{% trans 'Add sections like Breakfast, Lunch, or Drinks to organize your menu.' %}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

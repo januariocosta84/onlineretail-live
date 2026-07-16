@@ -77,6 +77,7 @@ class Courier(models.Model):
 class SellerType(models.TextChoices):
     INDIVIDUAL = "individual", _("Individual")
     COMPANY = "company", _("Company")
+    RESTAURANT = "restaurant", _("Restaurant")
 
 
 class SellerVerificationStatus(models.TextChoices):
@@ -158,6 +159,25 @@ class Seller(models.Model):
         return self.get_name
 
 
+class MenuCategory(models.Model):
+    """A restaurant's own menu sections (Breakfast, Lunch, Drinks, ...) —
+    distinct from the site-wide Category taxonomy below, which is a shared
+    list every seller picks a single entry from. A MenuCategory belongs to
+    one restaurant Seller and only they can assign their products to it."""
+
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="menu_categories")
+    name = models.CharField(max_length=100)
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["display_order", "name"]
+        unique_together = ("seller", "name")
+        verbose_name_plural = "Menu categories"
+
+    def __str__(self):
+        return self.name
+
+
 class Country(models.Model):
     country = models.CharField(max_length=100, unique=True)
 
@@ -172,6 +192,9 @@ class Country(models.Model):
 class City(models.Model):
     city = models.CharField(max_length=100, unique=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    # Flat delivery fee for orders delivered to this city — city-based like
+    # Courier.service_cities, not coordinate-based (no maps/geocoding here).
+    delivery_fee = models.DecimalField(max_digits=8, decimal_places=2, default=0)
 
     class Meta:
         ordering = ["city"]
@@ -205,6 +228,17 @@ NON_CART_CATEGORY_SLUGS = {"housing", "vehicles", "motorcycles", "services"}
 # Services have no physical stock or condition — matched by slug, not title,
 # for the same reason as above.
 SERVICE_CATEGORY_SLUG = "services"
+
+# Restaurant menu items, like services, have no "condition" (new/second-hand)
+# or traditional stock count — Product.is_available is their analog. Unlike
+# services, restaurant items ARE cart-purchasable (not in
+# NON_CART_CATEGORY_SLUGS). This is a dedicated Category row, distinct from
+# the pre-existing "food" category already used by ordinary grocery listings.
+RESTAURANT_CATEGORY_SLUG = "restaurant"
+
+# Categories where quantity/condition don't apply and are hidden on the
+# product form in favor of category-specific fields instead.
+NO_CONDITION_QUANTITY_CATEGORY_SLUGS = {SERVICE_CATEGORY_SLUG, RESTAURANT_CATEGORY_SLUG}
 
 
 class ProductStatus(models.TextChoices):
@@ -252,6 +286,15 @@ class Product(models.Model):
     units_per_box = models.PositiveIntegerField(
         null=True, blank=True, help_text=_("e.g. 24 packs in a box")
     )
+    # Restaurant menu items only — a restaurant's own menu section (Breakfast,
+    # Drinks, ...), on/off availability instead of a stock count, and prep time.
+    menu_category = models.ForeignKey(
+        MenuCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="items"
+    )
+    is_available = models.BooleanField(default=True)
+    prep_time_minutes = models.PositiveIntegerField(
+        null=True, blank=True, help_text=_("e.g. 20")
+    )
 
     class Meta:
         ordering = ["-created"]
@@ -294,6 +337,20 @@ class Product(models.Model):
         """True for service listings, which have no physical stock or
         condition to show (quantity/condition are just placeholder defaults)."""
         return self.category_id is not None and self.category.slug == SERVICE_CATEGORY_SLUG
+
+    @property
+    def is_restaurant_category(self):
+        return self.category_id is not None and self.category.slug == RESTAURANT_CATEGORY_SLUG
+
+    @property
+    def hides_quantity_condition(self):
+        """True for categories where quantity/condition are meaningless
+        (services and restaurant menu items) and are hidden on the product
+        form/detail page in favor of category-specific fields instead."""
+        return (
+            self.category_id is not None
+            and self.category.slug in NO_CONDITION_QUANTITY_CATEGORY_SLUGS
+        )
 
     @property
     def gallery(self):
@@ -354,7 +411,7 @@ class Comment(models.Model):
 # Re-exported so Django's app registry (and makemigrations) discovers them —
 # they live in payment_models.py to keep the marketplace and payment domains separate.
 from .payment_models import (  # noqa: E402, F401
-    Cart, Order, OrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
+    Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
     DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings,
     Notification, Rating, CourierRating,

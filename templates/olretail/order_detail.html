@@ -71,6 +71,90 @@
           </div>
         </div>
 
+        <!-- Restaurant Order Status -->
+        {% if order.product.is_restaurant_category and order.food_status %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">{% trans "Kitchen & Pickup Status" %}</h5>
+
+            <div class="row text-center">
+              <div class="col">
+                <div class="status-step completed">
+                  <div class="status-icon"><i class="fas fa-receipt"></i></div>
+                  <small>{% trans "Order Received" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.food_status in 'preparing,ready_for_pickup,picked_up,on_the_way' %}completed{% endif %}">
+                  <div class="status-icon"><i class="fas fa-utensils"></i></div>
+                  <small>{% trans "Preparing" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.food_status in 'ready_for_pickup,picked_up,on_the_way' %}completed{% endif %}">
+                  <div class="status-icon"><i class="fas fa-shopping-bag"></i></div>
+                  <small>{% trans "Ready for Pickup" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.food_status in 'picked_up,on_the_way' %}completed{% endif %}">
+                  <div class="status-icon"><i class="fas fa-box"></i></div>
+                  <small>{% trans "Picked Up" %}</small>
+                </div>
+              </div>
+              <div class="col">
+                <div class="status-step {% if order.food_status == 'on_the_way' or order.status == 'delivered' %}completed{% endif %}">
+                  <div class="status-icon"><i class="fas fa-motorcycle"></i></div>
+                  <small>{% trans "On the Way" %}</small>
+                </div>
+              </div>
+            </div>
+
+            {% if is_seller %}
+            {% if order.food_status == 'received' %}
+            <form method="post" action="{% url 'olretail:update_food_status' order.id %}" class="mt-4">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-utensils mr-1" aria-hidden="true"></i>{% trans "Start Preparing" %}
+              </button>
+            </form>
+            {% elif order.food_status == 'preparing' %}
+            <form method="post" action="{% url 'olretail:update_food_status' order.id %}" class="mt-4">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-shopping-bag mr-1" aria-hidden="true"></i>{% trans "Mark Ready for Pickup" %}
+              </button>
+            </form>
+            {% endif %}
+            {% if order.food_status == 'ready_for_pickup' %}
+            <p class="text-muted small mt-3 mb-0">
+              <i class="fas fa-map-marker-alt mr-1" aria-hidden="true"></i>
+              {% trans "Pickup location" %}: {{ order.seller.address }}
+            </p>
+            {% endif %}
+            {% endif %}
+
+            {% if is_courier %}
+            {% if order.food_status == 'ready_for_pickup' %}
+            <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mt-4">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-box mr-1" aria-hidden="true"></i>{% trans "Confirm Pickup" %}
+              </button>
+            </form>
+            {% elif order.food_status == 'picked_up' %}
+            <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mt-4">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-motorcycle mr-1" aria-hidden="true"></i>{% trans "Mark On the Way" %}
+              </button>
+            </form>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
         <!-- Delivery Tracking -->
         {% if order.status in 'paid,shipped,delivered' %}
         <div class="card border-0 shadow-sm mb-4">

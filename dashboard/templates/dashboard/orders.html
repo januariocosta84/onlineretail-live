@@ -1,0 +1,86 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block dash_title %}Orders{% endblock %}
+
+{% block dash_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 page-header-bar">
+  <h1 class="h4 mb-0">Orders <small class="text-muted h6">({{ page_obj.paginator.count }})</small></h1>
+</div>
+
+<form method="get" class="card mb-3">
+  <div class="card-body py-3">
+    <div class="form-row">
+      <div class="col-md-4 mb-2">
+        <input type="search" name="q" value="{{ q }}" class="form-control form-control-sm"
+               placeholder="Search order # or product" aria-label="Search orders">
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="status" class="browser-default custom-select custom-select-sm" aria-label="Filter by status">
+          <option value="">All statuses</option>
+          {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="food_status" class="browser-default custom-select custom-select-sm" aria-label="Filter by food status">
+          <option value="">All food statuses</option>
+          {% for value, label in food_status_choices %}
+          <option value="{{ value }}" {% if food_status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <select name="seller" class="browser-default custom-select custom-select-sm" aria-label="Filter by seller">
+          <option value="">All sellers</option>
+          {% for s in seller_choices %}
+          <option value="{{ s.pk }}" {% if seller == s.pk|stringformat:'s' %}selected{% endif %}>{{ s.get_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-sm btn-block m-0">Filter</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Order #</th><th>Buyer</th><th>Seller</th><th>Product</th><th>Total</th>
+          <th>Status</th><th>Food status</th><th>Courier</th><th>Created</th><th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in page_obj.object_list %}
+        <tr>
+          <td>{{ o.order_number }}</td>
+          <td>{{ o.buyer.get_full_name|default:o.buyer.username }}</td>
+          <td>{{ o.seller.get_name }}</td>
+          <td>{{ o.product.name|truncatewords:4 }}</td>
+          <td>$ {{ o.total|intcomma }}</td>
+          <td>
+            {% if o.status == 'delivered' %}<span class="badge badge-success">{{ o.get_status_display }}</span>
+            {% elif o.status == 'shipped' %}<span class="badge badge-primary">{{ o.get_status_display }}</span>
+            {% elif o.status == 'cancelled' or o.status == 'refunded' %}<span class="badge badge-secondary">{{ o.get_status_display }}</span>
+            {% else %}<span class="badge badge-warning">{{ o.get_status_display }}</span>{% endif %}
+          </td>
+          <td>{% if o.food_status %}<span class="badge badge-light border">{{ o.get_food_status_display }}</span>{% endif %}</td>
+          <td>{{ o.assigned_courier.get_name|default:"—" }}</td>
+          <td><small class="text-muted">{{ o.created_at|date:"j M Y" }}</small></td>
+          <td class="text-right">
+            <a href="{% url 'olretail:order_detail' o.id %}" class="btn btn-sm btn-outline-primary my-0">View</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="text-center text-muted py-4">No orders match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'shared/pagination.html' %}
+{% endblock %}

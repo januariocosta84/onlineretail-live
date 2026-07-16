@@ -10,14 +10,18 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .decorators import seller_required
-from .forms import CommentForm, ProductForm
+from .forms import CommentForm, MenuCategoryForm, ProductForm
 from .models import (
+    RESTAURANT_CATEGORY_SLUG,
     SERVICE_CATEGORY_SLUG,
     Category,
     FREE_PRODUCT_LIMIT,
+    MenuCategory,
     Product,
     ProductStatus,
+    Rating,
     SellerSubscription,
+    SellerType,
 )
 
 logger = logging.getLogger(__name__)
@@ -173,6 +177,15 @@ def product_detail(request, slug):
 
     rating_stats = product.ratings.aggregate(avg=Avg("score"), count=Count("id"))
 
+    # A restaurant's rating is just an aggregate over the same Rating table,
+    # scoped to every product (menu item) under that seller — no separate
+    # model needed.
+    restaurant_rating_stats = None
+    if product.is_restaurant_category:
+        restaurant_rating_stats = Rating.objects.filter(product__seller=product.seller).aggregate(
+            avg=Avg("score"), count=Count("id")
+        )
+
     return render(
         request,
         "olretail/details.html",
@@ -189,11 +202,13 @@ def product_detail(request, slug):
             "can_view_contact": can_view_contact,
             "can_add_to_cart": (
                 can_comment and not is_owner and product.approved
-                and product.in_stock and product.cart_purchasable
+                and product.cart_purchasable
+                and (product.is_available if product.is_restaurant_category else product.in_stock)
             ),
             "gallery_urls": gallery_urls,
             "avg_rating": rating_stats["avg"],
             "rating_count": rating_stats["count"],
+            "restaurant_rating_stats": restaurant_rating_stats,
             # "Seller" reads oddly for the Services category — nobody buying a
             # haircut or a repair job thinks of the person doing it as a
             # "seller". The template swaps in "service provider" wording,
@@ -250,7 +265,7 @@ def product_create(request):
         return redirect("olretail:seller_subscription")
 
     if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES, seller=seller)
         if form.is_valid():
             product = form.save(commit=False)
             product.seller = seller
@@ -272,7 +287,7 @@ def product_create(request):
             return redirect("olretail:list")
         messages.error(request, _("Please correct the errors below."))
     else:
-        form = ProductForm()
+        form = ProductForm(seller=seller)
     return render(
         request,
         "olretail/product_form.html",
@@ -284,6 +299,10 @@ def product_create(request):
             "service_category_ids": list(
                 Category.objects.filter(slug=SERVICE_CATEGORY_SLUG).values_list("id", flat=True)
             ),
+            "restaurant_category_ids": list(
+                Category.objects.filter(slug=RESTAURANT_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
+            "is_restaurant_seller": seller.seller_type == SellerType.RESTAURANT,
         },
     )
 
@@ -298,7 +317,7 @@ def product_update(request, slug):
         # save (Django never does this automatically; see the pre_delete
         # signal in models.py for the same gap on the delete side).
         old_images = {name: getattr(product, name) for name in Product.IMAGE_FIELD_NAMES}
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product, seller=product.seller)
         if form.is_valid():
             updated = form.save(commit=False)
             if updated.status in (ProductStatus.REJECTED, ProductStatus.CHANGES_REQUESTED):
@@ -318,7 +337,7 @@ def product_update(request, slug):
             return redirect("olretail:list")
         messages.error(request, _("Please correct the errors below."))
     else:
-        form = ProductForm(instance=product)
+        form = ProductForm(instance=product, seller=product.seller)
     return render(
         request,
         "olretail/product_form.html",
@@ -330,6 +349,10 @@ def product_update(request, slug):
             "service_category_ids": list(
                 Category.objects.filter(slug=SERVICE_CATEGORY_SLUG).values_list("id", flat=True)
             ),
+            "restaurant_category_ids": list(
+                Category.objects.filter(slug=RESTAURANT_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
+            "is_restaurant_seller": product.seller.seller_type == SellerType.RESTAURANT,
         },
     )
 
@@ -360,3 +383,56 @@ def product_delete(request, slug):
         return redirect("olretail:list")
     messages.success(request, _("“%(name)s” was deleted.") % {"name": name})
     return redirect("olretail:list")
+
+
+def _require_restaurant_seller(request):
+    """Menu sections only make sense for restaurant sellers — every view
+    below is gated by this instead of a decorator since it needs to render
+    a message and redirect, not just 403."""
+    seller = request.user.seller
+    if seller.seller_type != SellerType.RESTAURANT:
+        messages.error(request, _("Menu sections are only available for restaurant seller accounts."))
+        return None
+    return seller
+
+
+@seller_required
+def menu_categories(request):
+    seller = _require_restaurant_seller(request)
+    if seller is None:
+        return redirect("olretail:list")
+
+    if request.method == "POST":
+        form = MenuCategoryForm(request.POST)
+        if form.is_valid():
+            section = form.save(commit=False)
+            section.seller = seller
+            section.save()
+            messages.success(request, _("“%(name)s” was added to your menu.") % {"name": section.name})
+            return redirect("olretail:menu_categories")
+        messages.error(request, _("Please correct the errors below."))
+    else:
+        form = MenuCategoryForm()
+
+    return render(
+        request,
+        "olretail/menu_categories.html",
+        {
+            "form": form,
+            "sections": MenuCategory.objects.filter(seller=seller),
+        },
+    )
+
+
+@seller_required
+@require_POST
+def menu_category_delete(request, pk):
+    seller = _require_restaurant_seller(request)
+    if seller is None:
+        return redirect("olretail:list")
+
+    section = get_object_or_404(MenuCategory, pk=pk, seller=seller)
+    name = section.name
+    section.delete()
+    messages.success(request, _("“%(name)s” was removed from your menu.") % {"name": name})
+    return redirect("olretail:menu_categories")

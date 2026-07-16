@@ -14,11 +14,12 @@ from django.contrib import messages
 from django.db import transaction
 
 from olretail.models import (
-    Product, Seller, SellerType, SellerVerificationStatus, Buyer, Courier, CourierVerificationStatus,
+    Product, RESTAURANT_CATEGORY_SLUG, Seller, SellerType, SellerVerificationStatus,
+    Buyer, City, Courier, CourierVerificationStatus,
 )
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
-    Cart, Order, Payment, OrderStatus, PaymentMethod, PaymentStatus, Transaction,
+    Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate,
     PlatformSettings, Notification, Rating, CourierRating,
 )
@@ -90,14 +91,20 @@ def add_to_cart(request, product_id):
         messages.error(request, _('This item can only be purchased by contacting the seller directly.'))
         return redirect(product.get_absolute_url())
 
-    if product.quantity <= 0:
+    # Menu items don't track a real stock count (quantity is a placeholder
+    # default) — availability is the actual gate, and any quantity is fine.
+    if product.is_restaurant_category:
+        if not product.is_available:
+            messages.error(request, _('This item is currently unavailable.'))
+            return redirect(product.get_absolute_url())
+    elif product.quantity <= 0:
         messages.error(request, _('This product is out of stock.'))
         return redirect(product.get_absolute_url())
-    
+
     quantity = _parse_int(request.POST.get('quantity'), default=1)
     if quantity < 1:
         quantity = 1
-    if quantity > product.quantity:
+    if not product.is_restaurant_category and quantity > product.quantity:
         quantity = product.quantity
 
     cart_item, created = Cart.objects.get_or_create(
@@ -105,10 +112,10 @@ def add_to_cart(request, product_id):
         product=product,
         defaults={'quantity': quantity}
     )
-    
+
     if not created:
         cart_item.quantity += quantity
-        if cart_item.quantity > product.quantity:
+        if not product.is_restaurant_category and cart_item.quantity > product.quantity:
             cart_item.quantity = product.quantity
         cart_item.save()
     
@@ -128,12 +135,14 @@ def update_cart(request, cart_id):
     """Update cart item quantity."""
     cart_item = get_object_or_404(Cart, id=cart_id, buyer=request.user)
     quantity = _parse_int(request.POST.get('quantity'), default=1)
+    # Menu items don't track a real stock count — any positive quantity is fine.
+    stock_limit = None if cart_item.product.is_restaurant_category else cart_item.product.quantity
 
-    if quantity > 0 and quantity <= cart_item.product.quantity:
+    if quantity > 0 and (stock_limit is None or quantity <= stock_limit):
         cart_item.quantity = quantity
         cart_item.save()
         messages.success(request, _('Cart updated.'))
-    elif quantity > cart_item.product.quantity:
+    elif stock_limit is not None and quantity > stock_limit:
         messages.error(request, _('Not enough stock available.'))
     else:
         cart_item.delete()
@@ -182,7 +191,16 @@ def checkout(request):
                 % {'product': item.product.name}
             )
             return redirect('olretail:cart')
-        if item.quantity > item.product.quantity:
+        if item.product.is_restaurant_category:
+            # Menu items don't track a real stock count (quantity is a
+            # placeholder default) — availability is the actual gate.
+            if not item.product.is_available:
+                messages.error(
+                    request,
+                    _('%(product)s is currently unavailable.') % {'product': item.product.name}
+                )
+                return redirect('olretail:cart')
+        elif item.quantity > item.product.quantity:
             messages.error(
                 request,
                 _('%(product)s has only %(qty)d available.') % {
@@ -220,6 +238,15 @@ def checkout(request):
         if not item.product.seller.payment_instructions.strip()
     }
 
+    # Delivery fee is a flat amount per restaurant seller in the cart (see
+    # City.delivery_fee), charged once each — depends on which city the
+    # buyer picks in the form below, so the client recalculates it live
+    # rather than the server guessing a default city here.
+    restaurant_seller_count = len({
+        item.product.seller_id for item in cart_items if item.product.is_restaurant_category
+    })
+    city_delivery_fees = dict(City.objects.values_list('id', 'delivery_fee'))
+
     context = {
         'form': form,
         'cart_items': cart_items,
@@ -227,6 +254,8 @@ def checkout(request):
         'platform_fee': platform_fee,
         'payment_fee': payment_fee,
         'estimated_total': estimated_total,
+        'restaurant_seller_count': restaurant_seller_count,
+        'city_delivery_fees': {str(k): float(v) for k, v in city_delivery_fees.items()},
         'sellers_missing_instructions': sellers_missing_instructions,
     }
     return render(request, 'olretail/checkout.html', context)
@@ -254,12 +283,32 @@ def _process_checkout(request, form, cart_items):
     return _process_stripe_checkout(request, form, cart_items)
 
 
+def _last_restaurant_item_index_per_seller(cart_items):
+    """Map each restaurant seller present in the cart to the index of their
+    last line item — that's where the flat per-restaurant delivery fee gets
+    added, so ordering 3 items from one restaurant is charged once, not 3
+    times (same "remainder lands on the last item" pattern the Stripe
+    commission split below already uses)."""
+    last_index = {}
+    for index, item in enumerate(cart_items):
+        if item.product.is_restaurant_category:
+            last_index[item.product.seller_id] = index
+    return last_index
+
+
 def _process_bank_transfer_checkout(request, form, cart_items):
     """Create one order per cart item, no platform commission — the buyer
     pays the seller directly and the platform never touches the money."""
+    delivery_city = form.cleaned_data['delivery_city']
+    last_restaurant_item_index = _last_restaurant_item_index_per_seller(cart_items)
+
     with transaction.atomic():
         orders = []
-        for item in cart_items:
+        for index, item in enumerate(cart_items):
+            delivery_fee = Decimal('0')
+            if last_restaurant_item_index.get(item.product.seller_id) == index:
+                delivery_fee = delivery_city.delivery_fee
+
             order = Order.objects.create(
                 buyer=request.user,
                 seller=item.product.seller,
@@ -269,11 +318,12 @@ def _process_bank_transfer_checkout(request, form, cart_items):
                 subtotal=item.line_total,
                 commission_amount=Decimal('0'),
                 payment_fee=Decimal('0'),
-                total=item.line_total,
+                delivery_fee=delivery_fee,
+                total=item.line_total + delivery_fee,
                 status=OrderStatus.PENDING_PAYMENT,
                 payment_method=PaymentMethod.BANK_TRANSFER,
                 delivery_address=form.cleaned_data['delivery_address'],
-                delivery_city=form.cleaned_data['delivery_city'],
+                delivery_city=delivery_city,
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -299,6 +349,11 @@ def _process_stripe_checkout(request, form, cart_items):
     actually charges (remainder cents land on the last item)."""
     with transaction.atomic():
         cart_items = list(cart_items)
+        delivery_city = form.cleaned_data['delivery_city']
+        last_restaurant_item_index = _last_restaurant_item_index_per_seller(cart_items)
+        delivery_fee_cents = int(delivery_city.delivery_fee * 100)
+        total_delivery_fee_cents = delivery_fee_cents * len(last_restaurant_item_index)
+
         subtotal = sum(item.line_total for item in cart_items)
         subtotal_cents = int(subtotal * 100)
 
@@ -306,7 +361,7 @@ def _process_stripe_checkout(request, form, cart_items):
         commission_cents = int(subtotal_cents * float(commission_percent))
 
         # Stripe fee
-        total_cents = subtotal_cents + commission_cents
+        total_cents = subtotal_cents + commission_cents + total_delivery_fee_cents
         stripe_fee_percent = Decimal(str(settings.STRIPE_FEE_PERCENT))
         stripe_fee_fixed_cents = int(settings.STRIPE_FEE_FIXED * 100)
         payment_fee_cents = int(total_cents * float(stripe_fee_percent)) + stripe_fee_fixed_cents
@@ -332,6 +387,11 @@ def _process_stripe_checkout(request, form, cart_items):
 
             item_commission = Decimal(item_commission_cents) / 100
             item_fee = Decimal(item_fee_cents) / 100
+            item_delivery_fee = (
+                delivery_city.delivery_fee
+                if last_restaurant_item_index.get(item.product.seller_id) == index
+                else Decimal('0')
+            )
 
             order = Order.objects.create(
                 buyer=request.user,
@@ -342,11 +402,12 @@ def _process_stripe_checkout(request, form, cart_items):
                 subtotal=item.line_total,
                 commission_amount=item_commission,
                 payment_fee=item_fee,
-                total=item.line_total + item_commission + item_fee,
+                delivery_fee=item_delivery_fee,
+                total=item.line_total + item_commission + item_fee + item_delivery_fee,
                 status=OrderStatus.PENDING_PAYMENT,
                 payment_method=PaymentMethod.STRIPE,
                 delivery_address=form.cleaned_data['delivery_address'],
-                delivery_city=form.cleaned_data['delivery_city'],
+                delivery_city=delivery_city,
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -394,6 +455,18 @@ def _process_stripe_checkout(request, form, cart_items):
             return redirect('olretail:checkout')
 
 
+def _mark_food_order_received(order):
+    """Auto-advance a restaurant order's food_status to Received the moment
+    payment succeeds — the buyer's cart already left, there's nothing left
+    for them to do at this step, unlike Preparing/Ready which the
+    restaurant marks manually (see update_food_status)."""
+    if order.product.category.slug != RESTAURANT_CATEGORY_SLUG:
+        return
+    order.food_status = FoodOrderStatus.RECEIVED
+    order.save(update_fields=['food_status'])
+    DeliveryUpdate.objects.create(order=order, note=_('Order received by the restaurant.'))
+
+
 def _mark_payment_succeeded(payment, charge_id, source):
     """Apply payment-succeeded side effects to every order that shares this
     Payment (a single Stripe charge can cover a cart spanning several
@@ -412,10 +485,11 @@ def _mark_payment_succeeded(payment, charge_id, source):
 
         now = timezone.now()
         order_numbers = []
-        for order in payment.orders.select_related('product', 'seller').all():
+        for order in payment.orders.select_related('product__category', 'seller').all():
             order.status = OrderStatus.PAID
             order.paid_at = now
             order.save()
+            _mark_food_order_received(order)
 
             Transaction.objects.create(
                 order=order,
@@ -428,9 +502,12 @@ def _mark_payment_succeeded(payment, charge_id, source):
             seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
             seller_balance.add_commission(int(order.commission_amount * 100))
 
-            product = Product.objects.select_for_update().get(pk=order.product_id)
-            product.quantity = max(product.quantity - order.quantity, 0)
-            product.save(update_fields=['quantity'])
+            if not order.product.is_restaurant_category:
+                # Menu items don't track a real stock count — quantity is a
+                # placeholder default, availability is the actual gate.
+                product = Product.objects.select_for_update().get(pk=order.product_id)
+                product.quantity = max(product.quantity - order.quantity, 0)
+                product.save(update_fields=['quantity'])
 
             Cart.objects.filter(buyer=order.buyer, product=order.product).delete()
             order_numbers.append(order.order_number)
@@ -508,10 +585,12 @@ def _mark_bank_transfer_paid(order):
         order.status = OrderStatus.PAID
         order.paid_at = timezone.now()
         order.save()
+        _mark_food_order_received(order)
 
-        product = Product.objects.select_for_update().get(pk=order.product_id)
-        product.quantity = max(product.quantity - order.quantity, 0)
-        product.save(update_fields=['quantity'])
+        if not order.product.is_restaurant_category:
+            product = Product.objects.select_for_update().get(pk=order.product_id)
+            product.quantity = max(product.quantity - order.quantity, 0)
+            product.save(update_fields=['quantity'])
 
         Cart.objects.filter(buyer=order.buyer, product=order.product).delete()
 
@@ -940,6 +1019,15 @@ def seller_update_order_status(request, order_id):
             _('Your order %(order)s has shipped.') % {'order': order.order_number},
             order=order,
         )
+        if order.assigned_courier_id:
+            # Unlike the admin reassignment path (order_reassign_courier),
+            # this one never notified the courier they'd been assigned —
+            # a real gap regardless of order type, not just food orders.
+            _notify(
+                order.assigned_courier.user,
+                _('You have been assigned to deliver order %(order)s.') % {'order': order.order_number},
+                order=order,
+            )
         messages.success(request, _('Order marked as shipped.'))
     else:
         messages.error(request, _('Please correct the errors below.'))
@@ -986,6 +1074,86 @@ def mark_delivered(request, order_id):
         messages.error(request, _('A delivery photo is required to confirm delivery.'))
 
     return redirect('olretail:order_detail', order_id=order.id)
+
+
+_SELLER_FOOD_STATUS_TRANSITIONS = {
+    FoodOrderStatus.RECEIVED: (FoodOrderStatus.PREPARING, _('Preparing the food.')),
+    FoodOrderStatus.PREPARING: (FoodOrderStatus.READY_FOR_PICKUP, _('Order is ready for pickup.')),
+}
+
+
+@login_required
+@require_POST
+def update_food_status(request, order_id):
+    """Restaurant advances a food order through Received -> Preparing ->
+    Ready for Pickup. Courier assignment (who delivers it) is a separate,
+    unrelated action via the existing seller_update_order_status/
+    ShipOrderForm — a courier can be assigned before or after the kitchen
+    marks the order ready."""
+    order = get_object_or_404(Order, id=order_id)
+
+    try:
+        if order.seller != request.user.seller:
+            messages.error(request, _('Permission denied.'))
+            return redirect('olretail:order_detail', order_id=order.id)
+    except Seller.DoesNotExist:
+        messages.error(request, _('You must be a seller to update orders.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if not order.product.is_restaurant_category:
+        messages.error(request, _('This action only applies to restaurant orders.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    transition = _SELLER_FOOD_STATUS_TRANSITIONS.get(order.food_status)
+    if not transition:
+        messages.error(request, _('This order cannot be advanced from its current status.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    next_status, note = transition
+    order.food_status = next_status
+    order.save(update_fields=['food_status'])
+    DeliveryUpdate.objects.create(order=order, note=note)
+    _notify(order.buyer, note, order=order)
+    if next_status == FoodOrderStatus.READY_FOR_PICKUP and order.assigned_courier_id:
+        _notify(
+            order.assigned_courier.user,
+            _('Order %(order)s is ready for collection.') % {'order': order.order_number},
+            order=order,
+        )
+    messages.success(request, _('Order updated.'))
+    return redirect('olretail:order_detail', order_id=order.id)
+
+
+_COURIER_FOOD_STATUS_TRANSITIONS = {
+    FoodOrderStatus.READY_FOR_PICKUP: (FoodOrderStatus.PICKED_UP, _('Courier picked up the order.')),
+    FoodOrderStatus.PICKED_UP: (FoodOrderStatus.ON_THE_WAY, _('Courier is on the way.')),
+}
+
+
+@courier_required
+@require_POST
+def courier_update_food_status(request, order_id):
+    """Courier advances a food order through Picked Up -> On the Way —
+    final delivery confirmation (with required photo) is the existing
+    mark_delivered, unchanged."""
+    order = get_object_or_404(Order, id=order_id)
+
+    if not (order.assigned_courier_id and order.assigned_courier_id == request.user.courier.id):
+        messages.error(request, _('Permission denied.'))
+        return redirect('olretail:courier_deliveries')
+
+    transition = _COURIER_FOOD_STATUS_TRANSITIONS.get(order.food_status)
+    if not transition:
+        messages.error(request, _('This order cannot be advanced from its current status.'))
+        return redirect('olretail:courier_deliveries')
+
+    next_status, note = transition
+    order.food_status = next_status
+    order.save(update_fields=['food_status'])
+    DeliveryUpdate.objects.create(order=order, note=note)
+    _notify(order.buyer, note, order=order)
+    messages.success(request, _('Order updated.'))
+    return redirect('olretail:courier_deliveries')
 
 
 @courier_required

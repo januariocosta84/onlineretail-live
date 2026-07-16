@@ -12,6 +12,32 @@
   @media (max-width: 400px) {
     .notif-dropdown { min-width: calc(100vw - 2rem); left: auto; right: 0; }
   }
+  /* The logo is a wide image — the global `img { max-width: 100% }` rule
+     (base.html) clamps it to its column's width, which silently shrinks
+     its rendered height well below what a plain height="" attribute asks
+     for. Control size here instead so it renders at its intended size. */
+  .brand-logo { height: 110px; width: auto; max-width: 100%; }
+  @media (max-width: 767.98px) {
+    .brand-logo { height: 76px; }
+  }
+  /* Language switcher items are plain <button> elements (needed to POST to
+     set_language) — reset the browser's default button chrome so they
+     match the compact look of the other dropdown-item links in this menu.
+     !important because three separate vendor stylesheets (bootstrap.min.css,
+     mdb-pro.min.css, mdb.ecommerce.min.css) all define .dropdown-item with
+     differing padding/font-size, and which one wins the cascade for a
+     <button> (vs. the <a> every other dropdown-item in this file uses) is
+     inconsistent — this makes the size deterministic regardless. */
+  .lang-dropdown.dropdown-menu { min-width: 0 !important; width: 7rem !important; }
+  .lang-dropdown .dropdown-item {
+    background: none !important;
+    border: 0 !important;
+    width: 100% !important;
+    text-align: left !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.4 !important;
+    padding: 0.35rem 0.9rem !important;
+  }
 </style>
 <header>
   <div class="bg-light border-bottom py-1">
@@ -28,12 +54,12 @@
   </div>
   <div class="container-fluid">
     <div class="row jumbotron white border-bottom mb-0 py-3 align-items-center">
-      <div class="col-md-2 my-1">
+      <div class="col-md-3 my-1">
         <a href="{% url 'olretail:index' %}" aria-label="{% trans 'Home' %}">
-          <img src="{% static 'mdb/img/logo.jpg' %}" height="180" alt="TimorMart logo">
+          <img src="{% static 'mdb/img/logo.png' %}" class="brand-logo" alt="TimorMart logo">
         </a>
       </div>
-      <div class="col-md-6 my-1">
+      <div class="col-md-5 my-1">
         <form action="{% url 'olretail:search' %}" method="get" role="search">
           <div class="md-form md-outline input-group md-input-group w-100 my-0">
             <input type="search" class="form-control mb-0" name="q" value="{{ query|default:'' }}"
@@ -173,12 +199,12 @@
                aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-globe mr-1" aria-hidden="true"></i>{% trans 'Language' %}
             </a>
-            <div class="dropdown-menu dropdown-menu-lg-right">
+            <div class="dropdown-menu dropdown-menu-lg-right lang-dropdown">
               <form action="{% url 'set_language' %}" method="post">
                 {% csrf_token %}
                 <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="en" class="dropdown-item">English</button>
-                <button type="submit" name="language" value="tet" class="dropdown-item">Tetum</button>
+                <button type="submit" name="language" value="en" class="dropdown-item small">English</button>
+                <button type="submit" name="language" value="tet" class="dropdown-item small">Tetum</button>
               </form>
             </div>
           </li>

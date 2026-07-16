@@ -61,8 +61,31 @@
               <small class="text-muted d-block">{% trans "Deliver to" %}:</small>
               {{ order.delivery_address }}<br>
               <a href="tel:{{ order.delivery_phone }}">{{ order.delivery_phone }}</a>
+              {% if order.product.is_restaurant_category %}
+              <br>
+              {% if order.food_status == 'ready_for_pickup' %}
+              <span class="badge badge-warning mt-1">{% trans 'Ready for pickup' %}</span>
+              {% elif order.food_status == 'picked_up' %}
+              <span class="badge badge-info mt-1">{% trans 'Picked up' %}</span>
+              {% elif order.food_status == 'on_the_way' %}
+              <span class="badge badge-primary mt-1">{% trans 'On the way' %}</span>
+              {% else %}
+              <span class="badge badge-secondary mt-1">{% trans 'Awaiting kitchen' %}</span>
+              {% endif %}
+              {% endif %}
             </div>
             <div class="col-md-3">
+              {% if order.food_status == 'ready_for_pickup' %}
+              <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mb-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-primary btn-block">{% trans "Confirm Pickup" %}</button>
+              </form>
+              {% elif order.food_status == 'picked_up' %}
+              <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mb-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-primary btn-block">{% trans "Mark On the Way" %}</button>
+              </form>
+              {% endif %}
               <a href="{% url 'olretail:order_detail' order.id %}" class="btn btn-sm btn-outline-primary btn-block mb-2">
                 {% trans "View / Mark Delivered" %}
               </a>

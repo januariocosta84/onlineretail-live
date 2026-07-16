@@ -201,7 +201,16 @@
       </p>
       {% endif %}
       <p class="mb-2">
-        {% if not is_service_category %}
+        {% if product.is_restaurant_category %}
+        {% if product.prep_time_minutes %}
+        <span class="badge badge-info"><i class="fas fa-clock mr-1" aria-hidden="true"></i>{{ product.prep_time_minutes }} {% trans 'min' %}</span>
+        {% endif %}
+        {% if product.is_available %}
+        <span class="badge badge-success">{% trans 'Available' %}</span>
+        {% else %}
+        <span class="badge badge-secondary">{% trans 'Unavailable' %}</span>
+        {% endif %}
+        {% elif not is_service_category %}
         <span class="badge badge-info">{{ product.get_condition_display }}</span>
         {% if product.in_stock %}
         <span class="badge badge-success">{% trans 'In stock' %}: {{ product.quantity }}</span>
@@ -221,7 +230,8 @@
       <form method="post" action="{% url 'olretail:add_to_cart' product.id %}" class="form-inline mb-3">
         {% csrf_token %}
         <label for="cart-qty" class="sr-only">{% trans 'Quantity' %}</label>
-        <input type="number" id="cart-qty" name="quantity" value="1" min="1" max="{{ product.quantity }}"
+        <input type="number" id="cart-qty" name="quantity" value="1" min="1"
+               {% if not product.is_restaurant_category %}max="{{ product.quantity }}"{% endif %}
                class="form-control form-control-sm mr-2" style="width: 70px;">
         <button type="submit" class="btn btn-primary btn-sm m-0">
           <i class="fas fa-cart-plus mr-1" aria-hidden="true"></i>{% trans 'Add to Cart' %}
@@ -265,7 +275,7 @@
       <div class="card mt-4 contact-reveal">
         <div class="card-body py-3">
           <h2 class="h6 text-uppercase text-muted mb-2">
-            {% if is_service_category %}{% trans 'Service Provider' %}{% else %}{% trans 'Seller' %}{% endif %}
+            {% if product.is_restaurant_category %}{% trans 'Restaurant' %}{% elif is_service_category %}{% trans 'Service Provider' %}{% else %}{% trans 'Seller' %}{% endif %}
           </h2>
           <p class="mb-1">
             <strong>{{ product.seller.get_name }}</strong>
@@ -273,6 +283,14 @@
             <span class="badge badge-success"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>{% trans 'Verified Business' %}</span>
             {% endif %}
           </p>
+          {% if restaurant_rating_stats and restaurant_rating_stats.count %}
+          <p class="mb-1 small">
+            {% for i in "12345" %}
+              <i class="fas fa-star {% if forloop.counter <= restaurant_rating_stats.avg|floatformat:0|add:0 %}text-warning{% else %}text-muted{% endif %}" aria-hidden="true"></i>
+            {% endfor %}
+            <span class="text-muted ml-1">{{ restaurant_rating_stats.avg|floatformat:1 }} ({{ restaurant_rating_stats.count }} {% trans "rating" %}{{ restaurant_rating_stats.count|pluralize }})</span>
+          </p>
+          {% endif %}
           <p class="mb-1">
             <i class="fas fa-phone mr-1" aria-hidden="true"></i>
             <a href="tel:+{{ product.seller.whatsapp_number }}">{{ product.seller.mobile }}</a>

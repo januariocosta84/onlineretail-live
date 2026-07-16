@@ -39,6 +39,10 @@
              href="{% url 'dashboard:queue' %}"><i class="fas fa-clipboard-check mr-2" aria-hidden="true"></i>Approval queue</a>
           <a class="list-group-item list-group-item-action {% if section == 'products' %}active text-white{% endif %}"
              href="{% url 'dashboard:products' %}"><i class="fas fa-box mr-2" aria-hidden="true"></i>Products</a>
+          <a class="list-group-item list-group-item-action {% if section == 'orders' %}active text-white{% endif %}"
+             href="{% url 'dashboard:orders' %}"><i class="fas fa-receipt mr-2" aria-hidden="true"></i>Orders</a>
+          <a class="list-group-item list-group-item-action {% if section == 'restaurants' %}active text-white{% endif %}"
+             href="{% url 'dashboard:restaurants' %}"><i class="fas fa-store mr-2" aria-hidden="true"></i>Restaurants</a>
           <a class="list-group-item list-group-item-action {% if section == 'users' %}active text-white{% endif %}"
              href="{% url 'dashboard:users' %}"><i class="fas fa-users mr-2" aria-hidden="true"></i>Users</a>
           <a class="list-group-item list-group-item-action {% if section == 'comments' %}active text-white{% endif %}"

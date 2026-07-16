@@ -81,6 +81,9 @@
                   {% else %}
                     <span class="badge badge-secondary">{{ order.get_status_display }}</span>
                   {% endif %}
+                  {% if order.food_status %}
+                    <span class="badge badge-light border d-block mt-1">{{ order.get_food_status_display }}</span>
+                  {% endif %}
                 </td>
                 <td class="text-center text-muted">
                   <small>{{ order.created_at|date:"M d, Y" }}</small>

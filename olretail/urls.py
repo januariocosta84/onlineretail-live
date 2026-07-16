@@ -39,6 +39,10 @@ urlpatterns = [
     path("order/<int:order_id>/delivery-update/", payment_views.add_delivery_update, name="add_delivery_update"),
     path("order/<int:order_id>/mark-delivered/", payment_views.mark_delivered, name="mark_delivered"),
 
+    # Restaurant order workflow
+    path("order/<int:order_id>/food-status/", payment_views.update_food_status, name="update_food_status"),
+    path("order/<int:order_id>/courier-food-status/", payment_views.courier_update_food_status, name="courier_update_food_status"),
+
     # Courier
     path("courier/deliveries/", payment_views.courier_deliveries, name="courier_deliveries"),
     path("courier/verification/", payment_views.courier_submit_verification, name="courier_submit_verification"),
@@ -61,6 +65,8 @@ urlpatterns = [
     path("seller/update-product/<slug:slug>", views.product_update, name="update_product"),
     path("seller/mark-sold/<slug:slug>", views.product_mark_sold, name="mark_sold"),
     path("seller/delete-product/<slug:slug>", views.product_delete, name="delete_product"),
+    path("seller/menu-categories/", views.menu_categories, name="menu_categories"),
+    path("seller/menu-categories/<int:pk>/delete/", views.menu_category_delete, name="menu_category_delete"),
     
     # Notifications
     path("notifications/", payment_views.notifications, name="notifications"),

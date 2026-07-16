@@ -2,8 +2,8 @@ from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
 from .models import (
-    Buyer, Category, City, Comment, Country, Courier, CourierRating, Notification, Order, Product, ProductStatus,
-    Rating, Seller,
+    Buyer, Category, City, Comment, Country, Courier, CourierRating, MenuCategory, Notification, Order, Product,
+    ProductStatus, Rating, Seller,
 )
 
 admin.site.site_header = "TimorMart administration"
@@ -51,6 +51,13 @@ class SellerAdmin(admin.ModelAdmin):
     list_display = ["get_name", "mobile", "address", "seller_type", "company_name"]
     list_filter = ["seller_type"]
     search_fields = ["user__username", "user__first_name", "user__last_name", "mobile", "company_name", "company_tin"]
+
+
+@admin.register(MenuCategory)
+class MenuCategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "seller", "display_order"]
+    list_filter = ["seller"]
+    search_fields = ["name", "seller__user__username"]
 
 
 @admin.register(Buyer)

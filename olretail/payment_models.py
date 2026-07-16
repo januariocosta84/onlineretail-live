@@ -46,6 +46,19 @@ class OrderStatus(models.TextChoices):
     REFUNDED = 'refunded', _('Refunded')
 
 
+class FoodOrderStatus(models.TextChoices):
+    """Finer-grained sub-states for restaurant orders, layered on top of the
+    Order.status lifecycle above (which stays paid -> shipped -> delivered
+    for every order type, food included — this just tracks the kitchen/
+    pickup/transit progress in between). Delivered reuses the existing
+    top-level OrderStatus.DELIVERED rather than duplicating it here."""
+    RECEIVED = 'received', _('Order Received')
+    PREPARING = 'preparing', _('Preparing Food')
+    READY_FOR_PICKUP = 'ready_for_pickup', _('Ready for Pickup')
+    PICKED_UP = 'picked_up', _('Picked Up')
+    ON_THE_WAY = 'on_the_way', _('On the Way')
+
+
 class PaymentMethod(models.TextChoices):
     """How the buyer pays for an order."""
     STRIPE = 'stripe', _('Card (Stripe)')
@@ -71,6 +84,9 @@ class Order(models.Model):
     subtotal = models.DecimalField(max_digits=13, decimal_places=2)
     commission_amount = models.DecimalField(max_digits=13, decimal_places=2, default=0)
     payment_fee = models.DecimalField(max_digits=13, decimal_places=2, default=0)
+    # Restaurant orders only — flat fee per City.delivery_fee, charged once
+    # per restaurant per checkout (not per item), added to this order's total.
+    delivery_fee = models.DecimalField(max_digits=13, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=13, decimal_places=2)
     
     # Status & Timestamps
@@ -79,6 +95,10 @@ class Order(models.Model):
         choices=OrderStatus.choices,
         default=OrderStatus.PENDING_PAYMENT,
         db_index=True,
+    )
+    # Restaurant orders only — blank/unset for every other order type.
+    food_status = models.CharField(
+        max_length=20, choices=FoodOrderStatus.choices, blank=True,
     )
     payment_method = models.CharField(
         max_length=20,
@@ -138,8 +158,17 @@ class Order(models.Model):
 
         for _attempt in range(5):
             date_str = timezone.now().strftime('%Y%m%d')
-            count = Order.objects.filter(order_number__startswith=f'ORD-{date_str}').count()
-            self.order_number = f'ORD-{date_str}-{count + 1:03d}'
+            # Max existing suffix, not count() — count() undercounts (and
+            # permanently collides) once any order for today has been
+            # deleted, leaving a gap in the sequence.
+            last_order_number = (
+                Order.objects.filter(order_number__startswith=f'ORD-{date_str}-')
+                .order_by('-order_number')
+                .values_list('order_number', flat=True)
+                .first()
+            )
+            last_seq = int(last_order_number.rsplit('-', 1)[-1]) if last_order_number else 0
+            self.order_number = f'ORD-{date_str}-{last_seq + 1:03d}'
             try:
                 with transaction.atomic():
                     super().save(*args, **kwargs)

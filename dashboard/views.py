@@ -26,8 +26,9 @@ from django.db.models import F
 
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
-    Category, Comment, Courier, CourierVerificationStatus, Order, OrderStatus, Payout, PayoutStatus,
-    PlatformSettings, Product, ProductStatus, Seller, SellerBalance, SellerType, SellerVerificationStatus,
+    Category, Comment, Courier, CourierVerificationStatus, FoodOrderStatus, Order, OrderStatus, Payout,
+    PayoutStatus, PlatformSettings, Product, ProductStatus, Seller, SellerBalance, SellerType,
+    SellerVerificationStatus,
 )
 from olretail.payouts import create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
@@ -917,3 +918,66 @@ def seller_verification_action(request, pk):
         messages.success(request, f"{seller.get_name}'s submission was rejected.")
 
     return redirect("dashboard:seller_verification")
+
+
+# ── Orders (all types — restaurant food orders included) ─────────────────
+
+
+@admin_required
+def orders(request):
+    qs = Order.objects.select_related("buyer", "seller", "product", "assigned_courier__user").order_by(
+        "-created_at"
+    )
+
+    q = (request.GET.get("q") or "").strip()
+    status = request.GET.get("status") or ""
+    food_status = request.GET.get("food_status") or ""
+    seller = request.GET.get("seller") or ""
+
+    if q:
+        qs = qs.filter(Q(order_number__icontains=q) | Q(product__name__icontains=q))
+    if status:
+        qs = qs.filter(status=status)
+    if food_status:
+        qs = qs.filter(food_status=food_status)
+    if seller:
+        qs = qs.filter(seller_id=seller)
+
+    params = request.GET.copy()
+    params.pop("page", None)
+    page_obj = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+
+    return render(
+        request,
+        "dashboard/orders.html",
+        {
+            "section": "orders",
+            "page_obj": page_obj,
+            "querystring": params.urlencode(),
+            "q": q,
+            "status": status,
+            "food_status": food_status,
+            "seller": seller,
+            "status_choices": OrderStatus.choices,
+            "food_status_choices": FoodOrderStatus.choices,
+            "seller_choices": Seller.objects.select_related("user"),
+        },
+    )
+
+
+# ── Restaurants ───────────────────────────────────────────────────────────
+
+
+@admin_required
+def restaurants(request):
+    qs = (
+        Seller.objects.filter(seller_type=SellerType.RESTAURANT)
+        .select_related("user")
+        .annotate(product_count=Count("product"))
+        .order_by("user__first_name")
+    )
+    q = (request.GET.get("q") or "").strip()
+    if q:
+        qs = qs.filter(Q(user__first_name__icontains=q) | Q(user__last_name__icontains=q) | Q(user__username__icontains=q))
+
+    return render(request, "dashboard/restaurants.html", {"section": "restaurants", "restaurants": qs})

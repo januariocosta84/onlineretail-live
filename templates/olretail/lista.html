@@ -98,7 +98,13 @@
             </td>
             <td>$ {{ p.price|intcomma }}</td>
             <td>
-              {% if p.is_service_category %}
+              {% if p.is_restaurant_category %}
+              {% if p.is_available %}
+              <span class="badge badge-success">{% trans 'Available' %}</span>
+              {% else %}
+              <span class="badge badge-secondary">{% trans 'Unavailable' %}</span>
+              {% endif %}
+              {% elif p.is_service_category %}
               <span class="text-muted">—</span>
               {% elif p.in_stock %}
               {{ p.quantity }}
@@ -107,7 +113,7 @@
               {% endif %}
             </td>
             <td>
-              {% if p.is_service_category %}
+              {% if p.hides_quantity_condition %}
               <span class="text-muted">—</span>
               {% else %}
               {{ p.get_condition_display }}
@@ -135,7 +141,7 @@
                  title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %} {{ p.name }}">
                 <i class="fas fa-edit" aria-hidden="true"></i>
               </a>
-              {% if p.in_stock and not p.is_service_category %}
+              {% if p.in_stock and not p.hides_quantity_condition %}
               <form method="post" action="{% url 'olretail:mark_sold' p.slug %}" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary my-0"
