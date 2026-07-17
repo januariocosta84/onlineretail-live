@@ -16,18 +16,39 @@ class Cart(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+    # Set once a reminder email has been sent for this line item — prevents
+    # the abandoned-cart sweep from emailing the same buyer repeatedly.
+    # Cleared (via delete, same as the row itself) once the item is bought
+    # or removed, so a later abandon of a re-added item reminds again.
+    abandoned_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         unique_together = ('buyer', 'product')
         ordering = ['-added_at']
-    
+
     def __str__(self):
         return f"{self.buyer.username} - {self.product.name} (qty: {self.quantity})"
-    
+
     @property
     def line_total(self):
         """Total price for this line item."""
         return self.product.price * self.quantity
+
+
+class Wishlist(models.Model):
+    """A buyer's saved-for-later products — separate from Cart, no
+    quantity/checkout involvement, just a bookmark list."""
+
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlist_items')
+    product = models.ForeignKey('olretail.Product', on_delete=models.CASCADE, related_name='wishlisted_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('buyer', 'product')
+        ordering = ['-added_at']
+
+    def __str__(self):
+        return f"{self.buyer.username} - {self.product.name}"
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -63,6 +84,7 @@ class PaymentMethod(models.TextChoices):
     """How the buyer pays for an order."""
     STRIPE = 'stripe', _('Card (Stripe)')
     BANK_TRANSFER = 'bank_transfer', _('Bank / Mobile Transfer')
+    SIMULATED_BANK = 'simulated_bank', _('Automated Bank Transfer (Test)')
 
 
 class Order(models.Model):
@@ -230,6 +252,10 @@ class Rating(models.Model):
     product = models.ForeignKey('olretail.Product', on_delete=models.CASCADE, related_name='ratings')
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='rating')
     score = models.PositiveSmallIntegerField(choices=SCORE_CHOICES)
+    # Optional written review — every Rating is already tied to a Delivered
+    # Order the buyer placed, so this is inherently a verified-purchase
+    # review with no separate gating needed.
+    review_text = models.TextField(blank=True, max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -274,13 +300,25 @@ class PaymentStatus(models.TextChoices):
 
 
 class Payment(models.Model):
-    """Payment transaction record — one per Stripe charge. A checkout can
-    span several sellers/orders at once (see Order.payment), so this is not
-    one-to-one with Order."""
+    """Payment transaction record — one per gateway charge/transfer. A
+    checkout can span several sellers/orders at once (see Order.payment), so
+    this is not one-to-one with Order."""
 
-    stripe_payment_intent_id = models.CharField(max_length=255, unique=True)
+    # Nullable so non-Stripe gateways (which have their own reference field
+    # below) don't need a fake value here — SQL allows multiple NULLs under
+    # a unique constraint, unlike multiple ''.
+    stripe_payment_intent_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
     stripe_charge_id = models.CharField(max_length=255, blank=True)
-    
+
+    # Which gateway processed this payment, and its external reference —
+    # generic equivalent of stripe_payment_intent_id for non-Stripe gateways
+    # (kept separate rather than repurposing the Stripe field, since a real
+    # bank integration later needs its own honestly-named reference).
+    gateway = models.CharField(
+        max_length=20, choices=PaymentMethod.choices, default=PaymentMethod.STRIPE,
+    )
+    gateway_reference = models.CharField(max_length=255, blank=True, db_index=True)
+
     # Amount (in cents for precision)
     amount_cents = models.BigIntegerField()
     currency = models.CharField(max_length=3, default='USD')

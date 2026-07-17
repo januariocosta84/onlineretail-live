@@ -1,0 +1,142 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Transaction — {{ txn.reference }}{% endblock %}
+
+{% block dash_content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent px-0 mb-2">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard:bank_transactions' %}">Bank simulator transactions</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ txn.reference }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span class="font-weight-bold">{{ txn.reference }}</span>
+        {% if txn.status == 'success' %}<span class="badge badge-success">{{ txn.get_status_display }}</span>
+        {% elif txn.status == 'pending' %}<span class="badge badge-warning">{{ txn.get_status_display }}</span>
+        {% elif txn.status == 'cancelled' %}<span class="badge badge-secondary">{{ txn.get_status_display }}</span>
+        {% else %}<span class="badge badge-danger">{{ txn.get_status_display }}</span>{% endif %}
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Amount</dt>
+          <dd class="col-sm-9">${{ txn.amount_dollars|floatformat:2 }}</dd>
+          <dt class="col-sm-3">Account submitted</dt>
+          <dd class="col-sm-9">
+            {{ txn.account_number_submitted }}
+            {% if txn.source_account %} — <a href="{% url 'dashboard:bank_account_detail' txn.source_account.pk %}">{{ txn.source_account.account_holder_name }}</a>{% endif %}
+          </dd>
+          <dt class="col-sm-3">Attempts</dt>
+          <dd class="col-sm-9">{{ txn.attempt_count }}</dd>
+          <dt class="col-sm-3">Error</dt>
+          <dd class="col-sm-9">{{ txn.error_message|default:"—" }}</dd>
+          <dt class="col-sm-3">Created</dt>
+          <dd class="col-sm-9">{{ txn.created_at|date:"j M Y H:i:s" }}</dd>
+          <dt class="col-sm-3">Settle after</dt>
+          <dd class="col-sm-9">{% if txn.settle_after %}{{ txn.settle_after|date:"j M Y H:i:s" }}{% else %}— (never auto-settles){% endif %}</dd>
+          <dt class="col-sm-3">Settled at</dt>
+          <dd class="col-sm-9">{% if txn.settled_at %}{{ txn.settled_at|date:"j M Y H:i:s" }}{% else %}—{% endif %}</dd>
+          <dt class="col-sm-3">Payment gateway status</dt>
+          <dd class="col-sm-9">{{ txn.payment.get_status_display }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    {% if orders %}
+    <div class="card mt-3">
+      <div class="card-header py-2 font-weight-bold">Linked orders</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Order #</th><th>Buyer</th><th>Seller</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for order in orders %}
+            <tr>
+              <td><a href="{% url 'olretail:order_detail' order.id %}">{{ order.order_number }}</a></td>
+              <td>{{ order.buyer.get_full_name|default:order.buyer.username }}</td>
+              <td>{{ order.seller.get_name }}</td>
+              <td><small>{{ order.get_status_display }}</small></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="card mt-3">
+      <div class="card-header py-2 font-weight-bold">Request/response log</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Direction</th><th>Event</th><th>Status</th><th>When</th></tr></thead>
+          <tbody>
+            {% for log in event_logs %}
+            <tr>
+              <td><small>{{ log.get_direction_display }}</small></td>
+              <td><small>{{ log.event_type }}</small></td>
+              <td><small>{{ log.status_code|default:"—" }}</small></td>
+              <td><small class="text-muted">{{ log.created_at|date:"j M Y H:i:s" }}</small></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-3">No log entries.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Transaction actions</div>
+      <div class="card-body py-3">
+        {% if txn.status == 'pending' %}
+        <form method="post" action="{% url 'dashboard:bank_transaction_action' txn.pk %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="settle_now">
+          <button type="submit" class="btn btn-success btn-sm btn-block m-0">
+            <i class="fas fa-bolt mr-1" aria-hidden="true"></i>Settle now
+          </button>
+        </form>
+        <form method="post" action="{% url 'dashboard:bank_transaction_action' txn.pk %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_failed">
+          <button type="submit" class="btn btn-outline-danger btn-sm btn-block m-0">
+            <i class="fas fa-times mr-1" aria-hidden="true"></i>Force fail
+          </button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'dashboard:bank_transaction_action' txn.pk %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="retry">
+          <button type="submit" class="btn btn-info btn-sm btn-block m-0">
+            <i class="fas fa-redo mr-1" aria-hidden="true"></i>Retry
+          </button>
+        </form>
+        <form method="post" action="{% url 'dashboard:bank_transaction_action' txn.pk %}" class="mb-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="replay_callback">
+          <button type="submit" class="btn btn-outline-secondary btn-sm btn-block m-0">
+            <i class="fas fa-history mr-1" aria-hidden="true"></i>Replay callback
+          </button>
+        </form>
+        {% endif %}
+
+        {% if txn.status == 'success' and txn.payment.status == 'succeeded' %}
+        <form method="post" action="{% url 'dashboard:bank_transaction_action' txn.pk %}"
+              onsubmit="return confirm('Refund this payment? This reverses commission and restores stock.');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="refund">
+          <button type="submit" class="btn btn-outline-warning btn-sm btn-block m-0">
+            <i class="fas fa-undo mr-1" aria-hidden="true"></i>Refund
+          </button>
+        </form>
+        {% elif txn.payment.status == 'refunded' %}
+        <p class="text-muted small mb-0"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>Already refunded.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

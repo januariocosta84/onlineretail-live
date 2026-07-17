@@ -3,6 +3,7 @@ Django>=5.2,<5.3
 Pillow>=10.0
 whitenoise>=6.6
 django-modeltranslation>=0.19
+python-dotenv>=1.0
 
 # Payment Processing
 stripe>=5.4

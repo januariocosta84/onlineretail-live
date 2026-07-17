@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Bank account — {{ account.account_number }}{% endblock %}
+
+{% block dash_content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-transparent px-0 mb-2">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard:bank_accounts' %}">Bank simulator accounts</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ account.account_number }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span class="font-weight-bold">{{ account.account_number }}</span>
+        {% if account.status == 'active' %}<span class="badge badge-success">{{ account.get_status_display }}</span>
+        {% else %}<span class="badge badge-secondary">{{ account.get_status_display }}</span>{% endif %}
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Holder</dt>
+          <dd class="col-sm-9">{{ account.account_holder_name }}</dd>
+          <dt class="col-sm-3">Bank</dt>
+          <dd class="col-sm-9">{{ account.bank_name }}</dd>
+          <dt class="col-sm-3">Balance</dt>
+          <dd class="col-sm-9">${{ account.balance_dollars|floatformat:2 }}</dd>
+          <dt class="col-sm-3">Forced outcome</dt>
+          <dd class="col-sm-9">{{ account.get_forced_outcome_display }}</dd>
+          <dt class="col-sm-3">Notes</dt>
+          <dd class="col-sm-9">{{ account.notes|default:"—" }}</dd>
+          <dt class="col-sm-3">Created</dt>
+          <dd class="col-sm-9">{{ account.created_at|date:"j M Y H:i" }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header py-2 font-weight-bold">Recent transactions against this account</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Reference</th><th>Status</th><th class="text-right">Amount</th><th>Created</th></tr></thead>
+          <tbody>
+            {% for txn in transactions %}
+            <tr>
+              <td><a href="{% url 'dashboard:bank_transaction_detail' txn.pk %}">{{ txn.reference }}</a></td>
+              <td><small>{{ txn.get_status_display }}</small></td>
+              <td class="text-right">${{ txn.amount_dollars|floatformat:2 }}</td>
+              <td><small class="text-muted">{{ txn.created_at|date:"j M Y H:i" }}</small></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-4">No transactions yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-3">
+    <div class="card mb-3">
+      <div class="card-header py-2 font-weight-bold">Adjust balance</div>
+      <div class="card-body py-3">
+        <form method="post" action="{% url 'dashboard:bank_account_action' account.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="adjust_balance">
+          <div class="form-group">
+            <label>New balance (USD)</label>
+            <input type="number" step="0.01" name="balance_dollars" class="form-control form-control-sm" value="{{ account.balance_dollars|floatformat:2 }}">
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-primary m-0">Save balance</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header py-2 font-weight-bold">Configure test outcome</div>
+      <div class="card-body py-3">
+        <form method="post" action="{% url 'dashboard:bank_account_action' account.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="set_forced_outcome">
+          <div class="form-group">
+            <select name="forced_outcome" class="browser-default custom-select custom-select-sm">
+              {% for value, label in forced_outcome_choices %}
+              <option value="{{ value }}" {% if account.forced_outcome == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-primary m-0">Save outcome</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Account status</div>
+      <div class="card-body py-3">
+        <form method="post" action="{% url 'dashboard:bank_account_action' account.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle_status">
+          <div class="form-group">
+            <select name="status" class="browser-default custom-select custom-select-sm">
+              {% for value, label in status_choices %}
+              <option value="{{ value }}" {% if account.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-secondary m-0">Save status</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

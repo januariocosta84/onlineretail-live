@@ -59,6 +59,26 @@ class CheckoutForm(forms.Form):
         help_text=_("E.g., 'Please knock loudly' or 'Leave at door'")
     )
 
+    # Only required when payment_method == SIMULATED_BANK (see clean()) —
+    # optional at the field level so it doesn't block Stripe/manual-transfer
+    # checkouts, which never render this input.
+    bank_account_number = forms.CharField(
+        max_length=34,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': _('e.g. SIM-0001-SUCCESS'),
+            'class': 'form-control'
+        }),
+        label=_("Bank Account Number"),
+        help_text=_("The account you're paying from."),
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('payment_method') == PaymentMethod.SIMULATED_BANK and not cleaned_data.get('bank_account_number'):
+            self.add_error('bank_account_number', _('Enter the account number you\'re paying from.'))
+        return cleaned_data
+
 
 class DisputeForm(forms.ModelForm):
     """Form for buyer to open dispute."""

@@ -1,6 +1,17 @@
 {% load i18n %}
 {% load static %}
 {% load humanize %}
+<style>
+  .wishlist-toggle-btn {
+    position: absolute; top: 8px; right: 8px; z-index: 2;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,.9); border: 1px solid #dee2e6;
+    display: flex; align-items: center; justify-content: center;
+    color: #6c757d; box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  }
+  .wishlist-toggle-btn:hover { background: #fff; }
+  .wishlist-toggle-btn.active { color: #dc3545; }
+</style>
 <div class="row">
   {% for p in page_obj.object_list %}
   <div class="col-6 col-md-4 col-xl-3 mb-4">
@@ -14,6 +25,16 @@
         <a href="{{ p.get_absolute_url }}" aria-label="{{ p.name }}">
           <div class="mask"></div>
         </a>
+        {% if is_buyer and p.seller.user_id != request.user.id %}
+        <form method="post" action="{% url 'olretail:wishlist_toggle' p.id %}" class="wishlist-toggle-form">
+          {% csrf_token %}
+          <button type="submit" class="wishlist-toggle-btn {% if p.id in wishlisted_product_ids %}active{% endif %}"
+                  aria-label="{% trans 'Toggle wishlist' %}"
+                  {% if p.id in wishlisted_product_ids %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>
+            <i class="{% if p.id in wishlisted_product_ids %}fas{% else %}far{% endif %} fa-heart" aria-hidden="true"></i>
+          </button>
+        </form>
+        {% endif %}
       </div>
       <div class="card-body pb-2">
         <h2 class="h6 mb-1 text-truncate">
@@ -41,12 +62,18 @@
           <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
           {{ p.item_location }}, {{ p.country }}
         </p>
-        {% if p.is_restaurant_category %}
-        {% if not p.is_available %}
-        <span class="badge badge-secondary mt-1">{% trans 'Unavailable' %}</span>
-        {% endif %}
-        {% elif not p.in_stock and not p.is_service_category %}
-        <span class="badge badge-secondary mt-1">{% trans 'Out of stock' %}</span>
+        {% if not p.available_for_purchase and not p.is_service_category %}
+        <span class="badge badge-secondary mt-1">
+          {% if p.is_restaurant_category %}{% trans 'Unavailable' %}{% else %}{% trans 'Out of stock' %}{% endif %}
+        </span>
+        {% elif is_buyer and p.cart_purchasable and p.seller.user_id != request.user.id %}
+        <form method="post" action="{% url 'olretail:add_to_cart' p.id %}" class="quick-add-form mt-1">
+          {% csrf_token %}
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="btn btn-sm btn-outline-primary py-1 px-2">
+            <i class="fas fa-cart-plus mr-1" aria-hidden="true"></i>{% trans 'Add to Cart' %}
+          </button>
+        </form>
         {% endif %}
       </div>
     </div>
@@ -62,3 +89,68 @@
   </div>
   {% endfor %}
 </div>
+
+<script>
+(function () {
+  'use strict';
+  document.querySelectorAll('.quick-add-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var button = form.querySelector('button');
+      var originalHtml = button.innerHTML;
+      button.disabled = true;
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new FormData(form),
+      })
+        .then(function (resp) { return resp.ok ? resp.json() : Promise.reject(resp); })
+        .then(function (data) {
+          var badge = document.getElementById('cart-count-badge');
+          if (badge) {
+            badge.textContent = data.cart_count;
+            badge.classList.toggle('d-none', !data.cart_count);
+          }
+          button.innerHTML = '<i class="fas fa-check mr-1" aria-hidden="true"></i>{% trans "Added" %}';
+          setTimeout(function () { button.innerHTML = originalHtml; button.disabled = false; }, 1200);
+        })
+        .catch(function () {
+          // Fallback: let the browser submit the form normally (redirects to /cart/).
+          button.disabled = false;
+          form.submit();
+        });
+    });
+  });
+
+  document.querySelectorAll('.wishlist-toggle-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var button = form.querySelector('button');
+      var icon = button.querySelector('i');
+      button.disabled = true;
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new FormData(form),
+      })
+        .then(function (resp) { return resp.ok ? resp.json() : Promise.reject(resp); })
+        .then(function (data) {
+          button.classList.toggle('active', data.wishlisted);
+          button.setAttribute('aria-pressed', data.wishlisted ? 'true' : 'false');
+          icon.classList.toggle('fas', data.wishlisted);
+          icon.classList.toggle('far', !data.wishlisted);
+          var badge = document.getElementById('wishlist-count-badge');
+          if (badge) {
+            badge.textContent = data.wishlist_count;
+            badge.classList.toggle('d-none', !data.wishlist_count);
+          }
+          button.disabled = false;
+        })
+        .catch(function () {
+          button.disabled = false;
+          form.submit();
+        });
+    });
+  });
+})();
+</script>

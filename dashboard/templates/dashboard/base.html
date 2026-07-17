@@ -53,6 +53,10 @@
              href="{% url 'dashboard:seller_verification' %}"><i class="fas fa-building mr-2" aria-hidden="true"></i>Company verification</a>
           <a class="list-group-item list-group-item-action {% if section == 'payouts' %}active text-white{% endif %}"
              href="{% url 'dashboard:payouts' %}"><i class="fas fa-money-check-alt mr-2" aria-hidden="true"></i>Payouts</a>
+          <a class="list-group-item list-group-item-action {% if section == 'bank_accounts' %}active text-white{% endif %}"
+             href="{% url 'dashboard:bank_accounts' %}"><i class="fas fa-university mr-2" aria-hidden="true"></i>Bank simulator accounts</a>
+          <a class="list-group-item list-group-item-action {% if section == 'bank_transactions' %}active text-white{% endif %}"
+             href="{% url 'dashboard:bank_transactions' %}"><i class="fas fa-exchange-alt mr-2" aria-hidden="true"></i>Bank simulator transactions</a>
           <a class="list-group-item list-group-item-action {% if section == 'subscriptions' %}active text-white{% endif %}"
              href="{% url 'dashboard:subscriptions' %}"><i class="fas fa-crown mr-2" aria-hidden="true"></i>Subscriptions</a>
           <a class="list-group-item list-group-item-action {% if section == 'platform_settings' %}active text-white{% endif %}"

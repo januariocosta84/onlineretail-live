@@ -1,10 +1,14 @@
 import logging
+from decimal import Decimal, InvalidOperation
 from urllib.parse import quote
 
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Avg, Count, DecimalField, ExpressionWrapper, F, Q, Sum
+from django.db.models import (
+    Avg, Count, DecimalField, ExpressionWrapper, F, IntegerField, OuterRef, Q, Subquery, Sum,
+)
 from django.db.models.deletion import ProtectedError
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -17,11 +21,14 @@ from .models import (
     Category,
     FREE_PRODUCT_LIMIT,
     MenuCategory,
+    Order,
+    OrderStatus,
     Product,
     ProductStatus,
     Rating,
     SellerSubscription,
     SellerType,
+    Wishlist,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,7 +40,40 @@ SORT_OPTIONS = {
     "price_asc": "price",
     "price_desc": "-price",
     "name": "name",
+    "best_selling": "-order_count",
 }
+
+# A sale only "counts" once money has actually changed hands — excludes
+# pending_payment/payment_reported (not yet paid) and cancelled/refunded.
+COMPLETED_ORDER_STATUSES = [
+    OrderStatus.PAID, OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.DELIVERED,
+]
+
+
+def _with_order_count(queryset):
+    """Annotate each product with its completed-order count, via a
+    correlated subquery rather than a Count() join — this queryset is
+    usually already annotated with avg_rating/rating_count over a different
+    reverse relation (ratings), and combining multiple Count()s over
+    different relations in one query fans out and corrupts both unless
+    every Count is marked distinct; a subquery sidesteps that entirely."""
+    order_counts = (
+        Order.objects.filter(product=OuterRef("pk"), status__in=COMPLETED_ORDER_STATUSES)
+        .values("product")
+        .annotate(c=Count("id"))
+        .values("c")
+    )
+    return queryset.annotate(order_count=Coalesce(Subquery(order_counts, output_field=IntegerField()), 0))
+
+
+def _parse_price(raw):
+    if not raw:
+        return None
+    try:
+        value = Decimal(raw)
+    except InvalidOperation:
+        return None
+    return value if value >= 0 else None
 
 
 def index(request):
@@ -57,7 +97,16 @@ def index(request):
             Q(name__icontains=query) | Q(description__icontains=query)
         )
 
+    min_price = _parse_price(request.GET.get("min_price"))
+    if min_price is not None:
+        products = products.filter(price__gte=min_price)
+    max_price = _parse_price(request.GET.get("max_price"))
+    if max_price is not None:
+        products = products.filter(price__lte=max_price)
+
     sort = request.GET.get("sort", "newest")
+    if sort == "best_selling":
+        products = _with_order_count(products)
     products = products.order_by(SORT_OPTIONS.get(sort, "-created"))
 
     paginator = Paginator(products, PRODUCTS_PER_PAGE)
@@ -76,6 +125,29 @@ def index(request):
         if p.product_image
     ] or [p for p in page_obj.object_list if p.product_image][:3]
 
+    # Best sellers is a merchandising section on the plain default view only
+    # (same condition the featured carousel already uses) — a search/
+    # category/filtered view is the buyer already narrowing down, showing
+    # unrelated best sellers there would be noise.
+    best_sellers = []
+    if not query and not active_category and not min_price and not max_price:
+        best_sellers = list(
+            _with_order_count(
+                Product.objects.filter(status=ProductStatus.APPROVED)
+                .select_related("category", "item_location", "country", "seller__user")
+                .annotate(avg_rating=Avg("ratings__score"), rating_count=Count("ratings"))
+            )
+            .filter(order_count__gt=0)
+            .order_by("-order_count")[:8]
+        )
+
+    wishlisted_product_ids = set()
+    if request.user.is_authenticated:
+        shown_ids = [p.id for p in page_obj.object_list] + [p.id for p in best_sellers]
+        wishlisted_product_ids = set(
+            Wishlist.objects.filter(buyer=request.user, product_id__in=shown_ids).values_list("product_id", flat=True)
+        )
+
     return render(
         request,
         "olretail/index.html",
@@ -85,8 +157,12 @@ def index(request):
             "active_category": active_category,
             "query": query,
             "sort": sort,
+            "min_price": request.GET.get("min_price", ""),
+            "max_price": request.GET.get("max_price", ""),
             "querystring": querystring,
             "featured": featured,
+            "best_sellers": best_sellers,
+            "wishlisted_product_ids": wishlisted_product_ids,
             "result_count": paginator.count,
         },
     )
@@ -176,6 +252,14 @@ def product_detail(request, slug):
     }
 
     rating_stats = product.ratings.aggregate(avg=Avg("score"), count=Count("id"))
+    # Written reviews are optional on a Rating — only show ones with text.
+    # Every Rating is already tied to a Delivered order the buyer placed, so
+    # these are inherently verified-purchase reviews, no separate gating.
+    reviews = (
+        product.ratings.exclude(review_text="")
+        .select_related("buyer")
+        .order_by("-created_at")[:20]
+    )
 
     # A restaurant's rating is just an aggregate over the same Rating table,
     # scoped to every product (menu item) under that seller — no separate
@@ -202,10 +286,14 @@ def product_detail(request, slug):
             "can_view_contact": can_view_contact,
             "can_add_to_cart": (
                 can_comment and not is_owner and product.approved
-                and product.cart_purchasable
-                and (product.is_available if product.is_restaurant_category else product.in_stock)
+                and product.cart_purchasable and product.available_for_purchase
+            ),
+            "is_wishlisted": (
+                request.user.is_authenticated
+                and Wishlist.objects.filter(buyer=request.user, product=product).exists()
             ),
             "gallery_urls": gallery_urls,
+            "reviews": reviews,
             "avg_rating": rating_stats["avg"],
             "rating_count": rating_stats["count"],
             "restaurant_rating_stats": restaurant_rating_stats,

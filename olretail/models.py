@@ -343,6 +343,13 @@ class Product(models.Model):
         return self.category_id is not None and self.category.slug == RESTAURANT_CATEGORY_SLUG
 
     @property
+    def available_for_purchase(self):
+        """Whether there's currently stock/availability to buy — restaurant
+        menu items use the is_available toggle (no real stock count),
+        everything else uses the tracked quantity."""
+        return self.is_available if self.is_restaurant_category else self.in_stock
+
+    @property
     def hides_quantity_condition(self):
         """True for categories where quantity/condition are meaningless
         (services and restaurant menu items) and are hidden on the product
@@ -414,9 +421,13 @@ from .payment_models import (  # noqa: E402, F401
     Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
     DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings,
-    Notification, Rating, CourierRating,
+    Notification, Rating, CourierRating, Wishlist,
 )
 from .subscription_models import (  # noqa: E402, F401
     FREE_PRODUCT_LIMIT, PLAN_PRICES, PLAN_DURATION_DAYS, SubscriptionPlan,
     SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus,
+)
+from .banking_models import (  # noqa: E402, F401
+    VirtualAccountStatus, ForcedOutcome, VirtualBankAccount, SimulatedOutcome,
+    SimulatedBankTransaction, GatewayEventLog, IdempotencyRecord,
 )

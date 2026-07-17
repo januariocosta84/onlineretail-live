@@ -1,6 +1,7 @@
 {% extends 'shared/base.html' %}
 {% load i18n %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}{% if active_category %}{{ active_category.title }} — {% endif %}TimorMart{% endblock %}
 
@@ -45,6 +46,34 @@
       </div>
       {% endif %}
 
+      {% if best_sellers %}
+      <section class="py-2 my-3">
+        <h2 class="h5 text-uppercase font-weight-bold page-header-bar mb-3">
+          <i class="fas fa-fire mr-1" aria-hidden="true"></i>{% trans 'Best sellers' %}
+        </h2>
+        <div class="row flex-nowrap overflow-auto pb-2">
+          {% for p in best_sellers %}
+          <div class="col-6 col-md-3" style="min-width: 160px;">
+            <div class="card product-card h-100">
+              <div class="view zoom overlay">
+                {% if p.product_image %}
+                <img class="card-img-top" src="{{ p.product_image.url }}" alt="{{ p.name }}" loading="lazy">
+                {% else %}
+                <img class="card-img-top" src="{% static 'mdb/img/t-shirt.jpg' %}" alt="{% trans 'No image available' %}" loading="lazy">
+                {% endif %}
+                <a href="{{ p.get_absolute_url }}" aria-label="{{ p.name }}"><div class="mask"></div></a>
+              </div>
+              <div class="card-body py-2">
+                <p class="mb-1 text-truncate"><a class="text-dark" href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
+                <p class="mb-0"><strong class="text-danger">$ {{ p.price|intcomma }}</strong></p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
       <section class="py-2 my-3">
         <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 page-header-bar">
           <h1 class="h4 text-uppercase font-weight-bold mb-0">
@@ -60,14 +89,20 @@
           <form method="get" class="form-inline my-1">
             {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
             {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+            <label class="small text-muted mr-1 mb-0" for="min_price">{% trans 'Price' %}</label>
+            <input type="number" id="min_price" name="min_price" value="{{ min_price }}" min="0" step="0.01"
+                   placeholder="{% trans 'Min' %}" class="form-control form-control-sm mr-1" style="width: 80px;">
+            <input type="number" name="max_price" value="{{ max_price }}" min="0" step="0.01"
+                   placeholder="{% trans 'Max' %}" class="form-control form-control-sm mr-2" style="width: 80px;">
             <label class="small text-muted mr-2 mb-0" for="sort">{% trans 'Sort by' %}</label>
-            <select id="sort" name="sort" class="browser-default custom-select custom-select-sm"
-                    onchange="this.form.submit()">
+            <select id="sort" name="sort" class="browser-default custom-select custom-select-sm">
               <option value="newest" {% if sort == 'newest' %}selected{% endif %}>{% trans 'Newest' %}</option>
+              <option value="best_selling" {% if sort == 'best_selling' %}selected{% endif %}>{% trans 'Best selling' %}</option>
               <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>{% trans 'Price: low to high' %}</option>
               <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>{% trans 'Price: high to low' %}</option>
               <option value="name" {% if sort == 'name' %}selected{% endif %}>{% trans 'Name' %}</option>
             </select>
+            <button type="submit" class="btn btn-sm btn-outline-primary ml-2 my-0">{% trans 'Apply' %}</button>
           </form>
         </div>
 

@@ -1,0 +1,72 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Wishlist" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container-fluid">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-heart mr-2"></i>{% trans "My Wishlist" %}
+        </h1>
+      </div>
+    </div>
+
+    {% if wishlist_items %}
+      <div class="row">
+        {% for item in wishlist_items %}
+        <div class="col-6 col-md-4 col-xl-3 mb-4">
+          <div class="card product-card">
+            <div class="view zoom overlay">
+              {% if item.product.product_image %}
+              <img class="card-img-top" src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}" loading="lazy">
+              {% else %}
+              <img class="card-img-top" src="{% static 'mdb/img/t-shirt.jpg' %}" alt="{% trans 'No image available' %}" loading="lazy">
+              {% endif %}
+              <a href="{{ item.product.get_absolute_url }}" aria-label="{{ item.product.name }}"><div class="mask"></div></a>
+            </div>
+            <div class="card-body pb-2">
+              <h2 class="h6 mb-1 text-truncate">
+                <a href="{{ item.product.get_absolute_url }}" class="text-dark">{{ item.product.name }}</a>
+              </h2>
+              <p class="mb-2"><strong class="text-danger">$ {{ item.product.price }}</strong></p>
+
+              {% if not item.product.available_for_purchase and not item.product.is_service_category %}
+              <span class="badge badge-secondary mb-2">
+                {% if item.product.is_restaurant_category %}{% trans 'Unavailable' %}{% else %}{% trans 'Out of stock' %}{% endif %}
+              </span>
+              {% elif item.product.cart_purchasable %}
+              <form method="post" action="{% url 'olretail:wishlist_move_to_cart' item.id %}" class="mb-1">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-primary btn-block m-0">
+                  <i class="fas fa-cart-plus mr-1" aria-hidden="true"></i>{% trans 'Move to Cart' %}
+                </button>
+              </form>
+              {% endif %}
+
+              <form method="post" action="{% url 'olretail:wishlist_remove' item.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger btn-block m-0">
+                  <i class="fas fa-trash mr-1" aria-hidden="true"></i>{% trans 'Remove' %}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <i class="fas fa-info-circle mr-3 fa-2x"></i>
+        <div>
+          <strong>{% trans "Your wishlist is empty." %}</strong><br>
+          <a href="{% url 'olretail:index' %}">{% trans "Start browsing" %}</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

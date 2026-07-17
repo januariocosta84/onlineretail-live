@@ -72,6 +72,24 @@
                 {% endblocktrans %}
               </small>
               {% endif %}
+
+              <div class="form-group mt-3 d-none" id="bank-account-number-group">
+                <label for="{{ form.bank_account_number.id_for_label }}" class="font-weight-bold">
+                  {{ form.bank_account_number.label }}
+                </label>
+                {{ form.bank_account_number }}
+                {% if form.bank_account_number.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.bank_account_number.errors }}</small>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.bank_account_number.help_text }}</small>
+                {% if show_bank_simulator_test_accounts %}
+                <small class="form-text text-muted d-block mt-1">
+                  <i class="fas fa-flask mr-1"></i>{% trans "Test accounts:" %}
+                  SIM-0001-SUCCESS, SIM-0002-INSUFFICIENT, SIM-0003-CLOSED,
+                  SIM-0004-FAIL, SIM-0005-TIMEOUT, SIM-0006-DUPLICATE
+                </small>
+                {% endif %}
+              </div>
             </div>
           </div>
 
@@ -182,6 +200,10 @@
               <i class="fas fa-university mr-2"></i>
               <small>{% trans "You'll pay the seller directly — no platform fee. The next page shows their payment details." %}</small>
             </div>
+            <div class="alert alert-info alert-sm d-none" role="alert" id="simulated-bank-note">
+              <i class="fas fa-flask mr-2"></i>
+              <small>{% trans "Test/dev payment rail — enter one of the test account numbers above to trigger a specific outcome." %}</small>
+            </div>
           </div>
         </div>
       </div>
@@ -189,7 +211,6 @@
   </div>
 </main>
 
-{{ city_delivery_fees|json_script:"city-delivery-fees" }}
 <script>
 (function () {
   'use strict';
@@ -197,42 +218,51 @@
   var stripeFeeRows = document.getElementById('stripe-fee-rows');
   var stripeNote = document.getElementById('stripe-note');
   var bankTransferNote = document.getElementById('bank-transfer-note');
+  var simulatedBankNote = document.getElementById('simulated-bank-note');
+  var bankAccountNumberGroup = document.getElementById('bank-account-number-group');
   var totalEl = document.getElementById('checkout-total');
   var submitLabel = document.getElementById('submit-label');
   var deliveryFeeRow = document.getElementById('delivery-fee-row');
   var deliveryFeeAmountEl = document.getElementById('delivery-fee-amount');
-  var citySelect = document.getElementById('{{ form.delivery_city.id_for_label }}');
   var cartTotal = {{ cart_total }};
   var estimatedTotal = {{ estimated_total }};
-  var restaurantSellerCount = {{ restaurant_seller_count }};
-  var cityDeliveryFees = JSON.parse(document.getElementById('city-delivery-fees').textContent);
+  var bankEstimatedTotal = {{ bank_estimated_total }};
+  var sellerCount = {{ seller_count }};
+  var deliveryFeePerSeller = {{ delivery_fee_per_seller }};
 
   function currentDeliveryFee() {
-    if (!restaurantSellerCount || !citySelect || !citySelect.value) return 0;
-    var perRestaurant = cityDeliveryFees[citySelect.value] || 0;
-    return perRestaurant * restaurantSellerCount;
+    return sellerCount * deliveryFeePerSeller;
   }
 
   function update() {
     var selected = document.querySelector('input[name="payment_method"]:checked');
-    var isBankTransfer = selected && selected.value === 'bank_transfer';
-    stripeFeeRows.classList.toggle('d-none', isBankTransfer);
-    stripeNote.classList.toggle('d-none', isBankTransfer);
+    var method = selected ? selected.value : 'stripe';
+    var isBankTransfer = method === 'bank_transfer';
+    var isSimulatedBank = method === 'simulated_bank';
+
+    stripeFeeRows.classList.toggle('d-none', isBankTransfer || isSimulatedBank);
+    stripeNote.classList.toggle('d-none', isBankTransfer || isSimulatedBank);
     bankTransferNote.classList.toggle('d-none', !isBankTransfer);
+    simulatedBankNote.classList.toggle('d-none', !isSimulatedBank);
+    bankAccountNumberGroup.classList.toggle('d-none', !isSimulatedBank);
 
     var deliveryFee = currentDeliveryFee();
     deliveryFeeRow.classList.toggle('d-none', deliveryFee <= 0);
     deliveryFeeAmountEl.textContent = deliveryFee.toFixed(2);
 
-    var total = (isBankTransfer ? cartTotal : estimatedTotal) + deliveryFee;
+    var baseTotal = isBankTransfer ? cartTotal : (isSimulatedBank ? bankEstimatedTotal : estimatedTotal);
+    var total = baseTotal + deliveryFee;
     totalEl.textContent = '$' + total.toFixed(2);
-    submitLabel.innerHTML = isBankTransfer
-      ? '<i class="fas fa-university mr-2"></i>{% trans "Continue to Payment Details" %}'
-      : '<i class="fas fa-credit-card mr-2"></i>{% trans "Proceed to Payment" %}';
+    if (isBankTransfer) {
+      submitLabel.innerHTML = '<i class="fas fa-university mr-2"></i>{% trans "Continue to Payment Details" %}';
+    } else if (isSimulatedBank) {
+      submitLabel.innerHTML = '<i class="fas fa-flask mr-2"></i>{% trans "Submit Bank Transfer" %}';
+    } else {
+      submitLabel.innerHTML = '<i class="fas fa-credit-card mr-2"></i>{% trans "Proceed to Payment" %}';
+    }
   }
 
   radios.forEach(function (r) { r.addEventListener('change', update); });
-  if (citySelect) citySelect.addEventListener('change', update);
   update();
 })();
 </script>

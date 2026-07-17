@@ -3,6 +3,7 @@ from django.views.generic import RedirectView
 
 from . import views
 from . import payment_views
+from . import banking_api
 
 app_name = "olretail"
 
@@ -19,7 +20,13 @@ urlpatterns = [
     path("cart/update/<int:cart_id>/", payment_views.update_cart, name="update_cart"),
     path("cart/remove/<int:cart_id>/", payment_views.remove_from_cart, name="remove_from_cart"),
     path("cart/clear/", payment_views.clear_cart, name="clear_cart"),
-    
+
+    # Wishlist
+    path("wishlist/", payment_views.wishlist, name="wishlist"),
+    path("wishlist/toggle/<int:product_id>/", payment_views.wishlist_toggle, name="wishlist_toggle"),
+    path("wishlist/remove/<int:item_id>/", payment_views.wishlist_remove, name="wishlist_remove"),
+    path("wishlist/move-to-cart/<int:item_id>/", payment_views.wishlist_move_to_cart, name="wishlist_move_to_cart"),
+
     # Checkout & Payment
     path("checkout/", payment_views.checkout, name="checkout"),
     path("payment/<int:order_id>/confirmation/", payment_views.payment_confirmation, name="payment_confirmation"),
@@ -75,7 +82,15 @@ urlpatterns = [
 
     # Webhook
     path("webhook/stripe/", payment_views.stripe_webhook, name="stripe_webhook"),
-    
+    path("webhook/simulated-bank/", payment_views.simulated_bank_webhook, name="simulated_bank_webhook"),
+
+    # Simulated Bank Gateway — developer REST API (see BANK_SIMULATOR_ARCHITECTURE.md)
+    path("api/bank-simulator/v1/payments/", banking_api.create_payment, name="banking_api_create_payment"),
+    path("api/bank-simulator/v1/payments/<str:reference>/", banking_api.get_payment, name="banking_api_get_payment"),
+    path("api/bank-simulator/v1/payments/<str:reference>/cancel/", banking_api.cancel_payment, name="banking_api_cancel_payment"),
+    path("api/bank-simulator/v1/payments/<str:reference>/refund/", banking_api.refund_payment, name="banking_api_refund_payment"),
+    path("api/bank-simulator/v1/accounts/<str:account_number>/", banking_api.get_account, name="banking_api_get_account"),
+
     # Legacy routes kept so old bookmarks keep working
     path("login/", RedirectView.as_view(pattern_name="accounts:login", permanent=False), name="login"),
 ]

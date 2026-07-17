@@ -1,0 +1,49 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Bank simulator transactions{% endblock %}
+
+{% block dash_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 page-header-bar">
+  <h1 class="h4 mb-0">Simulated bank transactions <small class="text-muted h6">({{ page_obj.paginator.count }})</small></h1>
+</div>
+
+<div class="mb-3">
+  <a href="{% url 'dashboard:bank_transactions' %}" class="btn btn-sm {% if not status %}btn-primary{% else %}btn-outline-primary{% endif %} m-0">All</a>
+  {% for value, label in status_choices %}
+  <a href="{% url 'dashboard:bank_transactions' %}?status={{ value }}"
+     class="btn btn-sm {% if status == value %}btn-primary{% else %}btn-outline-primary{% endif %} m-0">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>Reference</th><th>Account</th><th>Status</th><th class="text-right">Amount</th><th>Attempts</th><th>Created</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for txn in page_obj.object_list %}
+        <tr>
+          <td><a href="{% url 'dashboard:bank_transaction_detail' txn.pk %}">{{ txn.reference }}</a></td>
+          <td><small>{{ txn.account_number_submitted }}</small></td>
+          <td>
+            {% if txn.status == 'success' %}<span class="badge badge-success">{{ txn.get_status_display }}</span>
+            {% elif txn.status == 'pending' %}<span class="badge badge-warning">{{ txn.get_status_display }}</span>
+            {% elif txn.status == 'cancelled' %}<span class="badge badge-secondary">{{ txn.get_status_display }}</span>
+            {% else %}<span class="badge badge-danger">{{ txn.get_status_display }}</span>{% endif %}
+          </td>
+          <td class="text-right">${{ txn.amount_dollars|floatformat:2 }}</td>
+          <td>{{ txn.attempt_count }}</td>
+          <td><small class="text-muted">{{ txn.created_at|date:"j M Y H:i" }}</small></td>
+          <td class="text-right">
+            <a href="{% url 'dashboard:bank_transaction_detail' txn.pk %}" class="btn btn-sm btn-outline-secondary my-0">Manage</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No simulated transactions yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'shared/pagination.html' %}
+{% endblock %}

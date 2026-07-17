@@ -4,6 +4,7 @@ from modeltranslation.admin import TranslationAdmin
 from .models import (
     Buyer, Category, City, Comment, Country, Courier, CourierRating, MenuCategory, Notification, Order, Product,
     ProductStatus, Rating, Seller,
+    VirtualBankAccount, SimulatedBankTransaction, GatewayEventLog,
 )
 
 admin.site.site_header = "TimorMart administration"
@@ -119,3 +120,27 @@ class CourierRatingAdmin(admin.ModelAdmin):
 
 admin.site.register(Country)
 admin.site.register(City)
+
+
+@admin.register(VirtualBankAccount)
+class VirtualBankAccountAdmin(admin.ModelAdmin):
+    list_display = ["account_number", "account_holder_name", "status", "forced_outcome", "balance_cents"]
+    list_filter = ["status", "forced_outcome"]
+    search_fields = ["account_number", "account_holder_name"]
+
+
+@admin.register(SimulatedBankTransaction)
+class SimulatedBankTransactionAdmin(admin.ModelAdmin):
+    list_display = ["reference", "status", "amount_cents", "source_account", "attempt_count", "created_at"]
+    list_filter = ["status"]
+    search_fields = ["reference", "account_number_submitted"]
+    list_select_related = ["source_account", "payment"]
+    date_hierarchy = "created_at"
+
+
+@admin.register(GatewayEventLog)
+class GatewayEventLogAdmin(admin.ModelAdmin):
+    list_display = ["transaction", "direction", "event_type", "status_code", "created_at"]
+    list_filter = ["direction", "event_type"]
+    search_fields = ["transaction__reference"]
+    date_hierarchy = "created_at"

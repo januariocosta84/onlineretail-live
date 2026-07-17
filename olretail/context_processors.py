@@ -1,4 +1,4 @@
-from .models import Category, Notification
+from .models import Cart, Category, Notification, Wishlist
 
 
 def categories(request):
@@ -27,3 +27,18 @@ def notifications(request):
         "unread_notification_count": qs.filter(is_read=False).count(),
         "recent_notifications": qs[:8],
     }
+
+
+def cart_count(request):
+    """Item count badge on the header Cart link — counts distinct line
+    items, not summed quantities, matching what the cart page itself lists."""
+    if not request.user.is_authenticated:
+        return {"cart_count": 0}
+    return {"cart_count": Cart.objects.filter(buyer=request.user).count()}
+
+
+def wishlist_count(request):
+    """Item count badge on the header Wishlist link."""
+    if not request.user.is_authenticated:
+        return {"wishlist_count": 0}
+    return {"wishlist_count": Wishlist.objects.filter(buyer=request.user).count()}

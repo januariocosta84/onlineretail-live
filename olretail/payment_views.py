@@ -1,3 +1,6 @@
+import hashlib
+import hmac
+import json
 import stripe
 import logging
 from decimal import Decimal
@@ -6,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -15,14 +19,16 @@ from django.db import transaction
 
 from olretail.models import (
     Product, RESTAURANT_CATEGORY_SLUG, Seller, SellerType, SellerVerificationStatus,
-    Buyer, City, Courier, CourierVerificationStatus,
+    Buyer, Courier, CourierVerificationStatus,
 )
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
     Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate,
-    PlatformSettings, Notification, Rating, CourierRating,
+    PlatformSettings, Notification, Rating, CourierRating, Wishlist,
 )
+from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
+from .payment_gateways import SimulatedBankGateway, _settle_simulated_transaction
 from .payment_forms import (
     CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
@@ -169,6 +175,85 @@ def clear_cart(request):
     messages.success(request, _('Cart cleared.'))
     return redirect('olretail:cart')
 
+
+# ──────────────────────────────────────────────────────────────────
+# WISHLIST VIEWS
+# ──────────────────────────────────────────────────────────────────
+
+@login_required
+def wishlist(request):
+    """Display saved-for-later products."""
+    items = Wishlist.objects.filter(buyer=request.user).select_related('product', 'product__category')
+    return render(request, 'olretail/wishlist.html', {'wishlist_items': items})
+
+
+@login_required
+@require_POST
+def wishlist_toggle(request, product_id):
+    """Add/remove a product from the wishlist in one action — mirrors
+    add_to_cart's AJAX-friendly JSON response so the same quick-toggle
+    button pattern works from the product grid."""
+    product = get_object_or_404(Product, id=product_id, status='approved')
+
+    item = Wishlist.objects.filter(buyer=request.user, product=product).first()
+    if item:
+        item.delete()
+        wishlisted = False
+    else:
+        Wishlist.objects.create(buyer=request.user, product=product)
+        wishlisted = True
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'ok',
+            'wishlisted': wishlisted,
+            'wishlist_count': Wishlist.objects.filter(buyer=request.user).count(),
+        })
+
+    if wishlisted:
+        messages.success(request, _('Saved to your wishlist.'))
+    else:
+        messages.success(request, _('Removed from your wishlist.'))
+    return redirect(request.META.get('HTTP_REFERER') or 'olretail:wishlist')
+
+
+@login_required
+@require_POST
+def wishlist_remove(request, item_id):
+    """Remove a single item from the wishlist page itself."""
+    item = get_object_or_404(Wishlist, id=item_id, buyer=request.user)
+    item.delete()
+    messages.success(request, _('Removed from your wishlist.'))
+    return redirect('olretail:wishlist')
+
+
+@login_required
+@require_POST
+def wishlist_move_to_cart(request, item_id):
+    """Move a wishlist item into the cart — same eligibility checks as
+    add_to_cart (approved, purchasable, in stock/available)."""
+    item = get_object_or_404(Wishlist, id=item_id, buyer=request.user)
+    product = item.product
+
+    if not product.cart_purchasable:
+        messages.error(request, _('This item can only be purchased by contacting the seller directly.'))
+        return redirect('olretail:wishlist')
+    if not product.available_for_purchase:
+        messages.error(request, _('This item is currently unavailable.'))
+        return redirect('olretail:wishlist')
+
+    cart_item, created = Cart.objects.get_or_create(buyer=request.user, product=product, defaults={'quantity': 1})
+    if not created:
+        cart_item.quantity += 1
+        if not product.is_restaurant_category and cart_item.quantity > product.quantity:
+            cart_item.quantity = product.quantity
+        cart_item.save()
+    item.delete()
+
+    messages.success(request, _('Moved to your cart.'))
+    return redirect('olretail:cart')
+
+
 # ──────────────────────────────────────────────────────────────────
 # CHECKOUT VIEWS
 # ──────────────────────────────────────────────────────────────────
@@ -233,19 +318,22 @@ def checkout(request):
     payment_fee = Decimal(str(settings.STRIPE_FEE_FIXED))
     estimated_total = cart_total + platform_fee + payment_fee
 
+    # Same rough approximation as the Stripe estimate above (exact total is
+    # computed server-side in _process_simulated_bank_checkout) — just for
+    # the live total preview when that radio is selected.
+    bank_payment_fee = Decimal(str(settings.SIMULATED_BANK_FEE_FIXED))
+    bank_estimated_total = cart_total + platform_fee + bank_payment_fee
+
     sellers_missing_instructions = {
         item.product.seller.get_name for item in cart_items
         if not item.product.seller.payment_instructions.strip()
     }
 
-    # Delivery fee is a flat amount per restaurant seller in the cart (see
-    # City.delivery_fee), charged once each — depends on which city the
-    # buyer picks in the form below, so the client recalculates it live
-    # rather than the server guessing a default city here.
-    restaurant_seller_count = len({
-        item.product.seller_id for item in cart_items if item.product.is_restaurant_category
-    })
-    city_delivery_fees = dict(City.objects.values_list('id', 'delivery_fee'))
+    # Flat $1 courier fee, charged once per seller in the cart (one courier
+    # pickup = one delivery) — same for every product category, not just
+    # restaurants, and no longer city-dependent (see settings.DELIVERY_FEE).
+    seller_count = len({item.product.seller_id for item in cart_items})
+    delivery_fee_per_seller = Decimal(str(settings.DELIVERY_FEE))
 
     context = {
         'form': form,
@@ -254,9 +342,12 @@ def checkout(request):
         'platform_fee': platform_fee,
         'payment_fee': payment_fee,
         'estimated_total': estimated_total,
-        'restaurant_seller_count': restaurant_seller_count,
-        'city_delivery_fees': {str(k): float(v) for k, v in city_delivery_fees.items()},
+        'bank_payment_fee': bank_payment_fee,
+        'bank_estimated_total': bank_estimated_total,
+        'seller_count': seller_count,
+        'delivery_fee_per_seller': delivery_fee_per_seller,
         'sellers_missing_instructions': sellers_missing_instructions,
+        'show_bank_simulator_test_accounts': settings.BANK_SIMULATOR_SHOW_TEST_ACCOUNTS,
     }
     return render(request, 'olretail/checkout.html', context)
 
@@ -280,19 +371,21 @@ def _process_checkout(request, form, cart_items):
             return redirect('olretail:checkout')
         return _process_bank_transfer_checkout(request, form, cart_items)
 
+    if payment_method == PaymentMethod.SIMULATED_BANK:
+        return _process_simulated_bank_checkout(request, form, cart_items)
+
     return _process_stripe_checkout(request, form, cart_items)
 
 
-def _last_restaurant_item_index_per_seller(cart_items):
-    """Map each restaurant seller present in the cart to the index of their
-    last line item — that's where the flat per-restaurant delivery fee gets
-    added, so ordering 3 items from one restaurant is charged once, not 3
-    times (same "remainder lands on the last item" pattern the Stripe
-    commission split below already uses)."""
+def _last_item_index_per_seller(cart_items):
+    """Map each seller present in the cart to the index of their last line
+    item — that's where the flat per-seller courier fee gets added, so
+    ordering 3 items from one seller is charged one delivery fee, not 3
+    (same "remainder lands on the last item" pattern the Stripe commission
+    split below already uses)."""
     last_index = {}
     for index, item in enumerate(cart_items):
-        if item.product.is_restaurant_category:
-            last_index[item.product.seller_id] = index
+        last_index[item.product.seller_id] = index
     return last_index
 
 
@@ -300,14 +393,14 @@ def _process_bank_transfer_checkout(request, form, cart_items):
     """Create one order per cart item, no platform commission — the buyer
     pays the seller directly and the platform never touches the money."""
     delivery_city = form.cleaned_data['delivery_city']
-    last_restaurant_item_index = _last_restaurant_item_index_per_seller(cart_items)
+    last_item_index = _last_item_index_per_seller(cart_items)
 
     with transaction.atomic():
         orders = []
         for index, item in enumerate(cart_items):
             delivery_fee = Decimal('0')
-            if last_restaurant_item_index.get(item.product.seller_id) == index:
-                delivery_fee = delivery_city.delivery_fee
+            if last_item_index.get(item.product.seller_id) == index:
+                delivery_fee = Decimal(str(settings.DELIVERY_FEE))
 
             order = Order.objects.create(
                 buyer=request.user,
@@ -350,9 +443,9 @@ def _process_stripe_checkout(request, form, cart_items):
     with transaction.atomic():
         cart_items = list(cart_items)
         delivery_city = form.cleaned_data['delivery_city']
-        last_restaurant_item_index = _last_restaurant_item_index_per_seller(cart_items)
-        delivery_fee_cents = int(delivery_city.delivery_fee * 100)
-        total_delivery_fee_cents = delivery_fee_cents * len(last_restaurant_item_index)
+        last_item_index = _last_item_index_per_seller(cart_items)
+        delivery_fee_cents = int(settings.DELIVERY_FEE * 100)
+        total_delivery_fee_cents = delivery_fee_cents * len(last_item_index)
 
         subtotal = sum(item.line_total for item in cart_items)
         subtotal_cents = int(subtotal * 100)
@@ -388,8 +481,8 @@ def _process_stripe_checkout(request, form, cart_items):
             item_commission = Decimal(item_commission_cents) / 100
             item_fee = Decimal(item_fee_cents) / 100
             item_delivery_fee = (
-                delivery_city.delivery_fee
-                if last_restaurant_item_index.get(item.product.seller_id) == index
+                Decimal(str(settings.DELIVERY_FEE))
+                if last_item_index.get(item.product.seller_id) == index
                 else Decimal('0')
             )
 
@@ -455,6 +548,97 @@ def _process_stripe_checkout(request, form, cart_items):
             return redirect('olretail:checkout')
 
 
+def _process_simulated_bank_checkout(request, form, cart_items):
+    """Same commission/fee-splitting shape as _process_stripe_checkout, but
+    using the simulated bank gateway's own fee schedule and creating a
+    Payment with no Stripe-specific fields set. Redirects straight to the
+    existing payment_confirmation page — there's no client-side card form
+    to show, the buyer just waits (or the simulated bank already rejected
+    it instantly, e.g. invalid account)."""
+    with transaction.atomic():
+        cart_items = list(cart_items)
+        delivery_city = form.cleaned_data['delivery_city']
+        last_item_index = _last_item_index_per_seller(cart_items)
+        delivery_fee_cents = int(settings.DELIVERY_FEE * 100)
+        total_delivery_fee_cents = delivery_fee_cents * len(last_item_index)
+
+        subtotal = sum(item.line_total for item in cart_items)
+        subtotal_cents = int(subtotal * 100)
+
+        commission_percent = Decimal(str(settings.COMMISSION_RATE))
+        commission_cents = int(subtotal_cents * float(commission_percent))
+
+        total_cents = subtotal_cents + commission_cents + total_delivery_fee_cents
+        bank_fee_percent = Decimal(str(settings.SIMULATED_BANK_FEE_PERCENT))
+        bank_fee_fixed_cents = int(settings.SIMULATED_BANK_FEE_FIXED * 100)
+        payment_fee_cents = int(total_cents * float(bank_fee_percent)) + bank_fee_fixed_cents
+
+        final_total_cents = total_cents + payment_fee_cents
+
+        orders = []
+        allocated_commission_cents = 0
+        allocated_fee_cents = 0
+        for index, item in enumerate(cart_items):
+            item_cents = int(item.line_total * 100)
+            is_last = index == len(cart_items) - 1
+            if is_last or subtotal_cents == 0:
+                item_commission_cents = commission_cents - allocated_commission_cents
+                item_fee_cents = payment_fee_cents - allocated_fee_cents
+            else:
+                item_commission_cents = (commission_cents * item_cents) // subtotal_cents
+                item_fee_cents = (payment_fee_cents * item_cents) // subtotal_cents
+                allocated_commission_cents += item_commission_cents
+                allocated_fee_cents += item_fee_cents
+
+            item_commission = Decimal(item_commission_cents) / 100
+            item_fee = Decimal(item_fee_cents) / 100
+            item_delivery_fee = (
+                Decimal(str(settings.DELIVERY_FEE))
+                if last_item_index.get(item.product.seller_id) == index
+                else Decimal('0')
+            )
+
+            order = Order.objects.create(
+                buyer=request.user,
+                seller=item.product.seller,
+                product=item.product,
+                quantity=item.quantity,
+                price_per_unit=item.product.price,
+                subtotal=item.line_total,
+                commission_amount=item_commission,
+                payment_fee=item_fee,
+                delivery_fee=item_delivery_fee,
+                total=item.line_total + item_commission + item_fee + item_delivery_fee,
+                status=OrderStatus.PENDING_PAYMENT,
+                payment_method=PaymentMethod.SIMULATED_BANK,
+                delivery_address=form.cleaned_data['delivery_address'],
+                delivery_city=delivery_city,
+                delivery_phone=form.cleaned_data['delivery_phone'],
+                buyer_notes=form.cleaned_data.get('buyer_notes', ''),
+            )
+            orders.append(order)
+
+        first_order = orders[0]
+
+        payment = Payment.objects.create(
+            gateway=PaymentMethod.SIMULATED_BANK,
+            amount_cents=final_total_cents,
+            status=PaymentStatus.PENDING,
+            payment_method_type='bank_transfer',
+        )
+        Order.objects.filter(id__in=[o.id for o in orders]).update(payment=payment)
+
+        SimulatedBankGateway().initiate(
+            payment,
+            account_number=form.cleaned_data['bank_account_number'],
+            amount_cents=final_total_cents,
+            order_reference=first_order.order_number,
+        )
+
+    messages.info(request, _('Your automated bank transfer is being processed.'))
+    return redirect('olretail:payment_confirmation', order_id=first_order.id)
+
+
 def _mark_food_order_received(order):
     """Auto-advance a restaurant order's food_status to Received the moment
     payment succeeds — the buyer's cart already left, there's nothing left
@@ -476,7 +660,10 @@ def _mark_payment_succeeded(payment, charge_id, source):
     (Stripe may confirm the card before the webhook arrives, or the webhook
     may never arrive in local dev)."""
     with transaction.atomic():
-        payment.stripe_charge_id = charge_id
+        if payment.gateway == PaymentMethod.STRIPE:
+            payment.stripe_charge_id = charge_id
+        elif not payment.gateway_reference:
+            payment.gateway_reference = charge_id
         payment.status = PaymentStatus.SUCCEEDED
         payment.succeeded_at = timezone.now()
         payment.webhook_received = True
@@ -528,15 +715,126 @@ def _mark_payment_succeeded(payment, charge_id, source):
     logger.info(f"Payment succeeded for order(s) {', '.join(order_numbers)} (via {source})")
 
 
+def _mark_payment_failed(payment, error_message, source):
+    """Shared by the Stripe webhook and the simulated-bank callback path —
+    the failure counterpart to _mark_payment_succeeded. Orders stay
+    PENDING_PAYMENT (retryable) rather than getting a dedicated failed
+    status, same as today's Stripe failure behavior — see
+    BANK_SIMULATOR_ARCHITECTURE.md for why."""
+    payment.status = PaymentStatus.FAILED
+    payment.error_message = error_message
+    payment.webhook_received = True
+    payment.webhook_received_at = timezone.now()
+    payment.save()
+    logger.warning(f"Payment failed for payment id={payment.id} (via {source}): {error_message}")
+
+
+def _process_bank_callback(txn, source):
+    """Single entrypoint for 'the simulated bank told us the final
+    outcome' — called by the settlement timer, the sweep command, the
+    inbound webhook, and the admin 'replay callback' action. txn.status is
+    already the resolved SimulatedOutcome by the time this runs; this only
+    translates that into the same Payment/Order effects the Stripe webhook
+    already applies. Idempotent: a payment already past PENDING/PROCESSING
+    is left alone, so replaying a callback or a late webhook after the
+    sweep command already settled it is harmless."""
+    payment = txn.payment
+    if payment.status not in (PaymentStatus.PENDING, PaymentStatus.PROCESSING):
+        return
+
+    if txn.status == SimulatedOutcome.PENDING:
+        return  # not settled yet — nothing to apply
+
+    if txn.status == SimulatedOutcome.SUCCESS:
+        _mark_payment_succeeded(payment, txn.reference, source=source)
+    else:
+        message = txn.error_message or f"Simulated bank: {txn.get_status_display()}"
+        _mark_payment_failed(payment, message, source=source)
+
+
+def _process_bank_refund(payment, amount_cents=None):
+    """Refund a settled simulated-bank payment: credits the virtual test
+    account back (SimulatedBankGateway.refund, the gateway-side effect) and
+    reverses every sibling order sharing this Payment (business-logic side
+    effect — commission, inventory, notifications), the mirror image of
+    _mark_payment_succeeded. Full refund only — amount_cents is accepted
+    for REST API shape parity with a real bank but a partial amount isn't
+    prorated across orders today."""
+    if payment.status != PaymentStatus.SUCCEEDED:
+        raise ValueError('Only a succeeded payment can be refunded.')
+
+    SimulatedBankGateway().refund(payment, amount_cents=amount_cents)
+
+    with transaction.atomic():
+        payment.status = PaymentStatus.REFUNDED
+        payment.save(update_fields=['status'])
+
+        for order in payment.orders.select_related('product__category', 'seller').all():
+            order.status = OrderStatus.REFUNDED
+            order.save(update_fields=['status'])
+
+            Transaction.objects.create(
+                order=order,
+                seller=order.seller,
+                amount_cents=-int(order.commission_amount * 100),
+                transaction_type=TransactionType.REFUND,
+                description=f"Refund on order {order.order_number}",
+            )
+
+            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+            seller_balance.available_balance -= int(order.commission_amount * 100)
+            seller_balance.total_earnings -= int(order.commission_amount * 100)
+            seller_balance.save()
+
+            if not order.product.is_restaurant_category:
+                product = Product.objects.select_for_update().get(pk=order.product_id)
+                product.quantity += order.quantity
+                product.save(update_fields=['quantity'])
+
+            _notify(
+                order.buyer,
+                _('Your payment for order %(order)s was refunded.') % {'order': order.order_number},
+                order=order,
+            )
+            _notify(
+                order.seller.user,
+                _('Order %(order)s was refunded to the buyer.') % {'order': order.order_number},
+                order=order,
+            )
+
+    logger.info(f"Refund processed for payment id={payment.id}")
+
+
+def _reconcile_simulated_bank_payment(payment):
+    """Reconcile-on-access counterpart to the Stripe branch below — the
+    reliable settlement path per BANK_SIMULATOR_ARCHITECTURE.md, since the
+    in-process threading.Timer is best-effort only."""
+    txn = getattr(payment, 'bank_simulation', None)
+    if txn is None:
+        return
+    if txn.status == SimulatedOutcome.PENDING:
+        if txn.settle_after and txn.settle_after <= timezone.now():
+            _settle_simulated_transaction(txn.id)
+        return
+    # Already terminal (e.g. an instantly-rejected invalid account/duplicate
+    # at initiate() time never went through settlement) — make sure the
+    # callback has actually been applied.
+    _process_bank_callback(txn, source='reconciliation')
+
+
 def _reconcile_payment(order):
-    """Fallback for when Stripe's webhook hasn't reached us yet (or won't,
-    e.g. localhost in dev): ask Stripe directly whether the PaymentIntent
+    """Fallback for when a gateway's webhook hasn't reached us yet (or
+    won't, e.g. localhost in dev): ask the gateway directly whether payment
     succeeded and, if so, apply the same effects the webhook would have."""
     payment = order.payment
     if payment is None:
         return
 
     if payment.status == PaymentStatus.SUCCEEDED:
+        return
+
+    if payment.gateway == PaymentMethod.SIMULATED_BANK:
+        _reconcile_simulated_bank_payment(payment)
         return
 
     try:
@@ -546,8 +844,7 @@ def _reconcile_payment(order):
         return
 
     if intent.status == 'succeeded':
-        charges = intent.get('charges', {}).get('data', [])
-        charge_id = charges[0]['id'] if charges else ''
+        charge_id = intent.latest_charge or ''
         _mark_payment_succeeded(payment, charge_id, source='reconciliation')
 
 
@@ -567,9 +864,14 @@ def payment_confirmation(request, order_id):
     else:
         related_orders = Order.objects.filter(pk=order.pk)
 
+    bank_transaction = None
+    if order.payment_id and order.payment.gateway == PaymentMethod.SIMULATED_BANK:
+        bank_transaction = getattr(order.payment, 'bank_simulation', None)
+
     context = {
         'order': order,
         'related_orders': related_orders,
+        'bank_transaction': bank_transaction,
     }
     return render(request, 'olretail/payment_confirmation.html', context)
 
@@ -815,7 +1117,11 @@ def cancel_order(request, order_id):
         messages.error(request, _('This order can no longer be cancelled — it has already been paid or is past that stage.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
-    if order.payment_id and order.payment.stripe_payment_intent_id:
+    if order.payment_id and order.payment.gateway == PaymentMethod.SIMULATED_BANK:
+        SimulatedBankGateway().cancel(order.payment)
+        order.payment.status = PaymentStatus.CANCELLED
+        order.payment.save(update_fields=['status'])
+    elif order.payment_id and order.payment.stripe_payment_intent_id:
         try:
             stripe.PaymentIntent.cancel(order.payment.stripe_payment_intent_id)
         except stripe.error.StripeError as e:
@@ -895,7 +1201,10 @@ def rate_order(request, order_id):
         messages.error(request, _('Please choose a rating from 1 to 5 stars.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
-    Rating.objects.create(buyer=request.user, product=order.product, order=order, score=score)
+    review_text = request.POST.get('review_text', '').strip()[:2000]
+    Rating.objects.create(
+        buyer=request.user, product=order.product, order=order, score=score, review_text=review_text,
+    )
     messages.success(request, _('Thanks for your rating!'))
     return redirect('olretail:order_detail', order_id=order.id)
 
@@ -1222,6 +1531,7 @@ def add_delivery_update(request, order_id):
 # WEBHOOK (Stripe)
 # ──────────────────────────────────────────────────────────────────
 
+@csrf_exempt
 @require_POST
 def stripe_webhook(request):
     """Handle Stripe webhook events."""
@@ -1246,8 +1556,7 @@ def stripe_webhook(request):
         try:
             payment = Payment.objects.get(stripe_payment_intent_id=payment_intent['id'])
             if payment.status != PaymentStatus.SUCCEEDED:
-                charges = payment_intent.get('charges', {}).get('data', [])
-                charge_id = charges[0]['id'] if charges else ''
+                charge_id = payment_intent.latest_charge or ''
                 _mark_payment_succeeded(payment, charge_id, source='webhook')
 
         except Payment.DoesNotExist:
@@ -1259,18 +1568,69 @@ def stripe_webhook(request):
 
         try:
             payment = Payment.objects.get(stripe_payment_intent_id=payment_intent['id'])
-
-            error_msg = payment_intent.get('last_payment_error', {}).get('message', 'Unknown error')
-            payment.status = PaymentStatus.FAILED
-            payment.error_message = error_msg
-            payment.webhook_received = True
-            payment.webhook_received_at = timezone.now()
-            payment.save()
-
-            logger.warning(f"Payment failed for intent {payment_intent['id']}: {error_msg}")
+            last_error = payment_intent.last_payment_error
+            error_msg = last_error.message if last_error else 'Unknown error'
+            _mark_payment_failed(payment, error_msg, source='webhook')
 
         except Payment.DoesNotExist:
             logger.error(f"Stripe webhook: payment not found for intent {payment_intent['id']}")
+
+    return JsonResponse({'status': 'success'})
+
+
+# ──────────────────────────────────────────────────────────────────
+# WEBHOOK (Simulated Bank)
+# ──────────────────────────────────────────────────────────────────
+
+def _verify_bank_webhook_signature(payload_bytes, signature_header):
+    """HMAC-SHA256 over the raw body, hex digest — same role as
+    stripe.Webhook.construct_event's signature check, hand-rolled since no
+    SDK is involved on this side."""
+    if not signature_header:
+        return False
+    expected = hmac.new(
+        settings.SIMULATED_BANK_WEBHOOK_SECRET.encode(), payload_bytes, hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(expected, signature_header)
+
+
+@csrf_exempt
+@require_POST
+def simulated_bank_webhook(request):
+    """Inbound callback from the simulated bank. In this dev/test tool the
+    'bank' is really our own settlement timer/sweep command calling
+    _process_bank_callback directly rather than posting HTTP requests to
+    itself — but this endpoint is fully functional, and is what a real bank
+    integration would point at instead (see BANK_SIMULATOR_ARCHITECTURE.md)."""
+    payload = request.body
+    signature = request.META.get('HTTP_X_SIMBANK_SIGNATURE', '')
+
+    if not _verify_bank_webhook_signature(payload, signature):
+        logger.error("Simulated bank webhook: invalid signature")
+        return JsonResponse({'error': 'Invalid signature'}, status=400)
+
+    try:
+        data = json.loads(payload)
+        reference = data['reference']
+    except (ValueError, KeyError):
+        logger.error("Simulated bank webhook: invalid payload")
+        return JsonResponse({'error': 'Invalid payload'}, status=400)
+
+    try:
+        txn = SimulatedBankTransaction.objects.get(reference=reference)
+    except SimulatedBankTransaction.DoesNotExist:
+        logger.error(f"Simulated bank webhook: transaction not found for {reference}")
+        return JsonResponse({'error': 'Transaction not found'}, status=404)
+
+    GatewayEventLog.objects.create(
+        transaction=txn, direction='inbound', event_type='webhook',
+        request_payload=data, status_code=200,
+    )
+
+    if txn.status == SimulatedOutcome.PENDING:
+        _settle_simulated_transaction(txn.id)
+    else:
+        _process_bank_callback(txn, source='webhook')
 
     return JsonResponse({'status': 'success'})
 

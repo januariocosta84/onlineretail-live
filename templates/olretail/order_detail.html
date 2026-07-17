@@ -456,12 +456,15 @@
           </div>
           <div class="card-body">
             {% if rating %}
-            <p class="mb-0">
+            <p class="mb-1">
               {% for i in "12345" %}
                 <i class="fas fa-star {% if forloop.counter <= rating.score %}text-warning{% else %}text-muted{% endif %}"></i>
               {% endfor %}
               <span class="text-muted small ml-1">{% trans "Thanks for rating this purchase." %}</span>
             </p>
+            {% if rating.review_text %}
+            <p class="mb-0 text-muted small font-italic">“{{ rating.review_text }}”</p>
+            {% endif %}
             {% else %}
             <form method="post" action="{% url 'olretail:rate_order' order.id %}">
               {% csrf_token %}
@@ -471,6 +474,11 @@
                 <label for="rate-star{{ i }}" title="{{ i }}"><i class="fas fa-star"></i></label>
                 {% endfor %}
               </fieldset>
+              <div class="form-group mt-2 mb-0">
+                <label for="rate-review-text" class="small text-muted mb-1">{% trans "Write a review (optional)" %}</label>
+                <textarea id="rate-review-text" name="review_text" class="form-control form-control-sm" rows="3"
+                          maxlength="2000" placeholder="{% trans 'What did you think of this product?' %}"></textarea>
+              </div>
               <button type="submit" class="btn btn-outline-primary btn-sm mt-2">{% trans "Submit rating" %}</button>
             </form>
             {% endif %}

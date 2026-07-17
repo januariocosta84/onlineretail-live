@@ -10,7 +10,16 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Loads variables from a local .env file (git-ignored — see .gitignore) into
+# the process environment. Harmless if the file doesn't exist (e.g. in
+# production, where real env vars are set directly by the host) — existing
+# environment variables always take precedence over .env, so this never
+# overrides real deployment config.
+load_dotenv(BASE_DIR / ".env")
 
 TEMPLATE_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
@@ -84,6 +93,8 @@ TEMPLATES = [
                 "olretail.context_processors.categories",
                 "olretail.context_processors.roles",
                 "olretail.context_processors.notifications",
+                "olretail.context_processors.cart_count",
+                "olretail.context_processors.wishlist_count",
             ],
         },
     },
@@ -221,6 +232,31 @@ STRIPE_CURRENCY = os.environ.get("STRIPE_CURRENCY", "USD")
 COMMISSION_RATE = 0.15  # 15% platform commission
 STRIPE_FEE_PERCENT = 0.029  # 2.9% Stripe processing fee
 STRIPE_FEE_FIXED = 0.30  # $0.30 fixed fee per transaction
+
+# Flat courier/delivery fee, charged once per seller in the cart (one
+# courier pickup = one delivery), regardless of product category.
+DELIVERY_FEE = float(os.environ.get("DELIVERY_FEE", "1.00"))
+
+# ──────────────────────────────────────────────────────────────────
+# SIMULATED BANK GATEWAY (dev/test automated bank transfer — see
+# olretail/payment_gateways.py). Same commission rate as Stripe
+# (COMMISSION_RATE above), but its own processing-fee schedule since a real
+# bank transfer typically costs less than a card network.
+# ──────────────────────────────────────────────────────────────────
+SIMULATED_BANK_FEE_PERCENT = float(os.environ.get("SIMULATED_BANK_FEE_PERCENT", "0.015"))
+SIMULATED_BANK_FEE_FIXED = float(os.environ.get("SIMULATED_BANK_FEE_FIXED", "0.10"))
+# How long a simulated transaction stays "pending" before auto-settling.
+SIMULATED_BANK_SETTLE_DELAY_SECONDS = int(os.environ.get("SIMULATED_BANK_SETTLE_DELAY_SECONDS", "8"))
+# A transaction with no scheduled settlement (the "always timeout" test
+# account) is flagged TIMEOUT once it's sat PENDING longer than this.
+SIMULATED_BANK_TIMEOUT_SECONDS = int(os.environ.get("SIMULATED_BANK_TIMEOUT_SECONDS", "120"))
+SIMULATED_BANK_WEBHOOK_SECRET = os.environ.get("SIMULATED_BANK_WEBHOOK_SECRET", "whsec_sim_test_demo")
+# Static API key for the developer REST API (olretail/banking_api.py) — this
+# app has no per-seller/buyer API-key infra and is single-merchant, so one
+# shared key (like STRIPE_SECRET_KEY) is proportionate.
+BANK_SIMULATOR_API_KEY = os.environ.get("BANK_SIMULATOR_API_KEY", "sk_sim_test_demo")
+# Gates the "here are some test account numbers" hint box on checkout.
+BANK_SIMULATOR_SHOW_TEST_ACCOUNTS = DEBUG
 
 MIN_PAYOUT_AMOUNT = 50000  # $500 minimum payout (in cents)
 PAYOUT_SCHEDULE = "monthly"  # 'daily', 'weekly', 'monthly'
