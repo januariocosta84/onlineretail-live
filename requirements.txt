@@ -13,3 +13,4 @@ stripe>=5.4
 # Optional: PostgreSQL in production (uncomment when DATABASE_URL is used)
 # psycopg[binary]>=3.1
 # dj-database-url>=2.1
+urllib3>=2.6.3 # not directly required, pinned by Snyk to avoid a vulnerability
