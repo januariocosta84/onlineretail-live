@@ -16,7 +16,13 @@ services:
     runtime: python
     plan: free
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "python manage.py migrate --noinput && gunicorn TLoretail.wsgi --log-file -"
+    # createsuperuser --noinput reads DJANGO_SUPERUSER_USERNAME/_EMAIL/_PASSWORD
+    # (Django's own built-in support, no custom code needed). The `|| true`
+    # is scoped to just that one step (parens matter — without them, a real
+    # migrate failure would get masked too and gunicorn would start against
+    # an unmigrated DB) — it only exists to no-op once the account already
+    # exists, since the free tier has no shell to run it manually.
+    startCommand: "python manage.py migrate --noinput && (python manage.py createsuperuser --noinput || true) && gunicorn TLoretail.wsgi --log-file -"
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
@@ -37,6 +43,15 @@ services:
           property: connectionString
       # Secrets — set these in the Render dashboard after the blueprint
       # creates the service (sync: false means "don't store in this file").
+      # Bootstraps your admin login (see startCommand above) — set these
+      # once, then feel free to remove DJANGO_SUPERUSER_PASSWORD afterward
+      # so it's not sitting in the dashboard indefinitely.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_PUBLIC_KEY
