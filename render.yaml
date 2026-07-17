@@ -1,0 +1,61 @@
+
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Lets Render provision the web service + database together from this one
+# file (Dashboard -> New -> Blueprint -> point at this repo), instead of
+# clicking through every setting by hand.
+#
+# NOTE on the free tier: the free Postgres database expires after 90 days
+# and the free web service sleeps after 15 minutes of inactivity (the first
+# request after sleeping takes ~30-60s to wake up). Fine for a soft-launch
+# trial; upgrade both to a paid plan before a real public launch.
+
+services:
+  - type: web
+    name: timormart
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "python manage.py migrate --noinput && gunicorn TLoretail.wsgi --log-file -"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SSL_REDIRECT
+        value: "true"
+      # Render assigns the real hostname (<service-name>.onrender.com) at
+      # provisioning time — update these two after the first deploy, or set
+      # them now if you already know your custom domain.
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: timormart-db
+          property: connectionString
+      # Secrets — set these in the Render dashboard after the blueprint
+      # creates the service (sync: false means "don't store in this file").
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLIC_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: SIMULATED_BANK_WEBHOOK_SECRET
+        sync: false
+      - key: BANK_SIMULATOR_API_KEY
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+
+databases:
+  - name: timormart-db
+    plan: free

@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 import os
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,6 +66,15 @@ INSTALLED_APPS = [
     "dashboard",
 ]
 
+# Cloudinary media storage (product images, delivery proofs) — only enabled
+# when CLOUDINARY_URL is set (e.g. in production). Locally, uploads just go
+# to the filesystem as before. cloudinary_storage must precede staticfiles;
+# cloudinary itself just needs to be present somewhere in the list.
+USE_CLOUDINARY = bool(os.environ.get("CLOUDINARY_URL"))
+if USE_CLOUDINARY:
+    INSTALLED_APPS.insert(INSTALLED_APPS.index("django.contrib.staticfiles"), "cloudinary_storage")
+    INSTALLED_APPS.append("cloudinary")
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -102,13 +112,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "TLoretail.wsgi.application"
 
-# Database
-
+# Database — Postgres in production via DATABASE_URL (set automatically by
+# most hosts, including Render, when a database is attached); falls back to
+# the local sqlite3 file when it's unset, so local dev is unchanged.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 # Keep legacy AutoField primary keys (project predates BigAutoField default).
@@ -164,6 +175,8 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
 }
+if USE_CLOUDINARY:
+    STORAGES["default"] = {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"}
 WHITENOISE_USE_FINDERS = True  # serve from static/ even before collectstatic
 
 MEDIA_URL = "/media/"

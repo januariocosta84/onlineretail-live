@@ -9,8 +9,15 @@ python-dotenv>=1.0
 stripe>=5.4
 
 # Production server
-#gunicorn>=22.0
+gunicorn>=22.0
 
-# Optional: PostgreSQL in production (uncomment when DATABASE_URL is used)
-# psycopg[binary]>=3.1
-# dj-database-url>=2.1
+# PostgreSQL in production, driven by the DATABASE_URL env var — falls
+# back to sqlite3 locally when it's unset (see TLoretail/settings.py).
+psycopg[binary]>=3.1
+dj-database-url>=2.1
+
+# Media storage (product images, delivery proofs) in production — the
+# host's disk is ephemeral, so uploads need to live somewhere persistent.
+# Driven by the CLOUDINARY_URL env var; falls back to local disk storage
+# when it's unset.
+django-cloudinary-storage>=0.3
