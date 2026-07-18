@@ -1,0 +1,2472 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-18 10:36+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Account type"
+msgstr "Tipo de conta"
+
+msgid "Seller type"
+msgstr "Tipo de vendedor"
+
+msgid "Company name"
+msgstr "Nome da empresa"
+
+msgid "Acme Trading Lda"
+msgstr "Acme Trading Lda"
+
+msgid "TIN (Tax Identification Number)"
+msgstr "NIF (Número de Identificação Fiscal)"
+
+msgid "e.g. 123456789"
+msgstr "ex.: 123456789"
+
+msgid "Company address"
+msgstr "Morada da empresa"
+
+msgid "Street, City, Region"
+msgstr "Rua, Cidade, Região"
+
+msgid "Bank account"
+msgstr "Conta bancária"
+
+msgid "Bank name, account number, account holder"
+msgstr "Nome do banco, número de conta, titular"
+
+msgid "First name"
+msgstr "Primeiro nome"
+
+msgid "John"
+msgstr "João"
+
+msgid "Last name"
+msgstr "Apelido"
+
+msgid "Doe"
+msgstr "Silva"
+
+msgid "Email address"
+msgstr "Endereço de email"
+
+msgid "you@example.com"
+msgstr "voce@exemplo.com"
+
+msgid "Phone number"
+msgstr "Número de telefone"
+
+msgid "7012345 or +670 7012345"
+msgstr "7012345 ou +670 7012345"
+
+msgid "Address"
+msgstr "Morada"
+
+msgid "Enter a strong password"
+msgstr "Introduza uma palavra-passe forte"
+
+msgid "Confirm password"
+msgstr "Confirmar palavra-passe"
+
+msgid "choose_a_username"
+msgstr "escolha_um_nome_utilizador"
+
+msgid "An account with this email address already exists."
+msgstr "Já existe uma conta com este endereço de email."
+
+msgid "Company name is required for a company seller account."
+msgstr "O nome da empresa é obrigatório para uma conta de vendedor empresa."
+
+msgid "TIN is required for a company seller account."
+msgstr "O NIF é obrigatório para uma conta de vendedor empresa."
+
+msgid "Company address is required for a company seller account."
+msgstr "A morada da empresa é obrigatória para uma conta de vendedor empresa."
+
+msgid "Bank account is required for a company seller account."
+msgstr "A conta bancária é obrigatória para uma conta de vendedor empresa."
+
+msgid "Too many attempts. Please wait a few minutes and try again."
+msgstr "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
+
+msgid "Buyer — browse products, contact sellers and post comments"
+msgstr "Comprador — ver produtos, contactar vendedores e comentar"
+
+msgid "Seller — list and manage products for sale"
+msgstr "Vendedor — listar e gerir produtos para venda"
+
+msgid "Buyer & Seller — everything in one account"
+msgstr "Comprador & Vendedor — tudo numa só conta"
+
+msgid "Password changed"
+msgstr "Palavra-passe alterada"
+
+msgid ""
+"Your password has been set. You can now sign in with your new password."
+msgstr ""
+"A sua palavra-passe foi definida. Já pode iniciar sessão com a nova palavra-"
+"passe."
+
+msgid "Sign in"
+msgstr "Iniciar sessão"
+
+msgid "Choose a new password"
+msgstr "Escolha uma nova palavra-passe"
+
+msgid "Set new password"
+msgstr "Definir nova palavra-passe"
+
+msgid ""
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr ""
+"Este link de redefinição de palavra-passe é inválido ou expirou. Por favor "
+"solicite um novo."
+
+msgid "Request a new link"
+msgstr "Solicitar novo link"
+
+msgid "Reset link sent"
+msgstr "Link de redefinição enviado"
+
+msgid "Check your email"
+msgstr "Verifique o seu email"
+
+msgid ""
+"If an account exists with the address you entered, we have emailed a "
+"password reset link."
+msgstr ""
+"Se existir uma conta com o endereço introduzido, enviámos um link de "
+"redefinição de palavra-passe por email."
+
+msgid "Back to sign in"
+msgstr "Voltar ao início de sessão"
+
+msgid ""
+"You are receiving this email because you requested a password reset for your"
+" TimorMart account."
+msgstr ""
+"Está a receber este email porque solicitou a redefinição da palavra-passe da"
+" sua conta TimorMart."
+
+msgid "Please go to the following page and choose a new password:"
+msgstr "Por favor aceda à página seguinte e escolha uma nova palavra-passe:"
+
+msgid "Your username, in case you have forgotten:"
+msgstr "O seu nome de utilizador, caso se tenha esquecido:"
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr "Se não solicitou isto, pode ignorar este email com segurança."
+
+msgid "Reset password"
+msgstr "Redefinir palavra-passe"
+
+msgid "Reset your password"
+msgstr "Redefina a sua palavra-passe"
+
+msgid ""
+"Enter the email address you registered with and we will send you a link to "
+"set a new password."
+msgstr ""
+"Introduza o endereço de email com que se registou e enviaremos um link para "
+"definir uma nova palavra-passe."
+
+msgid "Send reset link"
+msgstr "Enviar link de redefinição"
+
+msgid "Sign up"
+msgstr "Registar"
+
+msgid "Create an account"
+msgstr "Criar uma conta"
+
+msgid "Already have an account?"
+msgstr "Já tem uma conta?"
+
+#, python-format
+msgid "Welcome, %(name)s! Your account is ready — happy shopping."
+msgstr "Bem-vindo, %(name)s! A sua conta está pronta — boas compras."
+
+#, python-format
+msgid "Welcome, %(name)s! Your seller account is ready."
+msgstr "Bem-vindo, %(name)s! A sua conta de vendedor está pronta."
+
+msgid "Please correct the errors below."
+msgstr "Por favor corrija os erros abaixo."
+
+#, python-format
+msgid "Welcome back, %(name)s!"
+msgstr "Bem-vindo de volta, %(name)s!"
+
+msgid "Invalid username or password."
+msgstr "Nome de utilizador ou palavra-passe inválidos."
+
+msgid "You have been logged out."
+msgstr "Terminou a sessão."
+
+msgid ""
+"Administrator accounts manage the platform and cannot buy or sell products."
+msgstr ""
+"As contas de administrador gerem a plataforma e não podem comprar ou vender "
+"produtos."
+
+msgid "Your account already has the buyer role."
+msgstr "A sua conta já tem o papel de comprador."
+
+msgid ""
+"Your account is now Buyer & Seller — you can contact sellers and post "
+"comments."
+msgstr ""
+"A sua conta é agora Comprador & Vendedor — pode contactar vendedores e "
+"comentar."
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Closed"
+msgstr "Fechado"
+
+msgid "Frozen"
+msgstr "Congelado"
+
+msgid "Automatic (balance-based)"
+msgstr "Automático (baseado no saldo)"
+
+msgid "Always Succeed"
+msgstr "Sempre com Sucesso"
+
+msgid "Always Fail"
+msgstr "Sempre Falha"
+
+msgid "Always Timeout"
+msgstr "Sempre Timeout"
+
+msgid "Always Insufficient Funds"
+msgstr "Sempre Saldo Insuficiente"
+
+msgid "Always Flag as Duplicate"
+msgstr "Sempre Marcar como Duplicado"
+
+msgid "Pending"
+msgstr "Pendente"
+
+msgid "Success"
+msgstr "Sucesso"
+
+msgid "Failed"
+msgstr "Falhou"
+
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgid "Timeout"
+msgstr "Timeout"
+
+msgid "Insufficient Funds"
+msgstr "Saldo Insuficiente"
+
+msgid "Invalid / Closed Account"
+msgstr "Conta Inválida / Fechada"
+
+msgid "Duplicate Transaction"
+msgstr "Transação Duplicada"
+
+msgid "Outbound"
+msgstr "Saída"
+
+msgid "Inbound"
+msgstr "Entrada"
+
+msgid "You need a seller account to access that page."
+msgstr "Precisa de uma conta de vendedor para aceder a esta página."
+
+msgid "Administrator accounts manage the platform and cannot act as couriers."
+msgstr ""
+"As contas de administrador gerem a plataforma e não podem atuar como "
+"estafetas."
+
+msgid "You need a courier account to access that page."
+msgstr "Precisa de uma conta de estafeta para aceder a esta página."
+
+msgid "Product name"
+msgstr "Nome do produto"
+
+msgid "Price"
+msgstr "Preço"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Country"
+msgstr "País"
+
+msgid "City"
+msgstr "Cidade"
+
+msgid "Quantity"
+msgstr "Quantidade"
+
+msgid "Condition"
+msgstr "Condição"
+
+msgid "Size"
+msgstr "Tamanho"
+
+msgid "Pieces per unit"
+msgstr "Peças por unidade"
+
+msgid "Units per box"
+msgstr "Unidades por caixa"
+
+msgid "Menu section"
+msgstr "Secção do menu"
+
+msgid "Available"
+msgstr "Disponível"
+
+msgid "Prep time (minutes)"
+msgstr "Tempo de preparação (minutos)"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Main image"
+msgstr "Imagem principal"
+
+msgid "Extra image 1"
+msgstr "Imagem extra 1"
+
+msgid "Extra image 2"
+msgstr "Imagem extra 2"
+
+msgid "Set to 0 when the product is sold out."
+msgstr "Defina como 0 quando o produto se esgotar."
+
+msgid "Optional — e.g. L, 42, 500ml"
+msgstr "Opcional — ex.: L, 42, 500ml"
+
+msgid "Optional — e.g. 12 pens in a pack"
+msgstr "Opcional — ex.: 12 canetas num pacote"
+
+msgid "Optional — e.g. 24 packs in a box"
+msgstr "Opcional — ex.: 24 pacotes numa caixa"
+
+msgid "Which section of your menu this item belongs to"
+msgstr "A que secção do seu menu este item pertence"
+
+msgid "Optional — e.g. 20"
+msgstr "Opcional — ex.: 20"
+
+msgid "Select category"
+msgstr "Selecione a categoria"
+
+msgid "Select country"
+msgstr "Selecione o país"
+
+msgid "Select city"
+msgstr "Selecione a cidade"
+
+msgid "Select menu section"
+msgstr "Selecione a secção do menu"
+
+msgid "Price must be greater than zero."
+msgstr "O preço deve ser superior a zero."
+
+msgid "Section name"
+msgstr "Nome da secção"
+
+msgid "Display order"
+msgstr "Ordem de exibição"
+
+msgid "e.g. Breakfast"
+msgstr "ex.: Pequeno-almoço"
+
+msgid "Lower numbers show first on the menu."
+msgstr "Números mais baixos aparecem primeiro no menu."
+
+msgid "Your name"
+msgstr "O seu nome"
+
+msgid "Comment"
+msgstr "Comentário"
+
+#, python-format
+msgid " and %(count)d more"
+msgstr " e mais %(count)d"
+
+#, python-format
+msgid ""
+"You still have items in your cart: %(items)s. Complete your purchase before "
+"they sell out!"
+msgstr ""
+"Ainda tem artigos no seu carrinho: %(items)s. Complete a sua compra antes "
+"que se esgotem!"
+
+msgid "New"
+msgstr "Novo"
+
+msgid "Second Hand"
+msgstr "Em Segunda Mão"
+
+msgid "Pending Verification"
+msgstr "Verificação Pendente"
+
+msgid "Verified"
+msgstr "Verificado"
+
+msgid "Rejected"
+msgstr "Rejeitado"
+
+msgid ""
+"Cities this courier delivers to. Leave empty if not yet configured (order "
+"dropdowns will show all couriers until this is set)."
+msgstr ""
+"Cidades para onde este estafeta entrega. Deixe vazio se ainda não "
+"configurado (as listas de encomendas mostrarão todos os estafetas até isto "
+"ser definido)."
+
+msgid "Individual"
+msgstr "Individual"
+
+msgid "Company"
+msgstr "Empresa"
+
+msgid "Restaurant"
+msgstr "Restaurante"
+
+msgid ""
+"Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
+" account number, account holder name)."
+msgstr ""
+"Dados bancários ou de dinheiro móvel que os compradores usam para lhe pagar "
+"diretamente (ex.: nome do banco, número de conta, titular)."
+
+msgid "Pending approval"
+msgstr "Aprovação pendente"
+
+msgid "Published"
+msgstr "Publicado"
+
+msgid "Changes requested"
+msgstr "Alterações solicitadas"
+
+msgid "Suspended"
+msgstr "Suspenso"
+
+msgid "e.g. L, 42, 500ml"
+msgstr "ex.: L, 42, 500ml"
+
+msgid "e.g. 12 pens in a pack"
+msgstr "ex.: 12 canetas num pacote"
+
+msgid "e.g. 24 packs in a box"
+msgstr "ex.: 24 pacotes numa caixa"
+
+msgid "e.g. 20"
+msgstr "ex.: 20"
+
+msgid "Positive"
+msgstr "Positivo"
+
+msgid "Neutral"
+msgstr "Neutro"
+
+msgid "Negative"
+msgstr "Negativo"
+
+msgid "Payment Method"
+msgstr "Método de Pagamento"
+
+msgid "Delivery Address"
+msgstr "Morada de Entrega"
+
+msgid "Where should we deliver your order?"
+msgstr "Onde devemos entregar a sua encomenda?"
+
+msgid "Delivery City"
+msgstr "Cidade de Entrega"
+
+msgid "Couriers are matched to this city"
+msgstr "Os estafetas são associados a esta cidade"
+
+msgid "Delivery Phone"
+msgstr "Telefone de Entrega"
+
+msgid "Seller will contact you on this number"
+msgstr "O vendedor irá contactá-lo através deste número"
+
+msgid "Any special instructions? (Optional)"
+msgstr "Alguma instrução especial? (Opcional)"
+
+msgid "Special Instructions"
+msgstr "Instruções Especiais"
+
+msgid "E.g., 'Please knock loudly' or 'Leave at door'"
+msgstr "Ex.: 'Bata alto na porta' ou 'Deixar à porta'"
+
+msgid "e.g. SIM-0001-SUCCESS"
+msgstr "ex.: SIM-0001-SUCCESS"
+
+msgid "Bank Account Number"
+msgstr "Número de Conta Bancária"
+
+msgid "The account you're paying from."
+msgstr "A conta a partir da qual está a pagar."
+
+msgid "Enter the account number you're paying from."
+msgstr "Introduza o número da conta a partir da qual está a pagar."
+
+msgid "Describe what happened..."
+msgstr "Descreva o que aconteceu..."
+
+msgid "Upload photos or describe the issue"
+msgstr "Carregue fotografias ou descreva o problema"
+
+msgid "Reason for dispute"
+msgstr "Motivo do litígio"
+
+msgid "Evidence (photos, messages, etc.)"
+msgstr "Provas (fotografias, mensagens, etc.)"
+
+msgid "Provide your response with evidence..."
+msgstr "Forneça a sua resposta com provas..."
+
+msgid "Your Response"
+msgstr "A sua Resposta"
+
+msgid "You have 3 days to respond. Explain your side and provide evidence."
+msgstr "Tem 3 dias para responder. Explique o seu lado e forneça provas."
+
+msgid "e.g. Timor Post, local courier name"
+msgstr "ex.: Timor Post, nome do estafeta local"
+
+msgid "Courier / Delivery Service"
+msgstr "Estafeta / Serviço de Entrega"
+
+msgid "Tracking number, if any"
+msgstr "Número de rastreio, se aplicável"
+
+msgid "Tracking Number"
+msgstr "Número de Rastreio"
+
+msgid "No courier account (self-delivery / informal courier)"
+msgstr "Sem conta de estafeta (entrega própria / estafeta informal)"
+
+msgid "Assign Courier"
+msgstr "Atribuir Estafeta"
+
+#, python-format
+msgid "%(name)s (★ %(avg).1f, %(count)d rating(s))"
+msgstr "%(name)s (★ %(avg).1f, %(count)d avaliação(ões))"
+
+#, python-format
+msgid "%(name)s (no ratings yet)"
+msgstr "%(name)s (ainda sem avaliações)"
+
+msgid "Delivery Photo"
+msgstr "Fotografia de Entrega"
+
+msgid "A delivery photo is required to confirm delivery."
+msgstr "É necessária uma fotografia de entrega para confirmar a entrega."
+
+msgid "ID Document Photo"
+msgstr "Fotografia do Documento de Identificação"
+
+msgid "Please upload a photo of your ID document."
+msgstr "Por favor carregue uma fotografia do seu documento de identificação."
+
+msgid "e.g. 'Left Dili warehouse, arriving Baucau tomorrow'"
+msgstr "ex.: 'Saiu do armazém de Díli, chega a Baucau amanhã'"
+
+msgid "Status update"
+msgstr "Atualização de estado"
+
+msgid "Choose a plan"
+msgstr "Escolha um plano"
+
+msgid "e.g. Bank transfer ref #123, paid 14 Jul 2026"
+msgstr "ex.: Ref. transferência bancária #123, pago em 14 Jul 2026"
+
+msgid "Payment reference"
+msgstr "Referência de pagamento"
+
+msgid "Tell the admin how and when you paid, so they can confirm it."
+msgstr "Diga ao administrador como e quando pagou, para que possa confirmar."
+
+msgid "e.g. BNU Timor-Leste, Account: 1234567, Name: Jose Costa"
+msgstr "ex.: BNU Timor-Leste, Conta: 1234567, Nome: Jose Costa"
+
+msgid "Payment details for buyers"
+msgstr "Dados de pagamento para compradores"
+
+msgid "Business Registration Document"
+msgstr "Documento de Registo Comercial"
+
+msgid "Please upload a photo of your business registration document."
+msgstr ""
+"Por favor carregue uma fotografia do seu documento de registo comercial."
+
+msgid "No active account found for that account number."
+msgstr "Nenhuma conta ativa encontrada para esse número de conta."
+
+msgid "A matching transaction was already submitted recently."
+msgstr "Uma transação correspondente já foi submetida recentemente."
+
+msgid "No transaction found."
+msgstr "Nenhuma transação encontrada."
+
+msgid "No transaction to retry."
+msgstr "Nenhuma transação para repetir."
+
+msgid "Pending Payment"
+msgstr "Pagamento Pendente"
+
+msgid "Payment Reported — Awaiting Confirmation"
+msgstr "Pagamento Reportado — A Aguardar Confirmação"
+
+msgid "Payment Received"
+msgstr "Pagamento Recebido"
+
+msgid "Processing"
+msgstr "Em Processamento"
+
+msgid "Shipped"
+msgstr "Enviado"
+
+msgid "Delivered"
+msgstr "Entregue"
+
+msgid "Refunded"
+msgstr "Reembolsado"
+
+msgid "Order Received"
+msgstr "Encomenda Recebida"
+
+msgid "Preparing Food"
+msgstr "A Preparar Comida"
+
+msgid "Ready for Pickup"
+msgstr "Pronto para Recolha"
+
+msgid "Picked Up"
+msgstr "Recolhido"
+
+msgid "On the Way"
+msgstr "A Caminho"
+
+msgid "Card (Stripe)"
+msgstr "Cartão (Stripe)"
+
+msgid "Bank / Mobile Transfer"
+msgstr "Transferência Bancária / Móvel"
+
+msgid "Automated Bank Transfer (Test)"
+msgstr "Transferência Bancária Automática (Teste)"
+
+msgid "Succeeded"
+msgstr "Bem-sucedido"
+
+msgid "Commission"
+msgstr "Comissão"
+
+msgid "Refund"
+msgstr "Reembolso"
+
+msgid "Adjustment"
+msgstr "Ajuste"
+
+msgid "Payout"
+msgstr "Pagamento"
+
+msgid "Scheduled"
+msgstr "Agendado"
+
+msgid "Paid"
+msgstr "Pago"
+
+msgid "Open - Awaiting Seller Response"
+msgstr "Aberto - A Aguardar Resposta do Vendedor"
+
+msgid "Seller Responded"
+msgstr "Vendedor Respondeu"
+
+msgid "Under Admin Review"
+msgstr "Em Revisão pelo Administrador"
+
+msgid "Resolved"
+msgstr "Resolvido"
+
+msgid "Full Refund to Buyer"
+msgstr "Reembolso Total ao Comprador"
+
+msgid "Partial Refund"
+msgstr "Reembolso Parcial"
+
+msgid "Reshipment"
+msgstr "Reenvio"
+
+msgid "Closed - No Action"
+msgstr "Fechado - Sem Ação"
+
+msgid "Item Not Received"
+msgstr "Artigo Não Recebido"
+
+msgid "Item Damaged"
+msgstr "Artigo Danificado"
+
+msgid "Item Not as Described"
+msgstr "Artigo Não Corresponde à Descrição"
+
+msgid "Wrong Item Received"
+msgstr "Artigo Errado Recebido"
+
+msgid "Other"
+msgstr "Outro"
+
+msgid ""
+"Bank or mobile money details shown to sellers when they pay the platform for"
+" a subscription upgrade."
+msgstr ""
+"Dados bancários ou de dinheiro móvel mostrados aos vendedores quando pagam a"
+" plataforma por uma atualização de subscrição."
+
+#, python-format
+msgid "TimorMart — order %(order)s"
+msgstr "TimorMart — encomenda %(order)s"
+
+msgid "TimorMart notification"
+msgstr "Notificação TimorMart"
+
+msgid "This item can only be purchased by contacting the seller directly."
+msgstr "Este artigo só pode ser comprado contactando diretamente o vendedor."
+
+msgid "This item is currently unavailable."
+msgstr "Este artigo está atualmente indisponível."
+
+msgid "This product is out of stock."
+msgstr "Este produto está esgotado."
+
+msgid "Product added to cart."
+msgstr "Produto adicionado ao carrinho."
+
+msgid "Cart updated."
+msgstr "Carrinho atualizado."
+
+msgid "Not enough stock available."
+msgstr "Stock insuficiente."
+
+msgid "Item removed from cart."
+msgstr "Artigo removido do carrinho."
+
+msgid "Cart cleared."
+msgstr "Carrinho esvaziado."
+
+msgid "Saved to your wishlist."
+msgstr "Guardado na sua lista de desejos."
+
+msgid "Removed from your wishlist."
+msgstr "Removido da sua lista de desejos."
+
+msgid "Moved to your cart."
+msgstr "Movido para o seu carrinho."
+
+msgid "Your cart is empty."
+msgstr "O seu carrinho está vazio."
+
+#, python-format
+msgid ""
+"%(product)s can only be purchased by contacting the seller directly — remove"
+" it from your cart."
+msgstr ""
+"%(product)s só pode ser comprado contactando diretamente o vendedor — "
+"remova-o do seu carrinho."
+
+#, python-format
+msgid "%(product)s is currently unavailable."
+msgstr "%(product)s está atualmente indisponível."
+
+#, python-format
+msgid "%(product)s has only %(qty)d available."
+msgstr "%(product)s tem apenas %(qty)d disponíveis."
+
+#, python-format
+msgid ""
+"%(sellers)s haven't set up payment details yet — choose Card, or contact "
+"them."
+msgstr ""
+"%(sellers)s ainda não configuraram os dados de pagamento — escolha Cartão, "
+"ou contacte-os."
+
+#, python-format
+msgid ""
+"New order %(order)s from %(buyer)s for “%(product)s” — awaiting their "
+"bank/mobile transfer."
+msgstr ""
+"Nova encomenda %(order)s de %(buyer)s para “%(product)s” — a aguardar a "
+"transferência bancária/móvel."
+
+msgid "Payment processing error. Please try again."
+msgstr "Erro no processamento do pagamento. Por favor tente novamente."
+
+msgid "Your automated bank transfer is being processed."
+msgstr "A sua transferência bancária automática está a ser processada."
+
+msgid "Order received by the restaurant."
+msgstr "Encomenda recebida pelo restaurante."
+
+#, python-format
+msgid "Payment received for order %(order)s from %(buyer)s — “%(product)s”."
+msgstr ""
+"Pagamento recebido para a encomenda %(order)s de %(buyer)s — “%(product)s”."
+
+#, python-format
+msgid "Your payment for order %(order)s was successful."
+msgstr "O seu pagamento para a encomenda %(order)s foi bem-sucedido."
+
+#, python-format
+msgid "Your payment for order %(order)s was refunded."
+msgstr "O seu pagamento para a encomenda %(order)s foi reembolsado."
+
+#, python-format
+msgid "Order %(order)s was refunded to the buyer."
+msgstr "A encomenda %(order)s foi reembolsada ao comprador."
+
+msgid "This order is not awaiting a transfer."
+msgstr "Esta encomenda não está a aguardar transferência."
+
+#, python-format
+msgid ""
+"%(buyer)s says they've sent payment for order %(order)s — please confirm "
+"receipt."
+msgstr ""
+"%(buyer)s diz que enviou o pagamento para a encomenda %(order)s — por favor "
+"confirme a receção."
+
+msgid "Thanks — the seller has been notified to confirm receipt."
+msgstr "Obrigado — o vendedor foi notificado para confirmar a receção."
+
+msgid "Permission denied."
+msgstr "Permissão negada."
+
+msgid "You must be a seller to confirm payments."
+msgstr "Tem de ser vendedor para confirmar pagamentos."
+
+msgid "This order is not awaiting payment confirmation."
+msgstr "Esta encomenda não está a aguardar confirmação de pagamento."
+
+#, python-format
+msgid "%(seller)s confirmed your payment for order %(order)s."
+msgstr "%(seller)s confirmou o seu pagamento para a encomenda %(order)s."
+
+msgid "Payment confirmed — the order is now marked as paid."
+msgstr "Pagamento confirmado — a encomenda está agora marcada como paga."
+
+msgid "Payment details saved."
+msgstr "Dados de pagamento guardados."
+
+msgid "Company info only applies to company seller accounts."
+msgstr ""
+"As informações da empresa aplicam-se apenas a contas de vendedor empresa."
+
+msgid "Company information saved."
+msgstr "Informações da empresa guardadas."
+
+msgid "Business verification only applies to company seller accounts."
+msgstr ""
+"A verificação comercial aplica-se apenas a contas de vendedor empresa."
+
+msgid "Document submitted — an administrator will review it shortly."
+msgstr "Documento submetido — um administrador irá revê-lo em breve."
+
+msgid "You already have a pending subscription request awaiting confirmation."
+msgstr "Já tem um pedido de subscrição pendente a aguardar confirmação."
+
+msgid ""
+"Thanks — your payment report was submitted. An admin will confirm it "
+"shortly."
+msgstr ""
+"Obrigado — o seu relatório de pagamento foi submetido. Um administrador irá "
+"confirmá-lo em breve."
+
+msgid ""
+"This order can no longer be cancelled — it has already been paid or is past "
+"that stage."
+msgstr ""
+"Esta encomenda já não pode ser cancelada — já foi paga ou já passou essa "
+"fase."
+
+#, python-format
+msgid "%(buyer)s cancelled order %(order)s before paying."
+msgstr "%(buyer)s cancelou a encomenda %(order)s antes de pagar."
+
+#, python-format
+msgid "Order %(order)s was cancelled."
+msgstr "A encomenda %(order)s foi cancelada."
+
+msgid "You do not have permission to view this order."
+msgstr "Não tem permissão para ver esta encomenda."
+
+msgid "You can only rate a product after it has been delivered."
+msgstr "Só pode avaliar um produto depois de ser entregue."
+
+msgid "You already rated this order."
+msgstr "Já avaliou esta encomenda."
+
+msgid "Please choose a rating from 1 to 5 stars."
+msgstr "Por favor escolha uma avaliação de 1 a 5 estrelas."
+
+msgid "Thanks for your rating!"
+msgstr "Obrigado pela sua avaliação!"
+
+msgid "You can only rate a courier after the order has been delivered."
+msgstr "Só pode avaliar um estafeta depois de a encomenda ser entregue."
+
+msgid "This order has no assigned courier to rate."
+msgstr "Esta encomenda não tem estafeta atribuído para avaliar."
+
+msgid "You already rated this courier."
+msgstr "Já avaliou este estafeta."
+
+msgid "Thanks for rating the courier!"
+msgstr "Obrigado por avaliar o estafeta!"
+
+msgid "You must be a seller to view this page."
+msgstr "Tem de ser vendedor para ver esta página."
+
+msgid "You must be a seller to update orders."
+msgstr "Tem de ser vendedor para atualizar encomendas."
+
+msgid "Unknown action."
+msgstr "Ação desconhecida."
+
+msgid "Only paid orders can be marked as shipped."
+msgstr "Só encomendas pagas podem ser marcadas como enviadas."
+
+#, python-format
+msgid "Your order %(order)s has shipped."
+msgstr "A sua encomenda %(order)s foi enviada."
+
+#, python-format
+msgid "You have been assigned to deliver order %(order)s."
+msgstr "Foi-lhe atribuída a entrega da encomenda %(order)s."
+
+msgid "Order marked as shipped."
+msgstr "Encomenda marcada como enviada."
+
+msgid "Only shipped orders can be marked as delivered."
+msgstr "Só encomendas enviadas podem ser marcadas como entregues."
+
+#, python-format
+msgid "Your order %(order)s has been delivered."
+msgstr "A sua encomenda %(order)s foi entregue."
+
+msgid "Order marked as delivered."
+msgstr "Encomenda marcada como entregue."
+
+msgid "Preparing the food."
+msgstr "A preparar a comida."
+
+msgid "Order is ready for pickup."
+msgstr "A encomenda está pronta para recolha."
+
+msgid "This action only applies to restaurant orders."
+msgstr "Esta ação só se aplica a encomendas de restaurante."
+
+msgid "This order cannot be advanced from its current status."
+msgstr "Esta encomenda não pode avançar do seu estado atual."
+
+#, python-format
+msgid "Order %(order)s is ready for collection."
+msgstr "A encomenda %(order)s está pronta para recolha."
+
+msgid "Order updated."
+msgstr "Encomenda atualizada."
+
+msgid "Courier picked up the order."
+msgstr "O estafeta recolheu a encomenda."
+
+msgid "Courier is on the way."
+msgstr "O estafeta está a caminho."
+
+msgid "ID submitted — an administrator will review it shortly."
+msgstr ""
+"Documento de identificação submetido — um administrador irá revê-lo em "
+"breve."
+
+msgid "You must be a seller to post delivery updates."
+msgstr "Tem de ser vendedor para publicar atualizações de entrega."
+
+#, python-format
+msgid "Delivery update for order %(order)s: %(note)s"
+msgstr "Atualização de entrega da encomenda %(order)s: %(note)s"
+
+msgid "Update posted."
+msgstr "Atualização publicada."
+
+msgid "Please enter a status update."
+msgstr "Por favor introduza uma atualização de estado."
+
+msgid "You can only open disputes for delivered or shipped orders."
+msgstr "Só pode abrir litígios para encomendas entregues ou enviadas."
+
+msgid "A dispute is already open for this order."
+msgstr "Já existe um litígio aberto para esta encomenda."
+
+msgid "Dispute opened. Seller has 3 days to respond."
+msgstr "Litígio aberto. O vendedor tem 3 dias para responder."
+
+msgid "You do not have permission to view this dispute."
+msgstr "Não tem permissão para ver este litígio."
+
+msgid "You must be a seller to respond to disputes."
+msgstr "Tem de ser vendedor para responder a litígios."
+
+msgid "Response deadline has passed."
+msgstr "O prazo de resposta expirou."
+
+msgid "Your response has been submitted."
+msgstr "A sua resposta foi submetida."
+
+msgid "Free"
+msgstr "Grátis"
+
+msgid "Monthly — $11/month"
+msgstr "Mensal — $11/mês"
+
+msgid "Yearly — $100/year"
+msgstr "Anual — $100/ano"
+
+msgid "Approved"
+msgstr "Aprovado"
+
+msgid ""
+"How/when you paid — e.g. bank transfer reference, mobile money confirmation."
+msgstr ""
+"Como/quando pagou — ex.: referência de transferência bancária, confirmação "
+"de dinheiro móvel."
+
+#, python-format
+msgid "Image files must be smaller than %(max)sMB."
+msgstr "Os ficheiros de imagem devem ter menos de %(max)sMB."
+
+msgid "That category does not exist."
+msgstr "Essa categoria não existe."
+
+msgid "That product is awaiting approval."
+msgstr "Esse produto está a aguardar aprovação."
+
+msgid "Only buyer accounts can post comments."
+msgstr "Só contas de comprador podem publicar comentários."
+
+msgid "Your comment was posted."
+msgstr "O seu comentário foi publicado."
+
+msgid "Please correct the errors in your comment."
+msgstr "Por favor corrija os erros no seu comentário."
+
+#, python-format
+msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
+msgstr "Olá, tenho interesse em “%(name)s” (%(url)s) no TimorMart."
+
+#, python-format
+msgid ""
+"You've reached the free plan's %(limit)d listing limit. Subscribe to post "
+"more products."
+msgstr ""
+"Atingiu o limite de %(limit)d anúncios do plano grátis. Subscreva para "
+"publicar mais produtos."
+
+#, python-format
+msgid "“%(name)s” was published."
+msgstr "“%(name)s” foi publicado."
+
+#, python-format
+msgid "“%(name)s” was created and is awaiting approval by the administrators."
+msgstr ""
+"“%(name)s” foi criado e está a aguardar aprovação dos administradores."
+
+msgid "Add a new product"
+msgstr "Adicionar um novo produto"
+
+msgid "Create product"
+msgstr "Criar produto"
+
+#, python-format
+msgid "“%(name)s” was resubmitted for approval."
+msgstr "“%(name)s” foi ressubmetido para aprovação."
+
+#, python-format
+msgid "“%(name)s” was updated."
+msgstr "“%(name)s” foi atualizado."
+
+#, python-format
+msgid "Edit “%(name)s”"
+msgstr "Editar “%(name)s”"
+
+msgid "Save changes"
+msgstr "Guardar alterações"
+
+#, python-format
+msgid "“%(name)s” is now marked as sold out."
+msgstr "“%(name)s” está agora marcado como esgotado."
+
+#, python-format
+msgid ""
+"“%(name)s” can't be deleted because it has order history — mark it sold out "
+"instead."
+msgstr ""
+"“%(name)s” não pode ser eliminado porque tem histórico de encomendas — "
+"marque-o como esgotado."
+
+#, python-format
+msgid "“%(name)s” was deleted."
+msgstr "“%(name)s” foi eliminado."
+
+msgid "Menu sections are only available for restaurant seller accounts."
+msgstr ""
+"As secções do menu só estão disponíveis para contas de vendedor de "
+"restaurante."
+
+#, python-format
+msgid "“%(name)s” was added to your menu."
+msgstr "“%(name)s” foi adicionado ao seu menu."
+
+#, python-format
+msgid "“%(name)s” was removed from your menu."
+msgstr "“%(name)s” foi removido do seu menu."
+
+msgid "Page not found"
+msgstr "Página não encontrada"
+
+msgid "The page you are looking for does not exist or may have been removed."
+msgstr "A página que procura não existe ou pode ter sido removida."
+
+msgid "Back to the store"
+msgstr "Voltar à loja"
+
+msgid "Something went wrong"
+msgstr "Algo correu mal"
+
+msgid ""
+"We are sorry — an unexpected error occurred. Please try again in a moment."
+msgstr ""
+"Lamentamos — ocorreu um erro inesperado. Por favor tente novamente dentro de"
+" momentos."
+
+msgid "Sign In"
+msgstr "Iniciar Sessão"
+
+msgid "Welcome back to TimorMart"
+msgstr "Bem-vindo de volta ao TimorMart"
+
+msgid "Forgot password?"
+msgstr "Esqueceu-se da palavra-passe?"
+
+msgid "or"
+msgstr "ou"
+
+msgid "Don't have an account yet?"
+msgstr "Ainda não tem conta?"
+
+msgid "Create Account"
+msgstr "Criar Conta"
+
+msgid "First time here? Sign up to start buying and selling."
+msgstr "Primeira vez aqui? Registe-se para começar a comprar e vender."
+
+msgid "Sign Up"
+msgstr "Registar"
+
+msgid "Create Your Account"
+msgstr "Criar a sua Conta"
+
+msgid "Join thousands of buyers and sellers on TimorMart."
+msgstr "Junte-se a milhares de compradores e vendedores no TimorMart."
+
+msgid "Company Information"
+msgstr "Informações da Empresa"
+
+msgid "Personal Information"
+msgstr "Informações Pessoais"
+
+msgid "We'll use this to verify your account."
+msgstr "Vamos usar isto para verificar a sua conta."
+
+msgid "Local or international format (e.g., 7012345 or +670 7012345)."
+msgstr "Formato local ou internacional (ex.: 7012345 ou +670 7012345)."
+
+msgid "Your primary delivery or contact address."
+msgstr "A sua morada principal de entrega ou contacto."
+
+msgid "Account Credentials"
+msgstr "Credenciais da Conta"
+
+msgid "Letters, digits and @/./+/-/_ only. 30 characters or fewer."
+msgstr "Apenas letras, dígitos e @/./+/-/_. 30 caracteres ou menos."
+
+msgid ""
+"Your password must be at least 8 characters long and can't be entirely "
+"numeric."
+msgstr ""
+"A sua palavra-passe deve ter pelo menos 8 caracteres e não pode ser "
+"inteiramente numérica."
+
+msgid "Enter the same password to verify."
+msgstr "Introduza a mesma palavra-passe para verificar."
+
+msgid "Password requirements:"
+msgstr "Requisitos da palavra-passe:"
+
+msgid "At least 8 characters long"
+msgstr "Pelo menos 8 caracteres"
+
+msgid "Can't be entirely numeric"
+msgstr "Não pode ser inteiramente numérica"
+
+msgid "Can't be the same as your username"
+msgstr "Não pode ser igual ao seu nome de utilizador"
+
+msgid "Sign in here"
+msgstr "Inicie sessão aqui"
+
+msgid "About Us"
+msgstr "Sobre Nós"
+
+msgid ""
+"TimorMart is Timor-Leste's local online marketplace connecting buyers and "
+"sellers across the country."
+msgstr ""
+"O TimorMart é o mercado online local de Timor-Leste que liga compradores e "
+"vendedores em todo o país."
+
+msgid "About TimorMart"
+msgstr "Sobre o TimorMart"
+
+msgid ""
+"TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
+"        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
+msgstr ""
+"O TimorMart é o mercado online próprio de Timor-Leste — um lugar onde pessoas em todo o país\n"
+"        podem comprar e vender diretamente entre si, sem precisar de uma loja física ou de um grande orçamento para começar."
+
+msgid "Why we built this"
+msgstr "Porque construímos isto"
+
+msgid ""
+"Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
+"            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
+"            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling\n"
+"            online: a single, trusted place where anyone can list a product and anyone can find it, whether\n"
+"            it's brand new or a good second-hand find."
+msgstr ""
+"O comércio em Timor-Leste está espalhado por mercados, pequenas lojas e boca-a-boca —\n"
+"            ótimo para a comunidade, mas difícil para um comprador comparar opções ou para um pequeno vendedor alcançar\n"
+"            clientes fora da sua própria vizinhança. O TimorMart traz essa mesma compra e venda do dia a dia\n"
+"            para online: um único lugar de confiança onde qualquer pessoa pode anunciar um produto e qualquer pessoa pode encontrá-lo, seja\n"
+"            novo em folha ou um bom achado em segunda mão."
+
+msgid "For Buyers"
+msgstr "Para Compradores"
+
+msgid "Browse products from home, across every municipality"
+msgstr "Veja produtos a partir de casa, em todos os municípios"
+
+msgid "Clear pricing and condition (new vs. second-hand) on every listing"
+msgstr "Preço e condição claros (novo vs. segunda mão) em todos os anúncios"
+
+msgid "Ratings and comments from other buyers"
+msgstr "Avaliações e comentários de outros compradores"
+
+msgid "Contact sellers directly, including by WhatsApp"
+msgstr "Contacte vendedores diretamente, inclusive por WhatsApp"
+
+msgid "Use the site in English or Tetum"
+msgstr "Use o site em Inglês ou Tétum"
+
+msgid "For Sellers"
+msgstr "Para Vendedores"
+
+msgid "Reach buyers across the country without renting a storefront"
+msgstr "Alcance compradores em todo o país sem alugar uma loja"
+
+msgid "List, edit and track products from a simple dashboard"
+msgstr "Liste, edite e acompanhe produtos a partir de um painel simples"
+
+msgid "Get paid by card, bank transfer or mobile money"
+msgstr ""
+"Receba pagamentos por cartão, transferência bancária ou dinheiro móvel"
+
+msgid "Build a reputation through buyer ratings and reviews"
+msgstr ""
+"Construa uma reputação através das avaliações e comentários dos compradores"
+
+msgid "Start free — upgrade only once you're ready to grow"
+msgstr "Comece grátis — atualize apenas quando estiver pronto para crescer"
+
+msgid "Trust & Safety"
+msgstr "Confiança & Segurança"
+
+msgid "Every listing is reviewed before it goes live"
+msgstr "Todos os anúncios são revistos antes de serem publicados"
+
+msgid "Couriers submit ID and are verified before they can deliver an order"
+msgstr ""
+"Os estafetas submetem identificação e são verificados antes de poderem "
+"entregar uma encomenda"
+
+msgid "Photo proof of delivery on every shipped order"
+msgstr "Prova fotográfica de entrega em todas as encomendas enviadas"
+
+msgid "A dispute process if something goes wrong"
+msgstr "Um processo de litígio caso algo corra mal"
+
+msgid "Buyers and couriers can both be rated after delivery"
+msgstr "Compradores e estafetas podem ambos ser avaliados após a entrega"
+
+msgid "What makes TimorMart different"
+msgstr "O que torna o TimorMart diferente"
+
+msgid ""
+"Built for Timor-Leste — local cities, local languages, local payment options"
+msgstr ""
+"Feito para Timor-Leste — cidades locais, línguas locais, opções de pagamento"
+" locais"
+
+msgid "New and second-hand items side by side, so buying affordably is easy"
+msgstr ""
+"Artigos novos e em segunda mão lado a lado, tornando as compras acessíveis "
+"fáceis"
+
+msgid "Full English and Tetum support throughout the site"
+msgstr "Suporte completo em Inglês e Tétum em todo o site"
+
+msgid "Direct WhatsApp contact between buyers and sellers"
+msgstr "Contacto direto por WhatsApp entre compradores e vendedores"
+
+msgid "Delivery matched to the buyer's city, with verified couriers"
+msgstr "Entrega associada à cidade do comprador, com estafetas verificados"
+
+msgid "Moderation and dispute resolution to keep the marketplace trustworthy"
+msgstr "Moderação e resolução de litígios para manter o mercado confiável"
+
+msgid "Ready to get started?"
+msgstr "Pronto para começar?"
+
+msgid "Browse products"
+msgstr "Ver produtos"
+
+msgid "Start selling"
+msgstr "Comece a vender"
+
+msgid "Payment Details"
+msgstr "Dados de Pagamento"
+
+msgid ""
+"Send the amount below to each seller using the details they provided, then "
+"let them know you've paid."
+msgstr ""
+"Envie o montante abaixo a cada vendedor usando os dados fornecidos, depois "
+"informe-os de que pagou."
+
+msgid "Order"
+msgstr "Encomenda"
+
+msgid "Amount to send"
+msgstr "Montante a enviar"
+
+msgid "Reference (include in the transfer memo)"
+msgstr "Referência (incluir na nota de transferência)"
+
+msgid "Seller payment details"
+msgstr "Dados de pagamento do vendedor"
+
+msgid "I've sent payment"
+msgstr "Já enviei o pagamento"
+
+msgid "View my orders"
+msgstr "Ver as minhas encomendas"
+
+msgid "My Orders"
+msgstr "As minhas Encomendas"
+
+msgid "Continue Shopping"
+msgstr "Continuar a Comprar"
+
+msgid "All"
+msgstr "Todos"
+
+msgid "Order #"
+msgstr "Encomenda n.º"
+
+msgid "Product"
+msgstr "Produto"
+
+msgid "Seller"
+msgstr "Vendedor"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "No orders yet."
+msgstr "Ainda não há encomendas."
+
+msgid "Start shopping now"
+msgstr "Comece a comprar agora"
+
+msgid "Shopping Cart"
+msgstr "Carrinho de Compras"
+
+msgid "Qty"
+msgstr "Qtd"
+
+msgid "Update"
+msgstr "Atualizar"
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Order Summary"
+msgstr "Resumo da Encomenda"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#, python-format
+msgid "Commission (15%%) and payment fees will be calculated at checkout."
+msgstr ""
+"A comissão (15%%) e as taxas de pagamento serão calculadas no checkout."
+
+msgid "Proceed to Checkout"
+msgstr "Prosseguir para o Checkout"
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Order Review"
+msgstr "Revisão da Encomenda"
+
+msgid "Unit Price"
+msgstr "Preço Unitário"
+
+#, python-format
+msgid ""
+"\n"
+"                %(sellers)s haven't set up bank transfer details yet — choose Card if your cart includes their items.\n"
+"                "
+msgstr ""
+"\n"
+"                %(sellers)s ainda não configuraram os dados de transferência bancária — escolha Cartão se o seu carrinho incluir os artigos deles.\n"
+"                "
+
+msgid "Test accounts:"
+msgstr "Contas de teste:"
+
+msgid "Delivery Information"
+msgstr "Informação de Entrega"
+
+msgid "Proceed to Payment"
+msgstr "Prosseguir para o Pagamento"
+
+#, python-format
+msgid "Platform fee (15%%)"
+msgstr "Taxa da plataforma (15%%)"
+
+msgid "Payment fee"
+msgstr "Taxa de pagamento"
+
+msgid "Delivery fee"
+msgstr "Taxa de entrega"
+
+msgid "Your payment is secure and encrypted."
+msgstr "O seu pagamento é seguro e encriptado."
+
+msgid ""
+"You'll pay the seller directly — no platform fee. The next page shows their "
+"payment details."
+msgstr ""
+"Vai pagar o vendedor diretamente — sem taxa de plataforma. A próxima página "
+"mostra os dados de pagamento deles."
+
+msgid ""
+"Test/dev payment rail — enter one of the test account numbers above to "
+"trigger a specific outcome."
+msgstr ""
+"Via de pagamento de teste/dev — introduza um dos números de conta de teste "
+"acima para desencadear um resultado específico."
+
+msgid "Continue to Payment Details"
+msgstr "Continuar para os Dados de Pagamento"
+
+msgid "Submit Bank Transfer"
+msgstr "Submeter Transferência Bancária"
+
+msgid "My Deliveries"
+msgstr "As minhas Entregas"
+
+msgid "You're verified and can be assigned deliveries."
+msgstr "Está verificado e pode ser designado para entregas."
+
+msgid "Awaiting review"
+msgstr "A aguardar revisão"
+
+msgid "An administrator is reviewing your ID document."
+msgstr "Um administrador está a rever o seu documento de identificação."
+
+msgid "Your ID submission was rejected"
+msgstr "A sua submissão de identificação foi rejeitada"
+
+msgid ""
+"Submit a photo of your ID document to get verified — you can't be assigned "
+"deliveries until then."
+msgstr ""
+"Submeta uma fotografia do seu documento de identificação para ser verificado"
+" — não pode ser designado para entregas até lá."
+
+msgid "Submit"
+msgstr "Submeter"
+
+msgid "Buyer"
+msgstr "Comprador"
+
+msgid "Deliver to"
+msgstr "Entregar a"
+
+msgid "Ready for pickup"
+msgstr "Pronto para recolha"
+
+msgid "Picked up"
+msgstr "Recolhido"
+
+msgid "On the way"
+msgstr "A caminho"
+
+msgid "Awaiting kitchen"
+msgstr "A aguardar cozinha"
+
+msgid "Confirm Pickup"
+msgstr "Confirmar Recolha"
+
+msgid "Mark On the Way"
+msgstr "Marcar como a Caminho"
+
+msgid "View / Mark Delivered"
+msgstr "Ver / Marcar como Entregue"
+
+msgid "No deliveries waiting right now."
+msgstr "Não há entregas à espera neste momento."
+
+msgid "Recently Delivered"
+msgstr "Entregue Recentemente"
+
+msgid "No deliveries completed yet."
+msgstr "Ainda não há entregas concluídas."
+
+msgid "Home"
+msgstr "Início"
+
+msgid ""
+"This listing is awaiting administrator approval and is not yet visible to "
+"buyers."
+msgstr ""
+"Este anúncio está a aguardar aprovação do administrador e ainda não é "
+"visível para os compradores."
+
+msgid "This listing is not visible to buyers."
+msgstr "Este anúncio não é visível para os compradores."
+
+msgid "Moderator note:"
+msgstr "Nota do moderador:"
+
+msgid "Previous image"
+msgstr "Imagem anterior"
+
+msgid "Next image"
+msgstr "Imagem seguinte"
+
+msgid "View full screen"
+msgstr "Ver em ecrã completo"
+
+msgid "Product images"
+msgstr "Imagens do produto"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "No image available"
+msgstr "Sem imagem disponível"
+
+msgid "rating"
+msgstr "avaliação"
+
+msgid "min"
+msgstr "min"
+
+msgid "Unavailable"
+msgstr "Indisponível"
+
+msgid "In stock"
+msgstr "Em stock"
+
+msgid "Out of stock"
+msgstr "Esgotado"
+
+msgid "Add to Cart"
+msgstr "Adicionar ao Carrinho"
+
+msgid "Saved"
+msgstr "Guardado"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid ""
+"Not booked through the cart — contact the service provider directly to "
+"arrange this."
+msgstr ""
+"Não se reserva através do carrinho — contacte o prestador de serviços "
+"diretamente para combinar isto."
+
+msgid ""
+"Not sold through the cart — contact the seller directly to arrange this."
+msgstr ""
+"Não se vende através do carrinho — contacte o vendedor diretamente para "
+"combinar isto."
+
+msgid "Listed"
+msgstr "Publicado"
+
+msgid "Service Provider"
+msgstr "Prestador de Serviços"
+
+msgid "Verified Business"
+msgstr "Empresa Verificada"
+
+msgid "Chat on WhatsApp"
+msgstr "Conversar no WhatsApp"
+
+msgid "Interested in this service?"
+msgstr "Interessado neste serviço?"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, upgrade "
+"your account to Buyer & Seller."
+msgstr ""
+"Para ver o número de telefone e o contacto de WhatsApp do prestador de "
+"serviços, atualize a sua conta para Comprador & Vendedor."
+
+msgid "Interested in this product?"
+msgstr "Interessado neste produto?"
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, upgrade your account"
+" to Buyer & Seller."
+msgstr ""
+"Para ver o número de telefone e o contacto de WhatsApp do vendedor, atualize"
+" a sua conta para Comprador & Vendedor."
+
+msgid "Upgrade to Buyer & Seller"
+msgstr "Atualizar para Comprador & Vendedor"
+
+msgid "Sign in to view contact information"
+msgstr "Inicie sessão para ver as informações de contacto"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, please "
+"sign in or create an account."
+msgstr ""
+"Para ver o número de telefone e o contacto de WhatsApp do prestador de "
+"serviços, inicie sessão ou crie uma conta."
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, please sign in or "
+"create an account."
+msgstr ""
+"Para ver o número de telefone e o contacto de WhatsApp do vendedor, inicie "
+"sessão ou crie uma conta."
+
+msgid "Edit listing"
+msgstr "Editar anúncio"
+
+msgid "Reviews"
+msgstr "Avaliações"
+
+msgid "Verified Purchase"
+msgstr "Compra Verificada"
+
+msgid "Related products"
+msgstr "Produtos relacionados"
+
+msgid "Comments"
+msgstr "Comentários"
+
+msgid "Post comment"
+msgstr "Publicar comentário"
+
+msgid ""
+"Comments are available to buyer accounts. Seller accounts cannot post "
+"comments."
+msgstr ""
+"Os comentários estão disponíveis para contas de comprador. As contas de "
+"vendedor não podem comentar."
+
+msgid "Sign in with a buyer account to post a comment."
+msgstr "Inicie sessão com uma conta de comprador para comentar."
+
+msgid "No comments yet. Be the first to ask about this product!"
+msgstr ""
+"Ainda sem comentários. Seja o primeiro a perguntar sobre este produto!"
+
+msgid "Dispute"
+msgstr "Litígio"
+
+msgid "Seller response due by"
+msgstr "Resposta do vendedor até"
+
+msgid "Buyer's Report"
+msgstr "Relato do Comprador"
+
+msgid "Resolution"
+msgstr "Resolução"
+
+msgid "Refund Amount"
+msgstr "Montante do Reembolso"
+
+msgid "Resolved on"
+msgstr "Resolvido em"
+
+msgid "View Order"
+msgstr "Ver Encomenda"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next"
+msgstr "Seguinte"
+
+msgid "Best sellers"
+msgstr "Mais vendidos"
+
+#, python-format
+msgid "Search results for “%(query)s”"
+msgstr "Resultados da pesquisa para “%(query)s”"
+
+msgid "New arrivals"
+msgstr "Novidades"
+
+#, python-format
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] "%(counter)s artigo"
+msgstr[1] "%(counter)s artigos"
+
+msgid "Min"
+msgstr "Mín."
+
+msgid "Max"
+msgstr "Máx."
+
+msgid "Sort by"
+msgstr "Ordenar por"
+
+msgid "Newest"
+msgstr "Mais recente"
+
+msgid "Best selling"
+msgstr "Mais vendido"
+
+msgid "Price: low to high"
+msgstr "Preço: do mais baixo ao mais alto"
+
+msgid "Price: high to low"
+msgstr "Preço: do mais alto ao mais baixo"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "My products"
+msgstr "Os meus produtos"
+
+msgid "Add product"
+msgstr "Adicionar produto"
+
+#, python-format
+msgid ""
+"Your subscription expired. You have %(used)s listings (over the free limit "
+"of %(limit)s) — they stay live, but you can't add new ones until you renew."
+msgstr ""
+"A sua subscrição expirou. Tem %(used)s anúncios (acima do limite grátis de "
+"%(limit)s) — permanecem ativos, mas não pode adicionar novos até renovar."
+
+#, python-format
+msgid ""
+"Your subscription expires in %(days)s day(s) (%(date)s) — renew to keep "
+"posting new products."
+msgstr ""
+"A sua subscrição expira em %(days)s dia(s) (%(date)s) — renove para "
+"continuar a publicar novos produtos."
+
+#, python-format
+msgid "%(plan)s — unlimited listings, active until %(date)s."
+msgstr "%(plan)s — anúncios ilimitados, ativo até %(date)s."
+
+#, python-format
+msgid "%(used)s / %(limit)s free listings used."
+msgstr "%(used)s / %(limit)s anúncios grátis usados."
+
+msgid "Manage subscription"
+msgstr "Gerir subscrição"
+
+msgid "Listings"
+msgstr "Anúncios"
+
+msgid "Inventory value"
+msgstr "Valor do inventário"
+
+msgid "Created"
+msgstr "Criado"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Mark as sold out"
+msgstr "Marcar como esgotado"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Delete product"
+msgstr "Eliminar produto"
+
+#, python-format
+msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
+msgstr ""
+"Tem a certeza de que quer eliminar “%(name)s”? Esta ação não pode ser "
+"desfeita."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "You have no products yet"
+msgstr "Ainda não tem produtos"
+
+msgid "Create your first listing — it will appear in the store once approved."
+msgstr ""
+"Crie o seu primeiro anúncio — aparecerá na loja assim que for aprovado."
+
+msgid "Menu Sections"
+msgstr "Secções do Menu"
+
+msgid "Back to products"
+msgstr "Voltar aos produtos"
+
+msgid "Add a section"
+msgstr "Adicionar uma secção"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "Section"
+msgstr "Secção"
+
+msgid "Items"
+msgstr "Artigos"
+
+msgid "Remove this menu section?"
+msgstr "Remover esta secção do menu?"
+
+msgid "No menu sections yet"
+msgstr "Ainda sem secções de menu"
+
+msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
+msgstr ""
+"Adicione secções como Pequeno-almoço, Almoço ou Bebidas para organizar o seu"
+" menu."
+
+msgid "Notifications"
+msgstr "Notificações"
+
+msgid "Mark all as read"
+msgstr "Marcar tudo como lido"
+
+msgid "ago"
+msgstr "atrás"
+
+msgid "No notifications yet."
+msgstr "Ainda sem notificações."
+
+msgid "Report Issue"
+msgstr "Reportar Problema"
+
+msgid ""
+"The seller will have 3 days to respond before an admin reviews this dispute."
+msgstr ""
+"O vendedor terá 3 dias para responder antes de um administrador rever este "
+"litígio."
+
+msgid "Submit Dispute"
+msgstr "Submeter Litígio"
+
+msgid "Total Paid"
+msgstr "Total Pago"
+
+msgid "Order Status"
+msgstr "Estado da Encomenda"
+
+msgid "Current Status:"
+msgstr "Estado Atual:"
+
+msgid "Paid on"
+msgstr "Pago em"
+
+msgid "Delivered on"
+msgstr "Entregue em"
+
+msgid "Kitchen & Pickup Status"
+msgstr "Estado da Cozinha & Recolha"
+
+msgid "Preparing"
+msgstr "A preparar"
+
+msgid "Start Preparing"
+msgstr "Começar a Preparar"
+
+msgid "Mark Ready for Pickup"
+msgstr "Marcar Pronto para Recolha"
+
+msgid "Pickup location"
+msgstr "Local de recolha"
+
+msgid "Delivery Tracking"
+msgstr "Rastreio de Entrega"
+
+msgid "Courier"
+msgstr "Estafeta"
+
+msgid "No status updates yet."
+msgstr "Ainda sem atualizações de estado."
+
+msgid "Proof of Delivery"
+msgstr "Prova de Entrega"
+
+msgid "Proof of delivery"
+msgstr "Prova de entrega"
+
+msgid "Mark as Shipped"
+msgstr "Marcar como Enviado"
+
+msgid "Post update"
+msgstr "Publicar atualização"
+
+msgid "Take a photo of the delivered item to confirm."
+msgstr "Tire uma fotografia do artigo entregue para confirmar."
+
+msgid "Mark as Delivered"
+msgstr "Marcar como Entregue"
+
+msgid "Reassign courier"
+msgstr "Reatribuir estafeta"
+
+msgid "Unassigned (self-delivery)"
+msgstr "Não atribuído (entrega própria)"
+
+msgid "Reference"
+msgstr "Referência"
+
+msgid "Waiting for the seller to confirm they received your transfer."
+msgstr "A aguardar que o vendedor confirme que recebeu a sua transferência."
+
+msgid "Confirm you received the buyer'\\''s transfer?"
+msgstr "Confirma que recebeu a transferência do comprador?"
+
+msgid "Confirm payment received"
+msgstr "Confirmar pagamento recebido"
+
+msgid "Product Details"
+msgstr "Detalhes do Produto"
+
+msgid "Line Total"
+msgstr "Total da Linha"
+
+msgid "Seller Information"
+msgstr "Informação do Vendedor"
+
+#, python-format
+msgid "Commission (15%%)"
+msgstr "Comissão (15%%)"
+
+msgid "Payment Fee"
+msgstr "Taxa de Pagamento"
+
+msgid "Paid directly to the seller — no platform fee."
+msgstr "Pago diretamente ao vendedor — sem taxa de plataforma."
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Cancel this order?"
+msgstr "Cancelar esta encomenda?"
+
+msgid "Cancel Order"
+msgstr "Cancelar Encomenda"
+
+msgid "Rate this product"
+msgstr "Avaliar este produto"
+
+msgid "Thanks for rating this purchase."
+msgstr "Obrigado por avaliar esta compra."
+
+msgid "Write a review (optional)"
+msgstr "Escreva uma avaliação (opcional)"
+
+msgid "What did you think of this product?"
+msgstr "O que achou deste produto?"
+
+msgid "Submit rating"
+msgstr "Submeter avaliação"
+
+msgid "Rate the courier"
+msgstr "Avaliar o estafeta"
+
+msgid "Thanks for rating this courier."
+msgstr "Obrigado por avaliar este estafeta."
+
+msgid "Payment"
+msgstr "Pagamento"
+
+msgid "Secure Payment"
+msgstr "Pagamento Seguro"
+
+msgid "Card Information"
+msgstr "Informação do Cartão"
+
+msgid "Card Details"
+msgstr "Detalhes do Cartão"
+
+msgid "Your payment information is secure and never stored on our servers."
+msgstr ""
+"As suas informações de pagamento são seguras e nunca são armazenadas nos "
+"nossos servidores."
+
+msgid "Pay"
+msgstr "Pagar"
+
+msgid "Test Card:"
+msgstr "Cartão de Teste:"
+
+msgid "Exp"
+msgstr "Val."
+
+msgid "Payment successful! Redirecting..."
+msgstr "Pagamento bem-sucedido! A redirecionar..."
+
+msgid "Processing..."
+msgstr "A processar..."
+
+msgid "Payment Confirmation"
+msgstr "Confirmação de Pagamento"
+
+msgid "Processing your bank transfer…"
+msgstr "A processar a sua transferência bancária…"
+
+msgid ""
+"this page will show the result once your simulated bank responds. Refresh to"
+" check again."
+msgstr ""
+"esta página mostrará o resultado assim que o seu banco simulado responder. "
+"Atualize para verificar novamente."
+
+msgid "Payment did not go through"
+msgstr "O pagamento não foi concluído"
+
+msgid "Payment Successful!"
+msgstr "Pagamento Bem-sucedido!"
+
+msgid "Thank you for your order. Your payment has been received."
+msgstr "Obrigado pela sua encomenda. O seu pagamento foi recebido."
+
+msgid "Next Steps:"
+msgstr "Próximos Passos:"
+
+msgid "Seller will contact you at"
+msgstr "O vendedor irá contactá-lo através de"
+
+msgid "You can track your order status in your"
+msgstr "Pode acompanhar o estado da sua encomenda no seu"
+
+msgid "order history"
+msgstr "histórico de encomendas"
+
+msgid "Other Items in Your Order"
+msgstr "Outros Artigos na sua Encomenda"
+
+msgid "View My Orders"
+msgstr "Ver as Minhas Encomendas"
+
+msgid "A confirmation email has been sent to"
+msgstr "Foi enviado um email de confirmação para"
+
+msgid "Manage menu sections"
+msgstr "Gerir secções do menu"
+
+msgid ""
+"You're subscribed — this listing will publish immediately, no approval wait."
+msgstr ""
+"Está subscrito — este anúncio será publicado imediatamente, sem espera de "
+"aprovação."
+
+msgid ""
+"Services don't need a quantity or condition — instead, use the description "
+"to mention things like availability, service area, or turnaround time."
+msgstr ""
+"Os serviços não precisam de quantidade ou condição — em vez disso, use a "
+"descrição para mencionar disponibilidade, área de serviço ou tempo de "
+"execução."
+
+msgid ""
+"Menu items don't need a quantity or condition — use Menu section, Available,"
+" and Prep time instead."
+msgstr ""
+"Os itens de menu não precisam de quantidade ou condição — use antes Secção "
+"do menu, Disponível e Tempo de preparação."
+
+msgid "My Earnings"
+msgstr "Os meus Rendimentos"
+
+msgid "View Orders"
+msgstr "Ver Encomendas"
+
+msgid "Total Earnings"
+msgstr "Total de Rendimentos"
+
+msgid "Available Balance"
+msgstr "Saldo Disponível"
+
+msgid "Pending Payout"
+msgstr "Pagamento Pendente"
+
+msgid "Total Paid Out"
+msgstr "Total Pago"
+
+msgid "Recent Transactions"
+msgstr "Transações Recentes"
+
+msgid "Payouts"
+msgstr "Pagamentos"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Amount"
+msgstr "Montante"
+
+msgid "No transactions yet."
+msgstr "Ainda sem transações."
+
+msgid "Payout ID"
+msgstr "ID de Pagamento"
+
+msgid "Scheduled Date"
+msgstr "Data Agendada"
+
+msgid "Paid Date"
+msgstr "Data de Pagamento"
+
+msgid "No payouts yet."
+msgstr "Ainda sem pagamentos."
+
+msgid "How does it work?"
+msgstr "Como funciona?"
+
+#, python-format
+msgid "You earn 85%% of each sale (platform takes 15%% commission)"
+msgstr "Recebe 85%% de cada venda (a plataforma cobra 15%% de comissão)"
+
+msgid "Earnings are credited when payment is received"
+msgstr "Os rendimentos são creditados quando o pagamento é recebido"
+
+msgid "Payouts are processed monthly on the 1st of each month"
+msgstr "Os pagamentos são processados mensalmente no dia 1 de cada mês"
+
+msgid "Minimum payout amount: $500"
+msgstr "Montante mínimo de pagamento: $500"
+
+msgid "Seller Orders"
+msgstr "Encomendas do Vendedor"
+
+msgid "Confirm Payment"
+msgstr "Confirmar Pagamento"
+
+msgid "View your products"
+msgstr "Ver os seus produtos"
+
+msgid "Payment Settings"
+msgstr "Definições de Pagamento"
+
+msgid ""
+"When a buyer chooses to pay by bank/mobile transfer, they'll see these "
+"details to send you the money directly. Leave this blank to disable that "
+"payment option for your products."
+msgstr ""
+"Quando um comprador escolhe pagar por transferência bancária/móvel, verá "
+"estes dados para lhe enviar o dinheiro diretamente. Deixe em branco para "
+"desativar esta opção de pagamento para os seus produtos."
+
+msgid "Business Verification"
+msgstr "Verificação Comercial"
+
+msgid ""
+"Optional — a verified business shows a trust badge to buyers on your "
+"products. Selling and getting paid work the same either way."
+msgstr ""
+"Opcional — uma empresa verificada mostra um selo de confiança aos "
+"compradores nos seus produtos. Vender e receber pagamentos funciona da mesma"
+" forma."
+
+msgid "Your document was rejected"
+msgstr "O seu documento foi rejeitado"
+
+msgid "Subscription"
+msgstr "Subscrição"
+
+#, python-format
+msgid ""
+"Free accounts can list up to %(free_limit)s products, and each one is "
+"reviewed by an admin before it goes live. Subscribers can list without limit"
+" and publish instantly — no approval wait."
+msgstr ""
+"As contas grátis podem listar até %(free_limit)s produtos, e cada um é "
+"revisto por um administrador antes de ser publicado. Os subscritores podem "
+"listar sem limite e publicar instantaneamente — sem espera de aprovação."
+
+#, python-format
+msgid "Unlimited listings — active until %(date)s."
+msgstr "Anúncios ilimitados — ativo até %(date)s."
+
+#, python-format
+msgid ""
+"Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
+" new products."
+msgstr ""
+"Expira em %(days)s dia(s) — renove abaixo para não perder a capacidade de "
+"publicar novos produtos."
+
+msgid "Expired"
+msgstr "Expirado"
+
+msgid "listings"
+msgstr "anúncios"
+
+#, python-format
+msgid ""
+"Over the free limit of %(limit)s — your existing listings stay live, but you"
+" can't add new ones until you renew."
+msgstr ""
+"Acima do limite grátis de %(limit)s — os seus anúncios existentes permanecem"
+" ativos, mas não pode adicionar novos até renovar."
+
+msgid "free listings used"
+msgstr "anúncios grátis usados"
+
+msgid "You've used all your free listings — subscribe below to post more."
+msgstr ""
+"Já usou todos os seus anúncios grátis — subscreva abaixo para publicar mais."
+
+msgid "Awaiting confirmation"
+msgstr "A aguardar confirmação"
+
+msgid "Submitted"
+msgstr "Submetido"
+
+msgid "Your reference"
+msgstr "A sua referência"
+
+#, python-format
+msgid ""
+"You already have an active subscription until %(date)s. Submitting a new "
+"request won't start a separate subscription — once confirmed, it extends "
+"your current one from that date instead."
+msgstr ""
+"Já tem uma subscrição ativa até %(date)s. Submeter um novo pedido não "
+"iniciará uma subscrição separada — depois de confirmado, prolonga a atual a "
+"partir dessa data."
+
+msgid "Where to pay"
+msgstr "Onde pagar"
+
+msgid "I've paid — submit for confirmation"
+msgstr "Já paguei — submeter para confirmação"
+
+msgid "Request history"
+msgstr "Histórico de pedidos"
+
+msgid "Plan"
+msgstr "Plano"
+
+msgid "Wishlist"
+msgstr "Lista de Desejos"
+
+msgid "My Wishlist"
+msgstr "A minha Lista de Desejos"
+
+msgid "Move to Cart"
+msgstr "Mover para o Carrinho"
+
+msgid "Your wishlist is empty."
+msgstr "A sua lista de desejos está vazia."
+
+msgid "Start browsing"
+msgstr "Comece a explorar"
+
+msgid "Skip to main content"
+msgstr "Saltar para o conteúdo principal"
+
+msgid "We accept"
+msgstr "Aceitamos"
+
+msgid "VISA Card"
+msgstr "Cartão VISA"
+
+msgid "Bank Transfer"
+msgstr "Transferência Bancária"
+
+msgid "Mobile Money"
+msgstr "Dinheiro Móvel"
+
+msgid "Hotline"
+msgstr "Linha de Apoio"
+
+msgid "Currency"
+msgstr "Moeda"
+
+msgid "US Dollar (USD)"
+msgstr "Dólar Americano (USD)"
+
+msgid "Search by product"
+msgstr "Pesquisar por produto"
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "View all"
+msgstr "Ver tudo"
+
+msgid "Administrator"
+msgstr "Administrador"
+
+msgid "Buyer & Seller"
+msgstr "Comprador & Vendedor"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Log out"
+msgstr "Terminar sessão"
+
+msgid "Toggle navigation"
+msgstr "Alternar navegação"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Orders"
+msgstr "Encomendas"
+
+msgid "Earnings"
+msgstr "Rendimentos"
+
+msgid "Cart"
+msgstr "Carrinho"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Product pages"
+msgstr "Páginas de produto"
+
+msgid "Ad"
+msgstr "Anúncio"
+
+msgid "Latest phones, laptops and accessories — in stock now."
+msgstr "Últimos telemóveis, portáteis e acessórios — em stock agora."
+
+msgid "Shop Electronics"
+msgstr "Comprar Eletrónicos"
+
+msgid "Cement, tools and building materials for every project."
+msgstr ""
+"Cimento, ferramentas e materiais de construção para todos os projetos."
+
+msgid "Browse Materials"
+msgstr "Ver Materiais"
+
+msgid "Quality used vehicles and motorcycles, inspected."
+msgstr "Veículos e motociclos usados de qualidade, inspecionados."
+
+msgid "Browse Vehicles"
+msgstr "Ver Veículos"
+
+msgid "Explore Timor-Leste — book a local tour today."
+msgstr "Explore Timor-Leste — reserve um tour local hoje."
+
+msgid "Learn More"
+msgstr "Saber Mais"
+
+msgid "Shop by category"
+msgstr "Comprar por categoria"
+
+msgid "No categories yet."
+msgstr "Ainda sem categorias."
+
+msgid "Sell on TimorMart"
+msgstr "Vender no TimorMart"
+
+msgid "Create a free seller account and reach buyers across Timor-Leste."
+msgstr ""
+"Crie uma conta de vendedor grátis e alcance compradores em todo o Timor-"
+"Leste."
+
+msgid "Add a product"
+msgstr "Adicionar um produto"
+
+msgid "Toggle wishlist"
+msgstr "Alternar lista de desejos"
+
+msgid "No products found"
+msgstr "Nenhum produto encontrado"
+
+msgid "Try a different search term or category."
+msgstr "Tente um termo de pesquisa ou categoria diferente."
+
+msgid "Browse all products"
+msgstr "Ver todos os produtos"
+
+msgid "Added"
+msgstr "Adicionado"

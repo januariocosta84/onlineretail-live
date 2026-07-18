@@ -1,0 +1,2460 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-18 10:36+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Account type"
+msgstr "Jenis akun"
+
+msgid "Seller type"
+msgstr "Jenis penjual"
+
+msgid "Company name"
+msgstr "Nama perusahaan"
+
+msgid "Acme Trading Lda"
+msgstr "Acme Trading Lda"
+
+msgid "TIN (Tax Identification Number)"
+msgstr "NPWP (Nomor Pokok Wajib Pajak)"
+
+msgid "e.g. 123456789"
+msgstr "cth: 123456789"
+
+msgid "Company address"
+msgstr "Alamat perusahaan"
+
+msgid "Street, City, Region"
+msgstr "Jalan, Kota, Wilayah"
+
+msgid "Bank account"
+msgstr "Rekening bank"
+
+msgid "Bank name, account number, account holder"
+msgstr "Nama bank, nomor rekening, pemilik rekening"
+
+msgid "First name"
+msgstr "Nama depan"
+
+msgid "John"
+msgstr "Budi"
+
+msgid "Last name"
+msgstr "Nama belakang"
+
+msgid "Doe"
+msgstr "Santoso"
+
+msgid "Email address"
+msgstr "Alamat email"
+
+msgid "you@example.com"
+msgstr "anda@contoh.com"
+
+msgid "Phone number"
+msgstr "Nomor telepon"
+
+msgid "7012345 or +670 7012345"
+msgstr "7012345 atau +670 7012345"
+
+msgid "Address"
+msgstr "Alamat"
+
+msgid "Enter a strong password"
+msgstr "Masukkan kata sandi yang kuat"
+
+msgid "Confirm password"
+msgstr "Konfirmasi kata sandi"
+
+msgid "choose_a_username"
+msgstr "pilih_nama_pengguna"
+
+msgid "An account with this email address already exists."
+msgstr "Akun dengan alamat email ini sudah ada."
+
+msgid "Company name is required for a company seller account."
+msgstr "Nama perusahaan wajib diisi untuk akun penjual perusahaan."
+
+msgid "TIN is required for a company seller account."
+msgstr "NPWP wajib diisi untuk akun penjual perusahaan."
+
+msgid "Company address is required for a company seller account."
+msgstr "Alamat perusahaan wajib diisi untuk akun penjual perusahaan."
+
+msgid "Bank account is required for a company seller account."
+msgstr "Rekening bank wajib diisi untuk akun penjual perusahaan."
+
+msgid "Too many attempts. Please wait a few minutes and try again."
+msgstr ""
+"Terlalu banyak percobaan. Silakan tunggu beberapa menit dan coba lagi."
+
+msgid "Buyer — browse products, contact sellers and post comments"
+msgstr "Pembeli — jelajahi produk, hubungi penjual, dan tulis komentar"
+
+msgid "Seller — list and manage products for sale"
+msgstr "Penjual — mendaftarkan dan mengelola produk untuk dijual"
+
+msgid "Buyer & Seller — everything in one account"
+msgstr "Pembeli & Penjual — semuanya dalam satu akun"
+
+msgid "Password changed"
+msgstr "Kata sandi telah diubah"
+
+msgid ""
+"Your password has been set. You can now sign in with your new password."
+msgstr ""
+"Kata sandi Anda telah diatur. Anda sekarang bisa masuk dengan kata sandi "
+"baru."
+
+msgid "Sign in"
+msgstr "Masuk"
+
+msgid "Choose a new password"
+msgstr "Pilih kata sandi baru"
+
+msgid "Set new password"
+msgstr "Atur kata sandi baru"
+
+msgid ""
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr ""
+"Tautan reset kata sandi ini tidak valid atau sudah kedaluwarsa. Silakan "
+"minta yang baru."
+
+msgid "Request a new link"
+msgstr "Minta tautan baru"
+
+msgid "Reset link sent"
+msgstr "Tautan reset telah dikirim"
+
+msgid "Check your email"
+msgstr "Periksa email Anda"
+
+msgid ""
+"If an account exists with the address you entered, we have emailed a "
+"password reset link."
+msgstr ""
+"Jika ada akun dengan alamat yang Anda masukkan, kami telah mengirimkan "
+"tautan reset kata sandi melalui email."
+
+msgid "Back to sign in"
+msgstr "Kembali ke halaman masuk"
+
+msgid ""
+"You are receiving this email because you requested a password reset for your"
+" TimorMart account."
+msgstr ""
+"Anda menerima email ini karena Anda meminta reset kata sandi untuk akun "
+"TimorMart Anda."
+
+msgid "Please go to the following page and choose a new password:"
+msgstr "Silakan kunjungi halaman berikut dan pilih kata sandi baru:"
+
+msgid "Your username, in case you have forgotten:"
+msgstr "Nama pengguna Anda, jika Anda lupa:"
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr ""
+"Jika Anda tidak meminta ini, Anda bisa mengabaikan email ini dengan aman."
+
+msgid "Reset password"
+msgstr "Reset kata sandi"
+
+msgid "Reset your password"
+msgstr "Reset kata sandi Anda"
+
+msgid ""
+"Enter the email address you registered with and we will send you a link to "
+"set a new password."
+msgstr ""
+"Masukkan alamat email yang Anda gunakan saat mendaftar dan kami akan "
+"mengirimkan tautan untuk mengatur kata sandi baru."
+
+msgid "Send reset link"
+msgstr "Kirim tautan reset"
+
+msgid "Sign up"
+msgstr "Daftar"
+
+msgid "Create an account"
+msgstr "Buat akun"
+
+msgid "Already have an account?"
+msgstr "Sudah punya akun?"
+
+#, python-format
+msgid "Welcome, %(name)s! Your account is ready — happy shopping."
+msgstr "Selamat datang, %(name)s! Akun Anda sudah siap — selamat berbelanja."
+
+#, python-format
+msgid "Welcome, %(name)s! Your seller account is ready."
+msgstr "Selamat datang, %(name)s! Akun penjual Anda sudah siap."
+
+msgid "Please correct the errors below."
+msgstr "Silakan perbaiki kesalahan di bawah ini."
+
+#, python-format
+msgid "Welcome back, %(name)s!"
+msgstr "Selamat datang kembali, %(name)s!"
+
+msgid "Invalid username or password."
+msgstr "Nama pengguna atau kata sandi tidak valid."
+
+msgid "You have been logged out."
+msgstr "Anda telah keluar."
+
+msgid ""
+"Administrator accounts manage the platform and cannot buy or sell products."
+msgstr ""
+"Akun administrator mengelola platform dan tidak dapat membeli atau menjual "
+"produk."
+
+msgid "Your account already has the buyer role."
+msgstr "Akun Anda sudah memiliki peran pembeli."
+
+msgid ""
+"Your account is now Buyer & Seller — you can contact sellers and post "
+"comments."
+msgstr ""
+"Akun Anda sekarang Pembeli & Penjual — Anda dapat menghubungi penjual dan "
+"menulis komentar."
+
+msgid "Active"
+msgstr "Aktif"
+
+msgid "Closed"
+msgstr "Ditutup"
+
+msgid "Frozen"
+msgstr "Dibekukan"
+
+msgid "Automatic (balance-based)"
+msgstr "Otomatis (berdasarkan saldo)"
+
+msgid "Always Succeed"
+msgstr "Selalu Berhasil"
+
+msgid "Always Fail"
+msgstr "Selalu Gagal"
+
+msgid "Always Timeout"
+msgstr "Selalu Timeout"
+
+msgid "Always Insufficient Funds"
+msgstr "Selalu Dana Tidak Cukup"
+
+msgid "Always Flag as Duplicate"
+msgstr "Selalu Tandai sebagai Duplikat"
+
+msgid "Pending"
+msgstr "Tertunda"
+
+msgid "Success"
+msgstr "Berhasil"
+
+msgid "Failed"
+msgstr "Gagal"
+
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+msgid "Timeout"
+msgstr "Waktu Habis"
+
+msgid "Insufficient Funds"
+msgstr "Dana Tidak Cukup"
+
+msgid "Invalid / Closed Account"
+msgstr "Akun Tidak Valid / Ditutup"
+
+msgid "Duplicate Transaction"
+msgstr "Transaksi Duplikat"
+
+msgid "Outbound"
+msgstr "Keluar"
+
+msgid "Inbound"
+msgstr "Masuk"
+
+msgid "You need a seller account to access that page."
+msgstr "Anda memerlukan akun penjual untuk mengakses halaman ini."
+
+msgid "Administrator accounts manage the platform and cannot act as couriers."
+msgstr ""
+"Akun administrator mengelola platform dan tidak dapat bertindak sebagai "
+"kurir."
+
+msgid "You need a courier account to access that page."
+msgstr "Anda memerlukan akun kurir untuk mengakses halaman ini."
+
+msgid "Product name"
+msgstr "Nama produk"
+
+msgid "Price"
+msgstr "Harga"
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "Country"
+msgstr "Negara"
+
+msgid "City"
+msgstr "Kota"
+
+msgid "Quantity"
+msgstr "Jumlah"
+
+msgid "Condition"
+msgstr "Kondisi"
+
+msgid "Size"
+msgstr "Ukuran"
+
+msgid "Pieces per unit"
+msgstr "Jumlah per unit"
+
+msgid "Units per box"
+msgstr "Unit per kotak"
+
+msgid "Menu section"
+msgstr "Bagian menu"
+
+msgid "Available"
+msgstr "Tersedia"
+
+msgid "Prep time (minutes)"
+msgstr "Waktu persiapan (menit)"
+
+msgid "Description"
+msgstr "Deskripsi"
+
+msgid "Main image"
+msgstr "Gambar utama"
+
+msgid "Extra image 1"
+msgstr "Gambar tambahan 1"
+
+msgid "Extra image 2"
+msgstr "Gambar tambahan 2"
+
+msgid "Set to 0 when the product is sold out."
+msgstr "Atur ke 0 saat produk habis terjual."
+
+msgid "Optional — e.g. L, 42, 500ml"
+msgstr "Opsional — cth: L, 42, 500ml"
+
+msgid "Optional — e.g. 12 pens in a pack"
+msgstr "Opsional — cth: 12 pena dalam satu paket"
+
+msgid "Optional — e.g. 24 packs in a box"
+msgstr "Opsional — cth: 24 paket dalam satu kotak"
+
+msgid "Which section of your menu this item belongs to"
+msgstr "Bagian menu mana yang sesuai untuk item ini"
+
+msgid "Optional — e.g. 20"
+msgstr "Opsional — cth: 20"
+
+msgid "Select category"
+msgstr "Pilih kategori"
+
+msgid "Select country"
+msgstr "Pilih negara"
+
+msgid "Select city"
+msgstr "Pilih kota"
+
+msgid "Select menu section"
+msgstr "Pilih bagian menu"
+
+msgid "Price must be greater than zero."
+msgstr "Harga harus lebih besar dari nol."
+
+msgid "Section name"
+msgstr "Nama bagian"
+
+msgid "Display order"
+msgstr "Urutan tampilan"
+
+msgid "e.g. Breakfast"
+msgstr "cth: Sarapan"
+
+msgid "Lower numbers show first on the menu."
+msgstr "Angka yang lebih kecil ditampilkan lebih dulu di menu."
+
+msgid "Your name"
+msgstr "Nama Anda"
+
+msgid "Comment"
+msgstr "Komentar"
+
+#, python-format
+msgid " and %(count)d more"
+msgstr " dan %(count)d lainnya"
+
+#, python-format
+msgid ""
+"You still have items in your cart: %(items)s. Complete your purchase before "
+"they sell out!"
+msgstr ""
+"Anda masih memiliki barang di keranjang: %(items)s. Selesaikan pembelian "
+"sebelum kehabisan stok!"
+
+msgid "New"
+msgstr "Baru"
+
+msgid "Second Hand"
+msgstr "Bekas"
+
+msgid "Pending Verification"
+msgstr "Menunggu Verifikasi"
+
+msgid "Verified"
+msgstr "Terverifikasi"
+
+msgid "Rejected"
+msgstr "Ditolak"
+
+msgid ""
+"Cities this courier delivers to. Leave empty if not yet configured (order "
+"dropdowns will show all couriers until this is set)."
+msgstr ""
+"Kota-kota yang dilayani kurir ini. Biarkan kosong jika belum diatur (daftar "
+"kurir akan menampilkan semua kurir sampai ini diatur)."
+
+msgid "Individual"
+msgstr "Perorangan"
+
+msgid "Company"
+msgstr "Perusahaan"
+
+msgid "Restaurant"
+msgstr "Restoran"
+
+msgid ""
+"Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
+" account number, account holder name)."
+msgstr ""
+"Detail bank atau uang seluler yang digunakan pembeli untuk membayar Anda "
+"langsung (cth: nama bank, nomor rekening, nama pemilik rekening)."
+
+msgid "Pending approval"
+msgstr "Menunggu persetujuan"
+
+msgid "Published"
+msgstr "Diterbitkan"
+
+msgid "Changes requested"
+msgstr "Perubahan diminta"
+
+msgid "Suspended"
+msgstr "Ditangguhkan"
+
+msgid "e.g. L, 42, 500ml"
+msgstr "cth: L, 42, 500ml"
+
+msgid "e.g. 12 pens in a pack"
+msgstr "cth: 12 pena dalam satu paket"
+
+msgid "e.g. 24 packs in a box"
+msgstr "cth: 24 paket dalam satu kotak"
+
+msgid "e.g. 20"
+msgstr "cth: 20"
+
+msgid "Positive"
+msgstr "Positif"
+
+msgid "Neutral"
+msgstr "Netral"
+
+msgid "Negative"
+msgstr "Negatif"
+
+msgid "Payment Method"
+msgstr "Metode Pembayaran"
+
+msgid "Delivery Address"
+msgstr "Alamat Pengiriman"
+
+msgid "Where should we deliver your order?"
+msgstr "Ke mana kami harus mengirimkan pesanan Anda?"
+
+msgid "Delivery City"
+msgstr "Kota Pengiriman"
+
+msgid "Couriers are matched to this city"
+msgstr "Kurir disesuaikan dengan kota ini"
+
+msgid "Delivery Phone"
+msgstr "Telepon Pengiriman"
+
+msgid "Seller will contact you on this number"
+msgstr "Penjual akan menghubungi Anda di nomor ini"
+
+msgid "Any special instructions? (Optional)"
+msgstr "Ada instruksi khusus? (Opsional)"
+
+msgid "Special Instructions"
+msgstr "Instruksi Khusus"
+
+msgid "E.g., 'Please knock loudly' or 'Leave at door'"
+msgstr "Cth: 'Tolong ketuk keras-keras' atau 'Tinggalkan di depan pintu'"
+
+msgid "e.g. SIM-0001-SUCCESS"
+msgstr "cth: SIM-0001-SUCCESS"
+
+msgid "Bank Account Number"
+msgstr "Nomor Rekening Bank"
+
+msgid "The account you're paying from."
+msgstr "Rekening yang Anda gunakan untuk membayar."
+
+msgid "Enter the account number you're paying from."
+msgstr "Masukkan nomor rekening yang Anda gunakan untuk membayar."
+
+msgid "Describe what happened..."
+msgstr "Jelaskan apa yang terjadi..."
+
+msgid "Upload photos or describe the issue"
+msgstr "Unggah foto atau jelaskan masalahnya"
+
+msgid "Reason for dispute"
+msgstr "Alasan sengketa"
+
+msgid "Evidence (photos, messages, etc.)"
+msgstr "Bukti (foto, pesan, dll.)"
+
+msgid "Provide your response with evidence..."
+msgstr "Berikan tanggapan Anda beserta bukti..."
+
+msgid "Your Response"
+msgstr "Tanggapan Anda"
+
+msgid "You have 3 days to respond. Explain your side and provide evidence."
+msgstr ""
+"Anda memiliki 3 hari untuk menanggapi. Jelaskan sudut pandang Anda dan "
+"sertakan bukti."
+
+msgid "e.g. Timor Post, local courier name"
+msgstr "cth: Timor Post, nama kurir lokal"
+
+msgid "Courier / Delivery Service"
+msgstr "Kurir / Jasa Pengiriman"
+
+msgid "Tracking number, if any"
+msgstr "Nomor pelacakan, jika ada"
+
+msgid "Tracking Number"
+msgstr "Nomor Pelacakan"
+
+msgid "No courier account (self-delivery / informal courier)"
+msgstr "Tidak ada akun kurir (kirim sendiri / kurir informal)"
+
+msgid "Assign Courier"
+msgstr "Tetapkan Kurir"
+
+#, python-format
+msgid "%(name)s (★ %(avg).1f, %(count)d rating(s))"
+msgstr "%(name)s (★ %(avg).1f, %(count)d penilaian)"
+
+#, python-format
+msgid "%(name)s (no ratings yet)"
+msgstr "%(name)s (belum ada penilaian)"
+
+msgid "Delivery Photo"
+msgstr "Foto Pengiriman"
+
+msgid "A delivery photo is required to confirm delivery."
+msgstr "Foto pengiriman diperlukan untuk mengonfirmasi pengiriman."
+
+msgid "ID Document Photo"
+msgstr "Foto Dokumen Identitas"
+
+msgid "Please upload a photo of your ID document."
+msgstr "Silakan unggah foto dokumen identitas Anda."
+
+msgid "e.g. 'Left Dili warehouse, arriving Baucau tomorrow'"
+msgstr "cth: 'Meninggalkan gudang Dili, tiba di Baucau besok'"
+
+msgid "Status update"
+msgstr "Pembaruan status"
+
+msgid "Choose a plan"
+msgstr "Pilih paket"
+
+msgid "e.g. Bank transfer ref #123, paid 14 Jul 2026"
+msgstr "cth: Ref transfer bank #123, dibayar 14 Jul 2026"
+
+msgid "Payment reference"
+msgstr "Referensi pembayaran"
+
+msgid "Tell the admin how and when you paid, so they can confirm it."
+msgstr ""
+"Beri tahu admin bagaimana dan kapan Anda membayar, agar dapat dikonfirmasi."
+
+msgid "e.g. BNU Timor-Leste, Account: 1234567, Name: Jose Costa"
+msgstr "cth: BNU Timor-Leste, Rekening: 1234567, Nama: Jose Costa"
+
+msgid "Payment details for buyers"
+msgstr "Detail pembayaran untuk pembeli"
+
+msgid "Business Registration Document"
+msgstr "Dokumen Registrasi Usaha"
+
+msgid "Please upload a photo of your business registration document."
+msgstr "Silakan unggah foto dokumen registrasi usaha Anda."
+
+msgid "No active account found for that account number."
+msgstr "Tidak ditemukan akun aktif untuk nomor rekening tersebut."
+
+msgid "A matching transaction was already submitted recently."
+msgstr "Transaksi serupa baru saja diajukan."
+
+msgid "No transaction found."
+msgstr "Tidak ditemukan transaksi."
+
+msgid "No transaction to retry."
+msgstr "Tidak ada transaksi untuk dicoba lagi."
+
+msgid "Pending Payment"
+msgstr "Menunggu Pembayaran"
+
+msgid "Payment Reported — Awaiting Confirmation"
+msgstr "Pembayaran Dilaporkan — Menunggu Konfirmasi"
+
+msgid "Payment Received"
+msgstr "Pembayaran Diterima"
+
+msgid "Processing"
+msgstr "Diproses"
+
+msgid "Shipped"
+msgstr "Dikirim"
+
+msgid "Delivered"
+msgstr "Terkirim"
+
+msgid "Refunded"
+msgstr "Dikembalikan"
+
+msgid "Order Received"
+msgstr "Pesanan Diterima"
+
+msgid "Preparing Food"
+msgstr "Menyiapkan Makanan"
+
+msgid "Ready for Pickup"
+msgstr "Siap Diambil"
+
+msgid "Picked Up"
+msgstr "Sudah Diambil"
+
+msgid "On the Way"
+msgstr "Dalam Perjalanan"
+
+msgid "Card (Stripe)"
+msgstr "Kartu (Stripe)"
+
+msgid "Bank / Mobile Transfer"
+msgstr "Transfer Bank / Seluler"
+
+msgid "Automated Bank Transfer (Test)"
+msgstr "Transfer Bank Otomatis (Uji Coba)"
+
+msgid "Succeeded"
+msgstr "Berhasil"
+
+msgid "Commission"
+msgstr "Komisi"
+
+msgid "Refund"
+msgstr "Pengembalian Dana"
+
+msgid "Adjustment"
+msgstr "Penyesuaian"
+
+msgid "Payout"
+msgstr "Pencairan"
+
+msgid "Scheduled"
+msgstr "Dijadwalkan"
+
+msgid "Paid"
+msgstr "Dibayar"
+
+msgid "Open - Awaiting Seller Response"
+msgstr "Terbuka - Menunggu Tanggapan Penjual"
+
+msgid "Seller Responded"
+msgstr "Penjual Telah Menanggapi"
+
+msgid "Under Admin Review"
+msgstr "Sedang Ditinjau Admin"
+
+msgid "Resolved"
+msgstr "Terselesaikan"
+
+msgid "Full Refund to Buyer"
+msgstr "Pengembalian Dana Penuh ke Pembeli"
+
+msgid "Partial Refund"
+msgstr "Pengembalian Dana Sebagian"
+
+msgid "Reshipment"
+msgstr "Pengiriman Ulang"
+
+msgid "Closed - No Action"
+msgstr "Ditutup - Tanpa Tindakan"
+
+msgid "Item Not Received"
+msgstr "Barang Tidak Diterima"
+
+msgid "Item Damaged"
+msgstr "Barang Rusak"
+
+msgid "Item Not as Described"
+msgstr "Barang Tidak Sesuai Deskripsi"
+
+msgid "Wrong Item Received"
+msgstr "Barang yang Diterima Salah"
+
+msgid "Other"
+msgstr "Lainnya"
+
+msgid ""
+"Bank or mobile money details shown to sellers when they pay the platform for"
+" a subscription upgrade."
+msgstr ""
+"Detail bank atau uang seluler yang ditampilkan ke penjual saat mereka "
+"membayar platform untuk peningkatan langganan."
+
+#, python-format
+msgid "TimorMart — order %(order)s"
+msgstr "TimorMart — pesanan %(order)s"
+
+msgid "TimorMart notification"
+msgstr "Notifikasi TimorMart"
+
+msgid "This item can only be purchased by contacting the seller directly."
+msgstr ""
+"Barang ini hanya bisa dibeli dengan menghubungi penjual secara langsung."
+
+msgid "This item is currently unavailable."
+msgstr "Barang ini saat ini tidak tersedia."
+
+msgid "This product is out of stock."
+msgstr "Produk ini sedang habis stok."
+
+msgid "Product added to cart."
+msgstr "Produk ditambahkan ke keranjang."
+
+msgid "Cart updated."
+msgstr "Keranjang diperbarui."
+
+msgid "Not enough stock available."
+msgstr "Stok tidak mencukupi."
+
+msgid "Item removed from cart."
+msgstr "Barang dihapus dari keranjang."
+
+msgid "Cart cleared."
+msgstr "Keranjang dikosongkan."
+
+msgid "Saved to your wishlist."
+msgstr "Disimpan ke wishlist Anda."
+
+msgid "Removed from your wishlist."
+msgstr "Dihapus dari wishlist Anda."
+
+msgid "Moved to your cart."
+msgstr "Dipindahkan ke keranjang Anda."
+
+msgid "Your cart is empty."
+msgstr "Keranjang Anda kosong."
+
+#, python-format
+msgid ""
+"%(product)s can only be purchased by contacting the seller directly — remove"
+" it from your cart."
+msgstr ""
+"%(product)s hanya bisa dibeli dengan menghubungi penjual langsung — hapus "
+"dari keranjang Anda."
+
+#, python-format
+msgid "%(product)s is currently unavailable."
+msgstr "%(product)s saat ini tidak tersedia."
+
+#, python-format
+msgid "%(product)s has only %(qty)d available."
+msgstr "%(product)s hanya tersedia %(qty)d."
+
+#, python-format
+msgid ""
+"%(sellers)s haven't set up payment details yet — choose Card, or contact "
+"them."
+msgstr ""
+"%(sellers)s belum mengatur detail pembayaran — pilih Kartu, atau hubungi "
+"mereka."
+
+#, python-format
+msgid ""
+"New order %(order)s from %(buyer)s for “%(product)s” — awaiting their "
+"bank/mobile transfer."
+msgstr ""
+"Pesanan baru %(order)s dari %(buyer)s untuk “%(product)s” — menunggu "
+"transfer bank/seluler mereka."
+
+msgid "Payment processing error. Please try again."
+msgstr "Terjadi kesalahan pemrosesan pembayaran. Silakan coba lagi."
+
+msgid "Your automated bank transfer is being processed."
+msgstr "Transfer bank otomatis Anda sedang diproses."
+
+msgid "Order received by the restaurant."
+msgstr "Pesanan telah diterima restoran."
+
+#, python-format
+msgid "Payment received for order %(order)s from %(buyer)s — “%(product)s”."
+msgstr ""
+"Pembayaran diterima untuk pesanan %(order)s dari %(buyer)s — “%(product)s”."
+
+#, python-format
+msgid "Your payment for order %(order)s was successful."
+msgstr "Pembayaran Anda untuk pesanan %(order)s berhasil."
+
+#, python-format
+msgid "Your payment for order %(order)s was refunded."
+msgstr "Pembayaran Anda untuk pesanan %(order)s telah dikembalikan."
+
+#, python-format
+msgid "Order %(order)s was refunded to the buyer."
+msgstr "Pesanan %(order)s telah dikembalikan dananya ke pembeli."
+
+msgid "This order is not awaiting a transfer."
+msgstr "Pesanan ini tidak sedang menunggu transfer."
+
+#, python-format
+msgid ""
+"%(buyer)s says they've sent payment for order %(order)s — please confirm "
+"receipt."
+msgstr ""
+"%(buyer)s mengatakan telah mengirim pembayaran untuk pesanan %(order)s — "
+"mohon konfirmasi penerimaan."
+
+msgid "Thanks — the seller has been notified to confirm receipt."
+msgstr ""
+"Terima kasih — penjual telah diberi tahu untuk mengonfirmasi penerimaan."
+
+msgid "Permission denied."
+msgstr "Izin ditolak."
+
+msgid "You must be a seller to confirm payments."
+msgstr "Anda harus menjadi penjual untuk mengonfirmasi pembayaran."
+
+msgid "This order is not awaiting payment confirmation."
+msgstr "Pesanan ini tidak sedang menunggu konfirmasi pembayaran."
+
+#, python-format
+msgid "%(seller)s confirmed your payment for order %(order)s."
+msgstr ""
+"%(seller)s telah mengonfirmasi pembayaran Anda untuk pesanan %(order)s."
+
+msgid "Payment confirmed — the order is now marked as paid."
+msgstr "Pembayaran dikonfirmasi — pesanan sekarang ditandai sebagai dibayar."
+
+msgid "Payment details saved."
+msgstr "Detail pembayaran disimpan."
+
+msgid "Company info only applies to company seller accounts."
+msgstr "Info perusahaan hanya berlaku untuk akun penjual perusahaan."
+
+msgid "Company information saved."
+msgstr "Info perusahaan disimpan."
+
+msgid "Business verification only applies to company seller accounts."
+msgstr "Verifikasi usaha hanya berlaku untuk akun penjual perusahaan."
+
+msgid "Document submitted — an administrator will review it shortly."
+msgstr "Dokumen telah dikirim — admin akan meninjaunya segera."
+
+msgid "You already have a pending subscription request awaiting confirmation."
+msgstr "Anda sudah memiliki permintaan langganan yang menunggu konfirmasi."
+
+msgid ""
+"Thanks — your payment report was submitted. An admin will confirm it "
+"shortly."
+msgstr ""
+"Terima kasih — laporan pembayaran Anda telah dikirim. Admin akan segera "
+"mengonfirmasinya."
+
+msgid ""
+"This order can no longer be cancelled — it has already been paid or is past "
+"that stage."
+msgstr ""
+"Pesanan ini tidak dapat dibatalkan lagi — sudah dibayar atau sudah melewati "
+"tahap itu."
+
+#, python-format
+msgid "%(buyer)s cancelled order %(order)s before paying."
+msgstr "%(buyer)s membatalkan pesanan %(order)s sebelum membayar."
+
+#, python-format
+msgid "Order %(order)s was cancelled."
+msgstr "Pesanan %(order)s telah dibatalkan."
+
+msgid "You do not have permission to view this order."
+msgstr "Anda tidak memiliki izin untuk melihat pesanan ini."
+
+msgid "You can only rate a product after it has been delivered."
+msgstr "Anda hanya bisa menilai produk setelah dikirim."
+
+msgid "You already rated this order."
+msgstr "Anda sudah menilai pesanan ini."
+
+msgid "Please choose a rating from 1 to 5 stars."
+msgstr "Silakan pilih penilaian dari 1 hingga 5 bintang."
+
+msgid "Thanks for your rating!"
+msgstr "Terima kasih atas penilaian Anda!"
+
+msgid "You can only rate a courier after the order has been delivered."
+msgstr "Anda hanya bisa menilai kurir setelah pesanan dikirim."
+
+msgid "This order has no assigned courier to rate."
+msgstr "Pesanan ini tidak memiliki kurir yang ditugaskan untuk dinilai."
+
+msgid "You already rated this courier."
+msgstr "Anda sudah menilai kurir ini."
+
+msgid "Thanks for rating the courier!"
+msgstr "Terima kasih telah menilai kurir!"
+
+msgid "You must be a seller to view this page."
+msgstr "Anda harus menjadi penjual untuk melihat halaman ini."
+
+msgid "You must be a seller to update orders."
+msgstr "Anda harus menjadi penjual untuk memperbarui pesanan."
+
+msgid "Unknown action."
+msgstr "Tindakan tidak dikenal."
+
+msgid "Only paid orders can be marked as shipped."
+msgstr "Hanya pesanan yang sudah dibayar yang bisa ditandai sebagai dikirim."
+
+#, python-format
+msgid "Your order %(order)s has shipped."
+msgstr "Pesanan Anda %(order)s telah dikirim."
+
+#, python-format
+msgid "You have been assigned to deliver order %(order)s."
+msgstr "Anda telah ditugaskan untuk mengirimkan pesanan %(order)s."
+
+msgid "Order marked as shipped."
+msgstr "Pesanan ditandai sebagai dikirim."
+
+msgid "Only shipped orders can be marked as delivered."
+msgstr "Hanya pesanan yang sudah dikirim yang bisa ditandai sebagai terkirim."
+
+#, python-format
+msgid "Your order %(order)s has been delivered."
+msgstr "Pesanan Anda %(order)s telah terkirim."
+
+msgid "Order marked as delivered."
+msgstr "Pesanan ditandai sebagai terkirim."
+
+msgid "Preparing the food."
+msgstr "Sedang menyiapkan makanan."
+
+msgid "Order is ready for pickup."
+msgstr "Pesanan siap untuk diambil."
+
+msgid "This action only applies to restaurant orders."
+msgstr "Tindakan ini hanya berlaku untuk pesanan restoran."
+
+msgid "This order cannot be advanced from its current status."
+msgstr "Pesanan ini tidak dapat dilanjutkan dari status saat ini."
+
+#, python-format
+msgid "Order %(order)s is ready for collection."
+msgstr "Pesanan %(order)s siap untuk diambil."
+
+msgid "Order updated."
+msgstr "Pesanan diperbarui."
+
+msgid "Courier picked up the order."
+msgstr "Kurir telah mengambil pesanan."
+
+msgid "Courier is on the way."
+msgstr "Kurir sedang dalam perjalanan."
+
+msgid "ID submitted — an administrator will review it shortly."
+msgstr "Identitas telah dikirim — admin akan segera meninjaunya."
+
+msgid "You must be a seller to post delivery updates."
+msgstr "Anda harus menjadi penjual untuk memposting pembaruan pengiriman."
+
+#, python-format
+msgid "Delivery update for order %(order)s: %(note)s"
+msgstr "Pembaruan pengiriman untuk pesanan %(order)s: %(note)s"
+
+msgid "Update posted."
+msgstr "Pembaruan telah diposting."
+
+msgid "Please enter a status update."
+msgstr "Silakan masukkan pembaruan status."
+
+msgid "You can only open disputes for delivered or shipped orders."
+msgstr ""
+"Anda hanya bisa membuka sengketa untuk pesanan yang sudah terkirim atau "
+"dikirim."
+
+msgid "A dispute is already open for this order."
+msgstr "Sengketa sudah terbuka untuk pesanan ini."
+
+msgid "Dispute opened. Seller has 3 days to respond."
+msgstr "Sengketa dibuka. Penjual memiliki 3 hari untuk menanggapi."
+
+msgid "You do not have permission to view this dispute."
+msgstr "Anda tidak memiliki izin untuk melihat sengketa ini."
+
+msgid "You must be a seller to respond to disputes."
+msgstr "Anda harus menjadi penjual untuk menanggapi sengketa."
+
+msgid "Response deadline has passed."
+msgstr "Batas waktu tanggapan telah berlalu."
+
+msgid "Your response has been submitted."
+msgstr "Tanggapan Anda telah dikirim."
+
+msgid "Free"
+msgstr "Gratis"
+
+msgid "Monthly — $11/month"
+msgstr "Bulanan — $11/bulan"
+
+msgid "Yearly — $100/year"
+msgstr "Tahunan — $100/tahun"
+
+msgid "Approved"
+msgstr "Disetujui"
+
+msgid ""
+"How/when you paid — e.g. bank transfer reference, mobile money confirmation."
+msgstr ""
+"Bagaimana/kapan Anda membayar — cth: referensi transfer bank, konfirmasi "
+"uang seluler."
+
+#, python-format
+msgid "Image files must be smaller than %(max)sMB."
+msgstr "File gambar harus lebih kecil dari %(max)sMB."
+
+msgid "That category does not exist."
+msgstr "Kategori tersebut tidak ada."
+
+msgid "That product is awaiting approval."
+msgstr "Produk tersebut sedang menunggu persetujuan."
+
+msgid "Only buyer accounts can post comments."
+msgstr "Hanya akun pembeli yang dapat memposting komentar."
+
+msgid "Your comment was posted."
+msgstr "Komentar Anda telah diposting."
+
+msgid "Please correct the errors in your comment."
+msgstr "Silakan perbaiki kesalahan pada komentar Anda."
+
+#, python-format
+msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
+msgstr "Halo, saya tertarik dengan “%(name)s” (%(url)s) di TimorMart."
+
+#, python-format
+msgid ""
+"You've reached the free plan's %(limit)d listing limit. Subscribe to post "
+"more products."
+msgstr ""
+"Anda telah mencapai batas %(limit)d listing paket gratis. Berlangganan untuk"
+" memposting lebih banyak produk."
+
+#, python-format
+msgid "“%(name)s” was published."
+msgstr "“%(name)s” telah diterbitkan."
+
+#, python-format
+msgid "“%(name)s” was created and is awaiting approval by the administrators."
+msgstr "“%(name)s” telah dibuat dan sedang menunggu persetujuan admin."
+
+msgid "Add a new product"
+msgstr "Tambah produk baru"
+
+msgid "Create product"
+msgstr "Buat produk"
+
+#, python-format
+msgid "“%(name)s” was resubmitted for approval."
+msgstr "“%(name)s” telah dikirim ulang untuk persetujuan."
+
+#, python-format
+msgid "“%(name)s” was updated."
+msgstr "“%(name)s” telah diperbarui."
+
+#, python-format
+msgid "Edit “%(name)s”"
+msgstr "Edit “%(name)s”"
+
+msgid "Save changes"
+msgstr "Simpan perubahan"
+
+#, python-format
+msgid "“%(name)s” is now marked as sold out."
+msgstr "“%(name)s” sekarang ditandai sebagai habis terjual."
+
+#, python-format
+msgid ""
+"“%(name)s” can't be deleted because it has order history — mark it sold out "
+"instead."
+msgstr ""
+"“%(name)s” tidak dapat dihapus karena memiliki riwayat pesanan — tandai "
+"sebagai habis terjual saja."
+
+#, python-format
+msgid "“%(name)s” was deleted."
+msgstr "“%(name)s” telah dihapus."
+
+msgid "Menu sections are only available for restaurant seller accounts."
+msgstr "Bagian menu hanya tersedia untuk akun penjual restoran."
+
+#, python-format
+msgid "“%(name)s” was added to your menu."
+msgstr "“%(name)s” telah ditambahkan ke menu Anda."
+
+#, python-format
+msgid "“%(name)s” was removed from your menu."
+msgstr "“%(name)s” telah dihapus dari menu Anda."
+
+msgid "Page not found"
+msgstr "Halaman tidak ditemukan"
+
+msgid "The page you are looking for does not exist or may have been removed."
+msgstr "Halaman yang Anda cari tidak ada atau mungkin telah dihapus."
+
+msgid "Back to the store"
+msgstr "Kembali ke toko"
+
+msgid "Something went wrong"
+msgstr "Terjadi kesalahan"
+
+msgid ""
+"We are sorry — an unexpected error occurred. Please try again in a moment."
+msgstr ""
+"Mohon maaf — terjadi kesalahan tak terduga. Silakan coba lagi sebentar."
+
+msgid "Sign In"
+msgstr "Masuk"
+
+msgid "Welcome back to TimorMart"
+msgstr "Selamat datang kembali di TimorMart"
+
+msgid "Forgot password?"
+msgstr "Lupa kata sandi?"
+
+msgid "or"
+msgstr "atau"
+
+msgid "Don't have an account yet?"
+msgstr "Belum punya akun?"
+
+msgid "Create Account"
+msgstr "Buat Akun"
+
+msgid "First time here? Sign up to start buying and selling."
+msgstr "Pertama kali di sini? Daftar untuk mulai membeli dan menjual."
+
+msgid "Sign Up"
+msgstr "Daftar"
+
+msgid "Create Your Account"
+msgstr "Buat Akun Anda"
+
+msgid "Join thousands of buyers and sellers on TimorMart."
+msgstr "Bergabunglah dengan ribuan pembeli dan penjual di TimorMart."
+
+msgid "Company Information"
+msgstr "Informasi Perusahaan"
+
+msgid "Personal Information"
+msgstr "Informasi Pribadi"
+
+msgid "We'll use this to verify your account."
+msgstr "Kami akan menggunakan ini untuk memverifikasi akun Anda."
+
+msgid "Local or international format (e.g., 7012345 or +670 7012345)."
+msgstr "Format lokal atau internasional (cth: 7012345 atau +670 7012345)."
+
+msgid "Your primary delivery or contact address."
+msgstr "Alamat utama pengiriman atau kontak Anda."
+
+msgid "Account Credentials"
+msgstr "Kredensial Akun"
+
+msgid "Letters, digits and @/./+/-/_ only. 30 characters or fewer."
+msgstr "Hanya huruf, angka, dan @/./+/-/_. 30 karakter atau kurang."
+
+msgid ""
+"Your password must be at least 8 characters long and can't be entirely "
+"numeric."
+msgstr ""
+"Kata sandi Anda harus minimal 8 karakter dan tidak boleh seluruhnya angka."
+
+msgid "Enter the same password to verify."
+msgstr "Masukkan kata sandi yang sama untuk verifikasi."
+
+msgid "Password requirements:"
+msgstr "Persyaratan kata sandi:"
+
+msgid "At least 8 characters long"
+msgstr "Minimal 8 karakter"
+
+msgid "Can't be entirely numeric"
+msgstr "Tidak boleh seluruhnya angka"
+
+msgid "Can't be the same as your username"
+msgstr "Tidak boleh sama dengan nama pengguna Anda"
+
+msgid "Sign in here"
+msgstr "Masuk di sini"
+
+msgid "About Us"
+msgstr "Tentang Kami"
+
+msgid ""
+"TimorMart is Timor-Leste's local online marketplace connecting buyers and "
+"sellers across the country."
+msgstr ""
+"TimorMart adalah pasar daring lokal Timor-Leste yang menghubungkan pembeli "
+"dan penjual di seluruh negeri."
+
+msgid "About TimorMart"
+msgstr "Tentang TimorMart"
+
+msgid ""
+"TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
+"        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
+msgstr ""
+"TimorMart adalah pasar daring milik Timor-Leste sendiri — tempat bagi orang-orang di seluruh negeri\n"
+"        untuk membeli dan menjual langsung satu sama lain, tanpa perlu toko fisik atau modal besar untuk memulai."
+
+msgid "Why we built this"
+msgstr "Mengapa kami membangun ini"
+
+msgid ""
+"Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
+"            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
+"            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling\n"
+"            online: a single, trusted place where anyone can list a product and anyone can find it, whether\n"
+"            it's brand new or a good second-hand find."
+msgstr ""
+"Perdagangan eceran di Timor-Leste tersebar di pasar, toko kecil, dan dari mulut ke mulut —\n"
+"            bagus untuk komunitas, tetapi sulit bagi pembeli untuk membandingkan pilihan atau bagi penjual kecil untuk menjangkau\n"
+"            pelanggan di luar lingkungan mereka sendiri. TimorMart membawa jual beli sehari-hari yang sama itu\n"
+"            secara daring: satu tempat terpercaya di mana siapa pun dapat memasang produk dan siapa pun dapat menemukannya, baik\n"
+"            barang baru maupun barang bekas berkualitas."
+
+msgid "For Buyers"
+msgstr "Untuk Pembeli"
+
+msgid "Browse products from home, across every municipality"
+msgstr "Jelajahi produk dari rumah, di seluruh kabupaten"
+
+msgid "Clear pricing and condition (new vs. second-hand) on every listing"
+msgstr "Harga dan kondisi jelas (baru vs. bekas) di setiap listing"
+
+msgid "Ratings and comments from other buyers"
+msgstr "Penilaian dan komentar dari pembeli lain"
+
+msgid "Contact sellers directly, including by WhatsApp"
+msgstr "Hubungi penjual langsung, termasuk lewat WhatsApp"
+
+msgid "Use the site in English or Tetum"
+msgstr "Gunakan situs dalam Bahasa Inggris atau Tetum"
+
+msgid "For Sellers"
+msgstr "Untuk Penjual"
+
+msgid "Reach buyers across the country without renting a storefront"
+msgstr "Menjangkau pembeli di seluruh negeri tanpa menyewa toko"
+
+msgid "List, edit and track products from a simple dashboard"
+msgstr "Daftar, edit, dan lacak produk dari dashboard yang sederhana"
+
+msgid "Get paid by card, bank transfer or mobile money"
+msgstr "Terima pembayaran melalui kartu, transfer bank, atau uang seluler"
+
+msgid "Build a reputation through buyer ratings and reviews"
+msgstr "Bangun reputasi melalui penilaian dan ulasan pembeli"
+
+msgid "Start free — upgrade only once you're ready to grow"
+msgstr "Mulai gratis — tingkatkan hanya saat Anda siap berkembang"
+
+msgid "Trust & Safety"
+msgstr "Kepercayaan & Keamanan"
+
+msgid "Every listing is reviewed before it goes live"
+msgstr "Setiap listing ditinjau sebelum tayang"
+
+msgid "Couriers submit ID and are verified before they can deliver an order"
+msgstr ""
+"Kurir mengirimkan identitas dan diverifikasi sebelum dapat mengirimkan "
+"pesanan"
+
+msgid "Photo proof of delivery on every shipped order"
+msgstr "Bukti foto pengiriman untuk setiap pesanan yang dikirim"
+
+msgid "A dispute process if something goes wrong"
+msgstr "Proses sengketa jika ada yang tidak beres"
+
+msgid "Buyers and couriers can both be rated after delivery"
+msgstr "Pembeli dan kurir dapat dinilai setelah pengiriman"
+
+msgid "What makes TimorMart different"
+msgstr "Apa yang membuat TimorMart berbeda"
+
+msgid ""
+"Built for Timor-Leste — local cities, local languages, local payment options"
+msgstr ""
+"Dibangun untuk Timor-Leste — kota lokal, bahasa lokal, opsi pembayaran lokal"
+
+msgid "New and second-hand items side by side, so buying affordably is easy"
+msgstr "Barang baru dan bekas berdampingan, sehingga belanja hemat jadi mudah"
+
+msgid "Full English and Tetum support throughout the site"
+msgstr "Dukungan penuh Bahasa Inggris dan Tetum di seluruh situs"
+
+msgid "Direct WhatsApp contact between buyers and sellers"
+msgstr "Kontak WhatsApp langsung antara pembeli dan penjual"
+
+msgid "Delivery matched to the buyer's city, with verified couriers"
+msgstr ""
+"Pengiriman disesuaikan dengan kota pembeli, dengan kurir terverifikasi"
+
+msgid "Moderation and dispute resolution to keep the marketplace trustworthy"
+msgstr "Moderasi dan penyelesaian sengketa untuk menjaga kepercayaan pasar"
+
+msgid "Ready to get started?"
+msgstr "Siap untuk memulai?"
+
+msgid "Browse products"
+msgstr "Jelajahi produk"
+
+msgid "Start selling"
+msgstr "Mulai berjualan"
+
+msgid "Payment Details"
+msgstr "Detail Pembayaran"
+
+msgid ""
+"Send the amount below to each seller using the details they provided, then "
+"let them know you've paid."
+msgstr ""
+"Kirim jumlah di bawah ini ke setiap penjual menggunakan detail yang mereka "
+"berikan, lalu beri tahu mereka bahwa Anda telah membayar."
+
+msgid "Order"
+msgstr "Pesanan"
+
+msgid "Amount to send"
+msgstr "Jumlah yang dikirim"
+
+msgid "Reference (include in the transfer memo)"
+msgstr "Referensi (sertakan dalam catatan transfer)"
+
+msgid "Seller payment details"
+msgstr "Detail pembayaran penjual"
+
+msgid "I've sent payment"
+msgstr "Saya sudah mengirim pembayaran"
+
+msgid "View my orders"
+msgstr "Lihat pesanan saya"
+
+msgid "My Orders"
+msgstr "Pesanan Saya"
+
+msgid "Continue Shopping"
+msgstr "Lanjutkan Belanja"
+
+msgid "All"
+msgstr "Semua"
+
+msgid "Order #"
+msgstr "Pesanan #"
+
+msgid "Product"
+msgstr "Produk"
+
+msgid "Seller"
+msgstr "Penjual"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Date"
+msgstr "Tanggal"
+
+msgid "View"
+msgstr "Lihat"
+
+msgid "No orders yet."
+msgstr "Belum ada pesanan."
+
+msgid "Start shopping now"
+msgstr "Mulai belanja sekarang"
+
+msgid "Shopping Cart"
+msgstr "Keranjang Belanja"
+
+msgid "Qty"
+msgstr "Jml"
+
+msgid "Update"
+msgstr "Perbarui"
+
+msgid "Remove"
+msgstr "Hapus"
+
+msgid "Order Summary"
+msgstr "Ringkasan Pesanan"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#, python-format
+msgid "Commission (15%%) and payment fees will be calculated at checkout."
+msgstr "Komisi (15%%) dan biaya pembayaran akan dihitung saat checkout."
+
+msgid "Proceed to Checkout"
+msgstr "Lanjutkan ke Checkout"
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Order Review"
+msgstr "Tinjauan Pesanan"
+
+msgid "Unit Price"
+msgstr "Harga Satuan"
+
+#, python-format
+msgid ""
+"\n"
+"                %(sellers)s haven't set up bank transfer details yet — choose Card if your cart includes their items.\n"
+"                "
+msgstr ""
+"\n"
+"                %(sellers)s belum mengatur detail transfer bank — pilih Kartu jika keranjang Anda berisi barang mereka.\n"
+"                "
+
+msgid "Test accounts:"
+msgstr "Akun uji coba:"
+
+msgid "Delivery Information"
+msgstr "Informasi Pengiriman"
+
+msgid "Proceed to Payment"
+msgstr "Lanjutkan ke Pembayaran"
+
+#, python-format
+msgid "Platform fee (15%%)"
+msgstr "Biaya platform (15%%)"
+
+msgid "Payment fee"
+msgstr "Biaya pembayaran"
+
+msgid "Delivery fee"
+msgstr "Biaya pengiriman"
+
+msgid "Your payment is secure and encrypted."
+msgstr "Pembayaran Anda aman dan terenkripsi."
+
+msgid ""
+"You'll pay the seller directly — no platform fee. The next page shows their "
+"payment details."
+msgstr ""
+"Anda akan membayar penjual secara langsung — tanpa biaya platform. Halaman "
+"berikutnya menampilkan detail pembayaran mereka."
+
+msgid ""
+"Test/dev payment rail — enter one of the test account numbers above to "
+"trigger a specific outcome."
+msgstr ""
+"Jalur pembayaran uji coba/dev — masukkan salah satu nomor akun uji coba di "
+"atas untuk memicu hasil tertentu."
+
+msgid "Continue to Payment Details"
+msgstr "Lanjutkan ke Detail Pembayaran"
+
+msgid "Submit Bank Transfer"
+msgstr "Kirim Transfer Bank"
+
+msgid "My Deliveries"
+msgstr "Pengiriman Saya"
+
+msgid "You're verified and can be assigned deliveries."
+msgstr "Anda telah terverifikasi dan dapat ditugaskan pengiriman."
+
+msgid "Awaiting review"
+msgstr "Menunggu tinjauan"
+
+msgid "An administrator is reviewing your ID document."
+msgstr "Admin sedang meninjau dokumen identitas Anda."
+
+msgid "Your ID submission was rejected"
+msgstr "Pengajuan identitas Anda ditolak"
+
+msgid ""
+"Submit a photo of your ID document to get verified — you can't be assigned "
+"deliveries until then."
+msgstr ""
+"Kirim foto dokumen identitas Anda untuk diverifikasi — Anda tidak dapat "
+"ditugaskan pengiriman sampai saat itu."
+
+msgid "Submit"
+msgstr "Kirim"
+
+msgid "Buyer"
+msgstr "Pembeli"
+
+msgid "Deliver to"
+msgstr "Kirim ke"
+
+msgid "Ready for pickup"
+msgstr "Siap diambil"
+
+msgid "Picked up"
+msgstr "Sudah diambil"
+
+msgid "On the way"
+msgstr "Dalam perjalanan"
+
+msgid "Awaiting kitchen"
+msgstr "Menunggu dapur"
+
+msgid "Confirm Pickup"
+msgstr "Konfirmasi Pengambilan"
+
+msgid "Mark On the Way"
+msgstr "Tandai Dalam Perjalanan"
+
+msgid "View / Mark Delivered"
+msgstr "Lihat / Tandai Terkirim"
+
+msgid "No deliveries waiting right now."
+msgstr "Tidak ada pengiriman yang menunggu saat ini."
+
+msgid "Recently Delivered"
+msgstr "Baru Saja Terkirim"
+
+msgid "No deliveries completed yet."
+msgstr "Belum ada pengiriman yang selesai."
+
+msgid "Home"
+msgstr "Beranda"
+
+msgid ""
+"This listing is awaiting administrator approval and is not yet visible to "
+"buyers."
+msgstr ""
+"Listing ini sedang menunggu persetujuan admin dan belum terlihat oleh "
+"pembeli."
+
+msgid "This listing is not visible to buyers."
+msgstr "Listing ini tidak terlihat oleh pembeli."
+
+msgid "Moderator note:"
+msgstr "Catatan moderator:"
+
+msgid "Previous image"
+msgstr "Gambar sebelumnya"
+
+msgid "Next image"
+msgstr "Gambar berikutnya"
+
+msgid "View full screen"
+msgstr "Lihat layar penuh"
+
+msgid "Product images"
+msgstr "Gambar produk"
+
+msgid "Close"
+msgstr "Tutup"
+
+msgid "No image available"
+msgstr "Tidak ada gambar tersedia"
+
+msgid "rating"
+msgstr "penilaian"
+
+msgid "min"
+msgstr "menit"
+
+msgid "Unavailable"
+msgstr "Tidak Tersedia"
+
+msgid "In stock"
+msgstr "Tersedia"
+
+msgid "Out of stock"
+msgstr "Habis"
+
+msgid "Add to Cart"
+msgstr "Tambah ke Keranjang"
+
+msgid "Saved"
+msgstr "Tersimpan"
+
+msgid "Save"
+msgstr "Simpan"
+
+msgid ""
+"Not booked through the cart — contact the service provider directly to "
+"arrange this."
+msgstr ""
+"Tidak dipesan melalui keranjang — hubungi penyedia jasa langsung untuk "
+"mengaturnya."
+
+msgid ""
+"Not sold through the cart — contact the seller directly to arrange this."
+msgstr ""
+"Tidak dijual melalui keranjang — hubungi penjual langsung untuk mengaturnya."
+
+msgid "Listed"
+msgstr "Terdaftar"
+
+msgid "Service Provider"
+msgstr "Penyedia Jasa"
+
+msgid "Verified Business"
+msgstr "Bisnis Terverifikasi"
+
+msgid "Chat on WhatsApp"
+msgstr "Chat di WhatsApp"
+
+msgid "Interested in this service?"
+msgstr "Tertarik dengan jasa ini?"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, upgrade "
+"your account to Buyer & Seller."
+msgstr ""
+"Untuk melihat nomor telepon dan kontak WhatsApp penyedia jasa, tingkatkan "
+"akun Anda ke Pembeli & Penjual."
+
+msgid "Interested in this product?"
+msgstr "Tertarik dengan produk ini?"
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, upgrade your account"
+" to Buyer & Seller."
+msgstr ""
+"Untuk melihat nomor telepon dan kontak WhatsApp penjual, tingkatkan akun "
+"Anda ke Pembeli & Penjual."
+
+msgid "Upgrade to Buyer & Seller"
+msgstr "Tingkatkan ke Pembeli & Penjual"
+
+msgid "Sign in to view contact information"
+msgstr "Masuk untuk melihat informasi kontak"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, please "
+"sign in or create an account."
+msgstr ""
+"Untuk melihat nomor telepon dan kontak WhatsApp penyedia jasa, silakan masuk"
+" atau buat akun."
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, please sign in or "
+"create an account."
+msgstr ""
+"Untuk melihat nomor telepon dan kontak WhatsApp penjual, silakan masuk atau "
+"buat akun."
+
+msgid "Edit listing"
+msgstr "Edit listing"
+
+msgid "Reviews"
+msgstr "Ulasan"
+
+msgid "Verified Purchase"
+msgstr "Pembelian Terverifikasi"
+
+msgid "Related products"
+msgstr "Produk terkait"
+
+msgid "Comments"
+msgstr "Komentar"
+
+msgid "Post comment"
+msgstr "Kirim komentar"
+
+msgid ""
+"Comments are available to buyer accounts. Seller accounts cannot post "
+"comments."
+msgstr ""
+"Komentar tersedia untuk akun pembeli. Akun penjual tidak dapat memposting "
+"komentar."
+
+msgid "Sign in with a buyer account to post a comment."
+msgstr "Masuk dengan akun pembeli untuk memposting komentar."
+
+msgid "No comments yet. Be the first to ask about this product!"
+msgstr "Belum ada komentar. Jadilah yang pertama bertanya tentang produk ini!"
+
+msgid "Dispute"
+msgstr "Sengketa"
+
+msgid "Seller response due by"
+msgstr "Batas tanggapan penjual"
+
+msgid "Buyer's Report"
+msgstr "Laporan Pembeli"
+
+msgid "Resolution"
+msgstr "Penyelesaian"
+
+msgid "Refund Amount"
+msgstr "Jumlah Pengembalian Dana"
+
+msgid "Resolved on"
+msgstr "Diselesaikan pada"
+
+msgid "View Order"
+msgstr "Lihat Pesanan"
+
+msgid "Previous"
+msgstr "Sebelumnya"
+
+msgid "Next"
+msgstr "Berikutnya"
+
+msgid "Best sellers"
+msgstr "Terlaris"
+
+#, python-format
+msgid "Search results for “%(query)s”"
+msgstr "Hasil pencarian untuk “%(query)s”"
+
+msgid "New arrivals"
+msgstr "Produk Terbaru"
+
+#, python-format
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] "%(counter)s barang"
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Max"
+msgstr "Maks"
+
+msgid "Sort by"
+msgstr "Urutkan berdasarkan"
+
+msgid "Newest"
+msgstr "Terbaru"
+
+msgid "Best selling"
+msgstr "Terlaris"
+
+msgid "Price: low to high"
+msgstr "Harga: rendah ke tinggi"
+
+msgid "Price: high to low"
+msgstr "Harga: tinggi ke rendah"
+
+msgid "Name"
+msgstr "Nama"
+
+msgid "Apply"
+msgstr "Terapkan"
+
+msgid "My products"
+msgstr "Produk saya"
+
+msgid "Add product"
+msgstr "Tambah produk"
+
+#, python-format
+msgid ""
+"Your subscription expired. You have %(used)s listings (over the free limit "
+"of %(limit)s) — they stay live, but you can't add new ones until you renew."
+msgstr ""
+"Langganan Anda telah kedaluwarsa. Anda memiliki %(used)s listing (melebihi "
+"batas gratis %(limit)s) — tetap aktif, tetapi Anda tidak dapat menambah yang"
+" baru sampai memperbarui."
+
+#, python-format
+msgid ""
+"Your subscription expires in %(days)s day(s) (%(date)s) — renew to keep "
+"posting new products."
+msgstr ""
+"Langganan Anda akan kedaluwarsa dalam %(days)s hari (%(date)s) — perbarui "
+"untuk terus memposting produk baru."
+
+#, python-format
+msgid "%(plan)s — unlimited listings, active until %(date)s."
+msgstr "%(plan)s — listing tanpa batas, aktif hingga %(date)s."
+
+#, python-format
+msgid "%(used)s / %(limit)s free listings used."
+msgstr "%(used)s / %(limit)s listing gratis telah digunakan."
+
+msgid "Manage subscription"
+msgstr "Kelola langganan"
+
+msgid "Listings"
+msgstr "Listing"
+
+msgid "Inventory value"
+msgstr "Nilai inventaris"
+
+msgid "Created"
+msgstr "Dibuat"
+
+msgid "Actions"
+msgstr "Tindakan"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Mark as sold out"
+msgstr "Tandai habis terjual"
+
+msgid "Delete"
+msgstr "Hapus"
+
+msgid "Delete product"
+msgstr "Hapus produk"
+
+#, python-format
+msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
+msgstr ""
+"Apakah Anda yakin ingin menghapus “%(name)s”? Tindakan ini tidak dapat "
+"dibatalkan."
+
+msgid "Cancel"
+msgstr "Batal"
+
+msgid "You have no products yet"
+msgstr "Anda belum memiliki produk"
+
+msgid "Create your first listing — it will appear in the store once approved."
+msgstr "Buat listing pertama Anda — akan muncul di toko setelah disetujui."
+
+msgid "Menu Sections"
+msgstr "Bagian Menu"
+
+msgid "Back to products"
+msgstr "Kembali ke produk"
+
+msgid "Add a section"
+msgstr "Tambah bagian"
+
+msgid "Add"
+msgstr "Tambah"
+
+msgid "Section"
+msgstr "Bagian"
+
+msgid "Items"
+msgstr "Barang"
+
+msgid "Remove this menu section?"
+msgstr "Hapus bagian menu ini?"
+
+msgid "No menu sections yet"
+msgstr "Belum ada bagian menu"
+
+msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
+msgstr ""
+"Tambahkan bagian seperti Sarapan, Makan Siang, atau Minuman untuk mengatur "
+"menu Anda."
+
+msgid "Notifications"
+msgstr "Notifikasi"
+
+msgid "Mark all as read"
+msgstr "Tandai semua telah dibaca"
+
+msgid "ago"
+msgstr "yang lalu"
+
+msgid "No notifications yet."
+msgstr "Belum ada notifikasi."
+
+msgid "Report Issue"
+msgstr "Laporkan Masalah"
+
+msgid ""
+"The seller will have 3 days to respond before an admin reviews this dispute."
+msgstr ""
+"Penjual akan memiliki 3 hari untuk menanggapi sebelum admin meninjau "
+"sengketa ini."
+
+msgid "Submit Dispute"
+msgstr "Kirim Sengketa"
+
+msgid "Total Paid"
+msgstr "Total Dibayar"
+
+msgid "Order Status"
+msgstr "Status Pesanan"
+
+msgid "Current Status:"
+msgstr "Status Saat Ini:"
+
+msgid "Paid on"
+msgstr "Dibayar pada"
+
+msgid "Delivered on"
+msgstr "Terkirim pada"
+
+msgid "Kitchen & Pickup Status"
+msgstr "Status Dapur & Pengambilan"
+
+msgid "Preparing"
+msgstr "Menyiapkan"
+
+msgid "Start Preparing"
+msgstr "Mulai Menyiapkan"
+
+msgid "Mark Ready for Pickup"
+msgstr "Tandai Siap Diambil"
+
+msgid "Pickup location"
+msgstr "Lokasi pengambilan"
+
+msgid "Delivery Tracking"
+msgstr "Pelacakan Pengiriman"
+
+msgid "Courier"
+msgstr "Kurir"
+
+msgid "No status updates yet."
+msgstr "Belum ada pembaruan status."
+
+msgid "Proof of Delivery"
+msgstr "Bukti Pengiriman"
+
+msgid "Proof of delivery"
+msgstr "Bukti pengiriman"
+
+msgid "Mark as Shipped"
+msgstr "Tandai Sudah Dikirim"
+
+msgid "Post update"
+msgstr "Kirim pembaruan"
+
+msgid "Take a photo of the delivered item to confirm."
+msgstr "Ambil foto barang yang dikirim untuk konfirmasi."
+
+msgid "Mark as Delivered"
+msgstr "Tandai Sudah Terkirim"
+
+msgid "Reassign courier"
+msgstr "Tetapkan ulang kurir"
+
+msgid "Unassigned (self-delivery)"
+msgstr "Belum ditugaskan (kirim sendiri)"
+
+msgid "Reference"
+msgstr "Referensi"
+
+msgid "Waiting for the seller to confirm they received your transfer."
+msgstr "Menunggu penjual mengonfirmasi telah menerima transfer Anda."
+
+msgid "Confirm you received the buyer'\\''s transfer?"
+msgstr "Konfirmasi Anda telah menerima transfer dari pembeli?"
+
+msgid "Confirm payment received"
+msgstr "Konfirmasi pembayaran diterima"
+
+msgid "Product Details"
+msgstr "Detail Produk"
+
+msgid "Line Total"
+msgstr "Total Baris"
+
+msgid "Seller Information"
+msgstr "Informasi Penjual"
+
+#, python-format
+msgid "Commission (15%%)"
+msgstr "Komisi (15%%)"
+
+msgid "Payment Fee"
+msgstr "Biaya Pembayaran"
+
+msgid "Paid directly to the seller — no platform fee."
+msgstr "Dibayar langsung ke penjual — tanpa biaya platform."
+
+msgid "Phone"
+msgstr "Telepon"
+
+msgid "Cancel this order?"
+msgstr "Batalkan pesanan ini?"
+
+msgid "Cancel Order"
+msgstr "Batalkan Pesanan"
+
+msgid "Rate this product"
+msgstr "Nilai produk ini"
+
+msgid "Thanks for rating this purchase."
+msgstr "Terima kasih telah menilai pembelian ini."
+
+msgid "Write a review (optional)"
+msgstr "Tulis ulasan (opsional)"
+
+msgid "What did you think of this product?"
+msgstr "Bagaimana pendapat Anda tentang produk ini?"
+
+msgid "Submit rating"
+msgstr "Kirim penilaian"
+
+msgid "Rate the courier"
+msgstr "Nilai kurir"
+
+msgid "Thanks for rating this courier."
+msgstr "Terima kasih telah menilai kurir ini."
+
+msgid "Payment"
+msgstr "Pembayaran"
+
+msgid "Secure Payment"
+msgstr "Pembayaran Aman"
+
+msgid "Card Information"
+msgstr "Informasi Kartu"
+
+msgid "Card Details"
+msgstr "Detail Kartu"
+
+msgid "Your payment information is secure and never stored on our servers."
+msgstr ""
+"Informasi pembayaran Anda aman dan tidak pernah disimpan di server kami."
+
+msgid "Pay"
+msgstr "Bayar"
+
+msgid "Test Card:"
+msgstr "Kartu Uji Coba:"
+
+msgid "Exp"
+msgstr "Kedaluwarsa"
+
+msgid "Payment successful! Redirecting..."
+msgstr "Pembayaran berhasil! Mengalihkan..."
+
+msgid "Processing..."
+msgstr "Memproses..."
+
+msgid "Payment Confirmation"
+msgstr "Konfirmasi Pembayaran"
+
+msgid "Processing your bank transfer…"
+msgstr "Memproses transfer bank Anda…"
+
+msgid ""
+"this page will show the result once your simulated bank responds. Refresh to"
+" check again."
+msgstr ""
+"halaman ini akan menampilkan hasil setelah bank simulasi Anda merespons. "
+"Muat ulang untuk memeriksa lagi."
+
+msgid "Payment did not go through"
+msgstr "Pembayaran tidak berhasil"
+
+msgid "Payment Successful!"
+msgstr "Pembayaran Berhasil!"
+
+msgid "Thank you for your order. Your payment has been received."
+msgstr "Terima kasih atas pesanan Anda. Pembayaran Anda telah diterima."
+
+msgid "Next Steps:"
+msgstr "Langkah Selanjutnya:"
+
+msgid "Seller will contact you at"
+msgstr "Penjual akan menghubungi Anda di"
+
+msgid "You can track your order status in your"
+msgstr "Anda dapat melacak status pesanan Anda di"
+
+msgid "order history"
+msgstr "riwayat pesanan"
+
+msgid "Other Items in Your Order"
+msgstr "Barang Lain dalam Pesanan Anda"
+
+msgid "View My Orders"
+msgstr "Lihat Pesanan Saya"
+
+msgid "A confirmation email has been sent to"
+msgstr "Email konfirmasi telah dikirim ke"
+
+msgid "Manage menu sections"
+msgstr "Kelola bagian menu"
+
+msgid ""
+"You're subscribed — this listing will publish immediately, no approval wait."
+msgstr ""
+"Anda berlangganan — listing ini akan langsung diterbitkan, tanpa menunggu "
+"persetujuan."
+
+msgid ""
+"Services don't need a quantity or condition — instead, use the description "
+"to mention things like availability, service area, or turnaround time."
+msgstr ""
+"Jasa tidak memerlukan jumlah atau kondisi — sebagai gantinya, gunakan "
+"deskripsi untuk menyebutkan ketersediaan, area layanan, atau waktu "
+"pengerjaan."
+
+msgid ""
+"Menu items don't need a quantity or condition — use Menu section, Available,"
+" and Prep time instead."
+msgstr ""
+"Item menu tidak memerlukan jumlah atau kondisi — gunakan Bagian menu, "
+"Tersedia, dan Waktu persiapan."
+
+msgid "My Earnings"
+msgstr "Penghasilan Saya"
+
+msgid "View Orders"
+msgstr "Lihat Pesanan"
+
+msgid "Total Earnings"
+msgstr "Total Penghasilan"
+
+msgid "Available Balance"
+msgstr "Saldo Tersedia"
+
+msgid "Pending Payout"
+msgstr "Pencairan Tertunda"
+
+msgid "Total Paid Out"
+msgstr "Total Dicairkan"
+
+msgid "Recent Transactions"
+msgstr "Transaksi Terbaru"
+
+msgid "Payouts"
+msgstr "Pencairan Dana"
+
+msgid "Type"
+msgstr "Jenis"
+
+msgid "Amount"
+msgstr "Jumlah"
+
+msgid "No transactions yet."
+msgstr "Belum ada transaksi."
+
+msgid "Payout ID"
+msgstr "ID Pencairan"
+
+msgid "Scheduled Date"
+msgstr "Tanggal Terjadwal"
+
+msgid "Paid Date"
+msgstr "Tanggal Dibayar"
+
+msgid "No payouts yet."
+msgstr "Belum ada pencairan."
+
+msgid "How does it work?"
+msgstr "Bagaimana cara kerjanya?"
+
+#, python-format
+msgid "You earn 85%% of each sale (platform takes 15%% commission)"
+msgstr ""
+"Anda mendapat 85%% dari setiap penjualan (platform mengambil komisi 15%%)"
+
+msgid "Earnings are credited when payment is received"
+msgstr "Penghasilan dikreditkan saat pembayaran diterima"
+
+msgid "Payouts are processed monthly on the 1st of each month"
+msgstr "Pencairan dana diproses setiap bulan pada tanggal 1"
+
+msgid "Minimum payout amount: $500"
+msgstr "Jumlah minimum pencairan: $500"
+
+msgid "Seller Orders"
+msgstr "Pesanan Penjual"
+
+msgid "Confirm Payment"
+msgstr "Konfirmasi Pembayaran"
+
+msgid "View your products"
+msgstr "Lihat produk Anda"
+
+msgid "Payment Settings"
+msgstr "Pengaturan Pembayaran"
+
+msgid ""
+"When a buyer chooses to pay by bank/mobile transfer, they'll see these "
+"details to send you the money directly. Leave this blank to disable that "
+"payment option for your products."
+msgstr ""
+"Saat pembeli memilih membayar via transfer bank/seluler, mereka akan melihat"
+" detail ini untuk mengirim uang langsung ke Anda. Biarkan kosong untuk "
+"menonaktifkan opsi pembayaran ini untuk produk Anda."
+
+msgid "Business Verification"
+msgstr "Verifikasi Usaha"
+
+msgid ""
+"Optional — a verified business shows a trust badge to buyers on your "
+"products. Selling and getting paid work the same either way."
+msgstr ""
+"Opsional — bisnis terverifikasi menampilkan lencana kepercayaan kepada "
+"pembeli pada produk Anda. Menjual dan menerima pembayaran tetap sama."
+
+msgid "Your document was rejected"
+msgstr "Dokumen Anda ditolak"
+
+msgid "Subscription"
+msgstr "Langganan"
+
+#, python-format
+msgid ""
+"Free accounts can list up to %(free_limit)s products, and each one is "
+"reviewed by an admin before it goes live. Subscribers can list without limit"
+" and publish instantly — no approval wait."
+msgstr ""
+"Akun gratis dapat mendaftarkan hingga %(free_limit)s produk, dan masing-"
+"masing ditinjau admin sebelum tayang. Pelanggan dapat mendaftarkan tanpa "
+"batas dan langsung terbit — tanpa menunggu persetujuan."
+
+#, python-format
+msgid "Unlimited listings — active until %(date)s."
+msgstr "Listing tanpa batas — aktif hingga %(date)s."
+
+#, python-format
+msgid ""
+"Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
+" new products."
+msgstr ""
+"Kedaluwarsa dalam %(days)s hari — perbarui di bawah agar tidak kehilangan "
+"kemampuan memposting produk baru."
+
+msgid "Expired"
+msgstr "Kedaluwarsa"
+
+msgid "listings"
+msgstr "listing"
+
+#, python-format
+msgid ""
+"Over the free limit of %(limit)s — your existing listings stay live, but you"
+" can't add new ones until you renew."
+msgstr ""
+"Melebihi batas gratis %(limit)s — listing Anda yang ada tetap aktif, tetapi "
+"Anda tidak dapat menambah yang baru sampai memperbarui."
+
+msgid "free listings used"
+msgstr "listing gratis terpakai"
+
+msgid "You've used all your free listings — subscribe below to post more."
+msgstr ""
+"Anda telah menggunakan semua listing gratis — berlangganan di bawah untuk "
+"memposting lebih banyak."
+
+msgid "Awaiting confirmation"
+msgstr "Menunggu konfirmasi"
+
+msgid "Submitted"
+msgstr "Terkirim"
+
+msgid "Your reference"
+msgstr "Referensi Anda"
+
+#, python-format
+msgid ""
+"You already have an active subscription until %(date)s. Submitting a new "
+"request won't start a separate subscription — once confirmed, it extends "
+"your current one from that date instead."
+msgstr ""
+"Anda sudah memiliki langganan aktif hingga %(date)s. Mengirim permintaan "
+"baru tidak akan memulai langganan terpisah — setelah dikonfirmasi, ini akan "
+"memperpanjang langganan Anda saat ini mulai dari tanggal tersebut."
+
+msgid "Where to pay"
+msgstr "Tempat membayar"
+
+msgid "I've paid — submit for confirmation"
+msgstr "Saya sudah membayar — kirim untuk konfirmasi"
+
+msgid "Request history"
+msgstr "Riwayat permintaan"
+
+msgid "Plan"
+msgstr "Paket"
+
+msgid "Wishlist"
+msgstr "Wishlist"
+
+msgid "My Wishlist"
+msgstr "Wishlist Saya"
+
+msgid "Move to Cart"
+msgstr "Pindahkan ke Keranjang"
+
+msgid "Your wishlist is empty."
+msgstr "Wishlist Anda kosong."
+
+msgid "Start browsing"
+msgstr "Mulai jelajahi"
+
+msgid "Skip to main content"
+msgstr "Lompat ke konten utama"
+
+msgid "We accept"
+msgstr "Kami menerima"
+
+msgid "VISA Card"
+msgstr "Kartu VISA"
+
+msgid "Bank Transfer"
+msgstr "Transfer Bank"
+
+msgid "Mobile Money"
+msgstr "Uang Seluler"
+
+msgid "Hotline"
+msgstr "Hotline"
+
+msgid "Currency"
+msgstr "Mata Uang"
+
+msgid "US Dollar (USD)"
+msgstr "Dolar AS (USD)"
+
+msgid "Search by product"
+msgstr "Cari berdasarkan produk"
+
+msgid "Search"
+msgstr "Cari"
+
+msgid "View all"
+msgstr "Lihat semua"
+
+msgid "Administrator"
+msgstr "Administrator"
+
+msgid "Buyer & Seller"
+msgstr "Pembeli & Penjual"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Log out"
+msgstr "Keluar"
+
+msgid "Toggle navigation"
+msgstr "Alihkan navigasi"
+
+msgid "Categories"
+msgstr "Kategori"
+
+msgid "Orders"
+msgstr "Pesanan"
+
+msgid "Earnings"
+msgstr "Penghasilan"
+
+msgid "Cart"
+msgstr "Keranjang"
+
+msgid "Language"
+msgstr "Bahasa"
+
+msgid "Product pages"
+msgstr "Halaman produk"
+
+msgid "Ad"
+msgstr "Iklan"
+
+msgid "Latest phones, laptops and accessories — in stock now."
+msgstr "Ponsel, laptop, dan aksesori terbaru — tersedia sekarang."
+
+msgid "Shop Electronics"
+msgstr "Belanja Elektronik"
+
+msgid "Cement, tools and building materials for every project."
+msgstr "Semen, peralatan, dan bahan bangunan untuk setiap proyek."
+
+msgid "Browse Materials"
+msgstr "Jelajahi Material"
+
+msgid "Quality used vehicles and motorcycles, inspected."
+msgstr "Kendaraan dan motor bekas berkualitas, telah diperiksa."
+
+msgid "Browse Vehicles"
+msgstr "Jelajahi Kendaraan"
+
+msgid "Explore Timor-Leste — book a local tour today."
+msgstr "Jelajahi Timor-Leste — pesan tur lokal hari ini."
+
+msgid "Learn More"
+msgstr "Pelajari Lebih Lanjut"
+
+msgid "Shop by category"
+msgstr "Belanja berdasarkan kategori"
+
+msgid "No categories yet."
+msgstr "Belum ada kategori."
+
+msgid "Sell on TimorMart"
+msgstr "Jual di TimorMart"
+
+msgid "Create a free seller account and reach buyers across Timor-Leste."
+msgstr "Buat akun penjual gratis dan jangkau pembeli di seluruh Timor-Leste."
+
+msgid "Add a product"
+msgstr "Tambah produk"
+
+msgid "Toggle wishlist"
+msgstr "Alihkan wishlist"
+
+msgid "No products found"
+msgstr "Produk tidak ditemukan"
+
+msgid "Try a different search term or category."
+msgstr "Coba istilah pencarian atau kategori lain."
+
+msgid "Browse all products"
+msgstr "Jelajahi semua produk"
+
+msgid "Added"
+msgstr "Ditambahkan"

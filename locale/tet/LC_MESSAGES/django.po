@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TimorMart\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-12 14:30+0000\n"
+"POT-Creation-Date: 2026-07-18 10:31+0900\n"
 "PO-Revision-Date: 2026-07-12 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: Tetum\n"
@@ -14,310 +14,318 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#
-# ── Header / navigation ────────────────────────────────────────────────
-#
+msgid "Account type"
+msgstr "Tipu konta"
 
-msgid "Home"
-msgstr "Inísiu"
+#, fuzzy
+#| msgid "Seller"
+msgid "Seller type"
+msgstr "Fa'an-na'in"
 
-msgid "Search by product"
-msgstr "Buka tuir produtu"
+msgid "Company name"
+msgstr "Naran empreza"
 
-msgid "Search"
-msgstr "Buka"
+msgid "Acme Trading Lda"
+msgstr "Acme Trading Lda"
 
-msgid "My products"
-msgstr "Ha'u-nia produtu sira"
+msgid "TIN (Tax Identification Number)"
+msgstr "TIN (Numeru Identifikasaun Taxa)"
 
-msgid "Log out"
-msgstr "Sai"
+msgid "e.g. 123456789"
+msgstr "ex: 123456789"
+
+#, fuzzy
+#| msgid "Email address"
+msgid "Company address"
+msgstr "Diresaun email"
+
+msgid "Street, City, Region"
+msgstr "Rua, Sidade, Rejiaun"
+
+#, fuzzy
+#| msgid "Create an account"
+msgid "Bank account"
+msgstr "Kria konta"
+
+msgid "Bank name, account number, account holder"
+msgstr "Naran banku, numeru konta, naran titulár"
+
+msgid "First name"
+msgstr "Naran dahuluk"
+
+msgid "John"
+msgstr "João"
+
+msgid "Last name"
+msgstr "Apelidu"
+
+msgid "Doe"
+msgstr "Silva"
+
+msgid "Email address"
+msgstr "Diresaun email"
+
+msgid "you@example.com"
+msgstr "ita@ezemplu.com"
+
+msgid "Phone number"
+msgstr "Númeru telefone"
+
+msgid "7012345 or +670 7012345"
+msgstr "7012345 ka +670 7012345"
+
+msgid "Address"
+msgstr "Diresaun"
+
+# ── Accounts: password reset ───────────────────────────────────────────
+# 
+#, fuzzy
+#| msgid "Reset password"
+msgid "Enter a strong password"
+msgstr "Troka senha"
+
+#, fuzzy
+#| msgid "Forgot password?"
+msgid "Confirm password"
+msgstr "Haluha senha?"
+
+# Lowercase model verbose names (Django capitalizes them in form labels)
+#, fuzzy
+#| msgid "username"
+msgid "choose_a_username"
+msgstr "naran uzuáriu"
+
+msgid "An account with this email address already exists."
+msgstr "Konta ho diresaun email ida-ne'e eziste tiha ona."
+
+msgid "Company name is required for a company seller account."
+msgstr "Naran empreza presiza ba konta vendedór empreza."
+
+msgid "TIN is required for a company seller account."
+msgstr "TIN presiza ba konta vendedór empreza."
+
+msgid "Company address is required for a company seller account."
+msgstr "Enderesu empreza presiza ba konta vendedór empreza."
+
+msgid "Bank account is required for a company seller account."
+msgstr "Konta banku presiza ba konta vendedór empreza."
+
+msgid "Too many attempts. Please wait a few minutes and try again."
+msgstr "Tentativa barak liu. Favor hein minutu balu no tenta fali."
+
+msgid "Buyer — browse products, contact sellers and post comments"
+msgstr "Sosa-na'in — haree produtu, kontaktu fa'an-na'in no haruka komentáriu"
+
+msgid "Seller — list and manage products for sale"
+msgstr "Fa'an-na'in — hatama no jere produtu atu fa'an"
+
+msgid "Buyer & Seller — everything in one account"
+msgstr "Sosa-na'in & Fa'an-na'in — hotu-hotu iha konta ida"
+
+msgid "Password changed"
+msgstr "Senha troka tiha ona"
+
+msgid ""
+"Your password has been set. You can now sign in with your new password."
+msgstr "Ita-boot nia senha defini tiha ona. Agora bele login ho senha foun."
 
 msgid "Sign in"
 msgstr "Login"
 
+msgid "Choose a new password"
+msgstr "Hili senha foun"
+
+msgid "Set new password"
+msgstr "Defini senha foun"
+
+msgid ""
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu ida foun."
+
+msgid "Request a new link"
+msgstr "Husu ligasaun foun"
+
+msgid "Reset link sent"
+msgstr "Ligasaun haruka tiha ona"
+
+msgid "Check your email"
+msgstr "Xeke ita-boot nia email"
+
+msgid ""
+"If an account exists with the address you entered, we have emailed a "
+"password reset link."
+msgstr ""
+"Se konta ida eziste ho diresaun ne'ebé ita-boot hatama, ami haruka tiha ona "
+"ligasaun atu troka senha."
+
+msgid "Back to sign in"
+msgstr "Fila ba login"
+
+msgid ""
+"You are receiving this email because you requested a password reset for your"
+" TimorMart account."
+msgstr ""
+"Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka senha ba ita-boot"
+" nia konta TimorMart."
+
+msgid "Please go to the following page and choose a new password:"
+msgstr "Favór bá pájina tuir mai ne'e no hili senha foun:"
+
+msgid "Your username, in case you have forgotten:"
+msgstr "Ita-boot nia naran uzuáriu, karik haluha:"
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr "Se la'ós ita-boot mak husu ida-ne'e, bele ignora email ida-ne'e."
+
+# ── Accounts: password reset ───────────────────────────────────────────
+# 
+msgid "Reset password"
+msgstr "Troka senha"
+
+msgid "Reset your password"
+msgstr "Troka ita-boot nia senha"
+
+msgid ""
+"Enter the email address you registered with and we will send you a link to "
+"set a new password."
+msgstr ""
+"Hatama diresaun email ne'ebé ita-boot rejista ho nia no ami sei haruka "
+"ligasaun ida atu defini senha foun."
+
+msgid "Send reset link"
+msgstr "Haruka ligasaun"
+
 msgid "Sign up"
 msgstr "Rejista"
 
-msgid "Toggle navigation"
-msgstr "Loke ka taka menu"
+msgid "Create an account"
+msgstr "Kria konta"
 
-msgid "Categories"
-msgstr "Kategoria sira"
-
-msgid "All"
-msgstr "Hotu-hotu"
-
-msgid "Add product"
-msgstr "Aumenta produtu"
-
-msgid "Language"
-msgstr "Lian"
-
-#
-# ── Catalog / product grid ─────────────────────────────────────────────
-#
-
-msgid "No image available"
-msgstr "La iha imajen"
-
-msgid "Out of stock"
-msgstr "Esgotadu"
-
-msgid "In stock"
-msgstr "Disponível"
-
-msgid "No products found"
-msgstr "La hetan produtu ida"
-
-msgid "Try a different search term or category."
-msgstr "Koko liafuan buka ka kategoria seluk."
-
-msgid "Browse all products"
-msgstr "Haree produtu hotu"
-
-msgid "Product pages"
-msgstr "Pájina produtu"
-
-msgid "Previous"
-msgstr "Anteriór"
-
-msgid "Next"
-msgstr "Tuir mai"
-
-msgid "Shop by category"
-msgstr "Sosa tuir kategoria"
-
-msgid "No categories yet."
-msgstr "Seidauk iha kategoria."
-
-msgid "Sell on TimorMart"
-msgstr "Fa'an iha TimorMart"
-
-msgid "Create a free seller account and reach buyers across Timor-Leste."
-msgstr "Kria konta fa'an-na'in grátis no hetan sosa-na'in sira iha Timor-Leste laran tomak."
-
-msgid "Add a product"
-msgstr "Aumenta produtu ida"
-
-msgid "Start selling"
-msgstr "Hahú fa'an"
+msgid "Already have an account?"
+msgstr "Iha konta ona?"
 
 #, python-format
-msgid "Search results for “%(query)s”"
-msgstr "Rezultadu buka ba “%(query)s”"
-
-msgid "New arrivals"
-msgstr "Foin tama"
+msgid "Welcome, %(name)s! Your account is ready — happy shopping."
+msgstr "Bem-vindu, %(name)s! Ita-boot nia konta prontu ona — sosa ho ksolok."
 
 #, python-format
-msgid "%(counter)s item"
-msgid_plural "%(counter)s items"
-msgstr[0] "Produtu %(counter)s"
+msgid "Welcome, %(name)s! Your seller account is ready."
+msgstr "Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona."
 
-msgid "Sort by"
-msgstr "Orden tuir"
-
-msgid "Newest"
-msgstr "Foun liu"
-
-msgid "Price: low to high"
-msgstr "Folin: ki'ik ba boot"
-
-msgid "Price: high to low"
-msgstr "Folin: boot ba ki'ik"
-
-msgid "Name"
-msgstr "Naran"
-
-#
-# ── Product detail page ────────────────────────────────────────────────
-#
-
-msgid "This listing is awaiting administrator approval and is not yet visible to buyers."
-msgstr "Anúnsiu ida-ne'e sei hein aprovasaun husi administradór no sosa-na'in sira seidauk bele haree."
-
-msgid "extra image"
-msgstr "imajen adisionál"
-
-msgid "Published"
-msgstr "Publika ona"
-
-msgid "Pending approval"
-msgstr "Hein aprovasaun"
-
-msgid "Changes requested"
-msgstr "Husu mudansa"
-
-msgid "Rejected"
-msgstr "La simu"
-
-msgid "Suspended"
-msgstr "Suspende tiha ona"
-
-msgid "This listing is not visible to buyers."
-msgstr "Anúnsiu ida-ne'e sosa-na'in sira labele haree."
-
-msgid "Moderator note:"
-msgstr "Nota husi administradór:"
+msgid "Please correct the errors below."
+msgstr "Favór hadi'a erru sira iha okos."
 
 #, python-format
-msgid "“%(name)s” was resubmitted for approval."
-msgstr "“%(name)s” haruka fila fali ba aprovasaun."
+msgid "Welcome back, %(name)s!"
+msgstr "Bem-vindu fila fali, %(name)s!"
 
-msgid "Admin"
-msgstr "Admin"
+msgid "Invalid username or password."
+msgstr "Naran uzuáriu ka senha la loos."
 
-msgid "Administrator"
-msgstr "Administradór"
+msgid "You have been logged out."
+msgstr "Ita-boot sai tiha ona."
 
-msgid "Skip to main content"
-msgstr "Salta ba konteúdu prinsipál"
-
-msgid "Previous image"
-msgstr "Imajen anteriór"
-
-msgid "Next image"
-msgstr "Imajen tuir mai"
-
-msgid "View full screen"
-msgstr "Haree iha ekrã tomak"
-
-msgid "Product images"
-msgstr "Imajen produtu"
-
-msgid "Administrator accounts manage the platform and cannot buy or sell products."
+msgid ""
+"Administrator accounts manage the platform and cannot buy or sell products."
 msgstr "Konta administradór jere plataforma no labele sosa ka fa'an produtu."
-
-msgid "Description"
-msgstr "Deskrisaun"
-
-msgid "Listed"
-msgstr "Hatama iha"
-
-msgid "Seller"
-msgstr "Fa'an-na'in"
-
-msgid "Edit listing"
-msgstr "Edita anúnsiu"
-
-msgid "Chat on WhatsApp"
-msgstr "Konversa iha WhatsApp"
-
-msgid "Interested in this product?"
-msgstr "Iha interese ba produtu ida-ne'e?"
-
-msgid "To view the seller's phone number and WhatsApp contact, upgrade your account to Buyer & Seller."
-msgstr "Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
-
-msgid "Upgrade to Buyer & Seller"
-msgstr "Hasa'e ba Sosa-na'in & Fa'an-na'in"
-
-msgid "Sign in to view contact information"
-msgstr "Login atu haree informasaun kontaktu"
-
-msgid "To view the seller's phone number and WhatsApp contact, please sign in or create an account."
-msgstr "Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, favór login ka kria konta ida."
 
 msgid "Your account already has the buyer role."
 msgstr "Ita-boot nia konta iha ona papel sosa-na'in."
 
-msgid "Your account is now Buyer & Seller — you can contact sellers and post comments."
-msgstr "Ita-boot nia konta agora Sosa-na'in & Fa'an-na'in — bele kontaktu fa'an-na'in sira no haruka komentáriu."
+msgid ""
+"Your account is now Buyer & Seller — you can contact sellers and post "
+"comments."
+msgstr ""
+"Ita-boot nia konta agora Sosa-na'in & Fa'an-na'in — bele kontaktu fa'an-"
+"na'in sira no haruka komentáriu."
 
-#, python-format
-msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
-msgstr "Botarde, ha'u iha interese ba “%(name)s” (%(url)s) iha TimorMart."
+#, fuzzy
+#| msgid "Actions"
+msgid "Active"
+msgstr "Asaun"
 
-msgid "Related products"
-msgstr "Produtu relasionadu sira"
+#, fuzzy
+#| msgid "Close"
+msgid "Closed"
+msgstr "Taka"
 
-msgid "Comments"
-msgstr "Komentáriu sira"
+msgid "Frozen"
+msgstr "Kongela"
 
-msgid "Positive"
-msgstr "Pozitivu"
+msgid "Automatic (balance-based)"
+msgstr "Automátiku (bazeia iha saldu)"
 
-msgid "Neutral"
-msgstr "Neutru"
+msgid "Always Succeed"
+msgstr "Sempre Susesu"
 
-msgid "Negative"
-msgstr "Negativu"
+msgid "Always Fail"
+msgstr "Sempre Falha"
 
-msgid "Post comment"
-msgstr "Haruka komentáriu"
+msgid "Always Timeout"
+msgstr "Sempre Timeout"
 
-msgid "No comments yet. Be the first to ask about this product!"
-msgstr "Seidauk iha komentáriu. Sai ema dahuluk atu husu kona-ba produtu ida-ne'e!"
+msgid "Always Insufficient Funds"
+msgstr "Sempre Osan La Sufisiente"
 
-msgid "Your name"
-msgstr "Ita-boot nia naran"
+msgid "Always Flag as Duplicate"
+msgstr "Sempre Marka Hanesan Duplika"
 
-msgid "Comment"
-msgstr "Komentáriu"
+#, fuzzy
+#| msgid "Pending approval"
+msgid "Pending"
+msgstr "Hein aprovasaun"
 
-#
-# ── Seller dashboard ───────────────────────────────────────────────────
-#
+msgid "Success"
+msgstr "Susesu"
 
-msgid "Listings"
-msgstr "Anúnsiu sira"
+msgid "Failed"
+msgstr "Falha"
 
-msgid "Inventory value"
-msgstr "Valór inventáriu"
+#, fuzzy
+#| msgid "Cancel"
+msgid "Cancelled"
+msgstr "Kansela"
 
-msgid "Product"
-msgstr "Produtu"
+msgid "Timeout"
+msgstr "Timeout"
+
+msgid "Insufficient Funds"
+msgstr "Osan La Sufisiente"
+
+msgid "Invalid / Closed Account"
+msgstr "Konta La Valida / Taka"
+
+msgid "Duplicate Transaction"
+msgstr "Transasaun Duplika"
+
+msgid "Outbound"
+msgstr "Sai"
+
+msgid "Inbound"
+msgstr "Tama"
+
+msgid "You need a seller account to access that page."
+msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
+
+#, fuzzy
+#| msgid ""
+#| "Administrator accounts manage the platform and cannot buy or sell products."
+msgid "Administrator accounts manage the platform and cannot act as couriers."
+msgstr "Konta administradór jere plataforma no labele sosa ka fa'an produtu."
+
+#, fuzzy
+#| msgid "You need a seller account to access that page."
+msgid "You need a courier account to access that page."
+msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
+
+# ── Product form ───────────────────────────────────────────────────────
+# 
+msgid "Product name"
+msgstr "Naran produtu"
 
 msgid "Price"
 msgstr "Folin"
-
-msgid "Qty"
-msgstr "Kuant."
-
-msgid "Condition"
-msgstr "Kondisaun"
-
-msgid "Status"
-msgstr "Estadu"
-
-msgid "Created"
-msgstr "Kria iha"
-
-msgid "Actions"
-msgstr "Asaun"
-
-msgid "Edit"
-msgstr "Edita"
-
-msgid "Delete"
-msgstr "Apaga"
-
-msgid "Delete product"
-msgstr "Apaga produtu"
-
-msgid "Close"
-msgstr "Taka"
-
-#, python-format
-msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
-msgstr "Ita-boot hakarak duni apaga “%(name)s”? Ida-ne'e labele fila fali."
-
-msgid "Cancel"
-msgstr "Kansela"
-
-msgid "You have no products yet"
-msgstr "Ita-boot seidauk iha produtu"
-
-msgid "Create your first listing — it will appear in the store once approved."
-msgstr "Kria ita-boot nia anúnsiu dahuluk — nia sei mosu iha loja bainhira hetan aprovasaun."
-
-#
-# ── Product form ───────────────────────────────────────────────────────
-#
-
-msgid "Product name"
-msgstr "Naran produtu"
 
 msgid "Category"
 msgstr "Kategoria"
@@ -331,6 +339,32 @@ msgstr "Sidade"
 msgid "Quantity"
 msgstr "Kuantidade"
 
+msgid "Condition"
+msgstr "Kondisaun"
+
+msgid "Size"
+msgstr "Tamanhu"
+
+msgid "Pieces per unit"
+msgstr "Pesa ba unidade"
+
+msgid "Units per box"
+msgstr "Unidade ba kaixa"
+
+#, fuzzy
+#| msgid "Description"
+msgid "Menu section"
+msgstr "Deskrisaun"
+
+msgid "Available"
+msgstr "Disponivel"
+
+msgid "Prep time (minutes)"
+msgstr "Tempu prepara (minutu)"
+
+msgid "Description"
+msgstr "Deskrisaun"
+
 msgid "Main image"
 msgstr "Imajen prinsipál"
 
@@ -339,6 +373,24 @@ msgstr "Imajen adisionál 1"
 
 msgid "Extra image 2"
 msgstr "Imajen adisionál 2"
+
+msgid "Set to 0 when the product is sold out."
+msgstr "Tau 0 bainhira produtu fa'an hotu tiha ona."
+
+msgid "Optional — e.g. L, 42, 500ml"
+msgstr "Fakultativu — ex: L, 42, 500ml"
+
+msgid "Optional — e.g. 12 pens in a pack"
+msgstr "Fakultativu — ex: kaneta 12 iha pacote ida"
+
+msgid "Optional — e.g. 24 packs in a box"
+msgstr "Fakultativu — ex: pacote 24 iha kaixa ida"
+
+msgid "Which section of your menu this item belongs to"
+msgstr "Item ne'e tama iha seksaun menu ne'ebé"
+
+msgid "Optional — e.g. 20"
+msgstr "Fakultativu — ex: 20"
 
 msgid "Select category"
 msgstr "Hili kategoria"
@@ -349,18 +401,43 @@ msgstr "Hili nasaun"
 msgid "Select city"
 msgstr "Hili sidade"
 
+#, fuzzy
+#| msgid "Select country"
+msgid "Select menu section"
+msgstr "Hili nasaun"
+
 msgid "Price must be greater than zero."
 msgstr "Folin tenke boot liu zero."
 
-msgid "Set to 0 when the product is sold out."
-msgstr "Tau 0 bainhira produtu fa'an hotu tiha ona."
+msgid "Section name"
+msgstr "Naran seksaun"
 
-msgid "Mark as sold out"
-msgstr "Marka nu'udar esgotadu"
+msgid "Display order"
+msgstr "Ordem hatudu"
+
+msgid "e.g. Breakfast"
+msgstr "ex: Hahán Dader"
+
+msgid "Lower numbers show first on the menu."
+msgstr "Numeru ki'ik hatudu uluk iha menu."
+
+msgid "Your name"
+msgstr "Ita-boot nia naran"
+
+msgid "Comment"
+msgstr "Komentáriu"
 
 #, python-format
-msgid "“%(name)s” is now marked as sold out."
-msgstr "“%(name)s” marka tiha ona nu'udar esgotadu."
+msgid " and %(count)d more"
+msgstr " no %(count)d tan"
+
+#, python-format
+msgid ""
+"You still have items in your cart: %(items)s. Complete your purchase before "
+"they sell out!"
+msgstr ""
+"Ita seidauk kompleta sasán iha ita-nia kareta: %(items)s. Remata ita-nia "
+"kompra antes sasán ne'e esgota!"
 
 msgid "New"
 msgstr "Foun"
@@ -368,15 +445,697 @@ msgstr "Foun"
 msgid "Second Hand"
 msgstr "Uza tiha ona"
 
-#
-# ── View messages ──────────────────────────────────────────────────────
-#
+msgid "Pending Verification"
+msgstr "Hein Verifikasaun"
 
+msgid "Verified"
+msgstr "Verifika ona"
+
+msgid "Rejected"
+msgstr "La simu"
+
+msgid ""
+"Cities this courier delivers to. Leave empty if not yet configured (order "
+"dropdowns will show all couriers until this is set)."
+msgstr ""
+"Sidade sira ne'ebé entregadór ne'e servisu ba. Husik mamuk se seidauk hili "
+"(lista entregadór sei hatudu hotu-hotu to'o ne'e configura)."
+
+msgid "Individual"
+msgstr "Individuál"
+
+msgid "Company"
+msgstr "Empreza"
+
+msgid "Restaurant"
+msgstr "Restaurante"
+
+msgid ""
+"Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
+" account number, account holder name)."
+msgstr ""
+"Detallu banku ka osan movel ne'ebé kompradór uza atu selu ita direitamente "
+"(ex: naran banku, numeru konta, naran titulár)."
+
+msgid "Pending approval"
+msgstr "Hein aprovasaun"
+
+msgid "Published"
+msgstr "Publika ona"
+
+msgid "Changes requested"
+msgstr "Husu mudansa"
+
+msgid "Suspended"
+msgstr "Suspende tiha ona"
+
+msgid "e.g. L, 42, 500ml"
+msgstr "ex: L, 42, 500ml"
+
+msgid "e.g. 12 pens in a pack"
+msgstr "ex: kaneta 12 iha pacote ida"
+
+msgid "e.g. 24 packs in a box"
+msgstr "ex: pacote 24 iha kaixa ida"
+
+msgid "e.g. 20"
+msgstr "ex: 20"
+
+msgid "Positive"
+msgstr "Pozitivu"
+
+msgid "Neutral"
+msgstr "Neutru"
+
+msgid "Negative"
+msgstr "Negativu"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment Method"
+msgstr "Konfigurasaun Pagamentu"
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Delivery Address"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Where should we deliver your order?"
+msgstr "Ami tenke entrega ita-nia enkomenda iha ne'ebé?"
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Delivery City"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Couriers are matched to this city"
+msgstr "Entregadór sira konjuga ho sidade ne'e"
+
+msgid "Delivery Phone"
+msgstr "Telefone Entrega"
+
+msgid "Seller will contact you on this number"
+msgstr "Vendedór sei kontaktu ita iha numeru ne'e"
+
+msgid "Any special instructions? (Optional)"
+msgstr "Iha instrusaun espesiál? (Fakultativu)"
+
+msgid "Special Instructions"
+msgstr "Instrusaun Espesiál"
+
+msgid "E.g., 'Please knock loudly' or 'Leave at door'"
+msgstr "Ex: 'Favor toka odamatan makaas' ka 'Husik iha odamatan'"
+
+msgid "e.g. SIM-0001-SUCCESS"
+msgstr "ex: SIM-0001-SUCCESS"
+
+msgid "Bank Account Number"
+msgstr "Numeru Konta Banku"
+
+msgid "The account you're paying from."
+msgstr "Konta ne'ebé ita selu husi."
+
+msgid "Enter the account number you're paying from."
+msgstr "Tau numeru konta ne'ebé ita selu husi."
+
+msgid "Describe what happened..."
+msgstr "Deskreve saida mak akontese..."
+
+msgid "Upload photos or describe the issue"
+msgstr "Envia fotografia ka deskreve problema"
+
+msgid "Reason for dispute"
+msgstr "Razaun ba disputa"
+
+msgid "Evidence (photos, messages, etc.)"
+msgstr "Evidénsia (fotografia, mensajen, etc.)"
+
+msgid "Provide your response with evidence..."
+msgstr "Fornese ita-nia resposta ho evidénsia..."
+
+#, fuzzy
+#| msgid "Your name"
+msgid "Your Response"
+msgstr "Ita-boot nia naran"
+
+msgid "You have 3 days to respond. Explain your side and provide evidence."
+msgstr "Ita iha loron 3 atu hatan. Esplika ita-nia lado no fornese evidénsia."
+
+msgid "e.g. Timor Post, local courier name"
+msgstr "ex: Timor Post, naran entregadór lokál"
+
+msgid "Courier / Delivery Service"
+msgstr "Entregadór / Servisu Entrega"
+
+msgid "Tracking number, if any"
+msgstr "Numeru rastreamentu, se iha"
+
+msgid "Tracking Number"
+msgstr "Numeru Rastreamentu"
+
+msgid "No courier account (self-delivery / informal courier)"
+msgstr "La iha konta entregadór (entrega rasik / entregadór informál)"
+
+#, fuzzy
+#| msgid "Reassign courier"
+msgid "Assign Courier"
+msgstr "Troka entregador"
+
+#, python-format
+msgid "%(name)s (★ %(avg).1f, %(count)d rating(s))"
+msgstr "%(name)s (★ %(avg).1f, avaliasaun %(count)d)"
+
+#, python-format
+msgid "%(name)s (no ratings yet)"
+msgstr "%(name)s (seidauk iha avaliasaun)"
+
+msgid "Delivery Photo"
+msgstr "Fotografia Entrega"
+
+msgid "A delivery photo is required to confirm delivery."
+msgstr "Fotografia entrega presiza atu konfirma entrega."
+
+msgid "ID Document Photo"
+msgstr "Fotografia Dokumentu Identidade"
+
+msgid "Please upload a photo of your ID document."
+msgstr "Favor envia fotografia ita-nia dokumentu identidade."
+
+msgid "e.g. 'Left Dili warehouse, arriving Baucau tomorrow'"
+msgstr "ex: 'Sai husi armazén Dili, sei to'o Baucau aban'"
+
+#, fuzzy
+#| msgid "Status"
+msgid "Status update"
+msgstr "Estadu"
+
+#, fuzzy
+#| msgid "Choose a new password"
+msgid "Choose a plan"
+msgstr "Hili senha foun"
+
+msgid "e.g. Bank transfer ref #123, paid 14 Jul 2026"
+msgstr "ex: Referénsia transferénsia banku #123, selu iha 14 Jul 2026"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment reference"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Tell the admin how and when you paid, so they can confirm it."
+msgstr ""
+"Hato'o ba admin oinsá no bainhira ita selu, atu nune'e sira bele konfirma."
+
+msgid "e.g. BNU Timor-Leste, Account: 1234567, Name: Jose Costa"
+msgstr "ex: BNU Timor-Leste, Konta: 1234567, Naran: Jose Costa"
+
+msgid "Payment details for buyers"
+msgstr "Detallu pagamentu ba kompradór"
+
+msgid "Business Registration Document"
+msgstr "Dokumentu Rejistu Komersiál"
+
+msgid "Please upload a photo of your business registration document."
+msgstr "Favor envia fotografia ita-nia dokumentu rejistu komersiál."
+
+msgid "No active account found for that account number."
+msgstr "La hetan konta ativu ba numeru konta ne'e."
+
+msgid "A matching transaction was already submitted recently."
+msgstr "Transasaun hanesan submete ona ultimamente."
+
+#, fuzzy
+#| msgid "No products found"
+msgid "No transaction found."
+msgstr "La hetan produtu ida"
+
+msgid "No transaction to retry."
+msgstr "La iha transasaun atu tenta fali."
+
+msgid "Pending Payment"
+msgstr "Hein Pagamentu"
+
+msgid "Payment Reported — Awaiting Confirmation"
+msgstr "Pagamentu Reportadu — Hein Konfirmasaun"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment Received"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Processing"
+msgstr "Prosesa"
+
+msgid "Shipped"
+msgstr "Haruka ona"
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Delivered"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Refunded"
+msgstr "Selu fila fali"
+
+msgid "Order Received"
+msgstr "Enkomenda Simu"
+
+msgid "Preparing Food"
+msgstr "Prepara Hahán"
+
+msgid "Ready for Pickup"
+msgstr "Prontu ba Foti"
+
+msgid "Picked Up"
+msgstr "Foti ona"
+
+msgid "On the Way"
+msgstr "Iha dalan"
+
+msgid "Card (Stripe)"
+msgstr "Kartaun (Stripe)"
+
+#, fuzzy
+#| msgid "Bank Transfer"
+msgid "Bank / Mobile Transfer"
+msgstr "Transferénsia Banku"
+
+#, fuzzy
+#| msgid "Bank Transfer"
+msgid "Automated Bank Transfer (Test)"
+msgstr "Transferénsia Banku"
+
+msgid "Succeeded"
+msgstr "Susesu"
+
+msgid "Commission"
+msgstr "Komisaun"
+
+msgid "Refund"
+msgstr "Selu Fila Fali"
+
+#, fuzzy
+#| msgid "Advertisement"
+msgid "Adjustment"
+msgstr "Anúnsiu"
+
+msgid "Payout"
+msgstr "Pagamentu Saída"
+
+msgid "Scheduled"
+msgstr "Planeadu"
+
+msgid "Paid"
+msgstr "Selu ona"
+
+msgid "Open - Awaiting Seller Response"
+msgstr "Loke - Hein Resposta Vendedór"
+
+msgid "Seller Responded"
+msgstr "Vendedór Hatan ona"
+
+msgid "Under Admin Review"
+msgstr "Iha Revizaun Admin"
+
+msgid "Resolved"
+msgstr "Rezolve ona"
+
+msgid "Full Refund to Buyer"
+msgstr "Selu Fila Fali Kompletu ba Kompradór"
+
+msgid "Partial Refund"
+msgstr "Selu Fila Fali Parsiál"
+
+msgid "Reshipment"
+msgstr "Haruka Fali"
+
+msgid "Closed - No Action"
+msgstr "Taka - La iha Asaun"
+
+msgid "Item Not Received"
+msgstr "Item La Simu"
+
+msgid "Item Damaged"
+msgstr "Item Dana"
+
+msgid "Item Not as Described"
+msgstr "Item La Hanesan Deskrisaun"
+
+msgid "Wrong Item Received"
+msgstr "Simu Item Sala"
+
+msgid "Other"
+msgstr "Seluk"
+
+msgid ""
+"Bank or mobile money details shown to sellers when they pay the platform for"
+" a subscription upgrade."
+msgstr ""
+"Detallu banku ka osan movel ne'ebé hatudu ba vendedór wainhira sira selu "
+"plataforma ba atualiza subskrisaun."
+
+#, python-format
+msgid "TimorMart — order %(order)s"
+msgstr "TimorMart — enkomenda %(order)s"
+
+#, fuzzy
+#| msgid "No notifications yet."
+msgid "TimorMart notification"
+msgstr "Seidauk iha avizu."
+
+msgid "This item can only be purchased by contacting the seller directly."
+msgstr "Item ne'e bele deit sosa liu husi kontaktu direitu ho vendedór."
+
+msgid "This item is currently unavailable."
+msgstr "Item ne'e la disponivel agora."
+
+msgid "This product is out of stock."
+msgstr "Produtu ne'e esgota ona."
+
+msgid "Product added to cart."
+msgstr "Produtu tama ona iha kareta."
+
+#, fuzzy
+#| msgid "Created"
+msgid "Cart updated."
+msgstr "Kria iha"
+
+# ── Catalog / product grid ─────────────────────────────────────────────
+# 
+#, fuzzy
+#| msgid "No image available"
+msgid "Not enough stock available."
+msgstr "La iha imajen"
+
+msgid "Item removed from cart."
+msgstr "Item hasai ona husi kareta."
+
+msgid "Cart cleared."
+msgstr "Kareta limpa ona."
+
+msgid "Saved to your wishlist."
+msgstr "Rai ona iha ita-nia lista deseju."
+
+msgid "Removed from your wishlist."
+msgstr "Hasai ona husi ita-nia lista deseju."
+
+msgid "Moved to your cart."
+msgstr "Muda ona ba ita-nia kareta."
+
+#, fuzzy
+#| msgid "Your comment was posted."
+msgid "Your cart is empty."
+msgstr "Ita-boot nia komentáriu publika tiha ona."
+
+#, python-format
+msgid ""
+"%(product)s can only be purchased by contacting the seller directly — remove"
+" it from your cart."
+msgstr ""
+"%(product)s bele deit sosa liu husi kontaktu direitu ho vendedór — hasai "
+"husi ita-nia kareta."
+
+#, python-format
+msgid "%(product)s is currently unavailable."
+msgstr "%(product)s la disponivel agora."
+
+#, python-format
+msgid "%(product)s has only %(qty)d available."
+msgstr "%(product)s iha deit %(qty)d disponivel."
+
+#, python-format
+msgid ""
+"%(sellers)s haven't set up payment details yet — choose Card, or contact "
+"them."
+msgstr ""
+"%(sellers)s seidauk hatur detallu pagamentu — hili Kartaun, ka kontaktu "
+"sira."
+
+#, python-format
+msgid ""
+"New order %(order)s from %(buyer)s for “%(product)s” — awaiting their "
+"bank/mobile transfer."
+msgstr ""
+"Enkomenda foun %(order)s husi %(buyer)s ba “%(product)s” — hein sira-nia "
+"transferénsia banku/movel."
+
+msgid "Payment processing error. Please try again."
+msgstr "Erru iha prosesu pagamentu. Favor tenta fali."
+
+msgid "Your automated bank transfer is being processed."
+msgstr "Ita-nia transferénsia banku automátiku iha prosesu."
+
+msgid "Order received by the restaurant."
+msgstr "Restaurante simu ona enkomenda."
+
+#, python-format
+msgid "Payment received for order %(order)s from %(buyer)s — “%(product)s”."
+msgstr "Pagamentu simu ba enkomenda %(order)s husi %(buyer)s — “%(product)s”."
+
+#, python-format
+msgid "Your payment for order %(order)s was successful."
+msgstr "Ita-nia pagamentu ba enkomenda %(order)s susesu ona."
+
+#, python-format
+msgid "Your payment for order %(order)s was refunded."
+msgstr "Ita-nia pagamentu ba enkomenda %(order)s selu fila fali ona."
+
+#, python-format
+msgid "Order %(order)s was refunded to the buyer."
+msgstr "Enkomenda %(order)s selu fila fali ona ba kompradór."
+
+#, fuzzy
+#| msgid "That product is awaiting approval."
+msgid "This order is not awaiting a transfer."
+msgstr "Produtu ne'e sei hein aprovasaun."
+
+#, python-format
+msgid ""
+"%(buyer)s says they've sent payment for order %(order)s — please confirm "
+"receipt."
+msgstr ""
+"%(buyer)s dehan ona haruka pagamentu ba enkomenda %(order)s — favor konfirma"
+" simu."
+
+msgid "Thanks — the seller has been notified to confirm receipt."
+msgstr "Obrigadu — vendedór hetan ona notifikasaun atu konfirma simu."
+
+msgid "Permission denied."
+msgstr "Permisaun rejeitadu."
+
+msgid "You must be a seller to confirm payments."
+msgstr "Ita tenke sai vendedór atu konfirma pagamentu."
+
+msgid "This order is not awaiting payment confirmation."
+msgstr "Enkomenda ne'e la hein konfirmasaun pagamentu."
+
+#, python-format
+msgid "%(seller)s confirmed your payment for order %(order)s."
+msgstr "%(seller)s konfirma ona ita-nia pagamentu ba enkomenda %(order)s."
+
+msgid "Payment confirmed — the order is now marked as paid."
+msgstr "Pagamentu konfirma ona — enkomenda marka ona hanesan selu."
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment details saved."
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Company info only applies to company seller accounts."
+msgstr "Informasaun empreza aplika deit ba konta vendedór empreza."
+
+msgid "Company information saved."
+msgstr "Informasaun empreza rai ona."
+
+msgid "Business verification only applies to company seller accounts."
+msgstr "Verifikasaun komersiál aplika deit ba konta vendedór empreza."
+
+msgid "Document submitted — an administrator will review it shortly."
+msgstr "Dokumentu submete ona — administradór sei revee lalais."
+
+msgid "You already have a pending subscription request awaiting confirmation."
+msgstr "Ita iha ona pedidu subskrisaun ne'ebé hein konfirmasaun."
+
+msgid ""
+"Thanks — your payment report was submitted. An admin will confirm it "
+"shortly."
+msgstr ""
+"Obrigadu — ita-nia relatóriu pagamentu submete ona. Admin sei konfirma "
+"lalais."
+
+msgid ""
+"This order can no longer be cancelled — it has already been paid or is past "
+"that stage."
+msgstr "Enkomenda ne'e la bele kansela ona — selu ona ka pasa ona etapa ne'e."
+
+#, python-format
+msgid "%(buyer)s cancelled order %(order)s before paying."
+msgstr "%(buyer)s kansela ona enkomenda %(order)s antes selu."
+
+#, python-format
+msgid "Order %(order)s was cancelled."
+msgstr "Enkomenda %(order)s kansela ona."
+
+msgid "You do not have permission to view this order."
+msgstr "Ita la iha permisaun atu haree enkomenda ne'e."
+
+msgid "You can only rate a product after it has been delivered."
+msgstr "Ita bele deit avalia produtu depois entrega ona."
+
+msgid "You already rated this order."
+msgstr "Ita avalia ona enkomenda ne'e."
+
+msgid "Please choose a rating from 1 to 5 stars."
+msgstr "Favor hili avaliasaun husi bituin 1 to'o 5."
+
+#, fuzzy
+#| msgid "Thanks for rating this purchase."
+msgid "Thanks for your rating!"
+msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
+
+msgid "You can only rate a courier after the order has been delivered."
+msgstr "Ita bele deit avalia entregadór depois enkomenda entrega ona."
+
+msgid "This order has no assigned courier to rate."
+msgstr "Enkomenda ne'e la iha entregadór atu avalia."
+
+msgid "You already rated this courier."
+msgstr "Ita avalia ona entregadór ne'e."
+
+#, fuzzy
+#| msgid "Thanks for rating this purchase."
+msgid "Thanks for rating the courier!"
+msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
+
+#, fuzzy
+#| msgid "You need a seller account to access that page."
+msgid "You must be a seller to view this page."
+msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
+
+msgid "You must be a seller to update orders."
+msgstr "Ita tenke sai vendedór atu atualiza enkomenda."
+
+msgid "Unknown action."
+msgstr "Asaun la konhesidu."
+
+msgid "Only paid orders can be marked as shipped."
+msgstr "Enkomenda ne'ebé selu ona deit mak bele marka hanesan haruka."
+
+#, python-format
+msgid "Your order %(order)s has shipped."
+msgstr "Ita-nia enkomenda %(order)s haruka ona."
+
+#, python-format
+msgid "You have been assigned to deliver order %(order)s."
+msgstr "Ita nomeia ona atu entrega enkomenda %(order)s."
+
+msgid "Order marked as shipped."
+msgstr "Enkomenda marka ona hanesan haruka."
+
+msgid "Only shipped orders can be marked as delivered."
+msgstr "Enkomenda ne'ebé haruka ona deit mak bele marka hanesan entrega."
+
+#, python-format
+msgid "Your order %(order)s has been delivered."
+msgstr "Ita-nia enkomenda %(order)s entrega ona."
+
+msgid "Order marked as delivered."
+msgstr "Enkomenda marka ona hanesan entrega."
+
+msgid "Preparing the food."
+msgstr "Prepara hahán."
+
+msgid "Order is ready for pickup."
+msgstr "Enkomenda prontu ona ba foti."
+
+msgid "This action only applies to restaurant orders."
+msgstr "Asaun ne'e aplika deit ba enkomenda restaurante."
+
+msgid "This order cannot be advanced from its current status."
+msgstr "Enkomenda ne'e la bele avansa husi status atuál."
+
+#, python-format
+msgid "Order %(order)s is ready for collection."
+msgstr "Enkomenda %(order)s prontu ona ba kolete."
+
+msgid "Order updated."
+msgstr "Enkomenda atualiza ona."
+
+msgid "Courier picked up the order."
+msgstr "Entregadór foti ona enkomenda."
+
+msgid "Courier is on the way."
+msgstr "Entregadór iha dalan."
+
+msgid "ID submitted — an administrator will review it shortly."
+msgstr "Identidade submete ona — administradór sei revee lalais."
+
+msgid "You must be a seller to post delivery updates."
+msgstr "Ita tenke sai vendedór atu hakerek atualizasaun entrega."
+
+#, python-format
+msgid "Delivery update for order %(order)s: %(note)s"
+msgstr "Atualizasaun entrega ba enkomenda %(order)s: %(note)s"
+
+msgid "Update posted."
+msgstr "Atualizasaun hakerek ona."
+
+msgid "Please enter a status update."
+msgstr "Favor tau atualizasaun status."
+
+msgid "You can only open disputes for delivered or shipped orders."
+msgstr "Ita bele deit loke disputa ba enkomenda ne'ebé entrega ka haruka ona."
+
+msgid "A dispute is already open for this order."
+msgstr "Disputa loke ona ba enkomenda ne'e."
+
+msgid "Dispute opened. Seller has 3 days to respond."
+msgstr "Disputa loke ona. Vendedór iha loron 3 atu hatan."
+
+msgid "You do not have permission to view this dispute."
+msgstr "Ita la iha permisaun atu haree disputa ne'e."
+
+msgid "You must be a seller to respond to disputes."
+msgstr "Ita tenke sai vendedór atu hatan disputa."
+
+msgid "Response deadline has passed."
+msgstr "Prazu ba hatan pasa ona."
+
+msgid "Your response has been submitted."
+msgstr "Ita-nia resposta submete ona."
+
+msgid "Free"
+msgstr "Grátis"
+
+msgid "Monthly — $11/month"
+msgstr "Fulan-fulan — $11/fulan"
+
+msgid "Yearly — $100/year"
+msgstr "Tinan-tinan — $100/tinan"
+
+msgid "Approved"
+msgstr "Aprova ona"
+
+msgid ""
+"How/when you paid — e.g. bank transfer reference, mobile money confirmation."
+msgstr ""
+"Oinsá/bainhira ita selu — ex: referénsia transferénsia banku, konfirmasaun "
+"osan movel."
+
+#, python-format
+msgid "Image files must be smaller than %(max)sMB."
+msgstr "Fitxeiru imajen tenke ki'ik liu %(max)sMB."
+
+# ── View messages ──────────────────────────────────────────────────────
+# 
 msgid "That category does not exist."
 msgstr "Kategoria ne'e la eziste."
 
 msgid "That product is awaiting approval."
 msgstr "Produtu ne'e sei hein aprovasaun."
+
+msgid "Only buyer accounts can post comments."
+msgstr "De'it konta sosa-na'in mak bele haruka komentáriu."
 
 msgid "Your comment was posted."
 msgstr "Ita-boot nia komentáriu publika tiha ona."
@@ -385,17 +1144,36 @@ msgid "Please correct the errors in your comment."
 msgstr "Favór hadi'a erru sira iha ita-boot nia komentáriu."
 
 #, python-format
-msgid "“%(name)s” was created and is awaiting approval by the administrators."
-msgstr "“%(name)s” kria tiha ona no sei hein aprovasaun husi administradór sira."
+msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
+msgstr "Botarde, ha'u iha interese ba “%(name)s” (%(url)s) iha TimorMart."
 
-msgid "Please correct the errors below."
-msgstr "Favór hadi'a erru sira iha okos."
+#, python-format
+msgid ""
+"You've reached the free plan's %(limit)d listing limit. Subscribe to post "
+"more products."
+msgstr ""
+"Ita to'o ona limite %(limit)d listajen planu grátis. Subskreve atu hakerek "
+"produtu barak liu."
+
+#, fuzzy, python-format
+#| msgid "“%(name)s” was updated."
+msgid "“%(name)s” was published."
+msgstr "“%(name)s” atualiza tiha ona."
+
+#, python-format
+msgid "“%(name)s” was created and is awaiting approval by the administrators."
+msgstr ""
+"“%(name)s” kria tiha ona no sei hein aprovasaun husi administradór sira."
 
 msgid "Add a new product"
 msgstr "Aumenta produtu foun"
 
 msgid "Create product"
 msgstr "Kria produtu"
+
+#, python-format
+msgid "“%(name)s” was resubmitted for approval."
+msgstr "“%(name)s” haruka fila fali ba aprovasaun."
 
 #, python-format
 msgid "“%(name)s” was updated."
@@ -409,16 +1187,36 @@ msgid "Save changes"
 msgstr "Rai mudansa sira"
 
 #, python-format
+msgid "“%(name)s” is now marked as sold out."
+msgstr "“%(name)s” marka tiha ona nu'udar esgotadu."
+
+#, python-format
+msgid ""
+"“%(name)s” can't be deleted because it has order history — mark it sold out "
+"instead."
+msgstr ""
+"“%(name)s” la bele hamoos tanba iha istória enkomenda — marka deit hanesan "
+"esgota."
+
+#, python-format
 msgid "“%(name)s” was deleted."
 msgstr "“%(name)s” apaga tiha ona."
 
-msgid "You need a seller account to access that page."
-msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
+msgid "Menu sections are only available for restaurant seller accounts."
+msgstr "Seksaun menu disponivel deit ba konta vendedór restaurante."
 
-#
+#, fuzzy, python-format
+#| msgid "“%(name)s” was deleted."
+msgid "“%(name)s” was added to your menu."
+msgstr "“%(name)s” apaga tiha ona."
+
+#, fuzzy, python-format
+#| msgid "“%(name)s” was resubmitted for approval."
+msgid "“%(name)s” was removed from your menu."
+msgstr "“%(name)s” haruka fila fali ba aprovasaun."
+
 # ── Error pages ────────────────────────────────────────────────────────
-#
-
+# 
 msgid "Page not found"
 msgstr "La hetan pájina"
 
@@ -431,262 +1229,1346 @@ msgstr "Fila ba loja"
 msgid "Something went wrong"
 msgstr "Iha erru ida mosu"
 
-msgid "We are sorry — an unexpected error occurred. Please try again in a moment."
-msgstr "Ami husu deskulpa — erru ida ne'ebé la espera mosu. Favór koko fali lakleur."
+msgid ""
+"We are sorry — an unexpected error occurred. Please try again in a moment."
+msgstr ""
+"Ami husu deskulpa — erru ida ne'ebé la espera mosu. Favór koko fali lakleur."
 
-#
-# ── Accounts: login / register ─────────────────────────────────────────
-#
+#, fuzzy
+#| msgid "Sign in"
+msgid "Sign In"
+msgstr "Login"
 
-msgid "Username"
-msgstr "Naran uzuáriu"
-
-msgid "Password"
-msgstr "Senha"
+#, fuzzy
+#| msgid "Sell on TimorMart"
+msgid "Welcome back to TimorMart"
+msgstr "Fa'an iha TimorMart"
 
 msgid "Forgot password?"
 msgstr "Haluha senha?"
 
-msgid "New here?"
-msgstr "Foun iha ne'e?"
+msgid "or"
+msgstr "ka"
 
-msgid "Create a seller account"
-msgstr "Kria konta fa'an-na'in"
-
-msgid "Already have an account?"
+#, fuzzy
+#| msgid "Already have an account?"
+msgid "Don't have an account yet?"
 msgstr "Iha konta ona?"
 
-msgid "Account type"
+#, fuzzy
+#| msgid "Create an account"
+msgid "Create Account"
+msgstr "Kria konta"
+
+msgid "First time here? Sign up to start buying and selling."
+msgstr "Dahuluk mai iha ne'e? Rejista atu hahú sosa no fa'an."
+
+#, fuzzy
+#| msgid "Sign up"
+msgid "Sign Up"
+msgstr "Rejista"
+
+#, fuzzy
+#| msgid "Create an account"
+msgid "Create Your Account"
+msgstr "Kria konta"
+
+msgid "Join thousands of buyers and sellers on TimorMart."
+msgstr "Hola parte ho kompradór no vendedór rihun-rihun iha TimorMart."
+
+msgid "Company Information"
+msgstr "Informasaun Empreza"
+
+#, fuzzy
+#| msgid "Password confirmation"
+msgid "Personal Information"
+msgstr "Konfirma senha"
+
+msgid "We'll use this to verify your account."
+msgstr "Ami sei uza ida-ne'e atu verifika ita-nia konta."
+
+msgid "Local or international format (e.g., 7012345 or +670 7012345)."
+msgstr "Formatu lokál ka internasionál (ex: 7012345 ka +670 7012345)."
+
+msgid "Your primary delivery or contact address."
+msgstr "Ita-nia enderesu prinsipál ba entrega ka kontaktu."
+
+msgid "Account Credentials"
+msgstr "Kredensiál Konta"
+
+msgid "Letters, digits and @/./+/-/_ only. 30 characters or fewer."
+msgstr "Letra, numeru no @/./+/-/_ deit. Karater 30 ka menus."
+
+#, fuzzy
+#| msgid "Your password can’t be entirely numeric."
+msgid ""
+"Your password must be at least 8 characters long and can't be entirely "
+"numeric."
+msgstr "Ita-boot nia senha labele númeru de'it."
+
+#, fuzzy
+#| msgid "Enter the same password as before, for verification."
+msgid "Enter the same password to verify."
+msgstr "Hatama senha hanesan ho uluk nian, atu verifika."
+
+#, fuzzy
+#| msgid "Password confirmation"
+msgid "Password requirements:"
+msgstr "Konfirma senha"
+
+msgid "At least 8 characters long"
+msgstr "Karater 8 ka liu"
+
+#, fuzzy
+#| msgid "Your password can’t be entirely numeric."
+msgid "Can't be entirely numeric"
+msgstr "Ita-boot nia senha labele númeru de'it."
+
+msgid "Can't be the same as your username"
+msgstr "La bele hanesan ho ita-nia naran users"
+
+#, fuzzy
+#| msgid "Sign in"
+msgid "Sign in here"
+msgstr "Login"
+
+msgid "About Us"
+msgstr "Kona-ba Ami"
+
+msgid ""
+"TimorMart is Timor-Leste's local online marketplace connecting buyers and "
+"sellers across the country."
+msgstr ""
+"TimorMart mak merkadu online lokál Timor-Leste ne'ebé konjuga kompradór no "
+"vendedór iha rai laran tomak."
+
+#, fuzzy
+#| msgid "Sell on TimorMart"
+msgid "About TimorMart"
+msgstr "Fa'an iha TimorMart"
+
+msgid ""
+"TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
+"        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
+msgstr ""
+"TimorMart mak merkadu online rasik Timor-Leste — fatin ida ba ema hotu iha rai laran tomak\n"
+"        atu sosa no fa'an malu direitamente, la presiza loja fízika ka osan boot atu hahú."
+
+msgid "Why we built this"
+msgstr "Tanbasá ami harii ida-ne'e"
+
+msgid ""
+"Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
+"            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
+"            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling\n"
+"            online: a single, trusted place where anyone can list a product and anyone can find it, whether\n"
+"            it's brand new or a good second-hand find."
+msgstr ""
+"Komérsiu iha Timor-Leste fahe iha merkadu, loja ki'ik no lia-fuan husi ema ba ema —\n"
+"            di'ak ba komunidade, maibé susar ba kompradór atu kompara opsaun ka ba vendedór ki'ik atu to'o\n"
+"            kliente sira liur husi sira-nia vizinhansa. TimorMart lori hela-fatin komprasaun no fa'an loron-loron ne'e\n"
+"            ba online: fatin ida deit, konfiavel, ne'ebé ema hotu bele listu produtu no ema hotu bele hetan,\n"
+"            keta produtu foun ka sasán uza-tiha ne'ebé di'ak."
+
+#, fuzzy
+#| msgid "Buyer"
+msgid "For Buyers"
+msgstr "Sosa-na'in"
+
+msgid "Browse products from home, across every municipality"
+msgstr "Haree produtu husi uma, iha munisípiu hotu-hotu"
+
+msgid "Clear pricing and condition (new vs. second-hand) on every listing"
+msgstr ""
+"Prezu no kondisaun kléru (foun kontra uza-tiha) iha listajen hotu-hotu"
+
+msgid "Ratings and comments from other buyers"
+msgstr "Avaliasaun no komentáriu husi kompradór seluk"
+
+msgid "Contact sellers directly, including by WhatsApp"
+msgstr "Kontaktu vendedór direitamente, inklui liu husi WhatsApp"
+
+msgid "Use the site in English or Tetum"
+msgstr "Uza site iha Inglés ka Tetun"
+
+#, fuzzy
+#| msgid "Seller"
+msgid "For Sellers"
+msgstr "Fa'an-na'in"
+
+msgid "Reach buyers across the country without renting a storefront"
+msgstr "To'o kompradór iha rai laran tomak sem aluga loja"
+
+msgid "List, edit and track products from a simple dashboard"
+msgstr "Lista, edita no rastreia produtu husi dashboard simples"
+
+msgid "Get paid by card, bank transfer or mobile money"
+msgstr "Simu selu liu husi kartaun, transferénsia banku ka osan movel"
+
+msgid "Build a reputation through buyer ratings and reviews"
+msgstr "Harii reputasaun liu husi avaliasaun no revizaun kompradór"
+
+msgid "Start free — upgrade only once you're ready to grow"
+msgstr "Hahú grátis — atualiza deit wainhira ita prontu atu kresse"
+
+msgid "Trust & Safety"
+msgstr "Konfiansa & Seguransa"
+
+msgid "Every listing is reviewed before it goes live"
+msgstr "Listajen hotu-hotu revee antes publika"
+
+msgid "Couriers submit ID and are verified before they can deliver an order"
+msgstr ""
+"Entregadór submete identidade no verifika antes bele entrega enkomenda"
+
+msgid "Photo proof of delivery on every shipped order"
+msgstr "Fotografia komprovativu entrega ba enkomenda haruka hotu-hotu"
+
+msgid "A dispute process if something goes wrong"
+msgstr "Prosesu disputa se buat ida la loos"
+
+msgid "Buyers and couriers can both be rated after delivery"
+msgstr "Kompradór no entregadór bele avalia hotu depois entrega"
+
+msgid "What makes TimorMart different"
+msgstr "Saida mak halo TimorMart diferente"
+
+msgid ""
+"Built for Timor-Leste — local cities, local languages, local payment options"
+msgstr ""
+"Harii ba Timor-Leste — sidade lokál, lian lokál, opsaun pagamentu lokál"
+
+msgid "New and second-hand items side by side, so buying affordably is easy"
+msgstr "Sasán foun no uza-tiha hamutuk, atu sosa ho prezu ki'ik sai fásil"
+
+msgid "Full English and Tetum support throughout the site"
+msgstr "Suporta kompletu Inglés no Tetun iha site tomak"
+
+msgid "Direct WhatsApp contact between buyers and sellers"
+msgstr "Kontaktu WhatsApp direitu entre kompradór no vendedór"
+
+msgid "Delivery matched to the buyer's city, with verified couriers"
+msgstr "Entrega konjuga ho sidade kompradór, ho entregadór verifikadu"
+
+msgid "Moderation and dispute resolution to keep the marketplace trustworthy"
+msgstr "Moderasaun no rezolusaun disputa atu mantein merkadu konfiavel"
+
+msgid "Ready to get started?"
+msgstr "Prontu atu hahú?"
+
+#, fuzzy
+#| msgid "Browse all products"
+msgid "Browse products"
+msgstr "Haree produtu hotu"
+
+msgid "Start selling"
+msgstr "Hahú fa'an"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment Details"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid ""
+"Send the amount below to each seller using the details they provided, then "
+"let them know you've paid."
+msgstr ""
+"Haruka montante iha okos ba vendedór ida-idak uza detallu ne'ebé sira "
+"fornese, depois hato'o ba sira katak ita selu ona."
+
+msgid "Order"
+msgstr "Enkomenda"
+
+#, fuzzy
+#| msgid "Account type"
+msgid "Amount to send"
 msgstr "Tipu konta"
+
+msgid "Reference (include in the transfer memo)"
+msgstr "Referénsia (inklui iha memo transferénsia)"
+
+msgid "Seller payment details"
+msgstr "Detallu pagamentu vendedór"
+
+msgid "I've sent payment"
+msgstr "Hau haruka ona pagamentu"
+
+msgid "View my orders"
+msgstr "Haree ita-nia enkomenda"
+
+#, fuzzy
+#| msgid "Order"
+msgid "My Orders"
+msgstr "Enkomenda"
+
+msgid "Continue Shopping"
+msgstr "Kontinua Kompra"
+
+msgid "All"
+msgstr "Hotu-hotu"
+
+#, fuzzy
+#| msgid "Order"
+msgid "Order #"
+msgstr "Enkomenda"
+
+msgid "Product"
+msgstr "Produtu"
+
+msgid "Seller"
+msgstr "Fa'an-na'in"
+
+msgid "Total"
+msgstr "Totál"
+
+msgid "Status"
+msgstr "Estadu"
+
+msgid "Date"
+msgstr "Data"
+
+#, fuzzy
+#| msgid "View all"
+msgid "View"
+msgstr "Haree hotu"
+
+#, fuzzy
+#| msgid "No categories yet."
+msgid "No orders yet."
+msgstr "Seidauk iha kategoria."
+
+#, fuzzy
+#| msgid "Start selling"
+msgid "Start shopping now"
+msgstr "Hahú fa'an"
+
+msgid "Shopping Cart"
+msgstr "Kareta Kompra"
+
+msgid "Qty"
+msgstr "Kuant."
+
+msgid "Update"
+msgstr "Atualiza"
+
+msgid "Remove"
+msgstr "Hasai"
+
+msgid "Order Summary"
+msgstr "Rezumu Enkomenda"
+
+msgid "Subtotal"
+msgstr "Subtotál"
+
+#, python-format
+msgid "Commission (15%%) and payment fees will be calculated at checkout."
+msgstr "Komisaun (15%%) no taxa pagamentu sei kalkula iha checkout."
+
+msgid "Proceed to Checkout"
+msgstr "Kontinua ba Checkout"
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Order Review"
+msgstr "Revizaun Enkomenda"
+
+#, fuzzy
+#| msgid "Price"
+msgid "Unit Price"
+msgstr "Folin"
+
+#, python-format
+msgid ""
+"\n"
+"                %(sellers)s haven't set up bank transfer details yet — choose Card if your cart includes their items.\n"
+"                "
+msgstr ""
+"\n"
+"                %(sellers)s seidauk hatur detallu transferénsia banku — hili Kartaun se ita-nia kareta iha sira-nia sasán.\n"
+"                "
+
+#, fuzzy
+#| msgid "Create an account"
+msgid "Test accounts:"
+msgstr "Kria konta"
+
+msgid "Delivery Information"
+msgstr "Informasaun Entrega"
+
+msgid "Proceed to Payment"
+msgstr "Kontinua ba Pagamentu"
+
+#, python-format
+msgid "Platform fee (15%%)"
+msgstr "Taxa plataforma (15%%)"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment fee"
+msgstr "Konfigurasaun Pagamentu"
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Delivery fee"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Your payment is secure and encrypted."
+msgstr "Ita-nia pagamentu seguru no enkriptadu."
+
+msgid ""
+"You'll pay the seller directly — no platform fee. The next page shows their "
+"payment details."
+msgstr ""
+"Ita sei selu vendedór direitamente — la iha taxa plataforma. Pájina tuir mai"
+" hatudu sira-nia detallu pagamentu."
+
+msgid ""
+"Test/dev payment rail — enter one of the test account numbers above to "
+"trigger a specific outcome."
+msgstr ""
+"Kanál pagamentu teste/dev — tau numeru konta teste iha leten atu gatilha "
+"rezultadu espesífiku."
+
+msgid "Continue to Payment Details"
+msgstr "Kontinua ba Detallu Pagamentu"
+
+#, fuzzy
+#| msgid "Bank Transfer"
+msgid "Submit Bank Transfer"
+msgstr "Transferénsia Banku"
+
+msgid "My Deliveries"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "You're verified and can be assigned deliveries."
+msgstr "Ita verifika ona no bele nomeia ba entrega."
+
+msgid "Awaiting review"
+msgstr "Hein revizaun"
+
+msgid "An administrator is reviewing your ID document."
+msgstr "Administradór iha revizaun ba ita-nia dokumentu identidade."
+
+msgid "Your ID submission was rejected"
+msgstr "Ita-nia submisaun identidade rejeita ona"
+
+msgid ""
+"Submit a photo of your ID document to get verified — you can't be assigned "
+"deliveries until then."
+msgstr ""
+"Submete fotografia ita-nia dokumentu identidade atu verifika — ita la bele "
+"nomeia ba entrega to'o ne'e."
+
+#, fuzzy
+#| msgid "Submit rating"
+msgid "Submit"
+msgstr "Haruka klasifikasaun"
 
 msgid "Buyer"
 msgstr "Sosa-na'in"
 
-msgid "Buyer & Seller"
-msgstr "Sosa-na'in & Fa'an-na'in"
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Deliver to"
+msgstr "Ha'u-nia Entrega sira"
 
-msgid "Buyer — browse products, contact sellers and post comments"
-msgstr "Sosa-na'in — haree produtu, kontaktu fa'an-na'in no haruka komentáriu"
+msgid "Ready for pickup"
+msgstr "Prontu ba foti"
 
-msgid "Seller — list and manage products for sale"
-msgstr "Fa'an-na'in — hatama no jere produtu atu fa'an"
+msgid "Picked up"
+msgstr "Foti ona"
 
-msgid "Buyer & Seller — everything in one account"
-msgstr "Sosa-na'in & Fa'an-na'in — hotu-hotu iha konta ida"
+msgid "On the way"
+msgstr "Iha dalan"
 
-msgid "Create an account"
-msgstr "Kria konta"
+msgid "Awaiting kitchen"
+msgstr "Hein kusinha"
 
-#, python-format
-msgid "Welcome, %(name)s! Your account is ready — happy shopping."
-msgstr "Bem-vindu, %(name)s! Ita-boot nia konta prontu ona — sosa ho ksolok."
+msgid "Confirm Pickup"
+msgstr "Konfirma Foti"
 
-msgid "Only buyer accounts can post comments."
-msgstr "De'it konta sosa-na'in mak bele haruka komentáriu."
+msgid "Mark On the Way"
+msgstr "Marka Iha Dalan"
 
-msgid "Comments are available to buyer accounts. Seller accounts cannot post comments."
-msgstr "Komentáriu disponivel ba konta sosa-na'in. Konta fa'an-na'in labele haruka komentáriu."
+msgid "View / Mark Delivered"
+msgstr "Haree / Marka Entrega"
+
+msgid "No deliveries waiting right now."
+msgstr "La iha entrega hein daudaun."
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Recently Delivered"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "No deliveries completed yet."
+msgstr "Seidauk iha entrega remata."
+
+# ── Header / navigation ────────────────────────────────────────────────
+# 
+msgid "Home"
+msgstr "Inísiu"
+
+# ── Product detail page ────────────────────────────────────────────────
+# 
+msgid ""
+"This listing is awaiting administrator approval and is not yet visible to "
+"buyers."
+msgstr ""
+"Anúnsiu ida-ne'e sei hein aprovasaun husi administradór no sosa-na'in sira "
+"seidauk bele haree."
+
+msgid "This listing is not visible to buyers."
+msgstr "Anúnsiu ida-ne'e sosa-na'in sira labele haree."
+
+msgid "Moderator note:"
+msgstr "Nota husi administradór:"
+
+msgid "Previous image"
+msgstr "Imajen anteriór"
+
+msgid "Next image"
+msgstr "Imajen tuir mai"
+
+msgid "View full screen"
+msgstr "Haree iha ekrã tomak"
+
+msgid "Product images"
+msgstr "Imajen produtu"
+
+msgid "Close"
+msgstr "Taka"
+
+# ── Catalog / product grid ─────────────────────────────────────────────
+# 
+msgid "No image available"
+msgstr "La iha imajen"
+
+msgid "rating"
+msgstr "klasifikasaun"
+
+#, fuzzy
+#| msgid "Admin"
+msgid "min"
+msgstr "Admin"
+
+# ── Catalog / product grid ─────────────────────────────────────────────
+# 
+#, fuzzy
+#| msgid "No image available"
+msgid "Unavailable"
+msgstr "La iha imajen"
+
+msgid "In stock"
+msgstr "Disponível"
+
+msgid "Out of stock"
+msgstr "Esgotadu"
+
+msgid "Add to Cart"
+msgstr "Aumenta ba Kareta"
+
+#, fuzzy
+#| msgid "Save"
+msgid "Saved"
+msgstr "Rai"
+
+msgid "Save"
+msgstr "Rai"
+
+msgid ""
+"Not booked through the cart — contact the service provider directly to "
+"arrange this."
+msgstr ""
+"La book liu husi karrinu — kontaktu servisu-na'in diretamente atu kombina "
+"ida-ne'e."
+
+# ── Service-category contact wording (added 2026-07-15) ─────────────────
+# 
+msgid ""
+"Not sold through the cart — contact the seller directly to arrange this."
+msgstr ""
+"La fa'an liu husi karrinu — kontaktu fa'an-na'in diretamente atu kombina "
+"ida-ne'e."
+
+msgid "Listed"
+msgstr "Hatama iha"
+
+msgid "Service Provider"
+msgstr "Servisu-na'in"
+
+msgid "Verified Business"
+msgstr "Empreza Verifikadu"
+
+msgid "Chat on WhatsApp"
+msgstr "Konversa iha WhatsApp"
+
+msgid "Interested in this service?"
+msgstr "Iha interese ba servisu ida-ne'e?"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, upgrade "
+"your account to Buyer & Seller."
+msgstr ""
+"Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e "
+"ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
+
+msgid "Interested in this product?"
+msgstr "Iha interese ba produtu ida-ne'e?"
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, upgrade your account"
+" to Buyer & Seller."
+msgstr ""
+"Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-"
+"boot nia konta ba Sosa-na'in & Fa'an-na'in."
+
+msgid "Upgrade to Buyer & Seller"
+msgstr "Hasa'e ba Sosa-na'in & Fa'an-na'in"
+
+msgid "Sign in to view contact information"
+msgstr "Login atu haree informasaun kontaktu"
+
+msgid ""
+"To view the service provider's phone number and WhatsApp contact, please "
+"sign in or create an account."
+msgstr ""
+"Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, favór "
+"login ka kria konta ida."
+
+msgid ""
+"To view the seller's phone number and WhatsApp contact, please sign in or "
+"create an account."
+msgstr ""
+"Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, favór login "
+"ka kria konta ida."
+
+msgid "Edit listing"
+msgstr "Edita anúnsiu"
+
+msgid "Reviews"
+msgstr "Revizaun"
+
+msgid "Verified Purchase"
+msgstr "Kompra Verifikadu"
+
+msgid "Related products"
+msgstr "Produtu relasionadu sira"
+
+msgid "Comments"
+msgstr "Komentáriu sira"
+
+msgid "Post comment"
+msgstr "Haruka komentáriu"
+
+msgid ""
+"Comments are available to buyer accounts. Seller accounts cannot post "
+"comments."
+msgstr ""
+"Komentáriu disponivel ba konta sosa-na'in. Konta fa'an-na'in labele haruka "
+"komentáriu."
 
 msgid "Sign in with a buyer account to post a comment."
 msgstr "Login ho konta sosa-na'in atu haruka komentáriu."
 
-msgid "First name"
-msgstr "Naran dahuluk"
+msgid "No comments yet. Be the first to ask about this product!"
+msgstr ""
+"Seidauk iha komentáriu. Sai ema dahuluk atu husu kona-ba produtu ida-ne'e!"
 
-msgid "Last name"
-msgstr "Apelidu"
+msgid "Dispute"
+msgstr "Disputa"
 
-msgid "Email address"
-msgstr "Diresaun email"
+msgid "Seller response due by"
+msgstr "Vendedór tenke hatan to'o"
 
-msgid "Phone number"
-msgstr "Númeru telefone"
+msgid "Buyer's Report"
+msgstr "Relatóriu Kompradór"
 
-msgid "Address"
-msgstr "Diresaun"
+msgid "Resolution"
+msgstr "Rezolusaun"
 
-msgid "An account with this email address already exists."
-msgstr "Konta ho diresaun email ida-ne'e eziste tiha ona."
+msgid "Refund Amount"
+msgstr "Montante Selu Fila Fali"
 
-#, python-format
-msgid "Welcome, %(name)s! Your seller account is ready."
-msgstr "Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona."
+msgid "Resolved on"
+msgstr "Rezolve iha"
 
-#, python-format
-msgid "Welcome back, %(name)s!"
-msgstr "Bem-vindu fila fali, %(name)s!"
+#, fuzzy
+#| msgid "Order"
+msgid "View Order"
+msgstr "Enkomenda"
 
-msgid "Invalid username or password."
-msgstr "Naran uzuáriu ka senha la loos."
+msgid "Previous"
+msgstr "Anteriór"
 
-msgid "You have been logged out."
-msgstr "Ita-boot sai tiha ona."
+msgid "Next"
+msgstr "Tuir mai"
 
-#
-# ── Accounts: password reset ───────────────────────────────────────────
-#
-
-msgid "Reset password"
-msgstr "Troka senha"
-
-msgid "Reset your password"
-msgstr "Troka ita-boot nia senha"
-
-msgid "Enter the email address you registered with and we will send you a link to set a new password."
-msgstr "Hatama diresaun email ne'ebé ita-boot rejista ho nia no ami sei haruka ligasaun ida atu defini senha foun."
-
-msgid "Send reset link"
-msgstr "Haruka ligasaun"
-
-msgid "Reset link sent"
-msgstr "Ligasaun haruka tiha ona"
-
-msgid "Check your email"
-msgstr "Xeke ita-boot nia email"
-
-msgid "If an account exists with the address you entered, we have emailed a password reset link."
-msgstr "Se konta ida eziste ho diresaun ne'ebé ita-boot hatama, ami haruka tiha ona ligasaun atu troka senha."
-
-msgid "Back to sign in"
-msgstr "Fila ba login"
-
-msgid "Choose a new password"
-msgstr "Hili senha foun"
-
-msgid "Set new password"
-msgstr "Defini senha foun"
-
-msgid "This password reset link is invalid or has expired. Please request a new one."
-msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu ida foun."
-
-msgid "Request a new link"
-msgstr "Husu ligasaun foun"
-
-msgid "Password changed"
-msgstr "Senha troka tiha ona"
-
-msgid "Your password has been set. You can now sign in with your new password."
-msgstr "Ita-boot nia senha defini tiha ona. Agora bele login ho senha foun."
-
-msgid "You are receiving this email because you requested a password reset for your TimorMart account."
-msgstr "Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka senha ba ita-boot nia konta TimorMart."
-
-msgid "Please go to the following page and choose a new password:"
-msgstr "Favór bá pájina tuir mai ne'e no hili senha foun:"
-
-msgid "Your username, in case you have forgotten:"
-msgstr "Ita-boot nia naran uzuáriu, karik haluha:"
-
-msgid "If you did not request this, you can safely ignore this email."
-msgstr "Se la'ós ita-boot mak husu ida-ne'e, bele ignora email ida-ne'e."
-
-#
-# ── Django built-in form/validation strings shown in this app ─────────
-#
-
-msgid "This field is required."
-msgstr "Kampu ida-ne'e obrigatóriu."
+#, fuzzy
+#| msgid "Buyer & Seller"
+msgid "Best sellers"
+msgstr "Sosa-na'in & Fa'an-na'in"
 
 #, python-format
-msgid "Please enter a correct %(username)s and password. Note that both fields may be case-sensitive."
-msgstr "Favór hatama %(username)s no senha ne'ebé loos. Nota katak kampu rua ne'e diferensia letra boot ho ki'ik."
+msgid "Search results for “%(query)s”"
+msgstr "Rezultadu buka ba “%(query)s”"
 
-msgid "Password confirmation"
-msgstr "Konfirma senha"
-
-msgid "Enter the same password as before, for verification."
-msgstr "Hatama senha hanesan ho uluk nian, atu verifika."
-
-msgid "A user with that username already exists."
-msgstr "Uzuáriu ho naran ne'e eziste tiha ona."
-
-msgid "The two password fields didn’t match."
-msgstr "Senha rua ne'e la hanesan."
-
-msgid "Your password can’t be too similar to your other personal information."
-msgstr "Ita-boot nia senha labele hanesan liu ho ita-boot nia informasaun pesoál seluk."
-
-msgid "Your password can’t be a commonly used password."
-msgstr "Ita-boot nia senha labele senha ne'ebé ema uza beibeik."
-
-msgid "Your password can’t be entirely numeric."
-msgstr "Ita-boot nia senha labele númeru de'it."
+msgid "New arrivals"
+msgstr "Foin tama"
 
 #, python-format
-msgid "Your password must contain at least %(min_length)d character."
-msgid_plural "Your password must contain at least %(min_length)d characters."
-msgstr[0] "Ita-boot nia senha tenke iha pelu menus karakter %(min_length)d."
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] "sasán %(counter)s"
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Max"
+msgstr "Max"
+
+msgid "Sort by"
+msgstr "Orden tuir"
+
+msgid "Newest"
+msgstr "Foun liu"
+
+#, fuzzy
+#| msgid "Start selling"
+msgid "Best selling"
+msgstr "Hahú fa'an"
+
+msgid "Price: low to high"
+msgstr "Folin: ki'ik ba boot"
+
+msgid "Price: high to low"
+msgstr "Folin: boot ba ki'ik"
+
+msgid "Name"
+msgstr "Naran"
+
+msgid "Apply"
+msgstr "Aplika"
+
+msgid "My products"
+msgstr "Ha'u-nia produtu sira"
+
+msgid "Add product"
+msgstr "Aumenta produtu"
 
 #, python-format
-msgid "The password is too similar to the %(verbose_name)s."
-msgstr "Senha ne'e hanesan liu ho %(verbose_name)s."
-
-msgid "This password is too common."
-msgstr "Senha ida-ne'e komún liu."
-
-msgid "This password is entirely numeric."
-msgstr "Senha ida-ne'e númeru de'it."
+msgid ""
+"Your subscription expired. You have %(used)s listings (over the free limit "
+"of %(limit)s) — they stay live, but you can't add new ones until you renew."
+msgstr ""
+"Ita-nia subskrisaun remata ona. Ita iha listajen %(used)s (liu husi limite "
+"grátis %(limit)s) — sira kontinua ativu, maibé ita la bele aumenta foun to'o"
+" ita renova."
 
 #, python-format
-msgid "This password is too short. It must contain at least %(min_length)d character."
-msgid_plural "This password is too short. It must contain at least %(min_length)d characters."
-msgstr[0] "Senha ida-ne'e badak liu. Tenke iha pelu menus karakter %(min_length)d."
+msgid ""
+"Your subscription expires in %(days)s day(s) (%(date)s) — renew to keep "
+"posting new products."
+msgstr ""
+"Ita-nia subskrisaun sei remata iha loron %(days)s (%(date)s) — renova atu "
+"kontinua hakerek produtu foun."
 
-msgid "New password"
-msgstr "Senha foun"
+#, python-format
+msgid "%(plan)s — unlimited listings, active until %(date)s."
+msgstr "%(plan)s — listajen la limitadu, ativu to'o %(date)s."
 
-msgid "New password confirmation"
-msgstr "Konfirma senha foun"
+#, python-format
+msgid "%(used)s / %(limit)s free listings used."
+msgstr "%(used)s / %(limit)s listajen grátis uza ona."
 
-msgid "Email"
-msgstr "Email"
+#, fuzzy
+#| msgid "Description"
+msgid "Manage subscription"
+msgstr "Deskrisaun"
 
-msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr "Obrigatóriu. Karakter 150 ka menus. Letra, númeru no @/./+/-/_ de'it."
+# ── Seller dashboard ───────────────────────────────────────────────────
+# 
+msgid "Listings"
+msgstr "Anúnsiu sira"
 
-msgid "Enter a valid email address."
-msgstr "Hatama diresaun email ne'ebé loos."
+msgid "Inventory value"
+msgstr "Valór inventáriu"
 
-# Lowercase model verbose names (Django capitalizes them in form labels)
-msgid "username"
-msgstr "naran uzuáriu"
+msgid "Created"
+msgstr "Kria iha"
 
-msgid "password"
-msgstr "senha"
+msgid "Actions"
+msgstr "Asaun"
 
-msgid "email address"
-msgstr "diresaun email"
+msgid "Edit"
+msgstr "Edita"
 
-msgid "first name"
-msgstr "naran dahuluk"
+msgid "Mark as sold out"
+msgstr "Marka nu'udar esgotadu"
 
-msgid "last name"
-msgstr "apelidu"
+msgid "Delete"
+msgstr "Apaga"
 
-#
-# ── Header info bar, notifications, footer, orders (added 2026-07-15) ──
-#
+msgid "Delete product"
+msgstr "Apaga produtu"
 
-msgid "Hotline"
-msgstr "Linha diretu"
+#, python-format
+msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
+msgstr "Ita-boot hakarak duni apaga “%(name)s”? Ida-ne'e labele fila fali."
 
-msgid "Currency"
-msgstr "Moeda"
+msgid "Cancel"
+msgstr "Kansela"
 
-msgid "US Dollar (USD)"
-msgstr "Dólar Amerikanu (USD)"
+msgid "You have no products yet"
+msgstr "Ita-boot seidauk iha produtu"
+
+msgid "Create your first listing — it will appear in the store once approved."
+msgstr ""
+"Kria ita-boot nia anúnsiu dahuluk — nia sei mosu iha loja bainhira hetan "
+"aprovasaun."
+
+#, fuzzy
+#| msgid "Actions"
+msgid "Menu Sections"
+msgstr "Asaun"
+
+#, fuzzy
+#| msgid "Related products"
+msgid "Back to products"
+msgstr "Produtu relasionadu sira"
+
+#, fuzzy
+#| msgid "Add a product"
+msgid "Add a section"
+msgstr "Aumenta produtu ida"
+
+# ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
+# 
+#, fuzzy
+#| msgid "Ad"
+msgid "Add"
+msgstr "Anúnsiu"
+
+#, fuzzy
+#| msgid "Actions"
+msgid "Section"
+msgstr "Asaun"
+
+msgid "Items"
+msgstr "Sasán"
+
+msgid "Remove this menu section?"
+msgstr "Hasai seksaun menu ne'e?"
+
+#, fuzzy
+#| msgid "No notifications yet."
+msgid "No menu sections yet"
+msgstr "Seidauk iha avizu."
+
+msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
+msgstr ""
+"Aumenta seksaun hanesan Hahán Dader, Hahán Meiudia, ka Hemu atu organiza "
+"ita-nia menu."
 
 msgid "Notifications"
 msgstr "Avizu sira"
 
-msgid "No notifications yet."
-msgstr "Seidauk iha avizu."
-
-msgid "View all"
-msgstr "Haree hotu"
+msgid "Mark all as read"
+msgstr "Marka hotu hanesan lidu ona"
 
 msgid "ago"
 msgstr "liu ba"
+
+msgid "No notifications yet."
+msgstr "Seidauk iha avizu."
+
+msgid "Report Issue"
+msgstr "Relata Problema"
+
+msgid ""
+"The seller will have 3 days to respond before an admin reviews this dispute."
+msgstr "Vendedór sei iha loron 3 atu hatan antes admin revee disputa ne'e."
+
+msgid "Submit Dispute"
+msgstr "Submete Disputa"
+
+msgid "Total Paid"
+msgstr "Totál Selu"
+
+#, fuzzy
+#| msgid "Status"
+msgid "Order Status"
+msgstr "Estadu"
+
+msgid "Current Status:"
+msgstr "Status Atuál:"
+
+msgid "Paid on"
+msgstr "Selu iha"
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Delivered on"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Kitchen & Pickup Status"
+msgstr "Status Kusinha & Foti"
+
+msgid "Preparing"
+msgstr "Prepara"
+
+#, fuzzy
+#| msgid "Start selling"
+msgid "Start Preparing"
+msgstr "Hahú fa'an"
+
+msgid "Mark Ready for Pickup"
+msgstr "Marka Prontu ba Foti"
+
+msgid "Pickup location"
+msgstr "Fatin foti"
+
+msgid "Delivery Tracking"
+msgstr "Rastreamentu Entrega"
+
+msgid "Courier"
+msgstr "Entregadór"
+
+#, fuzzy
+#| msgid "No categories yet."
+msgid "No status updates yet."
+msgstr "Seidauk iha kategoria."
+
+msgid "Proof of Delivery"
+msgstr "Komprovativu Entrega"
+
+msgid "Proof of delivery"
+msgstr "Komprovativu entrega"
+
+#, fuzzy
+#| msgid "Mark all as read"
+msgid "Mark as Shipped"
+msgstr "Marka hotu hanesan lidu ona"
+
+msgid "Post update"
+msgstr "Hakerek atualizasaun"
+
+msgid "Take a photo of the delivered item to confirm."
+msgstr "Foti fotografia sasán entrega atu konfirma."
+
+#, fuzzy
+#| msgid "My Deliveries"
+msgid "Mark as Delivered"
+msgstr "Ha'u-nia Entrega sira"
+
+msgid "Reassign courier"
+msgstr "Troka entregador"
+
+msgid "Unassigned (self-delivery)"
+msgstr "La marka (entrega rasik)"
+
+msgid "Reference"
+msgstr "Referénsia"
+
+msgid "Waiting for the seller to confirm they received your transfer."
+msgstr "Hein vendedór atu konfirma simu ona ita-nia transferénsia."
+
+msgid "Confirm you received the buyer'\\''s transfer?"
+msgstr "Konfirma ita simu ona transferénsia kompradór?"
+
+msgid "Confirm payment received"
+msgstr "Konfirma pagamentu simu"
+
+#, fuzzy
+#| msgid "Product pages"
+msgid "Product Details"
+msgstr "Pájina produtu"
+
+msgid "Line Total"
+msgstr "Totál Linha"
+
+msgid "Seller Information"
+msgstr "Informasaun Vendedór"
+
+#, python-format
+msgid "Commission (15%%)"
+msgstr "Komisaun (15%%)"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment Fee"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Paid directly to the seller — no platform fee."
+msgstr "Selu direitamente ba vendedór — la iha taxa plataforma."
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Cancel this order?"
+msgstr "Kansela enkomenda ida-ne'e?"
+
+msgid "Cancel Order"
+msgstr "Kansela Enkomenda"
+
+msgid "Rate this product"
+msgstr "Fó klasifikasaun ba produtu ida-ne'e"
+
+msgid "Thanks for rating this purchase."
+msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
+
+msgid "Write a review (optional)"
+msgstr "Hakerek revizaun (fakultativu)"
+
+#, fuzzy
+#| msgid "Interested in this product?"
+msgid "What did you think of this product?"
+msgstr "Iha interese ba produtu ida-ne'e?"
+
+msgid "Submit rating"
+msgstr "Haruka klasifikasaun"
+
+#, fuzzy
+#| msgid "Reassign courier"
+msgid "Rate the courier"
+msgstr "Troka entregador"
+
+#, fuzzy
+#| msgid "Thanks for rating this purchase."
+msgid "Thanks for rating this courier."
+msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Secure Payment"
+msgstr "Pagamentu Seguru"
+
+#, fuzzy
+#| msgid "Password confirmation"
+msgid "Card Information"
+msgstr "Konfirma senha"
+
+msgid "Card Details"
+msgstr "Detallu Kartaun"
+
+msgid "Your payment information is secure and never stored on our servers."
+msgstr ""
+"Ita-nia informasaun pagamentu seguru no nunka rai iha ami-nia servidór."
+
+msgid "Pay"
+msgstr "Selu"
+
+msgid "Test Card:"
+msgstr "Kartaun Teste:"
+
+msgid "Exp"
+msgstr "Espira"
+
+msgid "Payment successful! Redirecting..."
+msgstr "Pagamentu susesu! Direksiona..."
+
+msgid "Processing..."
+msgstr "Prosesa..."
+
+#, fuzzy
+#| msgid "Password confirmation"
+msgid "Payment Confirmation"
+msgstr "Konfirma senha"
+
+msgid "Processing your bank transfer…"
+msgstr "Prosesa ita-nia transferénsia banku…"
+
+msgid ""
+"this page will show the result once your simulated bank responds. Refresh to"
+" check again."
+msgstr ""
+"pájina ne'e sei hatudu rezultadu wainhira ita-nia banku simuladu hatan. "
+"Refreska atu verifika fali."
+
+msgid "Payment did not go through"
+msgstr "Pagamentu la konsege"
+
+#, fuzzy
+#| msgid "Payment Settings"
+msgid "Payment Successful!"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid "Thank you for your order. Your payment has been received."
+msgstr "Obrigadu ba ita-nia enkomenda. Ita-nia pagamentu simu ona."
+
+msgid "Next Steps:"
+msgstr "Pasu Tuir Mai:"
+
+msgid "Seller will contact you at"
+msgstr "Vendedór sei kontaktu ita iha"
+
+msgid "You can track your order status in your"
+msgstr "Ita bele rastreia ita-nia status enkomenda iha ita-nia"
+
+msgid "order history"
+msgstr "istória enkomenda"
+
+msgid "Other Items in Your Order"
+msgstr "Sasán Seluk iha Ita-nia Enkomenda"
+
+msgid "View My Orders"
+msgstr "Haree Ita-nia Enkomenda"
+
+msgid "A confirmation email has been sent to"
+msgstr "Email konfirmasaun haruka ona ba"
+
+msgid "Manage menu sections"
+msgstr "Jere seksaun menu"
+
+msgid ""
+"You're subscribed — this listing will publish immediately, no approval wait."
+msgstr ""
+"Ita subskreve ona — listajen ne'e sei publika kedas, la iha hein aprovasaun."
+
+msgid ""
+"Services don't need a quantity or condition — instead, use the description "
+"to mention things like availability, service area, or turnaround time."
+msgstr ""
+"Servisu la presiza kuantidade ka kondisaun — uza deskrisaun atu temi "
+"disponibilidade, área servisu, ka tempu remata."
+
+msgid ""
+"Menu items don't need a quantity or condition — use Menu section, Available,"
+" and Prep time instead."
+msgstr ""
+"Item menu la presiza kuantidade ka kondisaun — uza Seksaun menu, Disponivel,"
+" no Tempu prepara."
+
+msgid "My Earnings"
+msgstr "Ita-nia Rendimentu"
+
+#, fuzzy
+#| msgid "Order"
+msgid "View Orders"
+msgstr "Enkomenda"
+
+msgid "Total Earnings"
+msgstr "Totál Rendimentu"
+
+msgid "Available Balance"
+msgstr "Saldu Disponivel"
+
+#, fuzzy
+#| msgid "Pending approval"
+msgid "Pending Payout"
+msgstr "Hein aprovasaun"
+
+msgid "Total Paid Out"
+msgstr "Totál Selu Sai"
+
+msgid "Recent Transactions"
+msgstr "Transasaun Foin Dadaun"
+
+msgid "Payouts"
+msgstr "Pagamentu Saída"
+
+msgid "Type"
+msgstr "Tipu"
+
+#, fuzzy
+#| msgid "Country"
+msgid "Amount"
+msgstr "Nasaun"
+
+#, fuzzy
+#| msgid "No notifications yet."
+msgid "No transactions yet."
+msgstr "Seidauk iha avizu."
+
+msgid "Payout ID"
+msgstr "ID Pagamentu Saída"
+
+msgid "Scheduled Date"
+msgstr "Data Planeadu"
+
+msgid "Paid Date"
+msgstr "Data Selu"
+
+#, fuzzy
+#| msgid "No categories yet."
+msgid "No payouts yet."
+msgstr "Seidauk iha kategoria."
+
+msgid "How does it work?"
+msgstr "Oinsá funsiona?"
+
+#, python-format
+msgid "You earn 85%% of each sale (platform takes 15%% commission)"
+msgstr "Ita simu 85%% husi fa'an ida-idak (plataforma hola komisaun 15%%)"
+
+msgid "Earnings are credited when payment is received"
+msgstr "Rendimentu kreditadu wainhira pagamentu simu"
+
+msgid "Payouts are processed monthly on the 1st of each month"
+msgstr "Pagamentu saída prosesa fulan-fulan iha loron 1 fulan ida-idak"
+
+msgid "Minimum payout amount: $500"
+msgstr "Montante mínimu pagamentu saída: $500"
+
+#, fuzzy
+#| msgid "Cancel Order"
+msgid "Seller Orders"
+msgstr "Kansela Enkomenda"
+
+#, fuzzy
+#| msgid "Comment"
+msgid "Confirm Payment"
+msgstr "Komentáriu"
+
+#, fuzzy
+#| msgid "My products"
+msgid "View your products"
+msgstr "Ha'u-nia produtu sira"
+
+msgid "Payment Settings"
+msgstr "Konfigurasaun Pagamentu"
+
+msgid ""
+"When a buyer chooses to pay by bank/mobile transfer, they'll see these "
+"details to send you the money directly. Leave this blank to disable that "
+"payment option for your products."
+msgstr ""
+"Wainhira kompradór hili selu liu husi transferénsia banku/movel, sira sei "
+"haree detallu ne'e atu haruka osan direitamente ba ita. Husik mamuk atu "
+"dizativa opsaun pagamentu ne'e ba ita-nia produtu."
+
+msgid "Business Verification"
+msgstr "Verifikasaun Komersiál"
+
+msgid ""
+"Optional — a verified business shows a trust badge to buyers on your "
+"products. Selling and getting paid work the same either way."
+msgstr ""
+"Fakultativu — empreza verifikadu hatudu marka konfiansa ba kompradór iha "
+"ita-nia produtu. Fa'an no simu selu funsiona hanesan deit."
+
+#, fuzzy
+#| msgid "Your comment was posted."
+msgid "Your document was rejected"
+msgstr "Ita-boot nia komentáriu publika tiha ona."
+
+#, fuzzy
+#| msgid "Description"
+msgid "Subscription"
+msgstr "Deskrisaun"
+
+#, python-format
+msgid ""
+"Free accounts can list up to %(free_limit)s products, and each one is "
+"reviewed by an admin before it goes live. Subscribers can list without limit"
+" and publish instantly — no approval wait."
+msgstr ""
+"Konta grátis bele lista produtu to'o %(free_limit)s, no ida-idak revee husi "
+"admin antes publika. Subskritór bele lista sem limite no publika kedas — la "
+"iha hein aprovasaun."
+
+#, python-format
+msgid "Unlimited listings — active until %(date)s."
+msgstr "Listajen la limitadu — ativu to'o %(date)s."
+
+#, python-format
+msgid ""
+"Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
+" new products."
+msgstr ""
+"Sei remata iha loron %(days)s — renova iha okos atu labele lakon kapasidade "
+"hakerek produtu foun."
+
+msgid "Expired"
+msgstr "Remata ona"
+
+# ── Seller dashboard ───────────────────────────────────────────────────
+# 
+#, fuzzy
+#| msgid "Listings"
+msgid "listings"
+msgstr "Anúnsiu sira"
+
+#, python-format
+msgid ""
+"Over the free limit of %(limit)s — your existing listings stay live, but you"
+" can't add new ones until you renew."
+msgstr ""
+"Liu husi limite grátis %(limit)s — ita-nia listajen existente kontinua "
+"ativu, maibé ita la bele aumenta foun to'o ita renova."
+
+msgid "free listings used"
+msgstr "listajen grátis uza ona"
+
+msgid "You've used all your free listings — subscribe below to post more."
+msgstr ""
+"Ita uza ona ita-nia listajen grátis hotu — subskreve iha okos atu hakerek "
+"liu tan."
+
+#, fuzzy
+#| msgid "Password confirmation"
+msgid "Awaiting confirmation"
+msgstr "Konfirma senha"
+
+#, fuzzy
+#| msgid "Submit rating"
+msgid "Submitted"
+msgstr "Haruka klasifikasaun"
+
+#, fuzzy
+#| msgid "Your name"
+msgid "Your reference"
+msgstr "Ita-boot nia naran"
+
+# ── Subscription renewal/extension logic (added 2026-07-15) ────────────
+# 
+#, python-format
+msgid ""
+"You already have an active subscription until %(date)s. Submitting a new "
+"request won't start a separate subscription — once confirmed, it extends "
+"your current one from that date instead."
+msgstr ""
+"Ita-boot iha ona subskrisaun ativu to'o %(date)s. Haruka pedidu foun labele "
+"hahú subskrisaun separadu — bainhira konfirma ona, nia sei estende ita-boot "
+"nia subskrisaun atuál husi data ne'e."
+
+msgid "Where to pay"
+msgstr "Fatin atu selu"
+
+#, fuzzy
+#| msgid "New password confirmation"
+msgid "I've paid — submit for confirmation"
+msgstr "Konfirma senha foun"
+
+msgid "Request history"
+msgstr "Istória pedidu"
+
+msgid "Plan"
+msgstr "Planu"
+
+msgid "Wishlist"
+msgstr "Lista Deseju"
+
+msgid "My Wishlist"
+msgstr "Ita-nia Lista Deseju"
+
+msgid "Move to Cart"
+msgstr "Muda ba Kareta"
+
+msgid "Your wishlist is empty."
+msgstr "Ita-nia lista deseju mamuk."
+
+#, fuzzy
+#| msgid "Start selling"
+msgid "Start browsing"
+msgstr "Hahú fa'an"
+
+msgid "Skip to main content"
+msgstr "Salta ba konteúdu prinsipál"
 
 msgid "We accept"
 msgstr "Ami simu"
@@ -700,105 +2582,118 @@ msgstr "Transferénsia Banku"
 msgid "Mobile Money"
 msgstr "Osan Movel"
 
-msgid "Advertisement"
-msgstr "Anúnsiu"
+# ── Header info bar, notifications, footer, orders (added 2026-07-15) ──
+# 
+msgid "Hotline"
+msgstr "Linha diretu"
 
-msgid "Mark all as read"
-msgstr "Marka hotu hanesan lidu ona"
+msgid "Currency"
+msgstr "Moeda"
 
-msgid "Order"
+msgid "US Dollar (USD)"
+msgstr "Dólar Amerikanu (USD)"
+
+msgid "Search by product"
+msgstr "Buka tuir produtu"
+
+msgid "Search"
+msgstr "Buka"
+
+msgid "View all"
+msgstr "Haree hotu"
+
+msgid "Administrator"
+msgstr "Administradór"
+
+msgid "Buyer & Seller"
+msgstr "Sosa-na'in & Fa'an-na'in"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Log out"
+msgstr "Sai"
+
+msgid "Toggle navigation"
+msgstr "Loke ka taka menu"
+
+msgid "Categories"
+msgstr "Kategoria sira"
+
+#, fuzzy
+#| msgid "Order"
+msgid "Orders"
 msgstr "Enkomenda"
 
-msgid "Payment Settings"
-msgstr "Konfigurasaun Pagamentu"
+msgid "Earnings"
+msgstr "Rendimentu"
 
-msgid "My Deliveries"
-msgstr "Ha'u-nia Entrega sira"
+msgid "Cart"
+msgstr "Kareta"
 
-msgid "Cancel Order"
-msgstr "Kansela Enkomenda"
+msgid "Language"
+msgstr "Lian"
 
-msgid "Cancel this order?"
-msgstr "Kansela enkomenda ida-ne'e?"
+msgid "Product pages"
+msgstr "Pájina produtu"
 
-msgid "Rate this product"
-msgstr "Fó klasifikasaun ba produtu ida-ne'e"
-
-msgid "Submit rating"
-msgstr "Haruka klasifikasaun"
-
-msgid "Thanks for rating this purchase."
-msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
-
-msgid "Reassign courier"
-msgstr "Troka entregador"
-
-msgid "Unassigned (self-delivery)"
-msgstr "La marka (entrega rasik)"
-
-msgid "Save"
-msgstr "Rai"
-
-msgid "rating"
-msgstr "klasifikasaun"
-
-#
 # ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
-#
-
+# 
 msgid "Ad"
 msgstr "Anúnsiu"
-
-msgid "Shop Electronics"
-msgstr "Sosa Elektrónika"
-
-msgid "Browse Materials"
-msgstr "Haree Materiál"
-
-msgid "Browse Vehicles"
-msgstr "Haree Veíkulu"
-
-msgid "Learn More"
-msgstr "Hatene Liu Tan"
 
 msgid "Latest phones, laptops and accessories — in stock now."
 msgstr "Telefone, laptop no asesóriu foun sira — disponível ona."
 
+msgid "Shop Electronics"
+msgstr "Sosa Elektrónika"
+
 msgid "Cement, tools and building materials for every project."
 msgstr "Simentu, ferramenta no materiál konstrusaun ba projetu hotu-hotu."
+
+msgid "Browse Materials"
+msgstr "Haree Materiál"
 
 msgid "Quality used vehicles and motorcycles, inspected."
 msgstr "Veíkulu no motór uza kualidade di'ak, ho inspesaun."
 
+msgid "Browse Vehicles"
+msgstr "Haree Veíkulu"
+
 msgid "Explore Timor-Leste — book a local tour today."
 msgstr "Esplora Timor-Leste — reserva tour lokál ohin."
 
-#
-# ── Subscription renewal/extension logic (added 2026-07-15) ────────────
-#
+msgid "Learn More"
+msgstr "Hatene Liu Tan"
 
-#, python-format
-msgid "You already have an active subscription until %(date)s. Submitting a new request won't start a separate subscription — once confirmed, it extends your current one from that date instead."
-msgstr "Ita-boot iha ona subskrisaun ativu to'o %(date)s. Haruka pedidu foun labele hahú subskrisaun separadu — bainhira konfirma ona, nia sei estende ita-boot nia subskrisaun atuál husi data ne'e."
+msgid "Shop by category"
+msgstr "Sosa tuir kategoria"
 
-#
-# ── Service-category contact wording (added 2026-07-15) ─────────────────
-#
+msgid "No categories yet."
+msgstr "Seidauk iha kategoria."
 
-msgid "Not sold through the cart — contact the seller directly to arrange this."
-msgstr "La fa'an liu husi karrinu — kontaktu fa'an-na'in diretamente atu kombina ida-ne'e."
+msgid "Sell on TimorMart"
+msgstr "Fa'an iha TimorMart"
 
-msgid "Not booked through the cart — contact the service provider directly to arrange this."
-msgstr "La book liu husi karrinu — kontaktu servisu-na'in diretamente atu kombina ida-ne'e."
+msgid "Create a free seller account and reach buyers across Timor-Leste."
+msgstr ""
+"Kria konta fa'an-na'in grátis no hetan sosa-na'in sira iha Timor-Leste laran"
+" tomak."
 
-msgid "Service Provider"
-msgstr "Servisu-na'in"
+msgid "Add a product"
+msgstr "Aumenta produtu ida"
 
-msgid "Interested in this service?"
-msgstr "Iha interese ba servisu ida-ne'e?"
+msgid "Toggle wishlist"
+msgstr "Troka lista deseju"
 
-msgid "To view the service provider's phone number and WhatsApp contact, upgrade your account to Buyer & Seller."
-msgstr "Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
+msgid "No products found"
+msgstr "La hetan produtu ida"
 
-msgid "To view the service provider's phone number and WhatsApp contact, please sign in or create an account."
-msgstr "Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, favór login ka kria konta ida."
+msgid "Try a different search term or category."
+msgstr "Koko liafuan buka ka kategoria seluk."
+
+msgid "Browse all products"
+msgstr "Haree produtu hotu"
+
+msgid "Added"
+msgstr "Aumenta ona"

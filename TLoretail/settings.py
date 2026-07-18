@@ -148,13 +148,17 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 LANGUAGES = [
     ("en", "English"),
     ("tet", "Tetum"),
+    ("pt-pt", "Português"),
+    ("id", "Bahasa Indonesia"),
 ]
 MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
-MODELTRANSLATION_LANGUAGES = ("en", "tet")
+MODELTRANSLATION_LANGUAGES = ("en", "tet", "pt-pt", "id")
 
-# Register custom language code "tet" (Tetum) in Django's language database.
-# "tet" is the correct ISO 639-3 code but isn't built into Django,
-# so django-modeltranslation can't find language metadata without this patch.
+# Register custom language codes not built into Django's language database.
+# "tet" (Tetum, ISO 639-3) and "pt-pt" (Portugal Portuguese, a regional
+# variant Django doesn't ship metadata for — only generic "pt"/"pt-br") both
+# need this patch so django-modeltranslation can find language metadata.
+# "id" (Indonesian) is already built into Django, no patch needed.
 from django.conf.locale import LANG_INFO  # noqa: E402
 
 if 'tet' not in LANG_INFO:
@@ -163,6 +167,13 @@ if 'tet' not in LANG_INFO:
         'code': 'tet',
         'name': 'Tetum',
         'name_local': 'Tetun',
+    }
+if 'pt-pt' not in LANG_INFO:
+    LANG_INFO['pt-pt'] = {
+        'bidi': False,
+        'code': 'pt-pt',
+        'name': 'Portuguese',
+        'name_local': 'Português',
     }
 
 # Static files (served by WhiteNoise) and user-uploaded media
