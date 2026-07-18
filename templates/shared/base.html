@@ -6,7 +6,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
   <meta name="description" content="{% block meta_description %}TimorMart — buy and sell products across Timor-Leste.{% endblock %}" />
   <title>{% block title %}TimorMart{% endblock %}</title>
@@ -72,6 +72,15 @@
         height: 220px !important; max-height: 220px !important;
       }
     }
+
+    /* ── Android/iOS app wrapper (Capacitor) ───────────────────────
+       .capacitor-app is only added by the script at the bottom of this
+       file, and only when the page is actually running inside the native
+       app — regular browser visitors are completely unaffected. Padding
+       clears the device status bar/notch, which sits on top of the page
+       content since the WebView draws edge-to-edge in the native shell. */
+    .capacitor-app header { padding-top: env(safe-area-inset-top, 0); }
+    .capacitor-app footer { padding-bottom: env(safe-area-inset-bottom, 0); }
   </style>
   {% block extra_head %}{% endblock %}
 </head>
@@ -96,6 +105,40 @@
   <script type="text/javascript" src="{% static 'costumize/js/mdb.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'costumize/js/mdb.ecommerce.min.js' %}"></script>
   {% block extra_scripts %}{% endblock %}
+
+  <!-- Android/iOS app wrapper (Capacitor) — no-op in a regular browser.
+       window.Capacitor only exists when this page is loaded inside the
+       native app shell (see /mobile in the repo), which injects its JS
+       bridge automatically; nothing here loads or runs on the live website
+       as visited from a normal browser. -->
+  <script type="text/javascript">
+    (function () {
+      if (!window.Capacitor || !window.Capacitor.isNativePlatform || !window.Capacitor.isNativePlatform()) return;
+      document.documentElement.classList.add('capacitor-app');
+
+      var StatusBar = window.Capacitor.Plugins.StatusBar;
+      if (StatusBar) {
+        StatusBar.setBackgroundColor({ color: '#0d6efd' }).catch(function () {});
+        StatusBar.setStyle({ style: 'DARK' }).catch(function () {});
+      }
+
+      var SplashScreen = window.Capacitor.Plugins.SplashScreen;
+      if (SplashScreen) {
+        SplashScreen.hide().catch(function () {});
+      }
+
+      var App = window.Capacitor.Plugins.App;
+      if (App) {
+        App.addListener('backButton', function (evt) {
+          if (evt && evt.canGoBack) {
+            window.history.back();
+          } else {
+            App.exitApp();
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 
 </html>

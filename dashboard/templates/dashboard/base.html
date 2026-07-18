@@ -15,11 +15,24 @@
   .bar-track { flex: 1; background: #eef1f5; border-radius: 4px; height: 14px; }
   .bar-fill { background: #1266f1; height: 14px; border-radius: 4px; min-width: 2px; }
   .bar-count { flex: 0 0 40px; text-align: right; font-size: .8rem; color: #333; }
-  /* On phones/tablets the sidebar becomes a horizontal scrollable nav bar */
+  /* Below lg, the section list (16 items) is a toggle-able panel instead of
+     an always-open sidebar — same collapse pattern as the main site's own
+     navbar-toggler, so it's a familiar interaction rather than a new one.
+     The link list is forced open at lg+ regardless of the collapse's JS
+     state, so desktop is unaffected even before Bootstrap's JS attaches. */
+  .dash-sidebar-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; border: 0; background: none; cursor: pointer;
+  }
+  .dash-sidebar-toggle .fa-chevron-down { display: none; }
   @media (max-width: 991.98px) {
-    .dash-sidebar .list-group { flex-direction: row; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .dash-sidebar .list-group-item { flex: 0 0 auto; white-space: nowrap; border-right: 1px solid #eee; }
-    .dash-sidebar .card-header { display: none; }
+    .dash-sidebar-toggle .fa-chevron-down {
+      display: inline-block; transition: transform .2s ease;
+    }
+    .dash-sidebar-toggle[aria-expanded="true"] .fa-chevron-down { transform: rotate(180deg); }
+  }
+  @media (min-width: 992px) {
+    #dashSidebarLinks.collapse { display: block !important; }
   }
 </style>
 {% endblock %}
@@ -29,10 +42,13 @@
   <div class="row my-3">
     <div class="col-lg-2 mb-3">
       <div class="card dash-sidebar">
-        <div class="card-header py-2 font-weight-bold">
-          <i class="fas fa-tools mr-1" aria-hidden="true"></i>Administration
-        </div>
-        <div class="list-group list-group-flush">
+        <button type="button" class="card-header py-2 font-weight-bold dash-sidebar-toggle"
+                data-toggle="collapse" data-target="#dashSidebarLinks"
+                aria-expanded="false" aria-controls="dashSidebarLinks">
+          <span><i class="fas fa-tools mr-1" aria-hidden="true"></i>Administration</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="list-group list-group-flush collapse" id="dashSidebarLinks">
           <a class="list-group-item list-group-item-action {% if section == 'overview' %}active text-white{% endif %}"
              href="{% url 'dashboard:overview' %}"><i class="fas fa-chart-line mr-2" aria-hidden="true"></i>Overview</a>
           <a class="list-group-item list-group-item-action {% if section == 'queue' %}active text-white{% endif %}"
