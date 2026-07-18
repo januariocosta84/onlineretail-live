@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+  Shown by the native side (MainActivity.java on Android, the equivalent
+  WKNavigationDelegate hook on iOS) whenever the WebView fails to load the
+  live site — no internet, DNS failure, server unreachable, timeout, or a
+  5xx from the server itself. Deliberately has zero external references
+  (no CDN fonts/icons/CSS) since it has to render correctly with no
+  connection at all — everything here is inline.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TimorMart</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f6fb;
+    color: #212529;
+  }
+  body {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100%;
+    padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+    text-align: center;
+  }
+  .brand { font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; }
+  .brand .timor { color: #1266f1; }
+  .brand .mart { color: #d32f2f; }
+  .icon { width: 72px; height: 72px; margin-bottom: 1.5rem; }
+  .messages { max-width: 360px; }
+  .lang-block { margin-bottom: 1.1rem; }
+  .lang-block:last-of-type { margin-bottom: 1.75rem; }
+  .lang-title { font-weight: 700; font-size: 1.02rem; margin: 0 0 .2rem; }
+  .lang-sub { font-size: .88rem; color: #5a6270; margin: 0; line-height: 1.4; }
+  button#retry {
+    background: #1266f1; color: #fff; border: 0; border-radius: 6px;
+    font-size: .95rem; font-weight: 600; padding: .7rem 2rem;
+    display: inline-flex; align-items: center; gap: .5rem; cursor: pointer;
+  }
+  button#retry:active { background: #0d52c9; }
+  button#retry svg { width: 16px; height: 16px; }
+  #retry.spinning svg { animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="brand"><span class="timor">Timor</span><span class="mart">Mart</span></div>
+
+  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9aa4b2" stroke-width="1.5">
+    <path d="M2 8.82a15 15 0 0 1 20 0" stroke-opacity=".35"/>
+    <path d="M5 12.86a10 10 0 0 1 14 0" stroke-opacity=".55"/>
+    <path d="M8.5 16.43a5 5 0 0 1 7 0" stroke-opacity=".75"/>
+    <line x1="2" y1="2" x2="22" y2="22" stroke="#d32f2f" stroke-width="1.8"/>
+    <circle cx="12" cy="20" r="1.1" fill="#9aa4b2" stroke="none"/>
+  </svg>
+
+  <div class="messages">
+    <div class="lang-block">
+      <p class="lang-title">Can't connect right now</p>
+      <p class="lang-sub">Please check your internet connection, or try again in a moment.</p>
+    </div>
+    <div class="lang-block">
+      <p class="lang-title">La bele konekta agora</p>
+      <p class="lang-sub">Favor verifika ita-nia koneksaun internet, ka tenta fali iha minutu ida nia laran.</p>
+    </div>
+    <div class="lang-block">
+      <p class="lang-title">Não é possível ligar agora</p>
+      <p class="lang-sub">Verifique a sua ligação à internet ou tente novamente dentro de instantes.</p>
+    </div>
+    <div class="lang-block">
+      <p class="lang-title">Tidak dapat terhubung saat ini</p>
+      <p class="lang-sub">Periksa koneksi internet Anda, atau coba lagi sesaat lagi.</p>
+    </div>
+  </div>
+
+  <button type="button" id="retry" onclick="retry()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="23 4 23 10 17 10"></polyline>
+      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+    </svg>
+    <span id="retry-label">Retry / Tenta fali / Tentar novamente / Coba lagi</span>
+  </button>
+
+  <script>
+    // window.Capacitor is injected on this local page the same as on the
+    // remote site — retry.html has none of the app's own JS bundled here,
+    // this is deliberately self-contained, so this just re-navigates to
+    // the real site directly. If still offline, the native side (which
+    // owns navigation failures) sends the WebView right back here.
+    function retry() {
+      var btn = document.getElementById('retry');
+      btn.classList.add('spinning');
+      btn.disabled = true;
+      window.location.href = 'https://timormart.onrender.com/';
+    }
+  </script>
+</body>
+</html>

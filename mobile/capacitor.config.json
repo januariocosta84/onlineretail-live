@@ -1,0 +1,21 @@
+{
+  "appId": "com.timormart.app",
+  "appName": "TimorMart",
+  "webDir": "www",
+  "server": {
+    "url": "https://timormart.onrender.com",
+    "cleartext": false,
+    "androidScheme": "https",
+    "errorPath": "offline.html"
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#0d6efd",
+      "androidSplashResourceName": "splash"
+    }
+  }
+}
