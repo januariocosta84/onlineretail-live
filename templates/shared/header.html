@@ -27,8 +27,16 @@
      mdb-pro.min.css, mdb.ecommerce.min.css) all define .dropdown-item with
      differing padding/font-size, and which one wins the cascade for a
      <button> (vs. the <a> every other dropdown-item in this file uses) is
-     inconsistent — this makes the size deterministic regardless. */
-  .lang-dropdown.dropdown-menu { min-width: 0 !important; width: 7rem !important; }
+     inconsistent — this makes the size deterministic regardless.
+     width was previously a fixed 7rem, sized for "English"/"Tetum" only —
+     too narrow for "Bahasa Indonesia" (16 characters), which either wrapped
+     or overflowed past the card's edge. auto + nowrap lets the box size
+     itself to whatever the longest label actually needs. */
+  /* Same reason as .notif-dropdown/.account-menu: now that this sits in the
+     top bar (moved there so language comes before notifications/account),
+     it needs to beat the nav bar's .sticky-top (z-index: 1020) below it or
+     that bar paints over part of the open list. */
+  .lang-dropdown.dropdown-menu { min-width: 11rem !important; width: auto !important; z-index: 1030 !important; }
   .lang-dropdown .dropdown-item {
     background: none !important;
     border: 0 !important;
@@ -37,15 +45,14 @@
     font-size: 0.8125rem !important;
     line-height: 1.4 !important;
     padding: 0.35rem 0.9rem !important;
+    white-space: nowrap !important;
   }
 
-  /* ── Mobile account menu ────────────────────────────────────
-     Below lg there isn't room for a name, a role badge, and up to
-     three separate buttons (Admin/My products/Log out) on one line —
-     they used to wrap onto their own row and crowd the header. A
-     single avatar trigger opens all of it as one menu instead; the
-     desktop layout above (name + badge + buttons in a row) is
-     untouched, this only replaces it below lg. */
+  /* ── Account menu ───────────────────────────────────────────
+     One avatar trigger + dropdown at every width, replacing what
+     used to be a name, a role badge, and up to three separate
+     buttons (Admin/My products/Log out) laid out in a row — fine on
+     a wide screen but it wrapped onto its own crowded row below lg. */
   .account-trigger {
     width: 42px;
     height: 42px;
@@ -182,6 +189,24 @@
         </form>
       </div>
       <div class="col-md-4 my-1 text-md-right">
+        {# Language — before notifications/account, available whether signed in or not. #}
+        <div class="dropdown d-inline-block mr-2">
+          <a class="btn btn-sm btn-outline-secondary my-0" href="#" role="button"
+             id="languageDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+             aria-label="{% trans 'Language' %}">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right lang-dropdown" aria-labelledby="languageDropdown">
+            <form action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <input name="next" type="hidden" value="{{ request.get_full_path }}">
+              <button type="submit" name="language" value="en" class="dropdown-item small">English</button>
+              <button type="submit" name="language" value="tet" class="dropdown-item small">Tetum</button>
+              <button type="submit" name="language" value="pt-pt" class="dropdown-item small">Português</button>
+              <button type="submit" name="language" value="id" class="dropdown-item small">Bahasa Indonesia</button>
+            </form>
+          </div>
+        </div>
         {% if user.is_authenticated %}
         <div class="dropdown d-inline-block mr-2">
           <a class="btn btn-sm btn-outline-secondary my-0 position-relative" href="#" role="button"
@@ -209,11 +234,6 @@
             <a class="dropdown-item small text-center" href="{% url 'olretail:notifications' %}">{% trans 'View all' %}</a>
           </div>
         </div>
-        {% comment %}
-          Role label text is computed once and reused by both the desktop
-          row below and the mobile account menu further down, so the two
-          can't drift out of sync with each other.
-        {% endcomment %}
         {% if user.is_staff %}{% trans 'Administrator' as role_label %}
         {% elif is_buyer and is_seller %}{% trans 'Buyer & Seller' as role_label %}
         {% elif is_seller %}{% trans 'Seller' as role_label %}
@@ -221,29 +241,8 @@
         {% elif is_courier %}{% trans 'Courier' as role_label %}
         {% endif %}
 
-        {# ─ Desktop (lg and up): unchanged name/badge + separate buttons ─ #}
-        <span class="text-muted small mr-2 d-none d-lg-inline-block">
-          <i class="fas fa-user-circle" aria-hidden="true"></i>
-          {{ user.get_full_name|default:user.username }}
-          {% if role_label %}
-          <span class="badge {% if user.is_staff %}badge-dark{% else %}badge-light border{% endif %}">{{ role_label }}</span>
-          {% endif %}
-        </span>
-        {% if user.is_staff %}
-        <a href="{% url 'dashboard:overview' %}" class="btn btn-sm btn-dark my-0 d-none d-lg-inline-block">
-          <i class="fas fa-tools mr-1" aria-hidden="true"></i>{% trans 'Admin' %}
-        </a>
-        {% endif %}
-        {% if is_seller %}
-        <a href="{% url 'olretail:list' %}" class="btn btn-sm btn-outline-primary my-0 d-none d-lg-inline-block">{% trans 'My products' %}</a>
-        {% endif %}
-        <form action="{% url 'accounts:logout' %}" method="post" class="d-none d-lg-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger my-0">{% trans 'Log out' %}</button>
-        </form>
-
-        {# ─ Mobile (below lg): one avatar menu replaces all of the above ─ #}
-        <div class="dropdown d-inline-block d-lg-none align-middle">
+        {# One account menu at every width — avatar trigger + role card, role-specific links, Log out. #}
+        <div class="dropdown d-inline-block align-middle">
           <button type="button" class="account-trigger" data-toggle="dropdown" href="#" role="button"
                   id="accountDropdown" aria-haspopup="true" aria-expanded="false"
                   aria-label="{% trans 'Account menu' %}">
@@ -264,6 +263,18 @@
             </a>
             {% endif %}
             {% if is_seller %}
+            <a class="dropdown-item" href="{% url 'olretail:create_product' %}">
+              <i class="fas fa-plus" aria-hidden="true"></i>{% trans 'Add product' %}
+            </a>
+            <a class="dropdown-item" href="{% url 'olretail:list' %}">
+              <i class="fas fa-box" aria-hidden="true"></i>{% trans 'My products' %}
+            </a>
+            <a class="dropdown-item" href="{% url 'olretail:seller_orders' %}">
+              <i class="fas fa-receipt" aria-hidden="true"></i>{% trans 'Orders' %}
+            </a>
+            <a class="dropdown-item" href="{% url 'olretail:seller_balance' %}">
+              <i class="fas fa-coins" aria-hidden="true"></i>{% trans 'Earnings' %}
+            </a>
             <a class="dropdown-item" href="{% url 'olretail:seller_company_info' %}">
               <i class="fas fa-building" aria-hidden="true"></i>{% trans 'Company profile' %}
             </a>
@@ -277,6 +288,25 @@
             {% if is_courier %}
             <a class="dropdown-item" href="{% url 'olretail:courier_deliveries' %}">
               <i class="fas fa-truck" aria-hidden="true"></i>{% trans 'My deliveries' %}
+            </a>
+            {% endif %}
+            {% if is_buyer %}
+            <a class="dropdown-item" href="{% url 'olretail:wishlist' %}" id="wishlist-nav-link">
+              <span class="position-relative d-inline-block">
+                <i class="fas fa-heart" aria-hidden="true"></i>
+                <span class="badge badge-danger notif-badge {% if not wishlist_count %}d-none{% endif %}" id="wishlist-count-badge">{{ wishlist_count }}</span>
+              </span>
+              {% trans 'Wishlist' %}
+            </a>
+            <a class="dropdown-item" href="{% url 'olretail:cart' %}" id="cart-nav-link">
+              <span class="position-relative d-inline-block">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <span class="badge badge-danger notif-badge {% if not cart_count %}d-none{% endif %}" id="cart-count-badge">{{ cart_count }}</span>
+              </span>
+              {% trans 'Cart' %}
+            </a>
+            <a class="dropdown-item" href="{% url 'olretail:buyer_orders' %}">
+              <i class="fas fa-clipboard-list" aria-hidden="true"></i>{% trans 'My Orders' %}
             </a>
             {% endif %}
             <div class="dropdown-divider m-0"></div>
@@ -308,86 +338,13 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-bars text-muted mr-2" aria-hidden="true"></i>{% trans 'Categories' %}
+              <i class="fas fa-tags text-muted mr-2" aria-hidden="true"></i>{% trans 'Categories' %}
             </a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'olretail:index' %}">{% trans 'All' %}</a>
               {% for category in categories %}
               <a class="dropdown-item" href="{% url 'olretail:index' %}?category={{ category.slug }}">{{ category.title }}</a>
               {% endfor %}
-            </div>
-          </li>
-          {% if is_seller %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:create_product' %}">
-              <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans 'Add product' %}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:list' %}">{% trans 'My products' %}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:seller_orders' %}">{% trans 'Orders' %}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:seller_balance' %}">{% trans 'Earnings' %}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:seller_payment_settings' %}">{% trans 'Payment Settings' %}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:seller_subscription' %}">
-              <i class="fas fa-crown mr-1" aria-hidden="true"></i>{% trans 'Subscription' %}
-            </a>
-          </li>
-          {% endif %}
-          {% if is_courier %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:courier_deliveries' %}">
-              <i class="fas fa-truck mr-1" aria-hidden="true"></i>{% trans 'My Deliveries' %}
-            </a>
-          </li>
-          {% endif %}
-          {% if is_buyer %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:wishlist' %}" id="wishlist-nav-link">
-              <span class="position-relative d-inline-block mr-1">
-                <i class="fas fa-heart" aria-hidden="true"></i>
-                <span class="badge badge-danger notif-badge {% if not wishlist_count %}d-none{% endif %}" id="wishlist-count-badge">{{ wishlist_count }}</span>
-              </span>
-              {% trans 'Wishlist' %}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:cart' %}" id="cart-nav-link">
-              <span class="position-relative d-inline-block mr-1">
-                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                <span class="badge badge-danger notif-badge {% if not cart_count %}d-none{% endif %}" id="cart-count-badge">{{ cart_count }}</span>
-              </span>
-              {% trans 'Cart' %}
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'olretail:buyer_orders' %}">{% trans 'My Orders' %}</a>
-          </li>
-          {% endif %}
-        </ul>
-
-        <ul class="navbar-nav ml-md-auto align-items-start">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-               aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-globe mr-1" aria-hidden="true"></i>{% trans 'Language' %}
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg-right lang-dropdown">
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="en" class="dropdown-item small">English</button>
-                <button type="submit" name="language" value="tet" class="dropdown-item small">Tetum</button>
-                <button type="submit" name="language" value="pt-pt" class="dropdown-item small">Português</button>
-                <button type="submit" name="language" value="id" class="dropdown-item small">Bahasa Indonesia</button>
-              </form>
             </div>
           </li>
         </ul>
