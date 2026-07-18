@@ -43,7 +43,7 @@
         </div>
 
         {% if seller.seller_type == 'company' %}
-        <div class="card border-0 shadow-sm mt-4">
+        <div class="card border-0 shadow-sm mt-4" id="company-info">
           <div class="card-body">
             <h2 class="h5 mb-3"><i class="fas fa-building mr-2"></i>{% trans "Company Information" %}</h2>
             <form method="post" action="{% url 'olretail:seller_company_info' %}" novalidate>
