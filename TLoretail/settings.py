@@ -188,6 +188,15 @@ STORAGES = {
 }
 if USE_CLOUDINARY:
     STORAGES["default"] = {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"}
+    # django-cloudinary-storage's own `collectstatic` override (which takes
+    # over from Django's built-in command once `cloudinary_storage` is in
+    # INSTALLED_APPS) reads the legacy STATICFILES_STORAGE setting directly
+    # rather than the modern STORAGES dict this project otherwise uses —
+    # without this, collectstatic crashes with AttributeError since that
+    # setting is never defined. Static files still go through WhiteNoise,
+    # not Cloudinary — this only exists so that equality check doesn't blow
+    # up; it deliberately does NOT match StaticCloudinaryStorage.
+    STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 WHITENOISE_USE_FINDERS = True  # serve from static/ even before collectstatic
 
 MEDIA_URL = "/media/"

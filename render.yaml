@@ -15,7 +15,13 @@ services:
     name: timormart
     runtime: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    # --upload-unhashed-files is required here: django-cloudinary-storage's
+    # collectstatic override (active whenever CLOUDINARY_URL is set) makes
+    # copy_file a no-op unless static files also go to Cloudinary or this
+    # flag is passed — without it, nothing is actually copied into
+    # STATIC_ROOT and WhiteNoise's compression pass crashes with
+    # FileNotFoundError trying to compress files that were never copied.
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput --upload-unhashed-files"
     # createsuperuser --noinput reads DJANGO_SUPERUSER_USERNAME/_EMAIL/_PASSWORD
     # (Django's own built-in support, no custom code needed). The `|| true`
     # is scoped to just that one step (parens matter — without them, a real
