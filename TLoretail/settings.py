@@ -68,12 +68,14 @@ INSTALLED_APPS = [
 
 # Cloudinary media storage (product images, delivery proofs) — only enabled
 # when CLOUDINARY_URL is set (e.g. in production). Locally, uploads just go
-# to the filesystem as before. cloudinary_storage must precede staticfiles;
-# cloudinary itself just needs to be present somewhere in the list.
+# to the filesystem as before. Deliberately NOT added to INSTALLED_APPS:
+# MediaCloudinaryStorage and the cloudinary SDK work as plain Python imports
+# with no Django app-registry dependency, and registering cloudinary_storage
+# as an app makes it silently take over the `collectstatic` command (it's
+# listed before django.contrib.staticfiles so its version wins) with a
+# broken copy_file() that no-ops unless static files also go to Cloudinary —
+# this caused two separate production build failures before being removed.
 USE_CLOUDINARY = bool(os.environ.get("CLOUDINARY_URL"))
-if USE_CLOUDINARY:
-    INSTALLED_APPS.insert(INSTALLED_APPS.index("django.contrib.staticfiles"), "cloudinary_storage")
-    INSTALLED_APPS.append("cloudinary")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -188,15 +190,6 @@ STORAGES = {
 }
 if USE_CLOUDINARY:
     STORAGES["default"] = {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"}
-    # django-cloudinary-storage's own `collectstatic` override (which takes
-    # over from Django's built-in command once `cloudinary_storage` is in
-    # INSTALLED_APPS) reads the legacy STATICFILES_STORAGE setting directly
-    # rather than the modern STORAGES dict this project otherwise uses —
-    # without this, collectstatic crashes with AttributeError since that
-    # setting is never defined. Static files still go through WhiteNoise,
-    # not Cloudinary — this only exists so that equality check doesn't blow
-    # up; it deliberately does NOT match StaticCloudinaryStorage.
-    STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 WHITENOISE_USE_FINDERS = True  # serve from static/ even before collectstatic
 
 MEDIA_URL = "/media/"
