@@ -17,8 +17,6 @@ msgstr ""
 msgid "Account type"
 msgstr "Tipu konta"
 
-#, fuzzy
-#| msgid "Seller"
 msgid "Seller type"
 msgstr "Fa'an-na'in"
 
@@ -34,16 +32,12 @@ msgstr "TIN (Numeru Identifikasaun Taxa)"
 msgid "e.g. 123456789"
 msgstr "ex: 123456789"
 
-#, fuzzy
-#| msgid "Email address"
 msgid "Company address"
 msgstr "Diresaun email"
 
 msgid "Street, City, Region"
 msgstr "Rua, Sidade, Rejiaun"
 
-#, fuzzy
-#| msgid "Create an account"
 msgid "Bank account"
 msgstr "Kria konta"
 
@@ -79,19 +73,13 @@ msgstr "Diresaun"
 
 # ── Accounts: password reset ───────────────────────────────────────────
 # 
-#, fuzzy
-#| msgid "Reset password"
 msgid "Enter a strong password"
 msgstr "Troka senha"
 
-#, fuzzy
-#| msgid "Forgot password?"
 msgid "Confirm password"
 msgstr "Haluha senha?"
 
 # Lowercase model verbose names (Django capitalizes them in form labels)
-#, fuzzy
-#| msgid "username"
 msgid "choose_a_username"
 msgstr "naran uzuáriu"
 
@@ -240,13 +228,9 @@ msgstr ""
 "Ita-boot nia konta agora Sosa-na'in & Fa'an-na'in — bele kontaktu fa'an-"
 "na'in sira no haruka komentáriu."
 
-#, fuzzy
-#| msgid "Actions"
 msgid "Active"
 msgstr "Asaun"
 
-#, fuzzy
-#| msgid "Close"
 msgid "Closed"
 msgstr "Taka"
 
@@ -271,8 +255,6 @@ msgstr "Sempre Osan La Sufisiente"
 msgid "Always Flag as Duplicate"
 msgstr "Sempre Marka Hanesan Duplika"
 
-#, fuzzy
-#| msgid "Pending approval"
 msgid "Pending"
 msgstr "Hein aprovasaun"
 
@@ -282,8 +264,6 @@ msgstr "Susesu"
 msgid "Failed"
 msgstr "Falha"
 
-#, fuzzy
-#| msgid "Cancel"
 msgid "Cancelled"
 msgstr "Kansela"
 
@@ -308,14 +288,9 @@ msgstr "Tama"
 msgid "You need a seller account to access that page."
 msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
 
-#, fuzzy
-#| msgid ""
-#| "Administrator accounts manage the platform and cannot buy or sell products."
 msgid "Administrator accounts manage the platform and cannot act as couriers."
 msgstr "Konta administradór jere plataforma no labele sosa ka fa'an produtu."
 
-#, fuzzy
-#| msgid "You need a seller account to access that page."
 msgid "You need a courier account to access that page."
 msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
 
@@ -351,8 +326,6 @@ msgstr "Pesa ba unidade"
 msgid "Units per box"
 msgstr "Unidade ba kaixa"
 
-#, fuzzy
-#| msgid "Description"
 msgid "Menu section"
 msgstr "Deskrisaun"
 
@@ -401,8 +374,6 @@ msgstr "Hili nasaun"
 msgid "Select city"
 msgstr "Hili sidade"
 
-#, fuzzy
-#| msgid "Select country"
 msgid "Select menu section"
 msgstr "Hili nasaun"
 
@@ -510,21 +481,15 @@ msgstr "Neutru"
 msgid "Negative"
 msgstr "Negativu"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment Method"
 msgstr "Konfigurasaun Pagamentu"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Delivery Address"
 msgstr "Ha'u-nia Entrega sira"
 
 msgid "Where should we deliver your order?"
 msgstr "Ami tenke entrega ita-nia enkomenda iha ne'ebé?"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Delivery City"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -573,8 +538,6 @@ msgstr "Evidénsia (fotografia, mensajen, etc.)"
 msgid "Provide your response with evidence..."
 msgstr "Fornese ita-nia resposta ho evidénsia..."
 
-#, fuzzy
-#| msgid "Your name"
 msgid "Your Response"
 msgstr "Ita-boot nia naran"
 
@@ -596,8 +559,6 @@ msgstr "Numeru Rastreamentu"
 msgid "No courier account (self-delivery / informal courier)"
 msgstr "La iha konta entregadór (entrega rasik / entregadór informál)"
 
-#, fuzzy
-#| msgid "Reassign courier"
 msgid "Assign Courier"
 msgstr "Troka entregador"
 
@@ -624,21 +585,15 @@ msgstr "Favor envia fotografia ita-nia dokumentu identidade."
 msgid "e.g. 'Left Dili warehouse, arriving Baucau tomorrow'"
 msgstr "ex: 'Sai husi armazén Dili, sei to'o Baucau aban'"
 
-#, fuzzy
-#| msgid "Status"
 msgid "Status update"
 msgstr "Estadu"
 
-#, fuzzy
-#| msgid "Choose a new password"
 msgid "Choose a plan"
 msgstr "Hili senha foun"
 
 msgid "e.g. Bank transfer ref #123, paid 14 Jul 2026"
 msgstr "ex: Referénsia transferénsia banku #123, selu iha 14 Jul 2026"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment reference"
 msgstr "Konfigurasaun Pagamentu"
 
@@ -664,8 +619,6 @@ msgstr "La hetan konta ativu ba numeru konta ne'e."
 msgid "A matching transaction was already submitted recently."
 msgstr "Transasaun hanesan submete ona ultimamente."
 
-#, fuzzy
-#| msgid "No products found"
 msgid "No transaction found."
 msgstr "La hetan produtu ida"
 
@@ -678,8 +631,6 @@ msgstr "Hein Pagamentu"
 msgid "Payment Reported — Awaiting Confirmation"
 msgstr "Pagamentu Reportadu — Hein Konfirmasaun"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment Received"
 msgstr "Konfigurasaun Pagamentu"
 
@@ -689,8 +640,6 @@ msgstr "Prosesa"
 msgid "Shipped"
 msgstr "Haruka ona"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Delivered"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -715,13 +664,9 @@ msgstr "Iha dalan"
 msgid "Card (Stripe)"
 msgstr "Kartaun (Stripe)"
 
-#, fuzzy
-#| msgid "Bank Transfer"
 msgid "Bank / Mobile Transfer"
 msgstr "Transferénsia Banku"
 
-#, fuzzy
-#| msgid "Bank Transfer"
 msgid "Automated Bank Transfer (Test)"
 msgstr "Transferénsia Banku"
 
@@ -734,8 +679,6 @@ msgstr "Komisaun"
 msgid "Refund"
 msgstr "Selu Fila Fali"
 
-#, fuzzy
-#| msgid "Advertisement"
 msgid "Adjustment"
 msgstr "Anúnsiu"
 
@@ -798,8 +741,6 @@ msgstr ""
 msgid "TimorMart — order %(order)s"
 msgstr "TimorMart — enkomenda %(order)s"
 
-#, fuzzy
-#| msgid "No notifications yet."
 msgid "TimorMart notification"
 msgstr "Seidauk iha avizu."
 
@@ -815,15 +756,11 @@ msgstr "Produtu ne'e esgota ona."
 msgid "Product added to cart."
 msgstr "Produtu tama ona iha kareta."
 
-#, fuzzy
-#| msgid "Created"
 msgid "Cart updated."
 msgstr "Kria iha"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
 # 
-#, fuzzy
-#| msgid "No image available"
 msgid "Not enough stock available."
 msgstr "La iha imajen"
 
@@ -842,8 +779,6 @@ msgstr "Hasai ona husi ita-nia lista deseju."
 msgid "Moved to your cart."
 msgstr "Muda ona ba ita-nia kareta."
 
-#, fuzzy
-#| msgid "Your comment was posted."
 msgid "Your cart is empty."
 msgstr "Ita-boot nia komentáriu publika tiha ona."
 
@@ -904,8 +839,6 @@ msgstr "Ita-nia pagamentu ba enkomenda %(order)s selu fila fali ona."
 msgid "Order %(order)s was refunded to the buyer."
 msgstr "Enkomenda %(order)s selu fila fali ona ba kompradór."
 
-#, fuzzy
-#| msgid "That product is awaiting approval."
 msgid "This order is not awaiting a transfer."
 msgstr "Produtu ne'e sei hein aprovasaun."
 
@@ -936,8 +869,6 @@ msgstr "%(seller)s konfirma ona ita-nia pagamentu ba enkomenda %(order)s."
 msgid "Payment confirmed — the order is now marked as paid."
 msgstr "Pagamentu konfirma ona — enkomenda marka ona hanesan selu."
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment details saved."
 msgstr "Konfigurasaun Pagamentu"
 
@@ -988,8 +919,6 @@ msgstr "Ita avalia ona enkomenda ne'e."
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Favor hili avaliasaun husi bituin 1 to'o 5."
 
-#, fuzzy
-#| msgid "Thanks for rating this purchase."
 msgid "Thanks for your rating!"
 msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
 
@@ -1002,13 +931,9 @@ msgstr "Enkomenda ne'e la iha entregadór atu avalia."
 msgid "You already rated this courier."
 msgstr "Ita avalia ona entregadór ne'e."
 
-#, fuzzy
-#| msgid "Thanks for rating this purchase."
 msgid "Thanks for rating the courier!"
 msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
 
-#, fuzzy
-#| msgid "You need a seller account to access that page."
 msgid "You must be a seller to view this page."
 msgstr "Ita-boot presiza konta fa'an-na'in atu asesu pájina ne'e."
 
@@ -1155,8 +1080,7 @@ msgstr ""
 "Ita to'o ona limite %(limit)d listajen planu grátis. Subskreve atu hakerek "
 "produtu barak liu."
 
-#, fuzzy, python-format
-#| msgid "“%(name)s” was updated."
+#, python-format
 msgid "“%(name)s” was published."
 msgstr "“%(name)s” atualiza tiha ona."
 
@@ -1205,13 +1129,11 @@ msgstr "“%(name)s” apaga tiha ona."
 msgid "Menu sections are only available for restaurant seller accounts."
 msgstr "Seksaun menu disponivel deit ba konta vendedór restaurante."
 
-#, fuzzy, python-format
-#| msgid "“%(name)s” was deleted."
+#, python-format
 msgid "“%(name)s” was added to your menu."
 msgstr "“%(name)s” apaga tiha ona."
 
-#, fuzzy, python-format
-#| msgid "“%(name)s” was resubmitted for approval."
+#, python-format
 msgid "“%(name)s” was removed from your menu."
 msgstr "“%(name)s” haruka fila fali ba aprovasaun."
 
@@ -1234,13 +1156,9 @@ msgid ""
 msgstr ""
 "Ami husu deskulpa — erru ida ne'ebé la espera mosu. Favór koko fali lakleur."
 
-#, fuzzy
-#| msgid "Sign in"
 msgid "Sign In"
 msgstr "Login"
 
-#, fuzzy
-#| msgid "Sell on TimorMart"
 msgid "Welcome back to TimorMart"
 msgstr "Fa'an iha TimorMart"
 
@@ -1250,26 +1168,18 @@ msgstr "Haluha senha?"
 msgid "or"
 msgstr "ka"
 
-#, fuzzy
-#| msgid "Already have an account?"
 msgid "Don't have an account yet?"
 msgstr "Iha konta ona?"
 
-#, fuzzy
-#| msgid "Create an account"
 msgid "Create Account"
 msgstr "Kria konta"
 
 msgid "First time here? Sign up to start buying and selling."
 msgstr "Dahuluk mai iha ne'e? Rejista atu hahú sosa no fa'an."
 
-#, fuzzy
-#| msgid "Sign up"
 msgid "Sign Up"
 msgstr "Rejista"
 
-#, fuzzy
-#| msgid "Create an account"
 msgid "Create Your Account"
 msgstr "Kria konta"
 
@@ -1279,8 +1189,6 @@ msgstr "Hola parte ho kompradór no vendedór rihun-rihun iha TimorMart."
 msgid "Company Information"
 msgstr "Informasaun Empreza"
 
-#, fuzzy
-#| msgid "Password confirmation"
 msgid "Personal Information"
 msgstr "Konfirma senha"
 
@@ -1299,36 +1207,26 @@ msgstr "Kredensiál Konta"
 msgid "Letters, digits and @/./+/-/_ only. 30 characters or fewer."
 msgstr "Letra, numeru no @/./+/-/_ deit. Karater 30 ka menus."
 
-#, fuzzy
-#| msgid "Your password can’t be entirely numeric."
 msgid ""
 "Your password must be at least 8 characters long and can't be entirely "
 "numeric."
 msgstr "Ita-boot nia senha labele númeru de'it."
 
-#, fuzzy
-#| msgid "Enter the same password as before, for verification."
 msgid "Enter the same password to verify."
 msgstr "Hatama senha hanesan ho uluk nian, atu verifika."
 
-#, fuzzy
-#| msgid "Password confirmation"
 msgid "Password requirements:"
 msgstr "Konfirma senha"
 
 msgid "At least 8 characters long"
 msgstr "Karater 8 ka liu"
 
-#, fuzzy
-#| msgid "Your password can’t be entirely numeric."
 msgid "Can't be entirely numeric"
 msgstr "Ita-boot nia senha labele númeru de'it."
 
 msgid "Can't be the same as your username"
 msgstr "La bele hanesan ho ita-nia naran users"
 
-#, fuzzy
-#| msgid "Sign in"
 msgid "Sign in here"
 msgstr "Login"
 
@@ -1342,8 +1240,6 @@ msgstr ""
 "TimorMart mak merkadu online lokál Timor-Leste ne'ebé konjuga kompradór no "
 "vendedór iha rai laran tomak."
 
-#, fuzzy
-#| msgid "Sell on TimorMart"
 msgid "About TimorMart"
 msgstr "Fa'an iha TimorMart"
 
@@ -1370,8 +1266,6 @@ msgstr ""
 "            ba online: fatin ida deit, konfiavel, ne'ebé ema hotu bele listu produtu no ema hotu bele hetan,\n"
 "            keta produtu foun ka sasán uza-tiha ne'ebé di'ak."
 
-#, fuzzy
-#| msgid "Buyer"
 msgid "For Buyers"
 msgstr "Sosa-na'in"
 
@@ -1391,8 +1285,6 @@ msgstr "Kontaktu vendedór direitamente, inklui liu husi WhatsApp"
 msgid "Use the site in English or Tetum"
 msgstr "Uza site iha Inglés ka Tetun"
 
-#, fuzzy
-#| msgid "Seller"
 msgid "For Sellers"
 msgstr "Fa'an-na'in"
 
@@ -1456,16 +1348,12 @@ msgstr "Moderasaun no rezolusaun disputa atu mantein merkadu konfiavel"
 msgid "Ready to get started?"
 msgstr "Prontu atu hahú?"
 
-#, fuzzy
-#| msgid "Browse all products"
 msgid "Browse products"
 msgstr "Haree produtu hotu"
 
 msgid "Start selling"
 msgstr "Hahú fa'an"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment Details"
 msgstr "Konfigurasaun Pagamentu"
 
@@ -1479,8 +1367,6 @@ msgstr ""
 msgid "Order"
 msgstr "Enkomenda"
 
-#, fuzzy
-#| msgid "Account type"
 msgid "Amount to send"
 msgstr "Tipu konta"
 
@@ -1496,8 +1382,6 @@ msgstr "Hau haruka ona pagamentu"
 msgid "View my orders"
 msgstr "Haree ita-nia enkomenda"
 
-#, fuzzy
-#| msgid "Order"
 msgid "My Orders"
 msgstr "Enkomenda"
 
@@ -1507,8 +1391,6 @@ msgstr "Kontinua Kompra"
 msgid "All"
 msgstr "Hotu-hotu"
 
-#, fuzzy
-#| msgid "Order"
 msgid "Order #"
 msgstr "Enkomenda"
 
@@ -1527,18 +1409,12 @@ msgstr "Estadu"
 msgid "Date"
 msgstr "Data"
 
-#, fuzzy
-#| msgid "View all"
 msgid "View"
 msgstr "Haree hotu"
 
-#, fuzzy
-#| msgid "No categories yet."
 msgid "No orders yet."
 msgstr "Seidauk iha kategoria."
 
-#, fuzzy
-#| msgid "Start selling"
 msgid "Start shopping now"
 msgstr "Hahú fa'an"
 
@@ -1573,8 +1449,6 @@ msgstr "Checkout"
 msgid "Order Review"
 msgstr "Revizaun Enkomenda"
 
-#, fuzzy
-#| msgid "Price"
 msgid "Unit Price"
 msgstr "Folin"
 
@@ -1588,8 +1462,6 @@ msgstr ""
 "                %(sellers)s seidauk hatur detallu transferénsia banku — hili Kartaun se ita-nia kareta iha sira-nia sasán.\n"
 "                "
 
-#, fuzzy
-#| msgid "Create an account"
 msgid "Test accounts:"
 msgstr "Kria konta"
 
@@ -1603,13 +1475,9 @@ msgstr "Kontinua ba Pagamentu"
 msgid "Platform fee (15%%)"
 msgstr "Taxa plataforma (15%%)"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment fee"
 msgstr "Konfigurasaun Pagamentu"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Delivery fee"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -1633,8 +1501,6 @@ msgstr ""
 msgid "Continue to Payment Details"
 msgstr "Kontinua ba Detallu Pagamentu"
 
-#, fuzzy
-#| msgid "Bank Transfer"
 msgid "Submit Bank Transfer"
 msgstr "Transferénsia Banku"
 
@@ -1660,16 +1526,12 @@ msgstr ""
 "Submete fotografia ita-nia dokumentu identidade atu verifika — ita la bele "
 "nomeia ba entrega to'o ne'e."
 
-#, fuzzy
-#| msgid "Submit rating"
 msgid "Submit"
 msgstr "Haruka klasifikasaun"
 
 msgid "Buyer"
 msgstr "Sosa-na'in"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Deliver to"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -1697,8 +1559,6 @@ msgstr "Haree / Marka Entrega"
 msgid "No deliveries waiting right now."
 msgstr "La iha entrega hein daudaun."
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Recently Delivered"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -1748,15 +1608,11 @@ msgstr "La iha imajen"
 msgid "rating"
 msgstr "klasifikasaun"
 
-#, fuzzy
-#| msgid "Admin"
 msgid "min"
 msgstr "Admin"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
 # 
-#, fuzzy
-#| msgid "No image available"
 msgid "Unavailable"
 msgstr "La iha imajen"
 
@@ -1769,8 +1625,6 @@ msgstr "Esgotadu"
 msgid "Add to Cart"
 msgstr "Aumenta ba Kareta"
 
-#, fuzzy
-#| msgid "Save"
 msgid "Saved"
 msgstr "Rai"
 
@@ -1894,8 +1748,6 @@ msgstr "Montante Selu Fila Fali"
 msgid "Resolved on"
 msgstr "Rezolve iha"
 
-#, fuzzy
-#| msgid "Order"
 msgid "View Order"
 msgstr "Enkomenda"
 
@@ -1905,8 +1757,6 @@ msgstr "Anteriór"
 msgid "Next"
 msgstr "Tuir mai"
 
-#, fuzzy
-#| msgid "Buyer & Seller"
 msgid "Best sellers"
 msgstr "Sosa-na'in & Fa'an-na'in"
 
@@ -1934,8 +1784,6 @@ msgstr "Orden tuir"
 msgid "Newest"
 msgstr "Foun liu"
 
-#, fuzzy
-#| msgid "Start selling"
 msgid "Best selling"
 msgstr "Hahú fa'an"
 
@@ -1982,8 +1830,6 @@ msgstr "%(plan)s — listajen la limitadu, ativu to'o %(date)s."
 msgid "%(used)s / %(limit)s free listings used."
 msgstr "%(used)s / %(limit)s listajen grátis uza ona."
 
-#, fuzzy
-#| msgid "Description"
 msgid "Manage subscription"
 msgstr "Deskrisaun"
 
@@ -2028,30 +1874,20 @@ msgstr ""
 "Kria ita-boot nia anúnsiu dahuluk — nia sei mosu iha loja bainhira hetan "
 "aprovasaun."
 
-#, fuzzy
-#| msgid "Actions"
 msgid "Menu Sections"
 msgstr "Asaun"
 
-#, fuzzy
-#| msgid "Related products"
 msgid "Back to products"
 msgstr "Produtu relasionadu sira"
 
-#, fuzzy
-#| msgid "Add a product"
 msgid "Add a section"
 msgstr "Aumenta produtu ida"
 
 # ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
 # 
-#, fuzzy
-#| msgid "Ad"
 msgid "Add"
 msgstr "Anúnsiu"
 
-#, fuzzy
-#| msgid "Actions"
 msgid "Section"
 msgstr "Asaun"
 
@@ -2061,8 +1897,6 @@ msgstr "Sasán"
 msgid "Remove this menu section?"
 msgstr "Hasai seksaun menu ne'e?"
 
-#, fuzzy
-#| msgid "No notifications yet."
 msgid "No menu sections yet"
 msgstr "Seidauk iha avizu."
 
@@ -2096,8 +1930,6 @@ msgstr "Submete Disputa"
 msgid "Total Paid"
 msgstr "Totál Selu"
 
-#, fuzzy
-#| msgid "Status"
 msgid "Order Status"
 msgstr "Estadu"
 
@@ -2107,8 +1939,6 @@ msgstr "Status Atuál:"
 msgid "Paid on"
 msgstr "Selu iha"
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Delivered on"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -2118,8 +1948,6 @@ msgstr "Status Kusinha & Foti"
 msgid "Preparing"
 msgstr "Prepara"
 
-#, fuzzy
-#| msgid "Start selling"
 msgid "Start Preparing"
 msgstr "Hahú fa'an"
 
@@ -2135,8 +1963,6 @@ msgstr "Rastreamentu Entrega"
 msgid "Courier"
 msgstr "Entregadór"
 
-#, fuzzy
-#| msgid "No categories yet."
 msgid "No status updates yet."
 msgstr "Seidauk iha kategoria."
 
@@ -2146,8 +1972,6 @@ msgstr "Komprovativu Entrega"
 msgid "Proof of delivery"
 msgstr "Komprovativu entrega"
 
-#, fuzzy
-#| msgid "Mark all as read"
 msgid "Mark as Shipped"
 msgstr "Marka hotu hanesan lidu ona"
 
@@ -2157,8 +1981,6 @@ msgstr "Hakerek atualizasaun"
 msgid "Take a photo of the delivered item to confirm."
 msgstr "Foti fotografia sasán entrega atu konfirma."
 
-#, fuzzy
-#| msgid "My Deliveries"
 msgid "Mark as Delivered"
 msgstr "Ha'u-nia Entrega sira"
 
@@ -2180,8 +2002,6 @@ msgstr "Konfirma ita simu ona transferénsia kompradór?"
 msgid "Confirm payment received"
 msgstr "Konfirma pagamentu simu"
 
-#, fuzzy
-#| msgid "Product pages"
 msgid "Product Details"
 msgstr "Pájina produtu"
 
@@ -2195,8 +2015,6 @@ msgstr "Informasaun Vendedór"
 msgid "Commission (15%%)"
 msgstr "Komisaun (15%%)"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment Fee"
 msgstr "Konfigurasaun Pagamentu"
 
@@ -2221,34 +2039,24 @@ msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
 msgid "Write a review (optional)"
 msgstr "Hakerek revizaun (fakultativu)"
 
-#, fuzzy
-#| msgid "Interested in this product?"
 msgid "What did you think of this product?"
 msgstr "Iha interese ba produtu ida-ne'e?"
 
 msgid "Submit rating"
 msgstr "Haruka klasifikasaun"
 
-#, fuzzy
-#| msgid "Reassign courier"
 msgid "Rate the courier"
 msgstr "Troka entregador"
 
-#, fuzzy
-#| msgid "Thanks for rating this purchase."
 msgid "Thanks for rating this courier."
 msgstr "Obrigadu tanba fó klasifikasaun ba sosa ida-ne'e."
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment"
 msgstr "Konfigurasaun Pagamentu"
 
 msgid "Secure Payment"
 msgstr "Pagamentu Seguru"
 
-#, fuzzy
-#| msgid "Password confirmation"
 msgid "Card Information"
 msgstr "Konfirma senha"
 
@@ -2274,8 +2082,6 @@ msgstr "Pagamentu susesu! Direksiona..."
 msgid "Processing..."
 msgstr "Prosesa..."
 
-#, fuzzy
-#| msgid "Password confirmation"
 msgid "Payment Confirmation"
 msgstr "Konfirma senha"
 
@@ -2292,8 +2098,6 @@ msgstr ""
 msgid "Payment did not go through"
 msgstr "Pagamentu la konsege"
 
-#, fuzzy
-#| msgid "Payment Settings"
 msgid "Payment Successful!"
 msgstr "Konfigurasaun Pagamentu"
 
@@ -2346,8 +2150,6 @@ msgstr ""
 msgid "My Earnings"
 msgstr "Ita-nia Rendimentu"
 
-#, fuzzy
-#| msgid "Order"
 msgid "View Orders"
 msgstr "Enkomenda"
 
@@ -2357,8 +2159,6 @@ msgstr "Totál Rendimentu"
 msgid "Available Balance"
 msgstr "Saldu Disponivel"
 
-#, fuzzy
-#| msgid "Pending approval"
 msgid "Pending Payout"
 msgstr "Hein aprovasaun"
 
@@ -2374,13 +2174,9 @@ msgstr "Pagamentu Saída"
 msgid "Type"
 msgstr "Tipu"
 
-#, fuzzy
-#| msgid "Country"
 msgid "Amount"
 msgstr "Nasaun"
 
-#, fuzzy
-#| msgid "No notifications yet."
 msgid "No transactions yet."
 msgstr "Seidauk iha avizu."
 
@@ -2393,8 +2189,6 @@ msgstr "Data Planeadu"
 msgid "Paid Date"
 msgstr "Data Selu"
 
-#, fuzzy
-#| msgid "No categories yet."
 msgid "No payouts yet."
 msgstr "Seidauk iha kategoria."
 
@@ -2414,18 +2208,12 @@ msgstr "Pagamentu saída prosesa fulan-fulan iha loron 1 fulan ida-idak"
 msgid "Minimum payout amount: $500"
 msgstr "Montante mínimu pagamentu saída: $500"
 
-#, fuzzy
-#| msgid "Cancel Order"
 msgid "Seller Orders"
 msgstr "Kansela Enkomenda"
 
-#, fuzzy
-#| msgid "Comment"
 msgid "Confirm Payment"
 msgstr "Komentáriu"
 
-#, fuzzy
-#| msgid "My products"
 msgid "View your products"
 msgstr "Ha'u-nia produtu sira"
 
@@ -2451,13 +2239,9 @@ msgstr ""
 "Fakultativu — empreza verifikadu hatudu marka konfiansa ba kompradór iha "
 "ita-nia produtu. Fa'an no simu selu funsiona hanesan deit."
 
-#, fuzzy
-#| msgid "Your comment was posted."
 msgid "Your document was rejected"
 msgstr "Ita-boot nia komentáriu publika tiha ona."
 
-#, fuzzy
-#| msgid "Description"
 msgid "Subscription"
 msgstr "Deskrisaun"
 
@@ -2488,8 +2272,6 @@ msgstr "Remata ona"
 
 # ── Seller dashboard ───────────────────────────────────────────────────
 # 
-#, fuzzy
-#| msgid "Listings"
 msgid "listings"
 msgstr "Anúnsiu sira"
 
@@ -2509,18 +2291,12 @@ msgstr ""
 "Ita uza ona ita-nia listajen grátis hotu — subskreve iha okos atu hakerek "
 "liu tan."
 
-#, fuzzy
-#| msgid "Password confirmation"
 msgid "Awaiting confirmation"
 msgstr "Konfirma senha"
 
-#, fuzzy
-#| msgid "Submit rating"
 msgid "Submitted"
 msgstr "Haruka klasifikasaun"
 
-#, fuzzy
-#| msgid "Your name"
 msgid "Your reference"
 msgstr "Ita-boot nia naran"
 
@@ -2539,8 +2315,6 @@ msgstr ""
 msgid "Where to pay"
 msgstr "Fatin atu selu"
 
-#, fuzzy
-#| msgid "New password confirmation"
 msgid "I've paid — submit for confirmation"
 msgstr "Konfirma senha foun"
 
@@ -2562,8 +2336,6 @@ msgstr "Muda ba Kareta"
 msgid "Your wishlist is empty."
 msgstr "Ita-nia lista deseju mamuk."
 
-#, fuzzy
-#| msgid "Start selling"
 msgid "Start browsing"
 msgstr "Hahú fa'an"
 
@@ -2620,8 +2392,6 @@ msgstr "Loke ka taka menu"
 msgid "Categories"
 msgstr "Kategoria sira"
 
-#, fuzzy
-#| msgid "Order"
 msgid "Orders"
 msgstr "Enkomenda"
 

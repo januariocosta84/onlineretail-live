@@ -1,10 +1,100 @@
+{% load i18n %}
 {% if messages %}
-{% for message in messages %}
-<div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-  {{ message }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<div class="toast-stack" aria-live="polite" aria-atomic="true">
+  {% for message in messages %}
+  <div class="toast-msg toast-msg-{{ message.tags|default:'info' }}" role="alert" data-toast>
+    <span class="toast-msg-icon" aria-hidden="true">
+      {% if message.tags == 'success' %}<i class="fas fa-check-circle"></i>
+      {% elif message.tags == 'error' or message.tags == 'danger' %}<i class="fas fa-exclamation-circle"></i>
+      {% elif message.tags == 'warning' %}<i class="fas fa-exclamation-triangle"></i>
+      {% else %}<i class="fas fa-info-circle"></i>
+      {% endif %}
+    </span>
+    <span class="toast-msg-body">{{ message }}</span>
+    <button type="button" class="toast-msg-close" data-toast-close aria-label="{% trans 'Close' %}">&times;</button>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
+
+<style>
+  /* Fixed to the viewport (not the page), top-right, above every other
+     dropdown/nav on the page (notifications/account/language dropdowns
+     and the .lang-dropdown menu all use 1030, the sticky nav bar 1020). */
+  .toast-stack {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1060;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    width: min(360px, calc(100vw - 2rem));
+    pointer-events: none;
+  }
+  .toast-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: .65rem;
+    background: #fff;
+    border-radius: 6px;
+    border-left: 4px solid #6c757d;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+    padding: .8rem .9rem;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateX(24px);
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .toast-msg.toast-msg-show { opacity: 1; transform: translateX(0); }
+  .toast-msg.toast-msg-hide { opacity: 0; transform: translateX(24px); }
+  .toast-msg-success { border-left-color: #00b74a; }
+  .toast-msg-error, .toast-msg-danger { border-left-color: #f93154; }
+  .toast-msg-warning { border-left-color: #fb3; }
+  .toast-msg-info { border-left-color: #1266f1; }
+  .toast-msg-icon { font-size: 1.05rem; line-height: 1.4; flex-shrink: 0; }
+  .toast-msg-success .toast-msg-icon { color: #00b74a; }
+  .toast-msg-error .toast-msg-icon, .toast-msg-danger .toast-msg-icon { color: #f93154; }
+  .toast-msg-warning .toast-msg-icon { color: #e0a800; }
+  .toast-msg-info .toast-msg-icon { color: #1266f1; }
+  .toast-msg-body { flex: 1; font-size: .9rem; color: #212529; line-height: 1.4; }
+  .toast-msg-close {
+    background: none; border: 0; color: #adb5bd; font-size: 1.15rem;
+    line-height: 1; padding: 0; margin-top: 1px; flex-shrink: 0; cursor: pointer;
+  }
+  .toast-msg-close:hover { color: #6c757d; }
+  @media (prefers-reduced-motion: reduce) {
+    .toast-msg { transition: none; }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+  var AUTO_DISMISS_MS = 10000;
+
+  function dismiss(toast) {
+    if (!toast || toast.dataset.dismissing) return;
+    toast.dataset.dismissing = '1';
+    toast.classList.remove('toast-msg-show');
+    toast.classList.add('toast-msg-hide');
+    toast.addEventListener('transitionend', function () { toast.remove(); }, { once: true });
+    // Fallback in case a transitionend never fires (e.g. reduced-motion, or
+    // the element was already removed from the layout tree by then).
+    setTimeout(function () { if (toast.parentNode) toast.remove(); }, 400);
+  }
+
+  document.querySelectorAll('[data-toast]').forEach(function (toast, i) {
+    // Stagger the entrance slightly when several messages land at once.
+    setTimeout(function () { toast.classList.add('toast-msg-show'); }, 20 + i * 80);
+    var timer = setTimeout(function () { dismiss(toast); }, AUTO_DISMISS_MS);
+    var closeBtn = toast.querySelector('[data-toast-close]');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        clearTimeout(timer);
+        dismiss(toast);
+      });
+    }
+  });
+})();
+</script>
 {% endif %}
