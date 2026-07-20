@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "anymail",
     "olretail",
     "accounts",
     "dashboard",
@@ -211,8 +212,16 @@ from django.contrib.messages import constants as message_constants  # noqa: E402
 
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
 
-# Email: console backend unless SMTP is configured via env.
-if os.environ.get("EMAIL_HOST"):
+# Email: Resend (HTTP API) if configured, else SMTP if configured, else the
+# console backend (prints instead of sending). Resend takes priority over
+# raw SMTP because Render's free tier blocks outbound traffic to SMTP ports
+# entirely (25/465/587) — an HTTPS-based API is the only outbound path that
+# actually works from there; SMTP is kept as a fallback for environments
+# that don't have that restriction (e.g. a different host, or local dev).
+if os.environ.get("RESEND_API_KEY"):
+    EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
+    ANYMAIL = {"RESEND_API_KEY": os.environ["RESEND_API_KEY"]}
+elif os.environ.get("EMAIL_HOST"):
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = os.environ["EMAIL_HOST"]
     EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))

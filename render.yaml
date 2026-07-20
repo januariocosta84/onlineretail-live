@@ -64,14 +64,26 @@ services:
         sync: false
       - key: CLOUDINARY_URL
         sync: false
+      # Outgoing email via Resend's HTTP API (see TLoretail/settings.py) —
+      # Render's free tier blocks outbound SMTP ports entirely, so plain
+      # SMTP (EMAIL_HOST/_USER/_PASSWORD below) can't reach any provider
+      # from here; Resend runs over plain HTTPS instead, which works fine.
+      - key: RESEND_API_KEY
+        sync: false
+      # onboarding@resend.dev is Resend's own pre-verified sandbox sender —
+      # works immediately with no setup. Switch this to a real TimorMart
+      # address once a domain you own is verified with Resend (Domains ->
+      # Add Domain in their dashboard) — see the note in .env.
+      - key: DEFAULT_FROM_EMAIL
+        value: "onboarding@resend.dev"
+      # Unused now that RESEND_API_KEY is set above (settings.py prefers
+      # Resend), kept as a fallback for a host that doesn't block SMTP.
       - key: EMAIL_HOST
         sync: false
       - key: EMAIL_HOST_USER
         sync: false
       - key: EMAIL_HOST_PASSWORD
         sync: false
-      - key: DEFAULT_FROM_EMAIL
-        value: "timormart@gmail.com"
 
 databases:
   - name: timormart-db

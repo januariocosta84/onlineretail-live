@@ -8,6 +8,13 @@ python-dotenv>=1.0
 # Payment Processing
 stripe>=5.4
 
+# Outgoing email (password resets, notifications) via Resend's HTTP API —
+# Render's free tier blocks outbound SMTP ports entirely, so a plain SMTP
+# backend can't reach any provider from there; an HTTPS-based API sidesteps
+# that. Driven by the RESEND_API_KEY env var; falls back to the console
+# backend (prints instead of sending) when it's unset.
+django-anymail[resend]>=13
+
 # Production server
 gunicorn>=22.0
 
