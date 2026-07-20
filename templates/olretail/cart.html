@@ -36,7 +36,7 @@
               </thead>
               <tbody>
                 {% for item in cart_items %}
-                <tr>
+                <tr data-cart-item="{{ item.id }}" data-max="{% if not item.product.is_restaurant_category %}{{ item.product.quantity }}{% endif %}">
                   <td>
                     <a href="{{ item.product.get_absolute_url }}" class="text-dark font-weight-bold">
                       {{ item.product.name }}
@@ -46,14 +46,20 @@
                   </td>
                   <td class="text-center">${{ item.product.price }}</td>
                   <td>
-                    <form method="post" action="{% url 'olretail:update_cart' item.id %}" class="form-inline">
+                    <form method="post" action="{% url 'olretail:update_cart' item.id %}" class="qty-stepper-form">
                       {% csrf_token %}
-                      <label for="qty-{{ item.id }}" class="sr-only">{% trans "Quantity" %}</label>
-                      <input type="number" id="qty-{{ item.id }}" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.quantity }}" class="form-control form-control-sm cart-qty-input">
-                      <button type="submit" class="btn btn-sm btn-secondary ml-2">{% trans "Update" %}</button>
+                      <div class="qty-stepper">
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+                                class="qty-btn qty-btn-minus" aria-label="{% trans 'Decrease quantity' %}"
+                                {% if item.quantity <= 1 %}disabled{% endif %}>&minus;</button>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+                                class="qty-btn qty-btn-plus" aria-label="{% trans 'Increase quantity' %}"
+                                {% if not item.product.is_restaurant_category and item.quantity >= item.product.quantity %}disabled{% endif %}>+</button>
+                      </div>
                     </form>
                   </td>
-                  <td class="text-right font-weight-bold">${{ item.line_total }}</td>
+                  <td class="text-right font-weight-bold cart-line-total">${{ item.line_total }}</td>
                   <td>
                     <form method="post" action="{% url 'olretail:remove_from_cart' item.id %}" class="d-inline">
                       {% csrf_token %}
@@ -71,7 +77,7 @@
           {# Mobile: one card per line item instead of the table above. #}
           <div class="d-md-none">
             {% for item in cart_items %}
-            <div class="card border-0 shadow-sm mb-3 cart-item-card">
+            <div class="card border-0 shadow-sm mb-3 cart-item-card" data-cart-item="{{ item.id }}" data-max="{% if not item.product.is_restaurant_category %}{{ item.product.quantity }}{% endif %}">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                   <div class="pr-2 min-w-0">
@@ -88,15 +94,21 @@
                   </form>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-3">
-                  <form method="post" action="{% url 'olretail:update_cart' item.id %}" class="form-inline mb-0">
+                  <form method="post" action="{% url 'olretail:update_cart' item.id %}" class="qty-stepper-form mb-0">
                     {% csrf_token %}
-                    <label for="qty-m-{{ item.id }}" class="sr-only">{% trans "Quantity" %}</label>
-                    <input type="number" id="qty-m-{{ item.id }}" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.quantity }}" class="form-control form-control-sm cart-qty-input mr-2">
-                    <button type="submit" class="btn btn-sm btn-secondary">{% trans "Update" %}</button>
+                    <div class="qty-stepper">
+                      <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+                              class="qty-btn qty-btn-minus" aria-label="{% trans 'Decrease quantity' %}"
+                              {% if item.quantity <= 1 %}disabled{% endif %}>&minus;</button>
+                      <span class="qty-value">{{ item.quantity }}</span>
+                      <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+                              class="qty-btn qty-btn-plus" aria-label="{% trans 'Increase quantity' %}"
+                              {% if not item.product.is_restaurant_category and item.quantity >= item.product.quantity %}disabled{% endif %}>+</button>
+                    </div>
                   </form>
                   <div class="text-right">
                     <div class="text-muted small">${{ item.product.price }} {% trans "each" %}</div>
-                    <div class="font-weight-bold">${{ item.line_total }}</div>
+                    <div class="font-weight-bold cart-line-total">${{ item.line_total }}</div>
                   </div>
                 </div>
               </div>
@@ -113,7 +125,7 @@
 
               <div class="d-flex justify-content-between mb-2">
                 <span>{% trans "Subtotal" %}:</span>
-                <span class="font-weight-bold">${{ cart_total }}</span>
+                <span class="font-weight-bold cart-subtotal">${{ cart_total }}</span>
               </div>
 
               <small class="text-muted d-block mb-3">
@@ -149,9 +161,83 @@
 </main>
 
 <style>
-  .cart-qty-input { width: 64px; }
   .cart-item-card .card-body { padding: 1rem; }
   .cart-item-card .min-w-0 { min-width: 0; }
   .cart-item-card a.font-weight-bold { overflow-wrap: anywhere; }
+
+  /* Quantity stepper — replaces a free-typed number input + separate
+     "Update" button with tap targets sized for touch (≥32px). */
+  .qty-stepper { display: inline-flex; align-items: center; border: 1px solid #ced4da; border-radius: 4px; overflow: hidden; }
+  .qty-btn {
+    width: 32px; height: 32px; border: 0; background: #f8f9fa; color: #495057;
+    font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 0;
+  }
+  .qty-btn:hover:not(:disabled) { background: #e9ecef; }
+  .qty-btn:disabled { color: #ced4da; cursor: not-allowed; }
+  .qty-btn-minus { border-right: 1px solid #ced4da; }
+  .qty-btn-plus { border-left: 1px solid #ced4da; }
+  .qty-value { min-width: 2.25rem; text-align: center; font-weight: 600; font-size: .95rem; }
 </style>
+
+<script>
+(function () {
+  'use strict';
+  document.querySelectorAll('.qty-stepper-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      var clicked = e.submitter;
+      if (!clicked || !clicked.classList.contains('qty-btn') || clicked.disabled) {
+        return; // no JS submitter info (older browser) — let the normal POST + reload happen.
+      }
+      e.preventDefault();
+
+      var scope = form.closest('[data-cart-item]');
+      var valueEl = form.querySelector('.qty-value');
+      var currentQty = parseInt(valueEl.textContent, 10);
+      var newQty = currentQty + (clicked.classList.contains('qty-btn-plus') ? 1 : -1);
+      if (newQty < 1) return;
+
+      var csrfInput = form.querySelector('input[name=csrfmiddlewaretoken]');
+      var body = new FormData();
+      body.append('quantity', newQty);
+      if (csrfInput) body.append('csrfmiddlewaretoken', csrfInput.value);
+
+      clicked.disabled = true;
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: body,
+      })
+        .then(function (resp) {
+          return resp.json().then(function (data) { return { ok: resp.ok, data: data }; });
+        })
+        .then(function (result) {
+          var data = result.data;
+          if (!result.ok || data.status === 'error') {
+            clicked.disabled = false;
+            return;
+          }
+          var cartId = scope.getAttribute('data-cart-item');
+          document.querySelectorAll('[data-cart-item="' + cartId + '"]').forEach(function (el) {
+            el.querySelectorAll('.qty-value').forEach(function (q) { q.textContent = data.quantity; });
+            el.querySelectorAll('.cart-line-total').forEach(function (t) { t.textContent = '$' + data.line_total; });
+            var max = el.getAttribute('data-max');
+            max = max ? parseInt(max, 10) : null;
+            el.querySelectorAll('.qty-btn-minus').forEach(function (b) { b.disabled = data.quantity <= 1; });
+            el.querySelectorAll('.qty-btn-plus').forEach(function (b) { b.disabled = max !== null && data.quantity >= max; });
+          });
+          document.querySelectorAll('.cart-subtotal').forEach(function (el) { el.textContent = '$' + data.cart_total; });
+          var badge = document.getElementById('cart-count-badge');
+          if (badge) {
+            badge.textContent = data.cart_count;
+            badge.classList.toggle('d-none', !data.cart_count);
+          }
+        })
+        .catch(function () {
+          clicked.disabled = false;
+          form.submit();
+        });
+    });
+  });
+})();
+</script>
 {% endblock %}

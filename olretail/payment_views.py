@@ -138,8 +138,12 @@ def add_to_cart(request, product_id):
 @login_required
 @require_POST
 def update_cart(request, cart_id):
-    """Update cart item quantity."""
+    """Update cart item quantity — the +/- stepper on the cart page posts
+    here via fetch for a live update; a JSON response is only returned for
+    that AJAX path, so a plain form submission (no JS) still falls back to
+    a full page reload exactly like before."""
     cart_item = get_object_or_404(Cart, id=cart_id, buyer=request.user)
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     quantity = _parse_int(request.POST.get('quantity'), default=1)
     # Menu items don't track a real stock count — any positive quantity is fine.
     stock_limit = None if cart_item.product.is_restaurant_category else cart_item.product.quantity
@@ -147,13 +151,33 @@ def update_cart(request, cart_id):
     if quantity > 0 and (stock_limit is None or quantity <= stock_limit):
         cart_item.quantity = quantity
         cart_item.save()
+        status = 'updated'
         messages.success(request, _('Cart updated.'))
     elif stock_limit is not None and quantity > stock_limit:
+        status = 'error'
+        if is_ajax:
+            return JsonResponse({
+                'status': status,
+                'message': str(_('Not enough stock available.')),
+                'quantity': cart_item.quantity,
+            }, status=400)
         messages.error(request, _('Not enough stock available.'))
     else:
         cart_item.delete()
+        status = 'removed'
         messages.success(request, _('Item removed from cart.'))
-    
+
+    if is_ajax:
+        remaining = Cart.objects.filter(buyer=request.user).select_related('product')
+        return JsonResponse({
+            'status': status,
+            'cart_id': cart_id,
+            'quantity': cart_item.quantity if status == 'updated' else 0,
+            'line_total': str(cart_item.line_total) if status == 'updated' else '0',
+            'cart_total': str(sum((item.line_total for item in remaining), Decimal('0'))),
+            'cart_count': remaining.count(),
+        })
+
     return redirect('olretail:cart')
 
 
