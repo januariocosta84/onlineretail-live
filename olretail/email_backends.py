@@ -45,7 +45,13 @@ class GmailAPIBackend(BaseEmailBackend):
             },
             timeout=REQUEST_TIMEOUT,
         )
-        response.raise_for_status()
+        if not response.ok:
+            # Google's error detail (invalid_grant, invalid_client, etc.) is
+            # in the JSON body, which raise_for_status() alone discards.
+            raise requests.HTTPError(
+                f"{response.status_code} refreshing Gmail access token: {response.text}",
+                response=response,
+            )
         payload = response.json()
         _token_cache["access_token"] = payload["access_token"]
         _token_cache["expires_at"] = time.time() + payload.get("expires_in", 3600)
