@@ -212,19 +212,37 @@ from django.contrib.messages import constants as message_constants  # noqa: E402
 
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
 
-# Email: Resend (HTTP API) if configured, else the console backend (prints
-# instead of sending — safe no-op, never blocks or crashes anything).
+# Email: plain Gmail SMTP for local dev, else Gmail API (HTTPS) if
+# configured, else Resend (HTTPS) if configured, else the console backend
+# (prints instead of sending — safe no-op, never blocks or crashes
+# anything).
 #
-# Deliberately no raw-SMTP option anymore. It used to be here as a fallback,
-# but a blocked/unreachable SMTP host hangs at the TCP connect() call with
-# no timeout, which took down a whole gunicorn worker on Render (free tier
-# blocks outbound SMTP ports entirely — see the Resend comment below) and
-# caused intermittent "Bad Gateway" for unrelated requests hitting the
-# service during that worker's crash-and-restart. An HTTP API can't do
-# that: it's an ordinary outgoing request with the app's normal timeout
-# handling, so the worst case is "this one request fails", never "this
-# request takes the whole worker down with it".
-if os.environ.get("RESEND_API_KEY"):
+# No raw-SMTP option in production. A blocked/unreachable SMTP host hangs
+# at the TCP connect() call with no timeout, which took down a whole
+# gunicorn worker on Render (free tier blocks outbound SMTP ports
+# entirely) and caused intermittent "Bad Gateway" for unrelated requests
+# hitting the service during that worker's crash-and-restart. An HTTP API
+# can't do that: it's an ordinary outgoing request with the app's normal
+# timeout handling, so the worst case is "this one request fails", never
+# "this request takes the whole worker down with it". Gmail is used via
+# its HTTPS API (olretail/email_backends.py) in production for the same
+# reason — plain smtp.gmail.com is only enabled below when DEBUG, since a
+# developer's machine isn't behind Render's port block and a hang there
+# just blocks one dev's terminal, not a shared production worker.
+if DEBUG and os.environ.get("GMAIL_APP_PASSWORD"):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ["GMAIL_USER"]
+    EMAIL_HOST_PASSWORD = os.environ["GMAIL_APP_PASSWORD"]
+    EMAIL_TIMEOUT = 10
+elif os.environ.get("GMAIL_REFRESH_TOKEN"):
+    EMAIL_BACKEND = "olretail.email_backends.GmailAPIBackend"
+    GMAIL_CLIENT_ID = os.environ["GMAIL_CLIENT_ID"]
+    GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
+    GMAIL_REFRESH_TOKEN = os.environ["GMAIL_REFRESH_TOKEN"]
+elif os.environ.get("RESEND_API_KEY"):
     EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
     ANYMAIL = {"RESEND_API_KEY": os.environ["RESEND_API_KEY"]}
 else:
