@@ -212,22 +212,21 @@ from django.contrib.messages import constants as message_constants  # noqa: E402
 
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
 
-# Email: Resend (HTTP API) if configured, else SMTP if configured, else the
-# console backend (prints instead of sending). Resend takes priority over
-# raw SMTP because Render's free tier blocks outbound traffic to SMTP ports
-# entirely (25/465/587) — an HTTPS-based API is the only outbound path that
-# actually works from there; SMTP is kept as a fallback for environments
-# that don't have that restriction (e.g. a different host, or local dev).
+# Email: Resend (HTTP API) if configured, else the console backend (prints
+# instead of sending — safe no-op, never blocks or crashes anything).
+#
+# Deliberately no raw-SMTP option anymore. It used to be here as a fallback,
+# but a blocked/unreachable SMTP host hangs at the TCP connect() call with
+# no timeout, which took down a whole gunicorn worker on Render (free tier
+# blocks outbound SMTP ports entirely — see the Resend comment below) and
+# caused intermittent "Bad Gateway" for unrelated requests hitting the
+# service during that worker's crash-and-restart. An HTTP API can't do
+# that: it's an ordinary outgoing request with the app's normal timeout
+# handling, so the worst case is "this one request fails", never "this
+# request takes the whole worker down with it".
 if os.environ.get("RESEND_API_KEY"):
     EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
     ANYMAIL = {"RESEND_API_KEY": os.environ["RESEND_API_KEY"]}
-elif os.environ.get("EMAIL_HOST"):
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.environ["EMAIL_HOST"]
-    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() == "true"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@localhost")
