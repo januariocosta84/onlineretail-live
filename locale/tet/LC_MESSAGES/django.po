@@ -74,17 +74,17 @@ msgstr "Diresaun"
 # ── Accounts: password reset ───────────────────────────────────────────
 # 
 msgid "Enter a strong password"
-msgstr "Troka senha"
+msgstr "Troka password"
 
 msgid "Confirm password"
-msgstr "Haluha senha?"
+msgstr "Haluha password?"
 
 # Lowercase model verbose names (Django capitalizes them in form labels)
 msgid "choose_a_username"
-msgstr "naran uzuáriu"
+msgstr "naran utilizador"
 
 msgid "An account with this email address already exists."
-msgstr "Konta ho diresaun email ida-ne'e eziste tiha ona."
+msgstr "Konta ho  email ida-ne'e eziste tiha ona."
 
 msgid "Company name is required for a company seller account."
 msgstr "Naran empreza presiza ba konta vendedór empreza."
@@ -129,7 +129,7 @@ msgstr "Defini senha foun"
 msgid ""
 "This password reset link is invalid or has expired. Please request a new "
 "one."
-msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu ida foun."
+msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu fali foun."
 
 msgid "Request a new link"
 msgstr "Husu ligasaun foun"
@@ -145,7 +145,7 @@ msgid ""
 "password reset link."
 msgstr ""
 "Se konta ida eziste ho diresaun ne'ebé ita-boot hatama, ami haruka tiha ona "
-"ligasaun atu troka senha."
+"ligasaun atu troka password."
 
 msgid "Back to sign in"
 msgstr "Fila ba login"
@@ -154,11 +154,11 @@ msgid ""
 "You are receiving this email because you requested a password reset for your"
 " TimorMart account."
 msgstr ""
-"Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka senha ba ita-boot"
+"Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka password ba ita-boot"
 " nia konta TimorMart."
 
 msgid "Please go to the following page and choose a new password:"
-msgstr "Favór bá pájina tuir mai ne'e no hili senha foun:"
+msgstr "Favór bá pájina tuir mai ne'e no hili password foun:"
 
 msgid "Your username, in case you have forgotten:"
 msgstr "Ita-boot nia naran uzuáriu, karik haluha:"
@@ -169,10 +169,10 @@ msgstr "Se la'ós ita-boot mak husu ida-ne'e, bele ignora email ida-ne'e."
 # ── Accounts: password reset ───────────────────────────────────────────
 # 
 msgid "Reset password"
-msgstr "Troka senha"
+msgstr "Troka password"
 
 msgid "Reset your password"
-msgstr "Troka ita-boot nia senha"
+msgstr "Troka ita-boot nia password"
 
 msgid ""
 "Enter the email address you registered with and we will send you a link to "
@@ -1184,7 +1184,7 @@ msgid "Create Your Account"
 msgstr "Kria konta"
 
 msgid "Join thousands of buyers and sellers on TimorMart."
-msgstr "Hola parte ho kompradór no vendedór rihun-rihun iha TimorMart."
+msgstr "Hola parte ho kompradór no vendedór barak iha TimorMart."
 
 msgid "Company Information"
 msgstr "Informasaun Empreza"
@@ -1609,7 +1609,7 @@ msgid "rating"
 msgstr "klasifikasaun"
 
 msgid "min"
-msgstr "Admin"
+msgstr "Min"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
 # 
