@@ -366,8 +366,11 @@ class Payment(models.Model):
 # ──────────────────────────────────────────────────────────────────
 
 class TransactionType(models.TextChoices):
-    """Transaction purpose."""
-    COMMISSION = 'commission', _('Commission')
+    """Transaction purpose. The stored value 'commission' predates this
+    label fix and is left as-is (other code and any historical rows key off
+    it) — only the human-readable label changed, since these entries record
+    what a seller earned from a sale, not the platform's commission cut."""
+    COMMISSION = 'commission', _('Order earnings')
     REFUND = 'refund', _('Refund')
     ADJUSTMENT = 'adjustment', _('Adjustment')
     PAYOUT = 'payout', _('Payout')

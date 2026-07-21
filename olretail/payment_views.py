@@ -702,16 +702,22 @@ def _mark_payment_succeeded(payment, charge_id, source):
             order.save()
             _mark_food_order_received(order)
 
+            # The seller is owed their sale proceeds (subtotal) — commission_amount
+            # is the platform's own cut of the buyer's payment, kept by the
+            # platform, not credited here. See order_detail.html's price
+            # breakdown: Subtotal is shown as the seller's line, Commission is
+            # shown as a separate fee subtracted from what the buyer pays on
+            # top of it.
             Transaction.objects.create(
                 order=order,
                 seller=order.seller,
-                amount_cents=int(order.commission_amount * 100),
+                amount_cents=int(order.subtotal * 100),
                 transaction_type=TransactionType.COMMISSION,
-                description=f"Commission on order {order.order_number}",
+                description=f"Earnings from order {order.order_number}",
             )
 
             seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-            seller_balance.add_commission(int(order.commission_amount * 100))
+            seller_balance.add_commission(int(order.subtotal * 100))
 
             if not order.product.is_restaurant_category:
                 # Menu items don't track a real stock count — quantity is a
@@ -797,17 +803,20 @@ def _process_bank_refund(payment, amount_cents=None):
             order.status = OrderStatus.REFUNDED
             order.save(update_fields=['status'])
 
+            # Mirrors the credit in _mark_payment_succeeded — reverse the
+            # same amount that was actually credited (subtotal), not the
+            # platform's commission cut.
             Transaction.objects.create(
                 order=order,
                 seller=order.seller,
-                amount_cents=-int(order.commission_amount * 100),
+                amount_cents=-int(order.subtotal * 100),
                 transaction_type=TransactionType.REFUND,
                 description=f"Refund on order {order.order_number}",
             )
 
             seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-            seller_balance.available_balance -= int(order.commission_amount * 100)
-            seller_balance.total_earnings -= int(order.commission_amount * 100)
+            seller_balance.available_balance -= int(order.subtotal * 100)
+            seller_balance.total_earnings -= int(order.subtotal * 100)
             seller_balance.save()
 
             if not order.product.is_restaurant_category:
