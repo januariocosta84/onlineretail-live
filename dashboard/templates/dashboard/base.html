@@ -59,6 +59,8 @@
              href="{% url 'dashboard:orders' %}"><i class="fas fa-receipt mr-2" aria-hidden="true"></i>Orders</a>
           <a class="list-group-item list-group-item-action {% if section == 'restaurants' %}active text-white{% endif %}"
              href="{% url 'dashboard:restaurants' %}"><i class="fas fa-store mr-2" aria-hidden="true"></i>Restaurants</a>
+          <a class="list-group-item list-group-item-action {% if section == 'company_list' %}active text-white{% endif %}"
+             href="{% url 'dashboard:company_list' %}"><i class="fas fa-briefcase mr-2" aria-hidden="true"></i>Company List</a>
           <a class="list-group-item list-group-item-action {% if section == 'users' %}active text-white{% endif %}"
              href="{% url 'dashboard:users' %}"><i class="fas fa-users mr-2" aria-hidden="true"></i>Users</a>
           <a class="list-group-item list-group-item-action {% if section == 'comments' %}active text-white{% endif %}"

@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Company List{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Company List <small class="text-muted h6">({{ page_obj.paginator.count }})</small></h1>
+
+<form method="get" class="card mb-3">
+  <div class="card-body py-3">
+    <div class="form-row">
+      <div class="col-md-6 mb-2">
+        <input type="search" name="q" value="{{ q }}" class="form-control form-control-sm"
+               placeholder="Search by business name, TIN or owner" aria-label="Search companies and restaurants">
+      </div>
+      <div class="col-md-4 mb-2">
+        <select name="seller_type" class="browser-default custom-select custom-select-sm" aria-label="Filter by type">
+          <option value="">All types</option>
+          <option value="company" {% if seller_type == 'company' %}selected{% endif %}>Company only</option>
+          <option value="restaurant" {% if seller_type == 'restaurant' %}selected{% endif %}>Restaurant only</option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-sm btn-block m-0">Filter</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Business</th><th>Type</th><th>TIN</th><th>Director</th>
+          <th>Products</th><th>Verification</th><th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in page_obj.object_list %}
+        <tr>
+          <td>
+            <strong>{{ s.company_name|default:s.get_name }}</strong>
+            <div class="small text-muted">{{ s.user.username }} &middot; {{ s.mobile }}</div>
+          </td>
+          <td>
+            {% if s.seller_type == 'restaurant' %}
+            <span class="badge badge-info"><i class="fas fa-store mr-1" aria-hidden="true"></i>Restaurant</span>
+            {% else %}
+            <span class="badge badge-primary"><i class="fas fa-building mr-1" aria-hidden="true"></i>Company</span>
+            {% endif %}
+          </td>
+          <td class="small">{{ s.company_tin|default:"—" }}</td>
+          <td class="small">
+            {{ s.director_name|default:"—" }}
+            {% if s.director_phone or s.director_email %}
+            <div class="text-muted">{{ s.director_phone }}{% if s.director_phone and s.director_email %} &middot; {% endif %}{{ s.director_email }}</div>
+            {% endif %}
+          </td>
+          <td>{{ s.product_count }}</td>
+          <td>
+            {% if s.verification_status == 'verified' %}<span class="badge badge-success">Verified</span>
+            {% elif s.verification_status == 'rejected' %}<span class="badge badge-danger">Rejected</span>
+            {% else %}<span class="badge badge-warning">Pending</span>{% endif %}
+          </td>
+          <td class="text-right">
+            <a href="{% url 'dashboard:products' %}?seller={{ s.pk }}" class="btn btn-sm btn-outline-primary my-0">
+              View products
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No companies or restaurants match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% include 'shared/pagination.html' %}
+{% endblock %}

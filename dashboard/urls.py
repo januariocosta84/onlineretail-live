@@ -38,6 +38,7 @@ urlpatterns = [
     path("sellers/verification/", views.seller_verification, name="seller_verification"),
     path("sellers/verification/<int:pk>/action/", views.seller_verification_action, name="seller_verification_action"),
     path("restaurants/", views.restaurants, name="restaurants"),
+    path("sellers/companies/", views.company_list, name="company_list"),
     path("bank-simulator/accounts/", banking_views.bank_accounts, name="bank_accounts"),
     path("bank-simulator/accounts/create/", banking_views.bank_account_create, name="bank_account_create"),
     path("bank-simulator/accounts/<int:pk>/", banking_views.bank_account_detail, name="bank_account_detail"),

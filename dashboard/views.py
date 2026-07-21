@@ -984,3 +984,44 @@ def restaurants(request):
         qs = qs.filter(Q(user__first_name__icontains=q) | Q(user__last_name__icontains=q) | Q(user__username__icontains=q))
 
     return render(request, "dashboard/restaurants.html", {"section": "restaurants", "restaurants": qs})
+
+
+# ── Company list (Company + Restaurant sellers) ────────────────────────────
+
+
+@admin_required
+def company_list(request):
+    qs = (
+        Seller.objects.filter(seller_type__in=(SellerType.COMPANY, SellerType.RESTAURANT))
+        .select_related("user")
+        .annotate(product_count=Count("product"))
+        .order_by("company_name")
+    )
+    q = (request.GET.get("q") or "").strip()
+    if q:
+        qs = qs.filter(
+            Q(company_name__icontains=q)
+            | Q(company_tin__icontains=q)
+            | Q(user__first_name__icontains=q)
+            | Q(user__last_name__icontains=q)
+            | Q(user__username__icontains=q)
+        )
+    seller_type = request.GET.get("seller_type") or ""
+    if seller_type in (SellerType.COMPANY, SellerType.RESTAURANT):
+        qs = qs.filter(seller_type=seller_type)
+
+    params = request.GET.copy()
+    params.pop("page", None)
+    page_obj = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+
+    return render(
+        request,
+        "dashboard/company_list.html",
+        {
+            "section": "company_list",
+            "page_obj": page_obj,
+            "querystring": params.urlencode(),
+            "q": q,
+            "seller_type": seller_type,
+        },
+    )
