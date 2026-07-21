@@ -997,7 +997,7 @@ def seller_payment_settings(request):
         form = SellerPaymentInstructionsForm(instance=seller, initial=initial)
 
     context = {'form': form, 'seller': seller}
-    if seller.seller_type == SellerType.COMPANY:
+    if seller.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT):
         context['company_form'] = SellerCompanyInfoForm(instance=seller)
         context['verification_form'] = SellerVerificationForm()
     return render(request, 'olretail/seller_payment_settings.html', context)
@@ -1006,12 +1006,13 @@ def seller_payment_settings(request):
 @seller_required
 @require_POST
 def seller_company_info(request):
-    """Company seller edits their business details after registration.
-    Changing the identity fields (name/TIN/address) voids an existing
-    verification — the approved document no longer matches what's on file."""
+    """Company or restaurant seller edits their business/director details
+    after registration. Changing the identity fields (name/TIN/address)
+    voids an existing verification — the approved document no longer
+    matches what's on file."""
     seller = request.user.seller
-    if seller.seller_type != SellerType.COMPANY:
-        messages.error(request, _('Company info only applies to company seller accounts.'))
+    if seller.seller_type not in (SellerType.COMPANY, SellerType.RESTAURANT):
+        messages.error(request, _('Business info only applies to company and restaurant seller accounts.'))
         return redirect('olretail:seller_payment_settings')
 
     identity_fields = ('company_name', 'company_tin', 'company_address')
@@ -1036,12 +1037,12 @@ def seller_company_info(request):
 @seller_required
 @require_POST
 def seller_submit_verification(request):
-    """Company seller submits (or resubmits) a business registration
-    document for admin review — a trust badge for buyers, not a
-    requirement to keep selling."""
+    """Company or restaurant seller submits (or resubmits) a business
+    registration document for admin review — a trust badge for buyers, not
+    a requirement to keep selling."""
     seller = request.user.seller
-    if seller.seller_type != SellerType.COMPANY:
-        messages.error(request, _('Business verification only applies to company seller accounts.'))
+    if seller.seller_type not in (SellerType.COMPANY, SellerType.RESTAURANT):
+        messages.error(request, _('Business verification only applies to company and restaurant seller accounts.'))
         return redirect('olretail:seller_payment_settings')
 
     form = SellerVerificationForm(request.POST, request.FILES)

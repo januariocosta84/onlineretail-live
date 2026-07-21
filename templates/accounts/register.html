@@ -85,15 +85,16 @@
               </div>
             </div>
 
-            <!-- Company Information (company sellers only) -->
+            <!-- Business Information (company & restaurant sellers only) -->
             <div class="mb-4 d-none" id="company-info-section">
               <h5 class="mb-3 font-weight-bold">
-                <i class="fas fa-building text-primary mr-2"></i>{% trans "Company Information" %}
+                <i class="fas fa-building text-primary mr-2"></i>
+                <span data-label-company>{% trans "Company Information" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant Information" %}</span>
               </h5>
 
               <div class="form-group">
                 <label for="{{ form.company_name.id_for_label }}">
-                  {{ form.company_name.label }}
+                  <span data-label-company>{% trans "Company name" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant name" %}</span>
                   <span class="text-danger">*</span>
                 </label>
                 {{ form.company_name }}
@@ -119,7 +120,7 @@
 
               <div class="form-group">
                 <label for="{{ form.company_address.id_for_label }}">
-                  {{ form.company_address.label }}
+                  <span data-label-company>{% trans "Company address" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant address" %}</span>
                   <span class="text-danger">*</span>
                 </label>
                 {{ form.company_address }}
@@ -139,6 +140,65 @@
                 {% if form.company_bank_account.errors %}
                   <small class="form-text text-danger d-block mt-1">
                     {{ form.company_bank_account.errors }}
+                  </small>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Director Information (company & restaurant sellers only) -->
+            <div class="mb-4 d-none" id="director-info-section">
+              <h5 class="mb-3 font-weight-bold">
+                <i class="fas fa-id-badge text-primary mr-2"></i>{% trans "Director Information" %}
+              </h5>
+
+              <div class="form-group">
+                <label for="{{ form.director_name.id_for_label }}">
+                  {{ form.director_name.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.director_name }}
+                {% if form.director_name.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.director_name.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.director_id_number.id_for_label }}">
+                  {{ form.director_id_number.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.director_id_number }}
+                {% if form.director_id_number.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.director_id_number.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.director_phone.id_for_label }}">
+                  {{ form.director_phone.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.director_phone }}
+                {% if form.director_phone.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.director_phone.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.director_email.id_for_label }}">
+                  {{ form.director_email.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.director_email }}
+                {% if form.director_email.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.director_email.errors }}
                   </small>
                 {% endif %}
               </div>
@@ -369,6 +429,9 @@
 (function () {
   var sellerTypeSection = document.getElementById("seller-type-section");
   var companySection = document.getElementById("company-info-section");
+  var directorSection = document.getElementById("director-info-section");
+  var companyLabels = document.querySelectorAll("[data-label-company]");
+  var restaurantLabels = document.querySelectorAll("[data-label-restaurant]");
 
   function accountTypeIsSeller() {
     var checked = document.querySelector('input[name="account_type"]:checked');
@@ -378,10 +441,21 @@
     var checked = document.querySelector('input[name="seller_type"]:checked');
     return !!checked && checked.value === "company";
   }
+  function sellerTypeIsRestaurant() {
+    var checked = document.querySelector('input[name="seller_type"]:checked');
+    return !!checked && checked.value === "restaurant";
+  }
   function updateVisibility() {
     var showSellerType = accountTypeIsSeller();
     sellerTypeSection.classList.toggle("d-none", !showSellerType);
-    companySection.classList.toggle("d-none", !(showSellerType && sellerTypeIsCompany()));
+
+    var isRestaurant = showSellerType && sellerTypeIsRestaurant();
+    var isBusiness = showSellerType && (sellerTypeIsCompany() || isRestaurant);
+    companySection.classList.toggle("d-none", !isBusiness);
+    directorSection.classList.toggle("d-none", !isBusiness);
+
+    companyLabels.forEach(function (el) { el.classList.toggle("d-none", isRestaurant); });
+    restaurantLabels.forEach(function (el) { el.classList.toggle("d-none", !isRestaurant); });
   }
 
   document.querySelectorAll('input[name="account_type"]').forEach(function (el) {

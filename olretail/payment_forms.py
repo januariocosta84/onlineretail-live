@@ -264,23 +264,35 @@ class SellerPaymentInstructionsForm(forms.ModelForm):
 
 
 class SellerCompanyInfoForm(forms.ModelForm):
-    """Lets a company seller fix their business details after registration
-    (the registration form is the only other place these are collected)."""
+    """Lets a company or restaurant seller fix their business and director
+    details after registration (the registration form is the only other
+    place these are collected)."""
 
     class Meta:
         model = Seller
-        fields = ['company_name', 'company_tin', 'company_address', 'company_bank_account']
+        fields = [
+            'company_name', 'company_tin', 'company_address', 'company_bank_account',
+            'director_name', 'director_id_number', 'director_phone', 'director_email',
+        ]
         widgets = {
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
             'company_tin': forms.TextInput(attrs={'class': 'form-control'}),
             'company_address': forms.TextInput(attrs={'class': 'form-control'}),
             'company_bank_account': forms.TextInput(attrs={'class': 'form-control'}),
+            'director_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'director_id_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'director_phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'director_email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'company_name': _('Company name'),
+            'company_name': _('Business name'),
             'company_tin': _('TIN (Tax Identification Number)'),
-            'company_address': _('Company address'),
+            'company_address': _('Business address'),
             'company_bank_account': _('Bank account'),
+            'director_name': _('Director name'),
+            'director_id_number': _('Director ID / TIN number'),
+            'director_phone': _('Director phone number'),
+            'director_email': _('Director email'),
         }
 
 

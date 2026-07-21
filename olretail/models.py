@@ -100,12 +100,19 @@ class Seller(models.Model):
     seller_type = models.CharField(
         max_length=20, choices=SellerType.choices, default=SellerType.INDIVIDUAL,
     )
-    # Only populated for SellerType.COMPANY — collected at registration, and
-    # editable afterward on the seller payment-settings page.
+    # Only populated for SellerType.COMPANY and SellerType.RESTAURANT —
+    # collected at registration, and editable afterward on the seller
+    # payment-settings page.
     company_name = models.CharField(max_length=200, blank=True)
     company_tin = models.CharField(max_length=50, blank=True, verbose_name="TIN")
     company_address = models.CharField(max_length=255, blank=True)
     company_bank_account = models.CharField(max_length=100, blank=True)
+    # The business's legally responsible person — same COMPANY/RESTAURANT-only
+    # scope as the company_* fields above.
+    director_name = models.CharField(max_length=200, blank=True)
+    director_id_number = models.CharField(max_length=50, blank=True, verbose_name="Director ID / TIN Number")
+    director_phone = models.CharField(max_length=40, blank=True)
+    director_email = models.EmailField(blank=True)
     # Business verification — a trust badge for buyers, not a gate: an
     # unverified company can still sell and get paid exactly the same as a
     # verified one (contrast Courier.verification_status, which does gate
@@ -122,10 +129,11 @@ class Seller(models.Model):
 
     @property
     def get_name(self):
-        # Company sellers trade under their business name everywhere they're
-        # shown as "the seller" — product listings, order confirmations,
-        # payouts, etc. — not the individual account holder's personal name.
-        if self.seller_type == SellerType.COMPANY and self.company_name:
+        # Company and Restaurant sellers trade under their business name
+        # everywhere they're shown as "the seller" — product listings, order
+        # confirmations, payouts, etc. — not the individual account holder's
+        # personal name.
+        if self.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT) and self.company_name:
             return self.company_name
         return self.user.get_full_name() or self.user.username
 
@@ -136,7 +144,7 @@ class Seller(models.Model):
     @property
     def is_verified_business(self):
         return (
-            self.seller_type == SellerType.COMPANY
+            self.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT)
             and self.verification_status == SellerVerificationStatus.VERIFIED
         )
 

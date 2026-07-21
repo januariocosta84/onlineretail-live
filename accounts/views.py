@@ -56,11 +56,15 @@ def register(request):
                 if role in (ROLE_SELLER, ROLE_BUYER_SELLER):
                     seller = user.seller
                     seller.seller_type = form.cleaned_data["seller_type"] or SellerType.INDIVIDUAL
-                    if seller.seller_type == SellerType.COMPANY:
+                    if seller.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT):
                         seller.company_name = form.cleaned_data["company_name"]
                         seller.company_tin = form.cleaned_data["company_tin"]
                         seller.company_address = form.cleaned_data["company_address"]
                         seller.company_bank_account = form.cleaned_data["company_bank_account"]
+                        seller.director_name = form.cleaned_data["director_name"]
+                        seller.director_id_number = form.cleaned_data["director_id_number"]
+                        seller.director_phone = form.cleaned_data["director_phone"]
+                        seller.director_email = form.cleaned_data["director_email"]
                     seller.save()
             login(request, user)
             logger.info("New user registered: %s (role=%s)", user.username, role)

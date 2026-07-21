@@ -40,10 +40,10 @@
           </div>
         </div>
 
-        {% if seller.seller_type == 'company' %}
+        {% if seller.seller_type == 'company' or seller.seller_type == 'restaurant' %}
         <div class="card border-0 shadow-sm mt-4" id="company-info">
           <div class="card-body">
-            <h2 class="h5 mb-3"><i class="fas fa-building mr-2"></i>{% trans "Company Information" %}</h2>
+            <h2 class="h5 mb-3"><i class="fas fa-building mr-2"></i>{% trans "Business & Director Information" %}</h2>
             <form method="post" action="{% url 'olretail:seller_company_info' %}" novalidate>
               {% csrf_token %}
               {% for field in company_form %}

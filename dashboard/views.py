@@ -876,7 +876,10 @@ def courier_verification_action(request, pk):
 @admin_required
 def seller_verification(request):
     sellers = (
-        Seller.objects.filter(seller_type=SellerType.COMPANY, verification_status=SellerVerificationStatus.PENDING)
+        Seller.objects.filter(
+            seller_type__in=(SellerType.COMPANY, SellerType.RESTAURANT),
+            verification_status=SellerVerificationStatus.PENDING,
+        )
         # Nullable ImageField: rows added via migration (or never touched)
         # can have NULL rather than "" — exclude both, not just "".
         .exclude(Q(business_document="") | Q(business_document__isnull=True))

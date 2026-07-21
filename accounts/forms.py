@@ -48,6 +48,29 @@ class RegistrationForm(UserCreationForm):
         label=_("Bank account"),
         widget=forms.TextInput(attrs={"placeholder": _("Bank name, account number, account holder")}),
     )
+    director_name = forms.CharField(
+        max_length=200,
+        required=False,
+        label=_("Director name"),
+        widget=forms.TextInput(attrs={"placeholder": _("Full name")}),
+    )
+    director_id_number = forms.CharField(
+        max_length=50,
+        required=False,
+        label=_("Director ID / TIN number"),
+        widget=forms.TextInput(attrs={"placeholder": _("e.g. 123456789")}),
+    )
+    director_phone = forms.CharField(
+        max_length=40,
+        required=False,
+        label=_("Director phone number"),
+        widget=forms.TextInput(attrs={"placeholder": _("7012345 or +670 7012345")}),
+    )
+    director_email = forms.EmailField(
+        required=False,
+        label=_("Director email"),
+        widget=forms.EmailInput(attrs={"placeholder": _("director@example.com")}),
+    )
     first_name = forms.CharField(
         max_length=150,
         label=_("First name"),
@@ -108,14 +131,18 @@ class RegistrationForm(UserCreationForm):
             return cleaned_data
 
         cleaned_data["seller_type"] = cleaned_data.get("seller_type") or SellerType.INDIVIDUAL
-        if cleaned_data["seller_type"] != SellerType.COMPANY:
+        if cleaned_data["seller_type"] not in (SellerType.COMPANY, SellerType.RESTAURANT):
             return cleaned_data
 
         required_fields = {
-            "company_name": _("Company name is required for a company seller account."),
-            "company_tin": _("TIN is required for a company seller account."),
-            "company_address": _("Company address is required for a company seller account."),
-            "company_bank_account": _("Bank account is required for a company seller account."),
+            "company_name": _("Business name is required."),
+            "company_tin": _("TIN is required."),
+            "company_address": _("Business address is required."),
+            "company_bank_account": _("Bank account is required."),
+            "director_name": _("Director name is required."),
+            "director_id_number": _("Director ID / TIN number is required."),
+            "director_phone": _("Director phone number is required."),
+            "director_email": _("Director email is required."),
         }
         for field_name, message in required_fields.items():
             if not cleaned_data.get(field_name):
