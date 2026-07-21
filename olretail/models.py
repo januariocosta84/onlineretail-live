@@ -260,6 +260,28 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     price = models.DecimalField(max_digits=13, decimal_places=2)
     description = models.TextField()
+    # Translatable marketing/content fields beyond the core name/description —
+    # all optional in every language (see olretail/translation.py).
+    short_description = models.CharField(
+        max_length=300, blank=True, help_text=_("A one-line summary shown in listings.")
+    )
+    specifications = models.TextField(
+        blank=True, help_text=_('One per line, e.g. "Weight: 500g".')
+    )
+    features = models.TextField(blank=True, help_text=_('One per line, e.g. "Hand-woven".'))
+    seo_title = models.CharField(
+        max_length=70,
+        blank=True,
+        help_text=_("Optional — shown in search engine results instead of the product name."),
+    )
+    seo_description = models.CharField(
+        max_length=160,
+        blank=True,
+        help_text=_("Optional — shown in search engine results instead of the description."),
+    )
+    tags = models.CharField(
+        max_length=255, blank=True, help_text=_('Optional — comma-separated, e.g. "scarf, wool, winter".')
+    )
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     item_location = models.ForeignKey(City, on_delete=models.PROTECT)
     created = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,7 @@
 from django import forms
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from modeltranslation.utils import build_localized_fieldname
 
 from .models import (
     NO_CONDITION_QUANTITY_CATEGORY_SLUGS,
@@ -11,12 +13,39 @@ from .models import (
 )
 from .validators import validate_image_size
 
+# Base (language-less) names of Product's translatable fields — see
+# olretail/translation.py. Each expands to one real form field per
+# MODELTRANSLATION_LANGUAGES entry (e.g. "name" -> name_en/name_tet/...).
+TRANSLATABLE_PRODUCT_FIELDS = (
+    "name",
+    "short_description",
+    "description",
+    "specifications",
+    "features",
+    "seo_title",
+    "seo_description",
+    "tags",
+)
+# Fields long enough to deserve a textarea + full-width layout in the
+# language tabs, and how many rows each gets.
+_TEXTAREA_PRODUCT_FIELDS = {"description": 4, "specifications": 4, "features": 4}
+
+_PRODUCT_FIELD_LABELS = {
+    "name": _("Product name"),
+    "short_description": _("Short description"),
+    "description": _("Full description"),
+    "specifications": _("Specifications"),
+    "features": _("Features"),
+    "seo_title": _("SEO title"),
+    "seo_description": _("SEO description"),
+    "tags": _("Tags"),
+}
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = (
-            "name",
             "price",
             "category",
             "country",
@@ -29,13 +58,15 @@ class ProductForm(forms.ModelForm):
             "menu_category",
             "is_available",
             "prep_time_minutes",
-            "description",
             "product_image",
             "product_image_2",
             "product_image_3",
+        ) + tuple(
+            build_localized_fieldname(base, lang)
+            for base in TRANSLATABLE_PRODUCT_FIELDS
+            for lang in settings.MODELTRANSLATION_LANGUAGES
         )
         labels = {
-            "name": _("Product name"),
             "price": _("Price"),
             "category": _("Category"),
             "country": _("Country"),
@@ -48,13 +79,21 @@ class ProductForm(forms.ModelForm):
             "menu_category": _("Menu section"),
             "is_available": _("Available"),
             "prep_time_minutes": _("Prep time (minutes)"),
-            "description": _("Description"),
             "product_image": _("Main image"),
             "product_image_2": _("Extra image 1"),
             "product_image_3": _("Extra image 2"),
+            **{
+                build_localized_fieldname(base, lang): label
+                for base, label in _PRODUCT_FIELD_LABELS.items()
+                for lang in settings.MODELTRANSLATION_LANGUAGES
+            },
         }
         widgets = {
-            "description": forms.Textarea(attrs={"rows": 4}),
+            **{
+                build_localized_fieldname(base, lang): forms.Textarea(attrs={"rows": rows})
+                for base, rows in _TEXTAREA_PRODUCT_FIELDS.items()
+                for lang in settings.MODELTRANSLATION_LANGUAGES
+            },
         }
         help_texts = {
             "quantity": _("Set to 0 when the product is sold out."),
@@ -91,6 +130,34 @@ class ProductForm(forms.ModelForm):
         if self._hides_quantity_condition():
             self.fields["quantity"].required = False
             self.fields["condition"].required = False
+
+    @property
+    def translated_field_names(self):
+        """Flat list of every per-language field name (name_en, name_tet,
+        ...) — used by the template to skip them in the generic field loop
+        so they're only rendered once, inside the language tabs."""
+        return [
+            build_localized_fieldname(base, lang)
+            for base in TRANSLATABLE_PRODUCT_FIELDS
+            for lang in settings.MODELTRANSLATION_LANGUAGES
+        ]
+
+    def language_tabs(self):
+        """One entry per configured language, each carrying the bound
+        fields for that language in a fixed order — drives the tabbed
+        language switcher in product_form.html."""
+        tabs = []
+        for lang_code, lang_label in settings.LANGUAGES:
+            fields = [
+                {
+                    "base": base,
+                    "bound": self[build_localized_fieldname(base, lang_code)],
+                    "full_width": base in _TEXTAREA_PRODUCT_FIELDS,
+                }
+                for base in TRANSLATABLE_PRODUCT_FIELDS
+            ]
+            tabs.append({"code": lang_code, "label": lang_label, "fields": fields})
+        return tabs
 
     def _submitted_category_slug(self):
         if not self.is_bound:

@@ -22,7 +22,14 @@ services:
     # migrate failure would get masked too and gunicorn would start against
     # an unmigrated DB) — it only exists to no-op once the account already
     # exists, since the free tier has no shell to run it manually.
-    startCommand: "python manage.py migrate --noinput && (python manage.py createsuperuser --noinput || true) && gunicorn TLoretail.wsgi --log-file -"
+    #
+    # update_translation_fields (django-modeltranslation) copies each
+    # existing row's plain name/description into name_en/description_en —
+    # needed once Product became a translated model, otherwise older listings
+    # show blank English fields until a seller resaves them. Idempotent (safe
+    # to run on every deploy) and there's no shell on the free tier to run it
+    # by hand, so it lives here instead.
+    startCommand: "python manage.py migrate --noinput && python manage.py update_translation_fields olretail && (python manage.py createsuperuser --noinput || true) && gunicorn TLoretail.wsgi --log-file -"
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true

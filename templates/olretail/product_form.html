@@ -3,6 +3,28 @@
 
 {% block title %}{{ title }} — TimorMart{% endblock %}
 
+{% block extra_head %}
+<style>
+  #productLangTabs .nav-link.active {
+    font-weight: 600;
+    border-bottom-color: #fff;
+  }
+  #productLangTabs .badge[data-status-badge] {
+    font-size: 0.65rem;
+    vertical-align: middle;
+  }
+  @media (max-width: 575.98px) {
+    #productLangTabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    #productLangTabs .nav-item {
+      flex: 0 0 auto;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -28,8 +50,52 @@
           {% endif %}
           <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
+
+            <div class="mb-4">
+              <h2 class="h6 mb-2">{% trans "Language" %}</h2>
+              <ul class="nav nav-tabs" id="productLangTabs" role="tablist">
+                {% for tab in form.language_tabs %}
+                <li class="nav-item">
+                  <a class="nav-link{% if forloop.first %} active{% endif %}"
+                     id="lang-{{ tab.code }}-tab" data-toggle="tab" href="#lang-{{ tab.code }}"
+                     role="tab" aria-controls="lang-{{ tab.code }}"
+                     aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                     data-lang-tab="{{ tab.code }}">
+                    {{ tab.label }}
+                    <span class="badge badge-pill badge-secondary ml-1" data-status-badge="{{ tab.code }}">{% trans "Not started" %}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content border border-top-0 rounded-bottom p-3" id="productLangTabsContent">
+                {% for tab in form.language_tabs %}
+                <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+                     id="lang-{{ tab.code }}" role="tabpanel" aria-labelledby="lang-{{ tab.code }}-tab"
+                     data-lang-pane="{{ tab.code }}">
+                  <div class="row">
+                    {% for entry in tab.fields %}
+                    <div class="{% if entry.full_width %}col-12{% else %}col-md-6{% endif %} form-group" data-field-base="{{ entry.base }}">
+                      <label for="{{ entry.bound.id_for_label }}">
+                        {{ entry.bound.label }}{% if entry.bound.field.required %} <span class="text-danger">*</span>{% endif %}
+                      </label>
+                      {{ entry.bound }}
+                      {% if entry.bound.help_text %}
+                      <small class="form-text text-muted">{{ entry.bound.help_text }}</small>
+                      {% endif %}
+                      {% for error in entry.bound.errors %}
+                      <div class="text-danger small">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
             <div class="row">
               {% for field in form %}
+              {% if field.name not in form.translated_field_names %}
               <div class="{% if field.name == 'description' %}col-12{% else %}col-md-6{% endif %} form-group" data-field="{{ field.name }}">
                 {% if field.name == 'is_available' %}
                 <div class="custom-control custom-checkbox mt-4">
@@ -49,6 +115,7 @@
                 <div class="text-danger small">{{ error }}</div>
                 {% endfor %}
               </div>
+              {% endif %}
               {% endfor %}
               <div class="col-12 form-group d-none" data-service-hint>
                 <div class="alert alert-info mb-0 py-2 small">
@@ -120,6 +187,53 @@
 
   categorySelect.addEventListener("change", applyCategoryMode);
   applyCategoryMode();
+})();
+
+// Per-language translation-status badges (Not started / Incomplete /
+// Completed) — driven by whether that language's name + description are
+// filled in. Purely client-side: every language's fields already live in
+// the DOM at once (see the tab panes above), so switching tabs never
+// loses data — this just reflects what's already there.
+(function () {
+  var STATUS_LABELS = {
+    "not-started": "{% trans 'Not started' %}",
+    "incomplete": "{% trans 'Incomplete' %}",
+    "completed": "{% trans 'Completed' %}"
+  };
+  var STATUS_CLASSES = {
+    "not-started": "badge-secondary",
+    "incomplete": "badge-warning",
+    "completed": "badge-success"
+  };
+
+  document.querySelectorAll("[data-lang-pane]").forEach(function (pane) {
+    var langCode = pane.getAttribute("data-lang-pane");
+    var badge = document.querySelector('[data-status-badge="' + langCode + '"]');
+    if (!badge) return;
+
+    var nameField = pane.querySelector('[data-field-base="name"] input, [data-field-base="name"] textarea');
+    var descField = pane.querySelector('[data-field-base="description"] textarea, [data-field-base="description"] input');
+    if (!nameField || !descField) return;
+
+    function refresh() {
+      var nameFilled = nameField.value.trim().length > 0;
+      var descFilled = descField.value.trim().length > 0;
+      var status = "not-started";
+      if (nameFilled && descFilled) {
+        status = "completed";
+      } else if (nameFilled || descFilled) {
+        status = "incomplete";
+      }
+      badge.textContent = STATUS_LABELS[status];
+      badge.classList.remove("badge-secondary", "badge-warning", "badge-success");
+      badge.classList.add(STATUS_CLASSES[status]);
+    }
+
+    [nameField, descField].forEach(function (input) {
+      input.addEventListener("input", refresh);
+    });
+    refresh();
+  });
 })();
 </script>
 {% endblock %}
