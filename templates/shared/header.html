@@ -37,6 +37,13 @@
      it needs to beat the nav bar's .sticky-top (z-index: 1020) below it or
      that bar paints over part of the open list. */
   .lang-dropdown.dropdown-menu { min-width: 11rem !important; width: auto !important; z-index: 1030 !important; }
+  .lang-flag {
+    vertical-align: middle;
+    margin-right: 0.35rem;
+    margin-top: -2px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+  }
   .lang-dropdown .dropdown-item {
     background: none !important;
     border: 0 !important;
@@ -202,21 +209,43 @@
           <span class="badge badge-danger notif-badge {% if not cart_count %}d-none{% endif %}" id="cart-count-badge">{{ cart_count }}</span>
         </a>
         {% endif %}
-        {# Language — before notifications/account, available whether signed in or not. #}
+        {% comment %}
+        Language — before notifications/account, available whether signed in or not.
+        Flags are self-hosted SVGs (static/flags/) rather than Unicode flag emoji —
+        emoji flag rendering is unreliable across platforms (e.g. some browsers/OSes
+        show the raw two-letter country code instead of a picture).
+        {% endcomment %}
+        {% get_current_language as CURRENT_LANGUAGE %}
         <div class="dropdown d-inline-block mr-2">
           <a class="btn btn-sm btn-outline-secondary my-0" href="#" role="button"
              id="languageDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
              aria-label="{% trans 'Language' %}">
-            <i class="fas fa-globe" aria-hidden="true"></i>
+            {% if CURRENT_LANGUAGE == 'tet' %}
+            <img src="{% static 'flags/tl.svg' %}" alt="" class="lang-flag" width="20" height="15">
+            {% elif CURRENT_LANGUAGE == 'pt-pt' %}
+            <img src="{% static 'flags/pt.svg' %}" alt="" class="lang-flag" width="20" height="15">
+            {% elif CURRENT_LANGUAGE == 'id' %}
+            <img src="{% static 'flags/id.svg' %}" alt="" class="lang-flag" width="20" height="15">
+            {% else %}
+            <img src="{% static 'flags/gb.svg' %}" alt="" class="lang-flag" width="20" height="15">
+            {% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right lang-dropdown" aria-labelledby="languageDropdown">
             <form action="{% url 'set_language' %}" method="post">
               {% csrf_token %}
               <input name="next" type="hidden" value="{{ request.get_full_path }}">
-              <button type="submit" name="language" value="en" class="dropdown-item small">English</button>
-              <button type="submit" name="language" value="tet" class="dropdown-item small">Tetum</button>
-              <button type="submit" name="language" value="pt-pt" class="dropdown-item small">Português</button>
-              <button type="submit" name="language" value="id" class="dropdown-item small">Bahasa Indonesia</button>
+              <button type="submit" name="language" value="en" class="dropdown-item small">
+                <img src="{% static 'flags/gb.svg' %}" alt="" class="lang-flag" width="20" height="15"> English
+              </button>
+              <button type="submit" name="language" value="tet" class="dropdown-item small">
+                <img src="{% static 'flags/tl.svg' %}" alt="" class="lang-flag" width="20" height="15"> Tetum
+              </button>
+              <button type="submit" name="language" value="pt-pt" class="dropdown-item small">
+                <img src="{% static 'flags/pt.svg' %}" alt="" class="lang-flag" width="20" height="15"> Português
+              </button>
+              <button type="submit" name="language" value="id" class="dropdown-item small">
+                <img src="{% static 'flags/id.svg' %}" alt="" class="lang-flag" width="20" height="15"> Bahasa Indonesia
+              </button>
             </form>
           </div>
         </div>
