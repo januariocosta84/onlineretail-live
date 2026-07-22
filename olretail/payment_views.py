@@ -455,6 +455,14 @@ def _process_bank_transfer_checkout(request, form, cart_items):
                 order=order,
             )
 
+        # Unlike Stripe/the bank simulator (which settle within seconds, so
+        # clearing the cart on payment success is effectively immediate),
+        # confirming a manual bank/mobile transfer depends on the seller
+        # actually checking their account — that can take hours or days.
+        # Clear the cart now, at order creation, so it doesn't sit showing
+        # items the buyer already committed to buying.
+        Cart.objects.filter(buyer=request.user, product__in=[item.product for item in cart_items]).delete()
+
     return render(request, 'olretail/bank_transfer_instructions.html', {'orders': orders})
 
 
