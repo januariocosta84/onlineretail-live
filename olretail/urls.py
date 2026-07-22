@@ -79,6 +79,7 @@ urlpatterns = [
     path("notifications/", payment_views.notifications, name="notifications"),
     path("notifications/<int:pk>/open/", payment_views.notification_open, name="notification_open"),
     path("notifications/mark-all-read/", payment_views.notifications_mark_all_read, name="notifications_mark_all_read"),
+    path("notifications/poll/", payment_views.notifications_poll, name="notifications_poll"),
 
     # Webhook
     path("webhook/stripe/", payment_views.stripe_webhook, name="stripe_webhook"),

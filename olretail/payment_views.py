@@ -12,7 +12,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.timesince import timesince
 from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.db import transaction
@@ -1801,3 +1803,24 @@ def notification_open(request, pk):
 def notifications_mark_all_read(request):
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
     return redirect(request.POST.get('next') or 'olretail:notifications')
+
+
+@login_required
+def notifications_poll(request):
+    """JSON mirror of context_processors.notifications — polled every few
+    seconds by the header bell's JS so a notification created by someone
+    else's action (seller ships an order, buyer sends payment, etc.) shows
+    up without the recipient having to navigate/refresh."""
+    qs = Notification.objects.filter(recipient=request.user).select_related('order')
+    unread_count = qs.filter(is_read=False).count()
+    notifications = [
+        {
+            'id': n.id,
+            'message': n.message,
+            'is_read': n.is_read,
+            'timesince': _('%(time)s ago') % {'time': timesince(n.created_at)},
+            'url': reverse('olretail:notification_open', args=[n.id]),
+        }
+        for n in qs[:8]
+    ]
+    return JsonResponse({'unread_count': unread_count, 'notifications': notifications})

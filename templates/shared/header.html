@@ -255,23 +255,23 @@
              id="notificationsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
              aria-label="{% trans 'Notifications' %}">
             <i class="fas fa-bell" aria-hidden="true"></i>
-            {% if unread_notification_count %}
-            <span class="badge badge-danger notif-badge">
+            <span class="badge badge-danger notif-badge {% if not unread_notification_count %}d-none{% endif %}" id="notif-badge">
               {{ unread_notification_count }}
             </span>
-            {% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right notif-dropdown" aria-labelledby="notificationsDropdown">
             <h6 class="dropdown-header">{% trans 'Notifications' %}</h6>
-            {% for n in recent_notifications %}
-            <a class="dropdown-item small {% if not n.is_read %}font-weight-bold{% endif %}"
-               href="{% url 'olretail:notification_open' n.pk %}">
-              {{ n.message }}
-              <div class="text-muted notif-meta">{{ n.created_at|timesince }} {% trans 'ago' %}</div>
-            </a>
-            {% empty %}
-            <span class="dropdown-item-text small text-muted">{% trans 'No notifications yet.' %}</span>
-            {% endfor %}
+            <div id="notif-list">
+              {% for n in recent_notifications %}
+              <a class="dropdown-item small {% if not n.is_read %}font-weight-bold{% endif %}"
+                 href="{% url 'olretail:notification_open' n.pk %}">
+                {{ n.message }}
+                <div class="text-muted notif-meta">{{ n.created_at|timesince }} {% trans 'ago' %}</div>
+              </a>
+              {% empty %}
+              <span class="dropdown-item-text small text-muted">{% trans 'No notifications yet.' %}</span>
+              {% endfor %}
+            </div>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item small text-center" href="{% url 'olretail:notifications' %}">{% trans 'View all' %}</a>
           </div>
@@ -389,3 +389,58 @@
     </div>
   </nav>
 </header>
+{% if user.is_authenticated %}
+<script>
+(function () {
+  var badge = document.getElementById("notif-badge");
+  var list = document.getElementById("notif-list");
+  if (!badge || !list) return;
+
+  var pollUrl = "{% url 'olretail:notifications_poll' %}";
+  var emptyText = "{% trans 'No notifications yet.' %}";
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function render(data) {
+    if (data.unread_count > 0) {
+      badge.textContent = data.unread_count > 9 ? "9+" : data.unread_count;
+      badge.classList.remove("d-none");
+    } else {
+      badge.classList.add("d-none");
+    }
+
+    if (!data.notifications.length) {
+      list.innerHTML = '<span class="dropdown-item-text small text-muted">' + emptyText + "</span>";
+      return;
+    }
+    list.innerHTML = data.notifications.map(function (n) {
+      var cls = "dropdown-item small" + (n.is_read ? "" : " font-weight-bold");
+      return '<a class="' + cls + '" href="' + n.url + '">' + escapeHtml(n.message) +
+        '<div class="text-muted notif-meta">' + escapeHtml(n.timesince) + "</div></a>";
+    }).join("");
+  }
+
+  function poll() {
+    fetch(pollUrl, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data) render(data); })
+      .catch(function () { /* silent — the next tick just tries again */ });
+  }
+
+  // Poll periodically so a notification from someone else's action (seller
+  // ships an order, buyer sends payment, etc.) shows up without the
+  // recipient having to navigate or refresh. Skipped while the tab is
+  // backgrounded, and refreshed immediately when it regains focus.
+  setInterval(function () {
+    if (!document.hidden) poll();
+  }, 15000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) poll();
+  });
+})();
+</script>
+{% endif %}
