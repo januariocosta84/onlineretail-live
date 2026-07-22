@@ -27,8 +27,9 @@ from olretail.decorators import seller_required, courier_required
 from .payment_models import (
     Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate,
-    PlatformSettings, Notification, Rating, CourierRating, Wishlist,
+    PlatformSettings, Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )
+from .push_notifications import send_push
 from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
 from .payment_gateways import SimulatedBankGateway, _settle_simulated_transaction
 from .payment_forms import (
@@ -47,19 +48,22 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def _notify(user, message, order=None):
     """Create an in-app notification for `user` (bell icon in the header —
     see context_processors.notifications and the /notifications/ page),
-    and email the same message so it reaches someone who isn't actively
+    email the same message so it reaches someone who isn't actively
     checking the site (console-only in dev unless EMAIL_HOST is set — see
-    settings.py). Email failures never break the calling flow."""
+    settings.py), and push it to their phone if they have the mobile app
+    installed (see push_notifications.py — a silent no-op until Firebase is
+    configured). All three are best-effort and never break the caller."""
     Notification.objects.create(recipient=user, order=order, message=message)
+    subject = (
+        _('TimorMart — order %(order)s') % {'order': order.order_number}
+        if order else _('TimorMart notification')
+    )
     if user.email:
-        subject = (
-            _('TimorMart — order %(order)s') % {'order': order.order_number}
-            if order else _('TimorMart notification')
-        )
         try:
             send_mail(subject, message, None, [user.email], fail_silently=True)
         except Exception:
             logger.warning(f"Failed to email notification to {user.email}", exc_info=True)
+    send_push(user, subject, message)
 
 
 def _parse_int(raw, default=1):
@@ -1832,3 +1836,42 @@ def notifications_poll(request):
         for n in qs[:8]
     ]
     return JsonResponse({'unread_count': unread_count, 'notifications': notifications})
+
+
+@login_required
+@require_POST
+def register_device_token(request):
+    """Called by the Capacitor app (templates/shared/base.html) once it has
+    obtained an FCM registration token, so _notify()/send_push can reach
+    this device. Re-registering an existing token (app reopened, a
+    different user signed in on a shared device) just reassigns it —
+    tokens are unique per install, not per user."""
+    try:
+        payload = json.loads(request.body)
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    token = (payload.get('token') or '').strip()
+    platform = payload.get('platform') or ''
+    if not token or platform not in DevicePlatform.values:
+        return JsonResponse({'error': 'token and a valid platform are required'}, status=400)
+
+    DeviceToken.objects.update_or_create(token=token, defaults={'user': request.user, 'platform': platform})
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_POST
+def unregister_device_token(request):
+    """Called on logout so a signed-out device stops receiving pushes
+    meant for the account that just left it — matters on shared/borrowed
+    phones more than a single-user device, but cheap to always do."""
+    try:
+        payload = json.loads(request.body)
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    token = (payload.get('token') or '').strip()
+    if token:
+        DeviceToken.objects.filter(token=token, user=request.user).delete()
+    return JsonResponse({'status': 'ok'})

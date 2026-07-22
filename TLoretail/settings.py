@@ -7,6 +7,8 @@ environment variables so the same code can run in development and production.
 https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 """
 
+import base64
+import json
 import os
 from pathlib import Path
 
@@ -248,6 +250,23 @@ elif os.environ.get("RESEND_API_KEY"):
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@localhost")
+
+# Push notifications to the TimorMart mobile app (see mobile/README.md and
+# olretail/push_notifications.py) via Firebase Cloud Messaging.
+# FIREBASE_SERVICE_ACCOUNT_B64 is the service-account JSON key (Firebase
+# Console -> Project Settings (gear icon) -> Service Accounts -> Generate
+# new private key), base64-encoded so it survives being a single .env
+# line/Render env var — the raw JSON's private key field contains real
+# newlines, which breaks unescaped in most .env parsers. Not set = push is
+# a silent no-op (see push_notifications.py) — nothing else changes.
+_firebase_b64 = os.environ.get("FIREBASE_SERVICE_ACCOUNT_B64", "")
+if _firebase_b64:
+    try:
+        FIREBASE_SERVICE_ACCOUNT = json.loads(base64.b64decode(_firebase_b64))
+    except Exception:
+        FIREBASE_SERVICE_ACCOUNT = None
+else:
+    FIREBASE_SERVICE_ACCOUNT = None
 
 # Production security hardening (skipped while DEBUG for local development).
 if not DEBUG:

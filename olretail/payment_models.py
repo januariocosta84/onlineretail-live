@@ -240,6 +240,33 @@ class Notification(models.Model):
         return f"{self.recipient.username}: {self.message}"
 
 
+class DevicePlatform(models.TextChoices):
+    ANDROID = 'android', _('Android')
+    IOS = 'ios', _('iOS')
+
+
+class DeviceToken(models.Model):
+    """One registered mobile device (the TimorMart Android/iOS app — see
+    /mobile in the repo) that can receive a push notification via Firebase
+    Cloud Messaging. A user can have several (phone + tablet, reinstall,
+    etc.); `token` alone is unique since FCM issues a fresh token per
+    install/app-data-reset regardless of which user re-registers it."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='device_tokens')
+    token = models.CharField(max_length=255, unique=True)
+    platform = models.CharField(max_length=10, choices=DevicePlatform.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_seen_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+        ]
+
+    def __str__(self):
+        return f"{self.user.username} ({self.platform})"
+
+
 class Rating(models.Model):
     """A buyer's 1-5 star rating for a product, tied to the specific
     Delivered order that earned them the right to rate it — one rating per

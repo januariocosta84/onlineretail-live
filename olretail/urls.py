@@ -81,6 +81,10 @@ urlpatterns = [
     path("notifications/mark-all-read/", payment_views.notifications_mark_all_read, name="notifications_mark_all_read"),
     path("notifications/poll/", payment_views.notifications_poll, name="notifications_poll"),
 
+    # Mobile app push notifications (Firebase Cloud Messaging — see /mobile)
+    path("push/register-device/", payment_views.register_device_token, name="register_device_token"),
+    path("push/unregister-device/", payment_views.unregister_device_token, name="unregister_device_token"),
+
     # Webhook
     path("webhook/stripe/", payment_views.stripe_webhook, name="stripe_webhook"),
     path("webhook/simulated-bank/", payment_views.simulated_bank_webhook, name="simulated_bank_webhook"),

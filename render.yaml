@@ -83,6 +83,11 @@ services:
       # Add Domain in their dashboard) — see the note in .env.
       - key: DEFAULT_FROM_EMAIL
         value: "onboarding@resend.dev"
+      # Push notifications to the mobile app (see mobile/README.md "Push
+      # notifications") — not set = push is a silent no-op, nothing else
+      # breaks. Base64-encoded Firebase service-account JSON key.
+      - key: FIREBASE_SERVICE_ACCOUNT_B64
+        sync: false
 
 databases:
   - name: timormart-db

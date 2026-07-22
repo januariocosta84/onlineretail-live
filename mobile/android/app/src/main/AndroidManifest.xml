@@ -33,9 +33,23 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <!-- Must match ANDROID_CHANNEL_ID in olretail/push_notifications.py
+             and the channel created by the Capacitor-aware script in
+             templates/shared/base.html — this is FCM's fallback channel
+             for any push that doesn't specify one explicitly. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default" />
     </application>
 
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Runtime-requested on Android 13+ (API 33) via
+         PushNotifications.requestPermissions() in base.html — declaring it
+         here is what makes that request possible; without it the OS denies
+         silently instead of prompting. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

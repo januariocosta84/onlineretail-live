@@ -30,3 +30,9 @@ dj-database-url>=2.1
 # Driven by the CLOUDINARY_URL env var; falls back to local disk storage
 # when it's unset.
 django-cloudinary-storage>=0.3
+
+# Push notifications to the mobile app (olretail/push_notifications.py) via
+# Firebase Cloud Messaging. Driven by the FIREBASE_SERVICE_ACCOUNT_B64 env
+# var; a no-op everywhere else (web, and the app before that's set) when
+# it's unset.
+firebase-admin>=6.5

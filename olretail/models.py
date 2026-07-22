@@ -451,7 +451,7 @@ from .payment_models import (  # noqa: E402, F401
     Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
     DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings,
-    Notification, Rating, CourierRating, Wishlist,
+    Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )
 from .subscription_models import (  # noqa: E402, F401
     FREE_PRODUCT_LIMIT, PLAN_PRICES, PLAN_DURATION_DAYS, SubscriptionPlan,

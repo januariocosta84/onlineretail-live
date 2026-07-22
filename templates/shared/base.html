@@ -137,6 +137,66 @@
           }
         });
       }
+
+      // Push notifications (order updates from the buyer/seller/courier
+      // side reaching the phone with sound + vibration even when the app
+      // is closed) — see olretail/push_notifications.py for the Django
+      // side. Requires @capacitor/push-notifications (mobile/package.json)
+      // and a configured Firebase project (mobile/README.md).
+      var PushNotifications = window.Capacitor.Plugins.PushNotifications;
+      if (PushNotifications) {
+        var isIOS = window.Capacitor.getPlatform && window.Capacitor.getPlatform() === "ios";
+
+        // Android only — notification channels are how Android 8+ decides
+        // whether a push actually makes a sound/vibrates versus arriving
+        // silently. Must match ANDROID_CHANNEL_ID in push_notifications.py
+        // and default_notification_channel_id in AndroidManifest.xml.
+        // iOS has no channel concept, so this is skipped there.
+        if (!isIOS) {
+          PushNotifications.createChannel({
+            id: "default",
+            name: "TimorMart notifications",
+            description: "Order, payment, and delivery updates",
+            importance: 5, // IMPORTANCE_HIGH — heads-up alert with sound + vibration
+            visibility: 1, // VISIBILITY_PUBLIC
+            sound: "default",
+            vibration: true,
+          }).catch(function () {});
+        }
+
+        {% if user.is_authenticated %}
+        var csrfToken = "{{ csrf_token }}";
+
+        PushNotifications.addListener("registration", function (tokenResult) {
+          var token = tokenResult && tokenResult.value;
+          if (!token) return;
+          // Skip re-posting a token we already registered this session —
+          // register() re-fires on every page load in this non-SPA app.
+          try {
+            if (window.localStorage.getItem("tm_push_token") === token) return;
+          } catch (e) {}
+          fetch("{% url 'olretail:register_device_token' %}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
+            body: JSON.stringify({ token: token, platform: isIOS ? "ios" : "android" }),
+          }).then(function (r) {
+            if (!r.ok) return;
+            try { window.localStorage.setItem("tm_push_token", token); } catch (e) {}
+          }).catch(function () {});
+        });
+        PushNotifications.addListener("registrationError", function () {});
+
+        // Tapping a push (app backgrounded or fully closed) opens straight
+        // to the notification list, same destination as the in-app bell.
+        PushNotifications.addListener("pushNotificationActionPerformed", function () {
+          window.location.href = "{% url 'olretail:notifications' %}";
+        });
+
+        PushNotifications.requestPermissions().then(function (result) {
+          if (result && result.receive === "granted") PushNotifications.register();
+        }).catch(function () {});
+        {% endif %}
+      }
     })();
   </script>
 </body>
