@@ -1,0 +1,102 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Payment disputes{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Payment disputes <small class="text-muted h6">({{ rows|length }} waiting)</small></h1>
+<p class="text-muted small">
+  A seller denied receiving a buyer's claimed bank/mobile transfer, or never responded to one in
+  time. Approve treats the buyer's claim as verified (marks the order paid, same as the seller's own
+  confirm button); reject cancels the order.
+</p>
+
+{% if rows %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Receipt</th>
+          <th>Reference / amount</th>
+          <th>Seller's side</th>
+          <th>Trust signals</th>
+          <th style="width:360px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        {% with d=row.dispute o=row.dispute.order %}
+        <tr>
+          <td>
+            <a href="{% url 'olretail:order_detail' o.id %}" target="_blank" rel="noopener">{{ o.order_number }}</a>
+            <br><small class="text-muted">{{ o.product.name }}</small>
+            <br><small class="text-muted">Buyer: {{ d.buyer.username }}</small>
+            <br><small class="text-muted">Seller: {{ d.seller.get_name }}</small>
+            {% if o.payment_flagged %}
+            <br><span class="badge badge-danger"><i class="fas fa-flag mr-1" aria-hidden="true"></i>Auto-flagged</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if o.payment_proof %}
+            <a href="{{ o.payment_proof.url }}" target="_blank" rel="noopener">
+              <img src="{{ o.payment_proof.url }}" alt="Payment receipt for order {{ o.order_number }}" style="max-height:80px; max-width:120px;" class="rounded border">
+            </a>
+            {% else %}
+            <span class="text-muted small">No receipt on file</span>
+            {% endif %}
+          </td>
+          <td class="small">
+            {{ o.payment_reference|default:"—" }}<br>
+            claimed ${{ o.payment_amount_claimed|default:"—" }} / order total ${{ o.total }}
+            {% if o.payment_flag_reason %}
+            <br><span class="text-danger">{{ o.payment_flag_reason }}</span>
+            {% endif %}
+          </td>
+          <td class="small">
+            {% if d.seller_response %}{{ d.seller_response }}{% else %}<span class="text-muted">No response — auto-escalated</span>{% endif %}
+          </td>
+          <td class="small">
+            {% if row.seller_prior_wrongful_denials %}
+            <span class="badge badge-warning" title="Times this seller denied a payment that was later confirmed">
+              {{ row.seller_prior_wrongful_denials }} prior wrongful denial{{ row.seller_prior_wrongful_denials|pluralize }}
+            </span><br>
+            {% endif %}
+            {% if row.buyer_prior_unverified_claims %}
+            <span class="badge badge-warning" title="Times this buyer's payment claim was rejected as unverifiable">
+              {{ row.buyer_prior_unverified_claims }} prior unverified claim{{ row.buyer_prior_unverified_claims|pluralize }}
+            </span>
+            {% endif %}
+            {% if not row.seller_prior_wrongful_denials and not row.buyer_prior_unverified_claims %}
+            <span class="text-muted">None on record</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="post" action="{% url 'dashboard:payment_dispute_action' d.pk %}">
+              {% csrf_token %}
+              <textarea name="admin_notes" class="form-control form-control-sm mb-2" rows="2"
+                        placeholder="Admin note (optional, kept on the dispute record)"></textarea>
+              <button type="submit" name="action" value="approve" class="btn btn-success btn-sm"
+                      onclick="return confirm('Mark order {{ o.order_number }} as paid?');">
+                <i class="fas fa-check mr-1" aria-hidden="true"></i>Approve buyer's claim
+              </button>
+              <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm"
+                      onclick="return confirm('Cancel order {{ o.order_number }}? The buyer\'s claim could not be verified.');">
+                <i class="fas fa-times mr-1" aria-hidden="true"></i>Reject &amp; cancel order
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body text-center text-muted py-5">
+  <i class="fas fa-university fa-3x mb-3" aria-hidden="true"></i>
+  <h2 class="h5">No payment disputes waiting</h2>
+  <p class="mb-0">Denied or unanswered bank-transfer payment claims will appear here.</p>
+</div></div>
+{% endif %}
+{% endblock %}

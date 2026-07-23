@@ -1,0 +1,97 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirm Your Payment" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container-fluid">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-university mr-2"></i>{% trans "Confirm Your Payment" %}
+        </h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">
+              {% trans "Order" %} {{ order.order_number }} &mdash; {{ order.product.name }}
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-secondary">
+              <strong>{% trans "Seller payment details" %} — {{ order.seller.get_name }}:</strong>
+              <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ order.seller.payment_instructions }}</pre>
+              <small class="text-muted d-block mt-2">{% trans "Reference" %}: <code>{{ order.order_number }}</code></small>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+
+              <div class="form-group">
+                <label for="{{ form.payment_proof.id_for_label }}" class="font-weight-bold">
+                  {{ form.payment_proof.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.payment_proof }}
+                <small class="form-text text-muted">{% trans "A screenshot or photo of your bank/mobile transfer confirmation." %}</small>
+                {% if form.payment_proof.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.payment_proof.errors }}</small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.payment_reference.id_for_label }}" class="font-weight-bold">
+                  {{ form.payment_reference.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.payment_reference }}
+                {% if form.payment_reference.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.payment_reference.errors }}</small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.payment_amount_claimed.id_for_label }}" class="font-weight-bold">
+                  {{ form.payment_amount_claimed.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.payment_amount_claimed }}
+                {% if form.payment_amount_claimed.errors %}
+                  <small class="form-text text-danger d-block mt-1">{{ form.payment_amount_claimed.errors }}</small>
+                {% endif %}
+              </div>
+
+              <div class="alert alert-warning">
+                <i class="fas fa-info-circle mr-2"></i>
+                {% trans "The seller will be notified to confirm receipt. If they don't respond within a few days, or if they say they haven't received it, an administrator will review this using the receipt and details you provide here." %}
+              </div>
+
+              <button type="submit" class="btn btn-success btn-lg btn-block mt-3">
+                <i class="fas fa-check mr-2"></i>{% trans "I've sent payment" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h6 class="mb-0">{% trans "Order Summary" %}</h6>
+          </div>
+          <div class="card-body">
+            <p class="mb-1"><strong>{{ order.product.name }}</strong></p>
+            <p class="text-muted mb-1">{% trans "Quantity" %}: {{ order.quantity }}</p>
+            <p class="text-muted mb-0">{% trans "Amount to send" %}: <span class="h5 text-primary">${{ order.total }}</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

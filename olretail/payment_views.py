@@ -26,7 +26,7 @@ from olretail.models import (
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
     Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
-    TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DeliveryUpdate,
+    TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate,
     PlatformSettings, Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )
 from .push_notifications import send_push
@@ -36,6 +36,7 @@ from .payment_forms import (
     CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
     CourierVerificationForm, SellerCompanyInfoForm, SellerVerificationForm,
+    PaymentProofForm, PaymentDenialForm,
 )
 from .subscription_models import (
     FREE_PRODUCT_LIMIT, PLAN_PRICES, SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus,
@@ -947,9 +948,15 @@ def _mark_bank_transfer_paid(order):
 
 
 @login_required
-@require_POST
 def mark_payment_sent(request, order_id):
-    """Buyer confirms they've sent the bank/mobile transfer."""
+    """Buyer confirms they've sent the bank/mobile transfer. Requires a
+    receipt/screenshot, the transfer reference number, and the amount sent
+    (PaymentProofForm) — a bare click was the entire fraud surface before
+    this existed. Auto-flags the order for priority admin attention (but
+    doesn't block the seller's own confirm) if the claimed amount doesn't
+    match the order total, or if the exact same receipt image or reference
+    number was already used on a different order — a soft signal that
+    catches reused evidence, not proof of tampering on its own."""
     order = get_object_or_404(
         Order, id=order_id, buyer=request.user, payment_method=PaymentMethod.BANK_TRANSFER
     )
@@ -957,17 +964,55 @@ def mark_payment_sent(request, order_id):
         messages.error(request, _('This order is not awaiting a transfer.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
-    order.status = OrderStatus.PAYMENT_REPORTED
-    order.payment_reported_at = timezone.now()
-    order.save(update_fields=['status', 'payment_reported_at'])
-    _notify(
-        order.seller.user,
-        _('%(buyer)s says they\'ve sent payment for order %(order)s — please confirm receipt.')
-        % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
-        order=order,
-    )
-    messages.success(request, _('Thanks — the seller has been notified to confirm receipt.'))
-    return redirect('olretail:order_detail', order_id=order.id)
+    if request.method == 'POST':
+        form = PaymentProofForm(request.POST, request.FILES)
+        if form.is_valid():
+            proof = form.cleaned_data['payment_proof']
+            reference = form.cleaned_data['payment_reference'].strip()
+            amount_claimed = form.cleaned_data['payment_amount_claimed']
+
+            proof_hash = hashlib.sha256(proof.read()).hexdigest()
+            proof.seek(0)  # rewind — Django still needs to read it to save the file
+
+            flags = []
+            if amount_claimed != order.total:
+                flags.append(
+                    _('Claimed amount ($%(claimed)s) does not match the order total ($%(total)s).')
+                    % {'claimed': amount_claimed, 'total': order.total}
+                )
+            if Order.objects.filter(payment_proof_hash=proof_hash).exclude(pk=order.pk).exists():
+                flags.append(_('This exact receipt image was already submitted on a different order.'))
+            if (
+                Order.objects.filter(payment_reference=reference, payment_method=PaymentMethod.BANK_TRANSFER)
+                .exclude(pk=order.pk)
+                .exists()
+            ):
+                flags.append(_('This reference number was already submitted on a different order.'))
+
+            order.payment_proof = proof
+            order.payment_reference = reference
+            order.payment_amount_claimed = amount_claimed
+            order.payment_proof_hash = proof_hash
+            order.payment_flagged = bool(flags)
+            order.payment_flag_reason = ' '.join(str(f) for f in flags)
+            order.status = OrderStatus.PAYMENT_REPORTED
+            order.payment_reported_at = timezone.now()
+            order.save(update_fields=[
+                'payment_proof', 'payment_reference', 'payment_amount_claimed', 'payment_proof_hash',
+                'payment_flagged', 'payment_flag_reason', 'status', 'payment_reported_at',
+            ])
+            _notify(
+                order.seller.user,
+                _('%(buyer)s says they\'ve sent payment for order %(order)s — please confirm receipt.')
+                % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
+                order=order,
+            )
+            messages.success(request, _('Thanks — the seller has been notified to confirm receipt.'))
+            return redirect('olretail:order_detail', order_id=order.id)
+    else:
+        form = PaymentProofForm(initial={'payment_amount_claimed': order.total})
+
+    return render(request, 'olretail/mark_payment_sent.html', {'order': order, 'form': form})
 
 
 @login_required
@@ -996,6 +1041,60 @@ def confirm_payment_received(request, order_id):
     )
     messages.success(request, _('Payment confirmed — the order is now marked as paid.'))
     return redirect('olretail:order_detail', order_id=order.id)
+
+
+@login_required
+def deny_payment_received(request, order_id):
+    """Seller reports they have NOT received a buyer's claimed transfer —
+    the explicit alternative to confirm_payment_received, so a buyer isn't
+    left with silence as their only signal something's wrong. Opens a
+    Dispute for admin review rather than resolving it one way or the other
+    immediately, since either side could be the one who's mistaken (or
+    dishonest)."""
+    order = get_object_or_404(Order, id=order_id, payment_method=PaymentMethod.BANK_TRANSFER)
+    try:
+        if order.seller != request.user.seller:
+            messages.error(request, _('Permission denied.'))
+            return redirect('olretail:index')
+    except Seller.DoesNotExist:
+        messages.error(request, _('You must be a seller to do this.'))
+        return redirect('olretail:index')
+
+    if order.status != OrderStatus.PAYMENT_REPORTED:
+        messages.error(request, _('This order has no reported payment to dispute.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if order.has_active_dispute:
+        messages.warning(request, _('A dispute is already open for this order.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if request.method == 'POST':
+        form = PaymentDenialForm(request.POST)
+        if form.is_valid():
+            dispute = Dispute.objects.create(
+                order=order,
+                buyer=order.buyer,
+                seller=order.seller,
+                reason=DisputeReason.PAYMENT_NOT_RECEIVED,
+                description=(
+                    _('Buyer claims payment sent for order %(order)s; seller reports not received.')
+                    % {'order': order.order_number}
+                ),
+                seller_response=form.cleaned_data['reason'],
+                status=DisputeStatus.UNDER_REVIEW,
+            )
+            _notify(
+                order.buyer,
+                _('%(seller)s says they have not received your payment for order %(order)s — this is now under review.')
+                % {'seller': order.seller.get_name, 'order': order.order_number},
+                order=order,
+            )
+            messages.success(request, _('Reported — an administrator will review this payment claim.'))
+            return redirect('olretail:dispute_detail', dispute_id=dispute.id)
+    else:
+        form = PaymentDenialForm()
+
+    return render(request, 'olretail/deny_payment_received.html', {'order': order, 'form': form})
 
 
 @seller_required
@@ -1225,6 +1324,10 @@ def order_detail(request, order_id):
     if is_buyer and order.status == OrderStatus.DELIVERED:
         context['rating'] = getattr(order, 'rating', None)
         context['courier_rating'] = getattr(order, 'courier_rating', None)
+    if order.payment_method == PaymentMethod.BANK_TRANSFER:
+        context['payment_dispute'] = order.disputes.filter(
+            reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE]
+        ).order_by('-created_at').first()
     return render(request, 'olretail/order_detail.html', context)
 
 
@@ -1697,10 +1800,15 @@ def open_dispute(request, order_id):
         messages.error(request, _('You can only open disputes for delivered or shipped orders.'))
         return redirect('olretail:order_detail', order_id=order.id)
     
-    # Check if dispute already exists
-    if hasattr(order, 'dispute'):
+    # Check for an already-active dispute (a resolved/closed one doesn't
+    # block a new one — see Dispute's docstring for why order is a
+    # ForeignKey, not OneToOne).
+    active_dispute = order.disputes.filter(
+        status__in=[DisputeStatus.OPEN, DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW]
+    ).first()
+    if active_dispute:
         messages.warning(request, _('A dispute is already open for this order.'))
-        return redirect('olretail:dispute_detail', dispute_id=order.dispute.id)
+        return redirect('olretail:dispute_detail', dispute_id=active_dispute.id)
     
     if request.method == 'POST':
         form = DisputeForm(request.POST)

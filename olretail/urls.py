@@ -41,6 +41,7 @@ urlpatterns = [
     # Bank / mobile transfer
     path("order/<int:order_id>/mark-sent/", payment_views.mark_payment_sent, name="mark_payment_sent"),
     path("order/<int:order_id>/confirm-received/", payment_views.confirm_payment_received, name="confirm_payment_received"),
+    path("order/<int:order_id>/deny-received/", payment_views.deny_payment_received, name="deny_payment_received"),
 
     # Delivery tracking
     path("order/<int:order_id>/delivery-update/", payment_views.add_delivery_update, name="add_delivery_update"),

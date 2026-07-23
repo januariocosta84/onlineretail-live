@@ -99,6 +99,9 @@
                       <i class="fas fa-check mr-1"></i>{% trans "Confirm Payment" %}
                     </button>
                   </form>
+                  <a href="{% url 'olretail:deny_payment_received' order.id %}" class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-times mr-1"></i>{% trans "Not Received" %}
+                  </a>
                   {% endif %}
                   <a href="{% url 'olretail:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
                     {% trans "View" %}

@@ -108,7 +108,7 @@ class DisputeForm(forms.ModelForm):
 
 class SellerDisputeResponseForm(forms.Form):
     """Form for seller to respond to dispute."""
-    
+
     seller_response = forms.CharField(
         widget=forms.Textarea(attrs={
             'rows': 4,
@@ -117,6 +117,58 @@ class SellerDisputeResponseForm(forms.Form):
         }),
         label=_("Your Response"),
         help_text=_("You have 3 days to respond. Explain your side and provide evidence.")
+    )
+
+
+class PaymentProofForm(forms.Form):
+    """Required receipt + reference number when a buyer confirms they've
+    sent a bank/mobile transfer — see payment_views.mark_payment_sent.
+    Capturing structured evidence up front (not just a click) is what lets
+    a later seller denial or admin review have something concrete to look
+    at, and lets duplicate/mismatched claims get auto-flagged before anyone
+    has to notice by hand."""
+
+    payment_proof = forms.ImageField(
+        required=True,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file', 'capture': 'environment', 'accept': 'image/*'}),
+        label=_("Payment receipt / screenshot"),
+        error_messages={'required': _('A receipt or screenshot of the transfer is required.')},
+    )
+    payment_reference = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. the bank transaction/reference number')}),
+        label=_("Transfer reference number"),
+        error_messages={'required': _('Enter the reference/transaction number shown on your transfer.')},
+    )
+    payment_amount_claimed = forms.DecimalField(
+        max_digits=13,
+        decimal_places=2,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        label=_("Amount you sent"),
+    )
+
+    def clean_payment_proof(self):
+        photo = self.cleaned_data.get('payment_proof')
+        validate_image_size(photo)
+        return photo
+
+
+class PaymentDenialForm(forms.Form):
+    """Seller's reason when they deny having received a buyer's claimed
+    bank/mobile transfer — see payment_views.deny_payment_received. Shown
+    to the buyer and to the admin who reviews the resulting dispute, so a
+    bare "no" isn't accepted."""
+
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'class': 'form-control',
+            'placeholder': _("Explain why you haven't received this payment..."),
+        }),
+        label=_("Reason"),
+        error_messages={'required': _('A reason is required — this is shown to the buyer and reviewed by an administrator.')},
     )
 
 

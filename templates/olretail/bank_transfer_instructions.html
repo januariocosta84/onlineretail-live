@@ -40,12 +40,9 @@
               <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ order.seller.payment_instructions }}</pre>
             </div>
 
-            <form method="post" action="{% url 'olretail:mark_payment_sent' order.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
-              </button>
-            </form>
+            <a href="{% url 'olretail:mark_payment_sent' order.id %}" class="btn btn-success">
+              <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
+            </a>
           </div>
         </div>
         {% endfor %}

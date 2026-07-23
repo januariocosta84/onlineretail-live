@@ -69,6 +69,8 @@
              href="{% url 'dashboard:courier_verification' %}"><i class="fas fa-id-card mr-2" aria-hidden="true"></i>Couriers</a>
           <a class="list-group-item list-group-item-action {% if section == 'seller_verification' %}active text-white{% endif %}"
              href="{% url 'dashboard:seller_verification' %}"><i class="fas fa-building mr-2" aria-hidden="true"></i>Company verification</a>
+          <a class="list-group-item list-group-item-action {% if section == 'payment_disputes' %}active text-white{% endif %}"
+             href="{% url 'dashboard:payment_disputes' %}"><i class="fas fa-university mr-2" aria-hidden="true"></i>Payment disputes</a>
           <a class="list-group-item list-group-item-action {% if section == 'payouts' %}active text-white{% endif %}"
              href="{% url 'dashboard:payouts' %}"><i class="fas fa-money-check-alt mr-2" aria-hidden="true"></i>Payouts</a>
           <a class="list-group-item list-group-item-action {% if section == 'bank_accounts' %}active text-white{% endif %}"

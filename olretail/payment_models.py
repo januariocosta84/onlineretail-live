@@ -135,6 +135,26 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     payment_reported_at = models.DateTimeField(null=True, blank=True)
+
+    # Bank/mobile-transfer evidence — collected at the "I've sent payment"
+    # step (BANK_TRANSFER orders only) so a seller's confirm/deny decision
+    # and any later admin review has something to look at beyond a bare
+    # claim. See olretail/payment_views.py mark_payment_sent /
+    # deny_payment_received and PAYMENT_VERIFICATION.md for the full flow.
+    payment_proof = models.ImageField(upload_to='payment_proofs/%Y/%m/', null=True, blank=True)
+    payment_reference = models.CharField(
+        max_length=100, blank=True, help_text=_('Bank/mobile transfer reference or transaction number.')
+    )
+    payment_amount_claimed = models.DecimalField(max_digits=13, decimal_places=2, null=True, blank=True)
+    payment_proof_hash = models.CharField(
+        max_length=64, blank=True, db_index=True,
+        help_text=_('SHA-256 of the uploaded proof image — catches the same receipt being reused across orders.'),
+    )
+    payment_flagged = models.BooleanField(
+        default=False, help_text=_('Auto-flagged (amount mismatch or reused receipt) for priority admin review.')
+    )
+    payment_flag_reason = models.CharField(max_length=255, blank=True)
+
     paid_at = models.DateTimeField(null=True, blank=True)
     shipped_at = models.DateTimeField(null=True, blank=True)
     delivered_at = models.DateTimeField(null=True, blank=True)
@@ -167,7 +187,17 @@ class Order(models.Model):
     
     def __str__(self):
         return f"{self.order_number} - {self.buyer.username} - ${self.total}"
-    
+
+    @property
+    def has_active_dispute(self):
+        """Any dispute (payment or delivery) still awaiting a
+        response/resolution — used to gate opening a *new* dispute so a
+        resolved/closed one from earlier in this order's life doesn't
+        permanently block a later, unrelated one."""
+        return self.disputes.filter(
+            status__in=[DisputeStatus.OPEN, DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW]
+        ).exists()
+
     def save(self, *args, **kwargs):
         # Auto-generate order number on creation. Wrapped in its own
         # savepoint with a retry: two concurrent checkouts can compute the
@@ -584,22 +614,39 @@ class DisputeResolution(models.TextChoices):
     REFUND_PARTIAL = 'refund_partial', _('Partial Refund')
     RESHIPMENT = 'reshipment', _('Reshipment')
     CLOSED_NO_ACTION = 'no_action', _('Closed - No Action')
+    # Bank-transfer payment disputes (see DisputeReason.PAYMENT_*) resolve to
+    # one of these instead — there's no refund/reshipment concept before a
+    # payment has even been confirmed.
+    PAYMENT_CONFIRMED = 'payment_confirmed', _('Payment Confirmed — Order Marked Paid')
+    PAYMENT_REJECTED = 'payment_rejected', _('Payment Claim Rejected — Order Cancelled')
 
 
 class DisputeReason(models.TextChoices):
-    """Why the buyer is opening a dispute."""
+    """Why this dispute was opened."""
     NOT_RECEIVED = 'not_received', _('Item Not Received')
     DAMAGED = 'damaged', _('Item Damaged')
     NOT_AS_DESCRIBED = 'not_as_described', _('Item Not as Described')
     WRONG_ITEM = 'wrong_item', _('Wrong Item Received')
     OTHER = 'other', _('Other')
+    # Bank-transfer payment disputes — the seller (not the buyer) is the one
+    # raising the issue here, via deny_payment_received; see
+    # PAYMENT_VERIFICATION.md for the full flow this feeds into.
+    PAYMENT_NOT_RECEIVED = 'payment_not_received', _('Seller Reports Payment Not Received')
+    PAYMENT_NO_RESPONSE = 'payment_no_response', _('Seller Did Not Respond to Payment Claim')
 
 
 class Dispute(models.Model):
-    """Buyer-initiated dispute (damaged, non-delivery, etc.)."""
-    
+    """A contested order — either buyer-initiated (damaged, non-delivery,
+    etc., via open_dispute) or, for bank-transfer orders, seller-initiated
+    when they deny receiving a payment the buyer claims to have sent (via
+    deny_payment_received) or system-initiated when a seller never responds
+    to a payment claim at all (see the escalate_stale_payment_claims
+    management command). A ForeignKey, not OneToOne, since an order that
+    survives a payment dispute can still go on to have a separate later
+    delivery dispute."""
+
     # Reference
-    order = models.OneToOneField(Order, on_delete=models.PROTECT, related_name='dispute')
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='disputes')
     dispute_id = models.CharField(max_length=20, unique=True)
     
     # Participants
@@ -653,9 +700,20 @@ class Dispute(models.Model):
     def save(self, *args, **kwargs):
         if not self.dispute_id:
             date_str = timezone.now().strftime('%Y%m%d')
-            count = Dispute.objects.filter(dispute_id__startswith=f'DIS-{date_str}').count()
-            self.dispute_id = f'DIS-{date_str}-{count + 1:03d}'
-        
+            # Max existing suffix, not count() — count() undercounts (and
+            # collides, see the IntegrityError this used to throw) once any
+            # dispute for today has been deleted, leaving a gap in the
+            # sequence. Mirrors the identical fix already applied to
+            # Order.save() for the same reason.
+            last_dispute_id = (
+                Dispute.objects.filter(dispute_id__startswith=f'DIS-{date_str}-')
+                .order_by('-dispute_id')
+                .values_list('dispute_id', flat=True)
+                .first()
+            )
+            last_seq = int(last_dispute_id.rsplit('-', 1)[-1]) if last_dispute_id else 0
+            self.dispute_id = f'DIS-{date_str}-{last_seq + 1:03d}'
+
         if not self.seller_response_deadline:
             from datetime import timedelta
             self.seller_response_deadline = timezone.now() + timedelta(days=3)

@@ -268,28 +268,60 @@
             </div>
             {% endif %}
 
+            {% if order.payment_proof %}
+            <div class="alert alert-secondary">
+              <strong>{% trans "Submitted receipt" %}:</strong>
+              <a href="{{ order.payment_proof.url }}" target="_blank" rel="noopener" class="d-block mt-2">
+                <img src="{{ order.payment_proof.url }}" alt="{% trans 'Payment receipt — opens full size' %}" style="max-height:180px; max-width:100%;" class="rounded border">
+              </a>
+              <small class="text-muted d-block mt-2">
+                {% trans "Reference" %}: {{ order.payment_reference|default:"—" }} &middot;
+                {% trans "Claimed amount" %}: ${{ order.payment_amount_claimed|default:"—" }}
+              </small>
+              {% if order.payment_flagged and is_seller %}
+              <small class="text-danger d-block mt-2">
+                <i class="fas fa-flag mr-1" aria-hidden="true"></i>{{ order.payment_flag_reason }}
+              </small>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            {% if payment_dispute %}
+            <div class="alert {% if payment_dispute.status == 'resolved' %}alert-info{% else %}alert-warning{% endif %}">
+              <strong>{% trans "Payment dispute" %}:</strong> {{ payment_dispute.get_status_display }}
+              {% if payment_dispute.status == 'resolved' %}
+              — {{ payment_dispute.get_resolution_display }}
+              {% if payment_dispute.admin_notes %}<br><small>{{ payment_dispute.admin_notes }}</small>{% endif %}
+              {% else %}
+              <br><small>{% trans "An administrator is reviewing this." %}</small>
+              {% endif %}
+            </div>
+            {% endif %}
+
             {% if is_buyer and order.status == 'pending_payment' %}
-            <form method="post" action="{% url 'olretail:mark_payment_sent' order.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
-              </button>
-            </form>
-            {% elif is_buyer and order.status == 'payment_reported' %}
+            <a href="{% url 'olretail:mark_payment_sent' order.id %}" class="btn btn-success">
+              <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
+            </a>
+            {% elif is_buyer and order.status == 'payment_reported' and not payment_dispute %}
             <p class="text-muted mb-0">
               <i class="fas fa-hourglass-half mr-1"></i>
               {% trans "Waiting for the seller to confirm they received your transfer." %}
             </p>
             {% endif %}
 
-            {% if is_seller and order.status in 'pending_payment,payment_reported' %}
-            <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}"
+            {% if is_seller and order.status in 'pending_payment,payment_reported' and not payment_dispute %}
+            <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}" class="d-inline"
                   onsubmit="return confirm('{% trans "Confirm you received the buyer'\''s transfer?" %}');">
               {% csrf_token %}
               <button type="submit" class="btn btn-success">
                 <i class="fas fa-check mr-1"></i>{% trans "Confirm payment received" %}
               </button>
             </form>
+            {% if order.status == 'payment_reported' %}
+            <a href="{% url 'olretail:deny_payment_received' order.id %}" class="btn btn-outline-danger">
+              <i class="fas fa-times mr-1"></i>{% trans "I have not received this" %}
+            </a>
+            {% endif %}
             {% endif %}
           </div>
         </div>
@@ -437,7 +469,7 @@
         </div>
         {% endif %}
 
-        {% if is_buyer and order.status == 'delivered' and not order.dispute %}
+        {% if is_buyer and order.status == 'delivered' and not order.has_active_dispute %}
         <div class="card border-0 shadow-sm mt-3">
           <div class="card-body">
             <a href="{% url 'olretail:open_dispute' order.id %}" class="btn btn-danger btn-block">

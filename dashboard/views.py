@@ -26,9 +26,9 @@ from django.db.models import F
 
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
-    Category, Comment, Courier, CourierVerificationStatus, FoodOrderStatus, Order, OrderStatus, Payout,
-    PayoutStatus, PlatformSettings, Product, ProductStatus, Seller, SellerBalance, SellerType,
-    SellerVerificationStatus,
+    Category, Comment, Courier, CourierVerificationStatus, Dispute, DisputeReason, DisputeResolution,
+    DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus, PlatformSettings, Product,
+    ProductStatus, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
 from olretail.payouts import create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
@@ -921,6 +921,100 @@ def seller_verification_action(request, pk):
         messages.success(request, f"{seller.get_name}'s submission was rejected.")
 
     return redirect("dashboard:seller_verification")
+
+
+# ── Bank-transfer payment disputes ─────────────────────────────────────────
+# A seller denying receipt (deny_payment_received) or a seller never
+# responding at all (escalate_stale_payment_claims) both land here as a
+# Dispute for an admin to actually decide — see PAYMENT_VERIFICATION.md.
+
+
+@admin_required
+def payment_disputes(request):
+    disputes = (
+        Dispute.objects.filter(
+            reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE],
+            status__in=[DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW],
+        )
+        .select_related("order", "buyer", "seller__user")
+        .order_by("-created_at")
+    )
+    rows = []
+    for d in disputes:
+        rows.append({
+            "dispute": d,
+            # Prior cases resolved *against* this seller/buyer — cheap trust
+            # signals computed from data already being generated, not a new
+            # scoring system to maintain.
+            "seller_prior_wrongful_denials": Dispute.objects.filter(
+                seller=d.seller, reason=DisputeReason.PAYMENT_NOT_RECEIVED,
+                resolution=DisputeResolution.PAYMENT_CONFIRMED,
+            ).exclude(pk=d.pk).count(),
+            "buyer_prior_unverified_claims": Dispute.objects.filter(
+                buyer=d.buyer, reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE],
+                resolution=DisputeResolution.PAYMENT_REJECTED,
+            ).exclude(pk=d.pk).count(),
+        })
+    return render(request, "dashboard/payment_disputes.html", {"section": "payment_disputes", "rows": rows})
+
+
+@admin_required
+@require_POST
+def payment_dispute_action(request, pk):
+    """Approve = treat the buyer's claim as verified and route through the
+    exact same _mark_bank_transfer_paid() a seller's own confirm click
+    uses, so there is only ever one code path that actually marks a
+    bank-transfer order paid — see that function's docstring. Reject =
+    cancel the order; nothing to restock/refund since a bank-transfer order
+    never decrements stock before reaching Paid (mirrors cancel_order)."""
+    dispute = get_object_or_404(Dispute, pk=pk)
+    order = dispute.order
+    action = request.POST.get("action")
+    note = (request.POST.get("admin_notes") or "").strip()
+
+    if action not in ("approve", "reject"):
+        messages.error(request, "Unknown action.")
+        return redirect("dashboard:payment_disputes")
+    if dispute.status not in (DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW):
+        messages.error(request, "This dispute has already been resolved.")
+        return redirect("dashboard:payment_disputes")
+
+    from olretail.payment_views import _mark_bank_transfer_paid, _notify
+
+    if action == "approve":
+        if order.status not in (OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_REPORTED):
+            messages.error(request, "This order is no longer awaiting payment confirmation.")
+            return redirect("dashboard:payment_disputes")
+        _mark_bank_transfer_paid(order)
+        dispute.resolution = DisputeResolution.PAYMENT_CONFIRMED
+        outcome_message = f"An administrator confirmed your payment for order {order.order_number} — it is now marked paid."
+        seller_message = f"An administrator reviewed order {order.order_number} and confirmed the buyer's payment."
+        log_action(request, "payment_dispute_approved", order.order_number, note)
+        messages.success(request, f"Order {order.order_number} marked as paid.")
+    else:
+        order.status = OrderStatus.CANCELLED
+        order.save(update_fields=["status"])
+        dispute.resolution = DisputeResolution.PAYMENT_REJECTED
+        outcome_message = (
+            f"An administrator reviewed order {order.order_number} and could not verify your payment — "
+            "the order has been cancelled."
+        )
+        seller_message = (
+            f"An administrator reviewed order {order.order_number} and cancelled it — "
+            "the buyer's payment claim could not be verified."
+        )
+        log_action(request, "payment_dispute_rejected", order.order_number, note)
+        messages.success(request, f"Order {order.order_number} cancelled.")
+
+    dispute.status = DisputeStatus.RESOLVED
+    dispute.admin_notes = note
+    dispute.resolved_at = timezone.now()
+    dispute.resolved_by = request.user
+    dispute.save(update_fields=["status", "resolution", "admin_notes", "resolved_at", "resolved_by"])
+    _notify(order.buyer, outcome_message, order=order)
+    _notify(order.seller.user, seller_message, order=order)
+
+    return redirect("dashboard:payment_disputes")
 
 
 # ── Orders (all types — restaurant food orders included) ─────────────────
