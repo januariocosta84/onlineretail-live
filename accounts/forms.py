@@ -72,12 +72,6 @@ class RegistrationForm(UserCreationForm):
         label=_("Director email"),
         widget=forms.EmailInput(attrs={"placeholder": _("director@example.com")}),
     )
-    whatsapp = forms.CharField(
-        max_length=40,
-        required=False,
-        label=_("WhatsApp number"),
-        widget=forms.TextInput(attrs={"placeholder": _("7012345 or +670 7012345")}),
-    )
     id_document = forms.ImageField(
         required=False,
         label=_("Identity Card Photo"),
@@ -159,7 +153,6 @@ class RegistrationForm(UserCreationForm):
 
         if account_type == ROLE_COURIER:
             required_fields = {
-                "whatsapp": _("WhatsApp number is required."),
                 "id_document": _("A photo of your identity card is required."),
                 "driving_license": _("A photo of your driving license is required."),
             }

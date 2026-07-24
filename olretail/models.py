@@ -46,9 +46,6 @@ class Courier(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=255, blank=True)
     mobile = models.CharField(max_length=40)
-    whatsapp = models.CharField(
-        max_length=40, blank=True, help_text=_("WhatsApp number for delivery coordination.")
-    )
     service_cities = models.ManyToManyField(
         "City",
         blank=True,
@@ -76,6 +73,19 @@ class Courier(models.Model):
     @property
     def get_name(self):
         return self.user.get_full_name() or self.user.username
+
+    @property
+    def whatsapp_number(self):
+        """Mobile number in international digits-only form for wa.me links —
+        mirrors Seller.whatsapp_number. No separate WhatsApp field: asking
+        for it alongside "mobile" was a duplicate ask, since it's the same
+        number for the overwhelming majority of couriers."""
+        digits = "".join(c for c in self.mobile if c.isdigit()).lstrip("0")
+        if not digits:
+            return ""
+        if not digits.startswith("670"):
+            digits = "670" + digits
+        return digits
 
     def __str__(self):
         return self.get_name

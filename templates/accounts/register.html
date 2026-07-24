@@ -210,24 +210,8 @@
                 <i class="fas fa-id-card text-primary mr-2"></i>{% trans "Courier Verification" %}
               </h5>
               <p class="text-muted small">
-                {% trans "An administrator reviews these before you can be assigned deliveries." %}
+                {% trans "An administrator reviews these before you can be assigned deliveries. Your phone number below is also used as your WhatsApp contact for delivery coordination." %}
               </p>
-
-              <div class="form-group">
-                <label for="{{ form.whatsapp.id_for_label }}">
-                  {{ form.whatsapp.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.whatsapp }}
-                <small class="form-text text-muted">
-                  {% trans "Used to coordinate deliveries — can differ from your phone number above." %}
-                </small>
-                {% if form.whatsapp.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.whatsapp.errors }}
-                  </small>
-                {% endif %}
-              </div>
 
               <div class="form-group">
                 <label for="{{ form.id_document.id_for_label }}">

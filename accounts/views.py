@@ -82,7 +82,6 @@ def register(request):
                     seller.save()
                 elif role == ROLE_COURIER:
                     courier = user.courier
-                    courier.whatsapp = form.cleaned_data["whatsapp"]
                     courier.id_document = form.cleaned_data["id_document"]
                     courier.driving_license = form.cleaned_data["driving_license"]
                     courier.save()

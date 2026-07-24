@@ -22,7 +22,7 @@
         {% for c in couriers %}
         <tr>
           <td>{{ c.get_name }}<br><small class="text-muted">{{ c.address }}</small></td>
-          <td>{{ c.mobile }}{% if c.whatsapp %}<br><small class="text-muted">WhatsApp: {{ c.whatsapp }}</small>{% endif %}</td>
+          <td>{{ c.mobile }}</td>
           <td>
             <a href="{{ c.id_document.url }}" target="_blank" rel="noopener">
               <img src="{{ c.id_document.url }}" alt="ID document for {{ c.get_name }}" style="max-height:80px; max-width:120px;" class="rounded border">
