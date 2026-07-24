@@ -17,7 +17,7 @@
           </p>
         </div>
 
-        <form method="post" class="card shadow-sm border-0" novalidate>
+        <form method="post" enctype="multipart/form-data" class="card shadow-sm border-0" novalidate>
           {% csrf_token %}
           <div class="card-body p-4 p-md-5">
 
@@ -199,6 +199,58 @@
                 {% if form.director_email.errors %}
                   <small class="form-text text-danger d-block mt-1">
                     {{ form.director_email.errors }}
+                  </small>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Courier Verification (couriers only) -->
+            <div class="mb-4 d-none" id="courier-info-section">
+              <h5 class="mb-3 font-weight-bold">
+                <i class="fas fa-id-card text-primary mr-2"></i>{% trans "Courier Verification" %}
+              </h5>
+              <p class="text-muted small">
+                {% trans "An administrator reviews these before you can be assigned deliveries." %}
+              </p>
+
+              <div class="form-group">
+                <label for="{{ form.whatsapp.id_for_label }}">
+                  {{ form.whatsapp.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.whatsapp }}
+                <small class="form-text text-muted">
+                  {% trans "Used to coordinate deliveries — can differ from your phone number above." %}
+                </small>
+                {% if form.whatsapp.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.whatsapp.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.id_document.id_for_label }}">
+                  {{ form.id_document.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.id_document }}
+                {% if form.id_document.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.id_document.errors }}
+                  </small>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.driving_license.id_for_label }}">
+                  {{ form.driving_license.label }}
+                  <span class="text-danger">*</span>
+                </label>
+                {{ form.driving_license }}
+                {% if form.driving_license.errors %}
+                  <small class="form-text text-danger d-block mt-1">
+                    {{ form.driving_license.errors }}
                   </small>
                 {% endif %}
               </div>
@@ -430,12 +482,17 @@
   var sellerTypeSection = document.getElementById("seller-type-section");
   var companySection = document.getElementById("company-info-section");
   var directorSection = document.getElementById("director-info-section");
+  var courierSection = document.getElementById("courier-info-section");
   var companyLabels = document.querySelectorAll("[data-label-company]");
   var restaurantLabels = document.querySelectorAll("[data-label-restaurant]");
 
   function accountTypeIsSeller() {
     var checked = document.querySelector('input[name="account_type"]:checked');
     return !!checked && (checked.value === "seller" || checked.value === "buyer_seller");
+  }
+  function accountTypeIsCourier() {
+    var checked = document.querySelector('input[name="account_type"]:checked');
+    return !!checked && checked.value === "courier";
   }
   function sellerTypeIsCompany() {
     var checked = document.querySelector('input[name="seller_type"]:checked');
@@ -456,6 +513,8 @@
 
     companyLabels.forEach(function (el) { el.classList.toggle("d-none", isRestaurant); });
     restaurantLabels.forEach(function (el) { el.classList.toggle("d-none", !isRestaurant); });
+
+    courierSection.classList.toggle("d-none", !accountTypeIsCourier());
   }
 
   document.querySelectorAll('input[name="account_type"]').forEach(function (el) {

@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 from olretail.models import SellerType
+from olretail.validators import validate_image_size
 
-from .roles import ACCOUNT_TYPE_CHOICES, ROLE_BUYER, ROLE_BUYER_SELLER, ROLE_SELLER
+from .roles import ACCOUNT_TYPE_CHOICES, ROLE_BUYER, ROLE_BUYER_SELLER, ROLE_COURIER, ROLE_SELLER
 
 
 class RegistrationForm(UserCreationForm):
@@ -71,6 +72,22 @@ class RegistrationForm(UserCreationForm):
         label=_("Director email"),
         widget=forms.EmailInput(attrs={"placeholder": _("director@example.com")}),
     )
+    whatsapp = forms.CharField(
+        max_length=40,
+        required=False,
+        label=_("WhatsApp number"),
+        widget=forms.TextInput(attrs={"placeholder": _("7012345 or +670 7012345")}),
+    )
+    id_document = forms.ImageField(
+        required=False,
+        label=_("Identity Card Photo"),
+        widget=forms.ClearableFileInput(attrs={"class": "form-control-file", "accept": "image/*"}),
+    )
+    driving_license = forms.ImageField(
+        required=False,
+        label=_("Driving License Photo"),
+        widget=forms.ClearableFileInput(attrs={"class": "form-control-file", "accept": "image/*"}),
+    )
     first_name = forms.CharField(
         max_length=150,
         label=_("First name"),
@@ -124,9 +141,33 @@ class RegistrationForm(UserCreationForm):
             raise forms.ValidationError(_("An account with this email address already exists."))
         return email
 
+    def clean_id_document(self):
+        photo = self.cleaned_data.get("id_document")
+        if photo:
+            validate_image_size(photo)
+        return photo
+
+    def clean_driving_license(self):
+        photo = self.cleaned_data.get("driving_license")
+        if photo:
+            validate_image_size(photo)
+        return photo
+
     def clean(self):
         cleaned_data = super().clean()
         account_type = cleaned_data.get("account_type")
+
+        if account_type == ROLE_COURIER:
+            required_fields = {
+                "whatsapp": _("WhatsApp number is required."),
+                "id_document": _("A photo of your identity card is required."),
+                "driving_license": _("A photo of your driving license is required."),
+            }
+            for field_name, message in required_fields.items():
+                if not cleaned_data.get(field_name):
+                    self.add_error(field_name, message)
+            return cleaned_data
+
         if account_type not in (ROLE_SELLER, ROLE_BUYER_SELLER):
             return cleaned_data
 

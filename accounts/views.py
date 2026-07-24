@@ -14,17 +14,31 @@ from olretail.models import SellerType
 
 from .forms import RegistrationForm
 from .ratelimit import rate_limit
-from .roles import ROLE_BUYER, ROLE_BUYER_SELLER, ROLE_SELLER, assign_role, is_buyer, is_seller
+from .roles import (
+    ROLE_BUYER,
+    ROLE_BUYER_SELLER,
+    ROLE_COURIER,
+    ROLE_SELLER,
+    assign_role,
+    is_buyer,
+    is_courier,
+    is_seller,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def _role_home(user):
     """Staff land on the admin dashboard, sellers on their product list,
-    everyone else on the store."""
+    couriers on their delivery dashboard (front and center is their
+    verification status), everyone else on the store."""
     if user.is_staff:
         return "dashboard:overview"
-    return "olretail:list" if is_seller(user) else "olretail:index"
+    if is_seller(user):
+        return "olretail:list"
+    if is_courier(user):
+        return "olretail:courier_deliveries"
+    return "olretail:index"
 
 
 def _safe_next(request):
@@ -42,7 +56,7 @@ def register(request):
         return redirect(_role_home(request.user))
 
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             role = form.cleaned_data["account_type"]
             with transaction.atomic():
@@ -66,12 +80,25 @@ def register(request):
                         seller.director_phone = form.cleaned_data["director_phone"]
                         seller.director_email = form.cleaned_data["director_email"]
                     seller.save()
+                elif role == ROLE_COURIER:
+                    courier = user.courier
+                    courier.whatsapp = form.cleaned_data["whatsapp"]
+                    courier.id_document = form.cleaned_data["id_document"]
+                    courier.driving_license = form.cleaned_data["driving_license"]
+                    courier.save()
             login(request, user)
             logger.info("New user registered: %s (role=%s)", user.username, role)
             if role == ROLE_BUYER:
                 messages.success(
                     request,
                     _("Welcome, %(name)s! Your account is ready — happy shopping.")
+                    % {"name": user.first_name},
+                )
+            elif role == ROLE_COURIER:
+                messages.success(
+                    request,
+                    _("Welcome, %(name)s! Your courier account is ready — an administrator will "
+                      "review your documents before you can be assigned deliveries.")
                     % {"name": user.first_name},
                 )
             else:

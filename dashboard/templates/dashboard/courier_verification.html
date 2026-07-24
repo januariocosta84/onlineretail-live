@@ -11,8 +11,9 @@
       <thead>
         <tr>
           <th>Courier</th>
-          <th>Mobile</th>
+          <th>Mobile / WhatsApp</th>
           <th>ID document</th>
+          <th>Driving license</th>
           <th style="width:160px;">Deposit received</th>
           <th style="width:340px;"></th>
         </tr>
@@ -20,12 +21,21 @@
       <tbody>
         {% for c in couriers %}
         <tr>
-          <td>{{ c.get_name }}</td>
-          <td>{{ c.mobile }}</td>
+          <td>{{ c.get_name }}<br><small class="text-muted">{{ c.address }}</small></td>
+          <td>{{ c.mobile }}{% if c.whatsapp %}<br><small class="text-muted">WhatsApp: {{ c.whatsapp }}</small>{% endif %}</td>
           <td>
             <a href="{{ c.id_document.url }}" target="_blank" rel="noopener">
               <img src="{{ c.id_document.url }}" alt="ID document for {{ c.get_name }}" style="max-height:80px; max-width:120px;" class="rounded border">
             </a>
+          </td>
+          <td>
+            {% if c.driving_license %}
+            <a href="{{ c.driving_license.url }}" target="_blank" rel="noopener">
+              <img src="{{ c.driving_license.url }}" alt="Driving license for {{ c.get_name }}" style="max-height:80px; max-width:120px;" class="rounded border">
+            </a>
+            {% else %}
+            <span class="text-muted">—</span>
+            {% endif %}
           </td>
           <td colspan="2">
             <form method="post" action="{% url 'dashboard:courier_verification_action' c.pk %}" class="form-row align-items-center">

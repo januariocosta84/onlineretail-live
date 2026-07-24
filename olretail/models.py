@@ -37,12 +37,18 @@ class Buyer(models.Model):
 
 
 class Courier(models.Model):
-    """Delivery person/company. Granted by admin (see accounts/roles.py) —
-    not self-registerable, since it carries the ability to confirm delivery."""
+    """Delivery person/company. Self-registerable (see accounts/roles.py) —
+    but a fresh signup starts at verification_status=pending and can't be
+    assigned any deliveries (see ShipOrderForm) until an admin verifies the
+    uploaded documents, since the role carries the ability to confirm
+    delivery."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=255, blank=True)
     mobile = models.CharField(max_length=40)
+    whatsapp = models.CharField(
+        max_length=40, blank=True, help_text=_("WhatsApp number for delivery coordination.")
+    )
     service_cities = models.ManyToManyField(
         "City",
         blank=True,
@@ -53,6 +59,7 @@ class Courier(models.Model):
         ),
     )
     id_document = models.ImageField(upload_to="courier_ids/", null=True, blank=True)
+    driving_license = models.ImageField(upload_to="courier_licenses/", null=True, blank=True)
     deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     verification_status = models.CharField(
         max_length=20,

@@ -25,9 +25,8 @@ ACCOUNT_TYPE_CHOICES = [
     (ROLE_BUYER, _("Buyer — browse products, contact sellers and post comments")),
     (ROLE_SELLER, _("Seller — list and manage products for sale")),
     (ROLE_BUYER_SELLER, _("Buyer & Seller — everything in one account")),
+    (ROLE_COURIER, _("Courier — deliver orders and earn per delivery")),
 ]
-# Courier is intentionally NOT self-registerable — an admin grants it from
-# the dashboard, since it carries the ability to confirm deliveries.
 
 ROLE_DEFINITIONS = {
     ROLE_BUYER: {"groups": (BUYER_GROUP,), "profiles": (Buyer,)},
