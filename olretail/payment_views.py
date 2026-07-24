@@ -402,6 +402,9 @@ def _process_checkout(request, form, cart_items):
             return redirect('olretail:checkout')
         return _process_bank_transfer_checkout(request, form, cart_items)
 
+    if payment_method == PaymentMethod.CASH_ON_DELIVERY:
+        return _process_cash_on_delivery_checkout(request, form, cart_items)
+
     if payment_method == PaymentMethod.SIMULATED_BANK:
         return _process_simulated_bank_checkout(request, form, cart_items)
 
@@ -469,6 +472,53 @@ def _process_bank_transfer_checkout(request, form, cart_items):
         Cart.objects.filter(buyer=request.user, product__in=[item.product for item in cart_items]).delete()
 
     return render(request, 'olretail/bank_transfer_instructions.html', {'orders': orders})
+
+
+def _process_cash_on_delivery_checkout(request, form, cart_items):
+    """Create one order per cart item, no platform commission — the buyer
+    pays cash directly to the seller/courier at delivery, so the order
+    stays pending_payment (see Order.can_ship) until mark_delivered
+    collects it, rather than needing a confirm step like bank transfer."""
+    delivery_city = form.cleaned_data['delivery_city']
+    last_item_index = _last_item_index_per_seller(cart_items)
+
+    with transaction.atomic():
+        orders = []
+        for index, item in enumerate(cart_items):
+            delivery_fee = Decimal('0')
+            if last_item_index.get(item.product.seller_id) == index:
+                delivery_fee = Decimal(str(settings.DELIVERY_FEE))
+
+            order = Order.objects.create(
+                buyer=request.user,
+                seller=item.product.seller,
+                product=item.product,
+                quantity=item.quantity,
+                price_per_unit=item.product.price,
+                subtotal=item.line_total,
+                commission_amount=Decimal('0'),
+                payment_fee=Decimal('0'),
+                delivery_fee=delivery_fee,
+                total=item.line_total + delivery_fee,
+                status=OrderStatus.PENDING_PAYMENT,
+                payment_method=PaymentMethod.CASH_ON_DELIVERY,
+                delivery_address=form.cleaned_data['delivery_address'],
+                delivery_city=delivery_city,
+                delivery_phone=form.cleaned_data['delivery_phone'],
+                buyer_notes=form.cleaned_data.get('buyer_notes', ''),
+            )
+            orders.append(order)
+            _notify(
+                order.seller.user,
+                _('New cash-on-delivery order %(order)s from %(buyer)s for “%(product)s” — collect $%(total)s on delivery.')
+                % {'order': order.order_number, 'buyer': request.user.get_full_name() or request.user.username,
+                   'product': order.product.name, 'total': order.total},
+                order=order,
+            )
+
+        Cart.objects.filter(buyer=request.user, product__in=[item.product for item in cart_items]).delete()
+
+    return render(request, 'olretail/cash_on_delivery_confirmation.html', {'orders': orders})
 
 
 def _process_stripe_checkout(request, form, cart_items):
@@ -1313,7 +1363,7 @@ def order_detail(request, order_id):
         'is_admin': is_admin,
         'delivery_updates': order.delivery_updates.all(),
     }
-    if is_seller and order.status == OrderStatus.PAID:
+    if is_seller and order.can_ship:
         context['ship_form'] = ShipOrderForm(order=order)
     if is_seller and order.status == OrderStatus.SHIPPED:
         context['delivery_update_form'] = DeliveryUpdateForm()
@@ -1462,7 +1512,7 @@ def seller_update_order_status(request, order_id):
         messages.error(request, _('Unknown action.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
-    if order.status != OrderStatus.PAID:
+    if not order.can_ship:
         messages.error(request, _('Only paid orders can be marked as shipped.'))
         return redirect('olretail:order_detail', order_id=order.id)
 
@@ -1518,6 +1568,12 @@ def mark_delivered(request, order_id):
 
     form = DeliveryProofForm(request.POST, request.FILES)
     if form.is_valid():
+        if order.payment_method == PaymentMethod.CASH_ON_DELIVERY and not order.paid_at:
+            # Cash changes hands at the door — reuse the same "payment
+            # confirmed" side effects (paid_at, stock decrement, cart
+            # clear) that a bank-transfer seller's confirm click triggers,
+            # just fired by the delivery event instead of a separate step.
+            _mark_bank_transfer_paid(order)
         order.status = OrderStatus.DELIVERED
         order.delivered_at = timezone.now()
         order.delivery_photo = form.cleaned_data['photo']

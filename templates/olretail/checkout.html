@@ -200,6 +200,10 @@
               <i class="fas fa-university mr-2"></i>
               <small>{% trans "You'll pay the seller directly — no platform fee. The next page shows their payment details." %}</small>
             </div>
+            <div class="alert alert-info alert-sm d-none" role="alert" id="cash-on-delivery-note">
+              <i class="fas fa-money-bill-wave mr-2"></i>
+              <small>{% trans "Pay in cash when your order arrives — no platform fee. Have the exact amount ready for the seller/courier." %}</small>
+            </div>
             <div class="alert alert-info alert-sm d-none" role="alert" id="simulated-bank-note">
               <i class="fas fa-flask mr-2"></i>
               <small>{% trans "Test/dev payment rail — enter one of the test account numbers above to trigger a specific outcome." %}</small>
@@ -218,6 +222,7 @@
   var stripeFeeRows = document.getElementById('stripe-fee-rows');
   var stripeNote = document.getElementById('stripe-note');
   var bankTransferNote = document.getElementById('bank-transfer-note');
+  var cashOnDeliveryNote = document.getElementById('cash-on-delivery-note');
   var simulatedBankNote = document.getElementById('simulated-bank-note');
   var bankAccountNumberGroup = document.getElementById('bank-account-number-group');
   var totalEl = document.getElementById('checkout-total');
@@ -238,11 +243,14 @@
     var selected = document.querySelector('input[name="payment_method"]:checked');
     var method = selected ? selected.value : 'stripe';
     var isBankTransfer = method === 'bank_transfer';
+    var isCashOnDelivery = method === 'cash_on_delivery';
     var isSimulatedBank = method === 'simulated_bank';
+    var isDirectPay = isBankTransfer || isCashOnDelivery;
 
-    stripeFeeRows.classList.toggle('d-none', isBankTransfer || isSimulatedBank);
-    stripeNote.classList.toggle('d-none', isBankTransfer || isSimulatedBank);
+    stripeFeeRows.classList.toggle('d-none', isDirectPay || isSimulatedBank);
+    stripeNote.classList.toggle('d-none', isDirectPay || isSimulatedBank);
     bankTransferNote.classList.toggle('d-none', !isBankTransfer);
+    cashOnDeliveryNote.classList.toggle('d-none', !isCashOnDelivery);
     simulatedBankNote.classList.toggle('d-none', !isSimulatedBank);
     bankAccountNumberGroup.classList.toggle('d-none', !isSimulatedBank);
 
@@ -250,11 +258,13 @@
     deliveryFeeRow.classList.toggle('d-none', deliveryFee <= 0);
     deliveryFeeAmountEl.textContent = deliveryFee.toFixed(2);
 
-    var baseTotal = isBankTransfer ? cartTotal : (isSimulatedBank ? bankEstimatedTotal : estimatedTotal);
+    var baseTotal = isDirectPay ? cartTotal : (isSimulatedBank ? bankEstimatedTotal : estimatedTotal);
     var total = baseTotal + deliveryFee;
     totalEl.textContent = '$' + total.toFixed(2);
     if (isBankTransfer) {
       submitLabel.innerHTML = '<i class="fas fa-university mr-2"></i>{% trans "Continue to Payment Details" %}';
+    } else if (isCashOnDelivery) {
+      submitLabel.innerHTML = '<i class="fas fa-money-bill-wave mr-2"></i>{% trans "Place Order" %}';
     } else if (isSimulatedBank) {
       submitLabel.innerHTML = '<i class="fas fa-flask mr-2"></i>{% trans "Submit Bank Transfer" %}';
     } else {

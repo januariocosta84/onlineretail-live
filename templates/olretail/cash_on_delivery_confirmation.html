@@ -1,0 +1,44 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Order Placed" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="h2 page-header-bar">
+              <i class="fas fa-money-bill-wave mr-2"></i>{% trans "Order Placed — Pay on Delivery" %}
+            </h1>
+            <p class="text-muted">
+              {% trans "No payment needed now. Have the exact amount in cash ready for the seller or courier when your order arrives." %}
+            </p>
+          </div>
+        </div>
+
+        {% for order in orders %}
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <span class="font-weight-bold">{{ order.product.name }}</span>
+            <span class="text-muted small">{% trans "Order" %} {{ order.order_number }}</span>
+          </div>
+          <div class="card-body">
+            <p class="mb-0">
+              <strong>{% trans "Amount to pay on delivery" %}:</strong>
+              <span class="h5 text-primary">${{ order.total }}</span>
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+
+        <p class="text-center">
+          <a href="{% url 'olretail:buyer_orders' %}">{% trans "View my orders" %} »</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

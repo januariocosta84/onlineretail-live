@@ -84,6 +84,7 @@ class PaymentMethod(models.TextChoices):
     """How the buyer pays for an order."""
     STRIPE = 'stripe', _('Card (Stripe)')
     BANK_TRANSFER = 'bank_transfer', _('Bank / Mobile Transfer')
+    CASH_ON_DELIVERY = 'cash_on_delivery', _('Cash on Delivery')
     SIMULATED_BANK = 'simulated_bank', _('Automated Bank Transfer (Test)')
 
 
@@ -187,6 +188,16 @@ class Order(models.Model):
     
     def __str__(self):
         return f"{self.order_number} - {self.buyer.username} - ${self.total}"
+
+    @property
+    def can_ship(self):
+        """Whether a seller may mark this order shipped. Normally requires
+        payment already confirmed (paid). Cash-on-delivery has no upfront
+        payment to confirm — it's shippable straight from pending_payment,
+        since payment is collected at the delivery step instead."""
+        if self.status == OrderStatus.PAID:
+            return True
+        return self.payment_method == PaymentMethod.CASH_ON_DELIVERY and self.status == OrderStatus.PENDING_PAYMENT
 
     @property
     def has_active_dispute(self):

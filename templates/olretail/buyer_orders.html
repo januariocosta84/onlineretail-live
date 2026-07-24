@@ -66,7 +66,9 @@
                   ${{ order.total }}
                 </td>
                 <td class="text-center">
-                  {% if order.status == 'pending_payment' %}
+                  {% if order.status == 'pending_payment' and order.payment_method == 'cash_on_delivery' %}
+                    <span class="badge badge-info">{% trans "Cash on Delivery" %}</span>
+                  {% elif order.status == 'pending_payment' %}
                     <span class="badge badge-warning">{{ order.get_status_display }}</span>
                   {% elif order.status == 'payment_reported' %}
                     <span class="badge badge-warning">{{ order.get_status_display }}</span>
