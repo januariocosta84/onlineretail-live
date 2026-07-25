@@ -18,6 +18,7 @@ from .forms import CommentForm, MenuCategoryForm, ProductForm
 from .models import (
     RESTAURANT_CATEGORY_SLUG,
     SERVICE_CATEGORY_SLUG,
+    VEHICLE_RENTAL_CATEGORY_SLUG,
     Category,
     FREE_PRODUCT_LIMIT,
     MenuCategory,
@@ -390,6 +391,9 @@ def product_create(request):
             "restaurant_category_ids": list(
                 Category.objects.filter(slug=RESTAURANT_CATEGORY_SLUG).values_list("id", flat=True)
             ),
+            "vehicle_rental_category_ids": list(
+                Category.objects.filter(slug=VEHICLE_RENTAL_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
             "is_restaurant_seller": seller.seller_type == SellerType.RESTAURANT,
         },
     )
@@ -439,6 +443,9 @@ def product_update(request, slug):
             ),
             "restaurant_category_ids": list(
                 Category.objects.filter(slug=RESTAURANT_CATEGORY_SLUG).values_list("id", flat=True)
+            ),
+            "vehicle_rental_category_ids": list(
+                Category.objects.filter(slug=VEHICLE_RENTAL_CATEGORY_SLUG).values_list("id", flat=True)
             ),
             "is_restaurant_seller": product.seller.seller_type == SellerType.RESTAURANT,
         },

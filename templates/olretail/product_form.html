@@ -104,11 +104,28 @@
                 </div>
                 {% else %}
                 <label for="{{ field.id_for_label }}">
-                  {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+                  {% if field.name == 'price' %}
+                  <span data-label-default>{{ field.label }}</span><span data-label-vehicle-rental class="d-none">{% trans "Daily rental rate ($)" %}</span>
+                  {% elif field.name == 'quantity' %}
+                  <span data-label-default>{{ field.label }}</span><span data-label-vehicle-rental class="d-none">{% trans "Vehicles available" %}</span>
+                  {% elif field.name == 'size' %}
+                  <span data-label-default>{{ field.label }}</span><span data-label-vehicle-rental class="d-none">{% trans "Seats / capacity" %}</span>
+                  {% else %}
+                  {{ field.label }}
+                  {% endif %}
+                  {% if field.field.required %} <span class="text-danger">*</span>{% endif %}
                 </label>
                 {{ field }}
                 {% endif %}
-                {% if field.help_text %}
+                {% if field.name == 'quantity' %}
+                <small class="form-text text-muted">
+                  <span data-label-default>{{ field.help_text }}</span><span data-label-vehicle-rental class="d-none">{% trans "Set to 0 when none are currently available to rent." %}</span>
+                </small>
+                {% elif field.name == 'size' %}
+                <small class="form-text text-muted">
+                  <span data-label-default>{{ field.help_text }}</span><span data-label-vehicle-rental class="d-none">{% trans "Optional — e.g. 5 seats, 7-seater" %}</span>
+                </small>
+                {% elif field.help_text %}
                 <small class="form-text text-muted">{{ field.help_text }}</small>
                 {% endif %}
                 {% for error in field.errors %}
@@ -127,6 +144,12 @@
                 <div class="alert alert-info mb-0 py-2 small">
                   <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
                   {% trans "Menu items don't need a quantity or condition — use Menu section, Available, and Prep time instead." %}
+                </div>
+              </div>
+              <div class="col-12 form-group d-none" data-vehicle-rental-hint>
+                <div class="alert alert-info mb-0 py-2 small">
+                  <i class="fas fa-car mr-1" aria-hidden="true"></i>
+                  {% trans "Renting out a car? Put your per-day price under Daily rental rate, seating under Seats / capacity, and details like transmission, fuel type, year and mileage under Specifications. Use Features for what's included (insurance, free delivery, child seat) and Description for the rental terms — minimum days, security deposit, driver requirements, fuel policy." %}
                 </div>
               </div>
               <div class="col-12 form-group d-none" data-no-menu-hint>
@@ -149,6 +172,7 @@
 </div>
 {{ service_category_ids|json_script:"service-category-ids" }}
 {{ restaurant_category_ids|json_script:"restaurant-category-ids" }}
+{{ vehicle_rental_category_ids|json_script:"vehicle-rental-category-ids" }}
 <script>
 (function () {
   var serviceCategoryIds = JSON.parse(
@@ -157,15 +181,31 @@
   var restaurantCategoryIds = JSON.parse(
     document.getElementById("restaurant-category-ids").textContent
   ).map(String);
+  var vehicleRentalCategoryIds = JSON.parse(
+    document.getElementById("vehicle-rental-category-ids").textContent
+  ).map(String);
   var categorySelect = document.getElementById("{{ form.category.id_for_label }}");
   var quantityGroup = document.querySelector('[data-field="quantity"]');
   var conditionGroup = document.querySelector('[data-field="condition"]');
   var serviceHint = document.querySelector("[data-service-hint]");
   var restaurantHint = document.querySelector("[data-restaurant-hint]");
+  var vehicleRentalHint = document.querySelector("[data-vehicle-rental-hint]");
   var noMenuHint = document.querySelector("[data-no-menu-hint]");
   var menuCategoryGroup = document.querySelector('[data-field="menu_category"]');
   var isAvailableGroup = document.querySelector('[data-field="is_available"]');
   var prepTimeGroup = document.querySelector('[data-field="prep_time_minutes"]');
+  var defaultLabelSpans = document.querySelectorAll("[data-label-default]");
+  var vehicleRentalLabelSpans = document.querySelectorAll("[data-label-vehicle-rental]");
+  // One textarea per configured language for each of these, since they're
+  // translatable fields repeated inside the language tabs.
+  var specificationsFields = document.querySelectorAll('[data-field-base="specifications"] textarea');
+  var featuresFields = document.querySelectorAll('[data-field-base="features"] textarea');
+  var descriptionFields = document.querySelectorAll('[data-field-base="description"] textarea');
+  var VEHICLE_RENTAL_PLACEHOLDERS = {
+    specifications: "{% trans 'Transmission: Automatic\nFuel type: Diesel\nYear: 2022\nMileage: 45,000 km' %}",
+    features: "{% trans 'Free delivery\nFull insurance included\nUnlimited mileage\nChild seat available' %}",
+    description: "{% trans 'Rental terms: minimum rental period, security deposit, driver requirements, fuel policy, pickup/drop-off location...' %}"
+  };
   if (!categorySelect || !quantityGroup || !conditionGroup || !serviceHint) {
     return;
   }
@@ -176,6 +216,7 @@
   function applyCategoryMode() {
     var isService = serviceCategoryIds.indexOf(categorySelect.value) !== -1;
     var isRestaurant = restaurantCategoryIds.indexOf(categorySelect.value) !== -1;
+    var isVehicleRental = vehicleRentalCategoryIds.indexOf(categorySelect.value) !== -1;
     var hideQuantityCondition = isService || isRestaurant;
 
     quantityGroup.classList.toggle("d-none", hideQuantityCondition);
@@ -185,6 +226,19 @@
 
     serviceHint.classList.toggle("d-none", !isService);
     restaurantHint.classList.toggle("d-none", !isRestaurant);
+    if (vehicleRentalHint) vehicleRentalHint.classList.toggle("d-none", !isVehicleRental);
+
+    defaultLabelSpans.forEach(function (el) { el.classList.toggle("d-none", isVehicleRental); });
+    vehicleRentalLabelSpans.forEach(function (el) { el.classList.toggle("d-none", !isVehicleRental); });
+
+    [
+      [specificationsFields, VEHICLE_RENTAL_PLACEHOLDERS.specifications],
+      [featuresFields, VEHICLE_RENTAL_PLACEHOLDERS.features],
+      [descriptionFields, VEHICLE_RENTAL_PLACEHOLDERS.description],
+    ].forEach(function (pair) {
+      var fields = pair[0], placeholder = pair[1];
+      fields.forEach(function (el) { el.placeholder = isVehicleRental ? placeholder : ""; });
+    });
 
     if (noMenuHint) {
       var menuCategorySelect = menuCategoryGroup ? menuCategoryGroup.querySelector("select") : null;

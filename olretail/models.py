@@ -261,6 +261,13 @@ SERVICE_CATEGORY_SLUG = "services"
 # the pre-existing "food" category already used by ordinary grocery listings.
 RESTAURANT_CATEGORY_SLUG = "restaurant"
 
+# Car rental listings — quantity/condition still apply (an owner can have
+# several of the same car; new vs. used is meaningful), so unlike services/
+# restaurant this doesn't hide any fields. It relabels the generic ones
+# instead (see ProductForm/product_form.html) so a seller filling this out
+# sees "Daily rate", "Seats", etc. instead of generic e-commerce wording.
+VEHICLE_RENTAL_CATEGORY_SLUG = "vehicle-rental"
+
 # Categories where quantity/condition don't apply and are hidden on the
 # product form in favor of category-specific fields instead.
 NO_CONDITION_QUANTITY_CATEGORY_SLUGS = {SERVICE_CATEGORY_SLUG, RESTAURANT_CATEGORY_SLUG}
@@ -388,6 +395,10 @@ class Product(models.Model):
     @property
     def is_restaurant_category(self):
         return self.category_id is not None and self.category.slug == RESTAURANT_CATEGORY_SLUG
+
+    @property
+    def is_vehicle_rental_category(self):
+        return self.category_id is not None and self.category.slug == VEHICLE_RENTAL_CATEGORY_SLUG
 
     @property
     def available_for_purchase(self):
