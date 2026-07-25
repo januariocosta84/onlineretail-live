@@ -248,7 +248,7 @@ class Category(models.Model):
 # (viewings, financing, scheduling, etc. happen off-platform) that don't fit
 # a cart/checkout flow. Matched by slug, not title, since Category.title is
 # translated and slugs aren't.
-NON_CART_CATEGORY_SLUGS = {"housing", "vehicles", "motorcycles", "services"}
+NON_CART_CATEGORY_SLUGS = {"housing", "vehicles", "motorcycles", "services", "vehicle-rental"}
 
 # Services have no physical stock or condition — matched by slug, not title,
 # for the same reason as above.
