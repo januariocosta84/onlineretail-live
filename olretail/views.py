@@ -2,6 +2,7 @@ import logging
 from decimal import Decimal, InvalidOperation
 from urllib.parse import quote
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import (
@@ -12,6 +13,7 @@ from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
+from modeltranslation.utils import build_localized_fieldname
 
 from .decorators import seller_required
 from .forms import CommentForm, MenuCategoryForm, ProductForm
@@ -94,9 +96,18 @@ def index(request):
 
     query = (request.GET.get("q") or request.GET.get("search") or "").strip()
     if query:
-        products = products.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
-        )
+        # A bare "name__icontains" lookup gets rewritten by modeltranslation
+        # to only the *active site language's* shadow column (e.g. name_tet
+        # when browsing in Tetum) — so a product whose Tetum translation was
+        # never filled in (translation is optional) wouldn't match even
+        # though its English name does. Search every language's column
+        # explicitly instead, so a listing is findable regardless of which
+        # language the buyer is searching in.
+        search_q = Q()
+        for base_field in ("name", "description"):
+            for lang in settings.MODELTRANSLATION_LANGUAGES:
+                search_q |= Q(**{f"{build_localized_fieldname(base_field, lang)}__icontains": query})
+        products = products.filter(search_q)
 
     min_price = _parse_price(request.GET.get("min_price"))
     if min_price is not None:
