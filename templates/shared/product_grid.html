@@ -40,7 +40,7 @@
         <h2 class="h6 mb-1 text-truncate">
           <a href="{{ p.get_absolute_url }}" class="text-dark">{{ p.name }}</a>
         </h2>
-        <p class="mb-1"><strong class="text-danger">$ {{ p.price|intcomma }}</strong></p>
+        <p class="mb-1"><strong class="text-danger">$ {{ p.price|intcomma }}</strong>{% if p.is_vehicle_rental_category %} <small class="text-muted">/ {% trans 'day' %}</small>{% endif %}</p>
         {% if p.rating_count %}
         <p class="mb-1 small text-warning" title="{{ p.avg_rating|floatformat:1 }} / 5 ({{ p.rating_count }})">
           {% for i in "12345" %}<i class="fas fa-star {% if forloop.counter > p.avg_rating|floatformat:0|add:0 %}text-muted{% endif %}" aria-hidden="true"></i>{% endfor %}

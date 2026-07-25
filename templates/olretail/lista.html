@@ -96,7 +96,7 @@
               {% endif %}
               <a href="{{ p.get_absolute_url }}">{{ p.name }}</a>
             </td>
-            <td>$ {{ p.price|intcomma }}</td>
+            <td>$ {{ p.price|intcomma }}{% if p.is_vehicle_rental_category %} <small class="text-muted">/{% trans 'day' %}</small>{% endif %}</td>
             <td>
               {% if p.is_restaurant_category %}
               {% if p.is_available %}
@@ -109,7 +109,9 @@
               {% elif p.in_stock %}
               {{ p.quantity }}
               {% else %}
-              <span class="badge badge-secondary">{% trans 'Out of stock' %}</span>
+              <span class="badge badge-secondary">
+                {% if p.is_vehicle_rental_category %}{% trans 'None available' %}{% else %}{% trans 'Out of stock' %}{% endif %}
+              </span>
               {% endif %}
             </td>
             <td>
