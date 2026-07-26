@@ -41,7 +41,7 @@ class RegistrationForm(UserCreationForm):
         queryset=BusinessCategory.objects.all(),
         required=False,
         label=_("Business Categories"),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(attrs={"class": "custom-control-input"}),
     )
     id_document = forms.ImageField(
         required=False,
