@@ -35,7 +35,8 @@ from .payment_gateways import SimulatedBankGateway, _settle_simulated_transactio
 from .payment_forms import (
     CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
-    CourierVerificationForm, SellerCompanyInfoForm, SellerVerificationForm,
+    CourierVerificationForm, SellerBusinessIdentityForm, SellerVerificationForm,
+    SellerContactForm, SellerLocationForm, SellerBrandingForm, SellerOperationsForm,
     PaymentProofForm, PaymentDenialForm,
 )
 from .subscription_models import (
@@ -1149,9 +1150,11 @@ def deny_payment_received(request, order_id):
 
 @seller_required
 def seller_payment_settings(request):
-    """Seller's bank/mobile money details shown to buyers who pay by direct
-    transfer, plus (for company sellers) editable company info and business
-    verification — all three live on this one settings page."""
+    """Seller's "Business Profile" page: bank/mobile money details shown to
+    buyers who pay by direct transfer, contact/location/branding/operations
+    info (every seller type), and — for non-individual sellers — editable
+    business identity info and business verification. All live on this one
+    settings page, one form per card."""
     seller = request.user.seller
     if request.method == 'POST':
         form = SellerPaymentInstructionsForm(request.POST, instance=seller)
@@ -1168,29 +1171,36 @@ def seller_payment_settings(request):
             initial['payment_instructions'] = seller.company_bank_account
         form = SellerPaymentInstructionsForm(instance=seller, initial=initial)
 
-    context = {'form': form, 'seller': seller}
-    if seller.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT):
-        context['company_form'] = SellerCompanyInfoForm(instance=seller)
+    context = {
+        'form': form,
+        'seller': seller,
+        'contact_form': SellerContactForm(instance=seller),
+        'location_form': SellerLocationForm(instance=seller),
+        'branding_form': SellerBrandingForm(instance=seller),
+        'operations_form': SellerOperationsForm(instance=seller),
+    }
+    if seller.seller_type != SellerType.INDIVIDUAL:
+        context['business_form'] = SellerBusinessIdentityForm(instance=seller)
         context['verification_form'] = SellerVerificationForm()
     return render(request, 'olretail/seller_payment_settings.html', context)
 
 
 @seller_required
 @require_POST
-def seller_company_info(request):
-    """Company or restaurant seller edits their business/director details
-    after registration. Changing the identity fields (name/TIN/address)
-    voids an existing verification — the approved document no longer
-    matches what's on file."""
+def seller_business_identity(request):
+    """Non-individual seller edits their business/registration/director
+    details after registration. Changing the identity fields (name/TIN/
+    address/registration number) voids an existing verification — the
+    approved document no longer matches what's on file."""
     seller = request.user.seller
-    if seller.seller_type not in (SellerType.COMPANY, SellerType.RESTAURANT):
-        messages.error(request, _('Business info only applies to company and restaurant seller accounts.'))
+    if seller.seller_type == SellerType.INDIVIDUAL:
+        messages.error(request, _('Business info only applies to non-individual seller accounts.'))
         return redirect('olretail:seller_payment_settings')
 
-    identity_fields = ('company_name', 'company_tin', 'company_address')
+    identity_fields = ('company_name', 'company_tin', 'company_address', 'business_registration_number')
     before = {name: getattr(seller, name) for name in identity_fields}
 
-    form = SellerCompanyInfoForm(request.POST, instance=seller)
+    form = SellerBusinessIdentityForm(request.POST, instance=seller)
     if form.is_valid():
         updated = form.save(commit=False)
         identity_changed = any(form.cleaned_data[name] != before[name] for name in identity_fields)
@@ -1200,7 +1210,66 @@ def seller_company_info(request):
             updated.verified_at = None
             updated.verified_by = None
         updated.save()
-        messages.success(request, _('Company information saved.'))
+        messages.success(request, _('Business information saved.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_contact(request):
+    """Any seller edits their contact person / WhatsApp override."""
+    seller = request.user.seller
+    form = SellerContactForm(request.POST, instance=seller)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Contact information saved.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_location(request):
+    """Any seller edits their business location (municipality/post/suco/
+    aldeia/full address/GPS). Does not affect verification status."""
+    seller = request.user.seller
+    form = SellerLocationForm(request.POST, instance=seller)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Location saved.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_branding(request):
+    """Any seller uploads/replaces their logo and cover image."""
+    seller = request.user.seller
+    form = SellerBrandingForm(request.POST, request.FILES, instance=seller)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Branding saved.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_operations(request):
+    """Any seller edits opening/closing hours and delivery/pickup/cash-on-
+    delivery availability. Informational only this phase — not wired into
+    checkout logic."""
+    seller = request.user.seller
+    form = SellerOperationsForm(request.POST, instance=seller)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Operations saved.'))
     else:
         messages.error(request, _('Please correct the errors below.'))
     return redirect('olretail:seller_payment_settings')
@@ -1209,12 +1278,12 @@ def seller_company_info(request):
 @seller_required
 @require_POST
 def seller_submit_verification(request):
-    """Company or restaurant seller submits (or resubmits) a business
-    registration document for admin review — a trust badge for buyers, not
-    a requirement to keep selling."""
+    """Non-individual seller submits (or resubmits) a business registration
+    document for admin review — a trust badge for buyers, not a
+    requirement to keep selling."""
     seller = request.user.seller
-    if seller.seller_type not in (SellerType.COMPANY, SellerType.RESTAURANT):
-        messages.error(request, _('Business verification only applies to company and restaurant seller accounts.'))
+    if seller.seller_type == SellerType.INDIVIDUAL:
+        messages.error(request, _('Business verification only applies to non-individual seller accounts.'))
         return redirect('olretail:seller_payment_settings')
 
     form = SellerVerificationForm(request.POST, request.FILES)

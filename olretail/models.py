@@ -92,9 +92,17 @@ class Courier(models.Model):
 
 
 class SellerType(models.TextChoices):
+    """Legal/organizational identity of the seller — who they are, not what
+    they sell (see BusinessCategory below for that, a separate concept).
+    Rarely changes once set. "Restaurant" used to live here but is now a
+    BusinessCategory instead — see migration 0039 for the one-time data
+    migration moving existing restaurant sellers to REGISTERED_BUSINESS
+    plus the Restaurant business category."""
     INDIVIDUAL = "individual", _("Individual")
-    COMPANY = "company", _("Company")
-    RESTAURANT = "restaurant", _("Restaurant")
+    REGISTERED_BUSINESS = "registered_business", _("Registered Business")
+    COOPERATIVE = "cooperative", _("Cooperative")
+    GOVERNMENT = "government", _("Government Institution")
+    NGO = "ngo", _("NGO / Non-Profit")
 
 
 class SellerVerificationStatus(models.TextChoices):
@@ -117,23 +125,71 @@ class Seller(models.Model):
     seller_type = models.CharField(
         max_length=20, choices=SellerType.choices, default=SellerType.INDIVIDUAL,
     )
-    # Only populated for SellerType.COMPANY and SellerType.RESTAURANT —
-    # collected at registration, and editable afterward on the seller
-    # payment-settings page.
+    # Business name — populated for any non-individual seller_type, not just
+    # company/restaurant. Field name kept as-is (predates the SellerType
+    # redesign) to avoid a churny column rename; only its meaning generalized.
     company_name = models.CharField(max_length=200, blank=True)
     company_tin = models.CharField(max_length=50, blank=True, verbose_name="TIN")
+    # Legacy business address field — superseded by full_address plus the
+    # municipality/administrative_post/suco/aldeia hierarchy below. Kept in
+    # schema for backward compatibility with existing data but no longer
+    # shown on any form; new sellers should use full_address instead.
     company_address = models.CharField(max_length=255, blank=True)
     company_bank_account = models.CharField(max_length=100, blank=True)
-    # The business's legally responsible person — same COMPANY/RESTAURANT-only
-    # scope as the company_* fields above.
+    business_registration_number = models.CharField(
+        max_length=100, blank=True,
+        help_text=_("Official business/company registration number, distinct from the TIN."),
+    )
+    # The business's legally responsible person — same non-individual-only
+    # scope as the company_* fields above. Still editable on the Business
+    # Profile page for sellers who filled it in previously; superseded at
+    # signup time by the simpler contact_person_name below.
     director_name = models.CharField(max_length=200, blank=True)
     director_id_number = models.CharField(max_length=50, blank=True, verbose_name="Director ID / TIN Number")
     director_phone = models.CharField(max_length=40, blank=True)
     director_email = models.EmailField(blank=True)
+    # Collected at signup for every seller type (including individuals) —
+    # "who should buyers/admins ask for regarding this business."
+    contact_person_name = models.CharField(max_length=200, blank=True)
+    # Overrides the mobile-derived WhatsApp number (see get_whatsapp_number)
+    # when a seller's WhatsApp contact differs from their phone number.
+    whatsapp_number_override = models.CharField(
+        max_length=40, blank=True,
+        help_text=_("Leave blank to use your phone number for WhatsApp."),
+    )
+    municipality = models.ForeignKey(
+        "Municipality", on_delete=models.SET_NULL, null=True, blank=True, related_name="sellers",
+    )
+    # Administrative Post / Suco / Aldeia are plain free text, not a
+    # relational hierarchy — no authoritative dataset for these levels was
+    # available when this was built; Municipality alone is a real seeded
+    # lookup table (see migration 0036).
+    administrative_post = models.CharField(max_length=150, blank=True)
+    suco = models.CharField(max_length=150, blank=True)
+    aldeia = models.CharField(max_length=150, blank=True)
+    full_address = models.CharField(
+        max_length=255, blank=True,
+        help_text=_("Detailed street-level business address."),
+    )
+    gps_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    gps_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    logo = models.ImageField(upload_to="seller_logos/", null=True, blank=True)
+    cover_image = models.ImageField(upload_to="seller_cover_images/", null=True, blank=True)
+    opening_time = models.TimeField(null=True, blank=True)
+    closing_time = models.TimeField(null=True, blank=True)
+    delivery_available = models.BooleanField(default=False)
+    pickup_available = models.BooleanField(default=False)
+    cash_on_delivery_available = models.BooleanField(default=False)
+    # What the seller sells — independent of seller_type (who they are).
+    # A seller can pick several; the list is admin-extensible with no
+    # migration required (see BusinessCategory below).
+    business_categories = models.ManyToManyField(
+        "BusinessCategory", blank=True, related_name="sellers",
+    )
     # Business verification — a trust badge for buyers, not a gate: an
-    # unverified company can still sell and get paid exactly the same as a
+    # unverified business can still sell and get paid exactly the same as a
     # verified one (contrast Courier.verification_status, which does gate
-    # delivery assignment).
+    # delivery assignment). Applies to any non-individual seller_type.
     business_document = models.ImageField(upload_to="seller_business_docs/", null=True, blank=True)
     verification_status = models.CharField(
         max_length=20, choices=SellerVerificationStatus.choices, default=SellerVerificationStatus.PENDING,
@@ -146,11 +202,11 @@ class Seller(models.Model):
 
     @property
     def get_name(self):
-        # Company and Restaurant sellers trade under their business name
-        # everywhere they're shown as "the seller" — product listings, order
+        # Non-individual sellers trade under their business name everywhere
+        # they're shown as "the seller" — product listings, order
         # confirmations, payouts, etc. — not the individual account holder's
         # personal name.
-        if self.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT) and self.company_name:
+        if self.seller_type != SellerType.INDIVIDUAL and self.company_name:
             return self.company_name
         return self.user.get_full_name() or self.user.username
 
@@ -161,19 +217,21 @@ class Seller(models.Model):
     @property
     def is_verified_business(self):
         return (
-            self.seller_type in (SellerType.COMPANY, SellerType.RESTAURANT)
+            self.seller_type != SellerType.INDIVIDUAL
             and self.verification_status == SellerVerificationStatus.VERIFIED
         )
 
     @property
-    def whatsapp_number(self):
-        """Mobile number in international digits-only form for wa.me links.
-
-        Numbers are stored as typed by sellers (usually the 7/8-digit local
+    def get_whatsapp_number(self):
+        """WhatsApp contact in international digits-only form for wa.me
+        links. Uses whatsapp_number_override if the seller set one (their
+        WhatsApp differs from their phone), otherwise derives it from
+        mobile — numbers are stored as typed (usually 7/8-digit local
         format); WhatsApp requires country code with no +, spaces or zeros,
         so local numbers get Timor-Leste's 670 prefix.
         """
-        digits = "".join(c for c in self.mobile if c.isdigit()).lstrip("0")
+        source = self.whatsapp_number_override or self.mobile
+        digits = "".join(c for c in source if c.isdigit()).lstrip("0")
         if not digits:
             return ""
         if not digits.startswith("670"):
@@ -229,6 +287,26 @@ class City(models.Model):
         return self.city
 
 
+class Municipality(models.Model):
+    """Timor-Leste's top-level administrative division, for a Seller's
+    registered business address (see Seller.municipality). Deliberately NOT
+    tied to City/Country above — those are delivery-logistics geography
+    (shipping zones/fees), a separate concern from a seller's own business
+    address. Administrative Post/Suco/Aldeia (the finer-grained levels
+    below Municipality) are plain free-text fields on Seller rather than a
+    relational hierarchy, since no authoritative dataset for those levels
+    was available when this was built."""
+
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "Municipalities"
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
@@ -242,6 +320,37 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return f"{reverse('olretail:index')}?category={self.slug}"
+
+
+class BusinessCategory(models.Model):
+    """What a seller sells (Electronics, Restaurant, Agriculture, ...) — a
+    seller can pick several (see Seller.business_categories). Deliberately a
+    separate model from Category above, not reused: Category drives
+    per-listing cart/checkout behavior (NON_CART_CATEGORY_SLUGS etc.), which
+    is an unrelated concept to "what general line of business is this
+    seller in." No django-modeltranslation here (unlike Category) — this is
+    only shown on the signup/business-profile forms this phase, not on
+    every product page in 4 languages; revisit if a public seller
+    storefront page is ever built. New rows can be added via the admin with
+    no migration required."""
+
+    title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ["title"]
+        verbose_name_plural = "Business Categories"
+
+    def __str__(self):
+        return self.title
+
+
+# The Restaurant BusinessCategory's slug — mirrors RESTAURANT_CATEGORY_SLUG
+# below (that one's for the product Category taxonomy; this one's for the
+# separate Seller-level BusinessCategory taxonomy). Used to check "is this
+# seller a restaurant" without seller_type (Restaurant is a business
+# category now, not a seller type — see SellerType's docstring).
+RESTAURANT_BUSINESS_CATEGORY_SLUG = "restaurant"
 
 
 # Categories that are contact-the-seller-only: big-ticket or service items

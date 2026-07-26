@@ -85,16 +85,15 @@
               </div>
             </div>
 
-            <!-- Business Information (company & restaurant sellers only) -->
+            <!-- Business Information (non-individual sellers only) -->
             <div class="mb-4 d-none" id="company-info-section">
               <h5 class="mb-3 font-weight-bold">
-                <i class="fas fa-building text-primary mr-2"></i>
-                <span data-label-company>{% trans "Company Information" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant Information" %}</span>
+                <i class="fas fa-building text-primary mr-2"></i>{% trans "Business Information" %}
               </h5>
 
               <div class="form-group">
                 <label for="{{ form.company_name.id_for_label }}">
-                  <span data-label-company>{% trans "Company name" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant name" %}</span>
+                  {{ form.company_name.label }}
                   <span class="text-danger">*</span>
                 </label>
                 {{ form.company_name }}
@@ -106,101 +105,38 @@
               </div>
 
               <div class="form-group">
-                <label for="{{ form.company_tin.id_for_label }}">
-                  {{ form.company_tin.label }}
-                  <span class="text-danger">*</span>
+                <label for="{{ form.contact_person_name.id_for_label }}">
+                  {{ form.contact_person_name.label }}
                 </label>
-                {{ form.company_tin }}
-                {% if form.company_tin.errors %}
+                {{ form.contact_person_name }}
+                {% if form.contact_person_name.errors %}
                   <small class="form-text text-danger d-block mt-1">
-                    {{ form.company_tin.errors }}
-                  </small>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="{{ form.company_address.id_for_label }}">
-                  <span data-label-company>{% trans "Company address" %}</span><span data-label-restaurant class="d-none">{% trans "Restaurant address" %}</span>
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.company_address }}
-                {% if form.company_address.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.company_address.errors }}
-                  </small>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="{{ form.company_bank_account.id_for_label }}">
-                  {{ form.company_bank_account.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.company_bank_account }}
-                {% if form.company_bank_account.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.company_bank_account.errors }}
+                    {{ form.contact_person_name.errors }}
                   </small>
                 {% endif %}
               </div>
             </div>
 
-            <!-- Director Information (company & restaurant sellers only) -->
-            <div class="mb-4 d-none" id="director-info-section">
+            <!-- Business Categories (every seller type) -->
+            <div class="mb-4 d-none" id="business-categories-section">
               <h5 class="mb-3 font-weight-bold">
-                <i class="fas fa-id-badge text-primary mr-2"></i>{% trans "Director Information" %}
+                <i class="fas fa-tags text-primary mr-2"></i>{{ form.business_categories.label }}
+                <span class="text-danger">*</span>
               </h5>
-
-              <div class="form-group">
-                <label for="{{ form.director_name.id_for_label }}">
-                  {{ form.director_name.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.director_name }}
-                {% if form.director_name.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.director_name.errors }}
-                  </small>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="{{ form.director_id_number.id_for_label }}">
-                  {{ form.director_id_number.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.director_id_number }}
-                {% if form.director_id_number.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.director_id_number.errors }}
-                  </small>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="{{ form.director_phone.id_for_label }}">
-                  {{ form.director_phone.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.director_phone }}
-                {% if form.director_phone.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.director_phone.errors }}
-                  </small>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="{{ form.director_email.id_for_label }}">
-                  {{ form.director_email.label }}
-                  <span class="text-danger">*</span>
-                </label>
-                {{ form.director_email }}
-                {% if form.director_email.errors %}
-                  <small class="form-text text-danger d-block mt-1">
-                    {{ form.director_email.errors }}
-                  </small>
-                {% endif %}
+              {% if form.business_categories.errors %}
+                <div class="alert alert-danger alert-sm mb-3">
+                  {{ form.business_categories.errors }}
+                </div>
+              {% endif %}
+              <div class="row">
+                {% for checkbox in form.business_categories %}
+                <div class="col-md-4 mb-2">
+                  <div class="custom-control custom-checkbox">
+                    {{ checkbox.tag }}
+                    <label class="custom-control-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                  </div>
+                </div>
+                {% endfor %}
               </div>
             </div>
 
@@ -465,10 +401,8 @@
 (function () {
   var sellerTypeSection = document.getElementById("seller-type-section");
   var companySection = document.getElementById("company-info-section");
-  var directorSection = document.getElementById("director-info-section");
+  var businessCategoriesSection = document.getElementById("business-categories-section");
   var courierSection = document.getElementById("courier-info-section");
-  var companyLabels = document.querySelectorAll("[data-label-company]");
-  var restaurantLabels = document.querySelectorAll("[data-label-restaurant]");
 
   function accountTypeIsSeller() {
     var checked = document.querySelector('input[name="account_type"]:checked');
@@ -478,25 +412,18 @@
     var checked = document.querySelector('input[name="account_type"]:checked');
     return !!checked && checked.value === "courier";
   }
-  function sellerTypeIsCompany() {
+  function sellerTypeIsIndividual() {
     var checked = document.querySelector('input[name="seller_type"]:checked');
-    return !!checked && checked.value === "company";
-  }
-  function sellerTypeIsRestaurant() {
-    var checked = document.querySelector('input[name="seller_type"]:checked');
-    return !!checked && checked.value === "restaurant";
+    return !checked || checked.value === "individual";
   }
   function updateVisibility() {
     var showSellerType = accountTypeIsSeller();
     sellerTypeSection.classList.toggle("d-none", !showSellerType);
 
-    var isRestaurant = showSellerType && sellerTypeIsRestaurant();
-    var isBusiness = showSellerType && (sellerTypeIsCompany() || isRestaurant);
-    companySection.classList.toggle("d-none", !isBusiness);
-    directorSection.classList.toggle("d-none", !isBusiness);
-
-    companyLabels.forEach(function (el) { el.classList.toggle("d-none", isRestaurant); });
-    restaurantLabels.forEach(function (el) { el.classList.toggle("d-none", !isRestaurant); });
+    // Business Name/Contact Person only make sense for non-individual
+    // sellers; Business Categories apply to every seller type.
+    companySection.classList.toggle("d-none", !(showSellerType && !sellerTypeIsIndividual()));
+    businessCategoriesSection.classList.toggle("d-none", !showSellerType);
 
     courierSection.classList.toggle("d-none", !accountTypeIsCourier());
   }

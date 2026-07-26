@@ -304,6 +304,13 @@
             <span class="badge badge-success"><i class="fas fa-check-circle mr-1" aria-hidden="true"></i>{% trans 'Verified Business' %}</span>
             {% endif %}
           </p>
+          {% if product.seller.delivery_available or product.seller.pickup_available or product.seller.cash_on_delivery_available %}
+          <p class="mb-1">
+            {% if product.seller.delivery_available %}<span class="badge badge-light border mr-1"><i class="fas fa-truck mr-1" aria-hidden="true"></i>{% trans 'Delivery available' %}</span>{% endif %}
+            {% if product.seller.pickup_available %}<span class="badge badge-light border mr-1"><i class="fas fa-store mr-1" aria-hidden="true"></i>{% trans 'Pickup available' %}</span>{% endif %}
+            {% if product.seller.cash_on_delivery_available %}<span class="badge badge-light border mr-1"><i class="fas fa-money-bill-wave mr-1" aria-hidden="true"></i>{% trans 'Cash on Delivery' %}</span>{% endif %}
+          </p>
+          {% endif %}
           {% if restaurant_rating_stats and restaurant_rating_stats.count %}
           <p class="mb-1 small">
             {% for i in "12345" %}
@@ -314,7 +321,7 @@
           {% endif %}
           <p class="mb-1">
             <i class="fas fa-phone mr-1" aria-hidden="true"></i>
-            <a href="tel:+{{ product.seller.whatsapp_number }}">{{ product.seller.mobile }}</a>
+            <a href="tel:+{{ product.seller.get_whatsapp_number }}">{{ product.seller.mobile }}</a>
           </p>
           <p class="mb-2 text-muted small"><i class="fas fa-home mr-1" aria-hidden="true"></i>{{ product.seller.address }}</p>
           {% if whatsapp_url %}

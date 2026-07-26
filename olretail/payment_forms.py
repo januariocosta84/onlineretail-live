@@ -2,7 +2,7 @@ from django import forms
 from django.db.models import Avg, Count
 from django.utils.translation import gettext_lazy as _
 
-from olretail.models import City, Courier, CourierVerificationStatus, Seller
+from olretail.models import City, Courier, CourierVerificationStatus, Municipality, Seller
 from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod
 from .subscription_models import SubscriptionPlan
 from .validators import validate_image_size
@@ -315,19 +315,24 @@ class SellerPaymentInstructionsForm(forms.ModelForm):
         }
 
 
-class SellerCompanyInfoForm(forms.ModelForm):
-    """Lets a company or restaurant seller fix their business and director
-    details after registration (the registration form is the only other
-    place these are collected)."""
+class SellerBusinessIdentityForm(forms.ModelForm):
+    """Lets a non-individual seller fix their business/registration and
+    director details after registration (the registration form only
+    collects Business Name + Contact Person up front — everything else
+    lives here). Changing company_name/company_tin/company_address/
+    business_registration_number reverts an already-verified seller to
+    pending review (see olretail/payment_views.py seller_business_identity)."""
 
     class Meta:
         model = Seller
         fields = [
-            'company_name', 'company_tin', 'company_address', 'company_bank_account',
+            'company_name', 'business_registration_number', 'company_tin',
+            'company_address', 'company_bank_account',
             'director_name', 'director_id_number', 'director_phone', 'director_email',
         ]
         widgets = {
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'business_registration_number': forms.TextInput(attrs={'class': 'form-control'}),
             'company_tin': forms.TextInput(attrs={'class': 'form-control'}),
             'company_address': forms.TextInput(attrs={'class': 'form-control'}),
             'company_bank_account': forms.TextInput(attrs={'class': 'form-control'}),
@@ -338,13 +343,124 @@ class SellerCompanyInfoForm(forms.ModelForm):
         }
         labels = {
             'company_name': _('Business name'),
+            'business_registration_number': _('Business Registration Number'),
             'company_tin': _('TIN (Tax Identification Number)'),
-            'company_address': _('Business address'),
+            'company_address': _('Business address (legacy — use Location below instead)'),
             'company_bank_account': _('Bank account'),
             'director_name': _('Director name'),
             'director_id_number': _('Director ID / TIN number'),
             'director_phone': _('Director phone number'),
             'director_email': _('Director email'),
+        }
+
+
+class SellerContactForm(forms.ModelForm):
+    """Who buyers/admins should contact, and (optionally) a WhatsApp number
+    different from the seller's phone number."""
+
+    class Meta:
+        model = Seller
+        fields = ['contact_person_name', 'whatsapp_number_override']
+        widgets = {
+            'contact_person_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'whatsapp_number_override': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'contact_person_name': _('Contact Person'),
+            'whatsapp_number_override': _('WhatsApp Number'),
+        }
+        help_texts = {
+            'whatsapp_number_override': _('Leave blank to use your phone number for WhatsApp.'),
+        }
+
+
+class SellerLocationForm(forms.ModelForm):
+    """Business address, Timor-Leste municipality, and optional GPS
+    coordinates — separate from the personal/delivery address collected at
+    signup."""
+
+    class Meta:
+        model = Seller
+        fields = [
+            'municipality', 'administrative_post', 'suco', 'aldeia',
+            'full_address', 'gps_latitude', 'gps_longitude',
+        ]
+        widgets = {
+            'municipality': forms.Select(attrs={'class': 'form-control'}),
+            'administrative_post': forms.TextInput(attrs={'class': 'form-control'}),
+            'suco': forms.TextInput(attrs={'class': 'form-control'}),
+            'aldeia': forms.TextInput(attrs={'class': 'form-control'}),
+            'full_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'gps_latitude': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
+            'gps_longitude': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
+        }
+        labels = {
+            'municipality': _('Municipality'),
+            'administrative_post': _('Administrative Post'),
+            'suco': _('Suco'),
+            'aldeia': _('Aldeia'),
+            'full_address': _('Full Address'),
+            'gps_latitude': _('GPS Latitude'),
+            'gps_longitude': _('GPS Longitude'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['municipality'].queryset = Municipality.objects.all()
+        self.fields['municipality'].empty_label = _('Select municipality')
+
+
+class SellerBrandingForm(forms.ModelForm):
+    """Logo and cover image shown on the seller's listings/profile."""
+
+    class Meta:
+        model = Seller
+        fields = ['logo', 'cover_image']
+        widgets = {
+            'logo': forms.ClearableFileInput(attrs={'class': 'form-control-file', 'accept': 'image/*'}),
+            'cover_image': forms.ClearableFileInput(attrs={'class': 'form-control-file', 'accept': 'image/*'}),
+        }
+        labels = {
+            'logo': _('Business Logo'),
+            'cover_image': _('Business Cover Image'),
+        }
+
+    def clean_logo(self):
+        photo = self.cleaned_data.get('logo')
+        if photo:
+            validate_image_size(photo)
+        return photo
+
+    def clean_cover_image(self):
+        photo = self.cleaned_data.get('cover_image')
+        if photo:
+            validate_image_size(photo)
+        return photo
+
+
+class SellerOperationsForm(forms.ModelForm):
+    """Opening/closing hours and delivery/pickup/cash-on-delivery
+    availability — informational this phase, not wired into checkout."""
+
+    class Meta:
+        model = Seller
+        fields = [
+            'opening_time', 'closing_time',
+            'delivery_available', 'pickup_available', 'cash_on_delivery_available',
+        ]
+        widgets = {
+            'opening_time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'closing_time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'delivery_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'pickup_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'cash_on_delivery_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'opening_time': _('Opening Hours'),
+            'closing_time': _('Closing Hours'),
+            'delivery_available': _('Delivery Available'),
+            'pickup_available': _('Pickup Available'),
+            'cash_on_delivery_available': _('Cash on Delivery Available'),
         }
 
 

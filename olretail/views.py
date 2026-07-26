@@ -18,6 +18,7 @@ from modeltranslation.utils import build_localized_fieldname
 from .decorators import seller_required
 from .forms import CommentForm, MenuCategoryForm, ProductForm
 from .models import (
+    RESTAURANT_BUSINESS_CATEGORY_SLUG,
     RESTAURANT_CATEGORY_SLUG,
     SERVICE_CATEGORY_SLUG,
     VEHICLE_RENTAL_CATEGORY_SLUG,
@@ -30,7 +31,6 @@ from .models import (
     ProductStatus,
     Rating,
     SellerSubscription,
-    SellerType,
     Wishlist,
 )
 
@@ -250,12 +250,12 @@ def product_detail(request, slug):
     can_view_contact = is_buyer(request.user) or is_owner or request.user.is_staff
 
     whatsapp_url = ""
-    if can_view_contact and product.seller.whatsapp_number:
+    if can_view_contact and product.seller.get_whatsapp_number:
         wa_text = _("Hello, I am interested in “%(name)s” (%(url)s) on TimorMart.") % {
             "name": product.name,
             "url": request.build_absolute_uri(product.get_absolute_url()),
         }
-        whatsapp_url = f"https://wa.me/{product.seller.whatsapp_number}?text={quote(wa_text)}"
+        whatsapp_url = f"https://wa.me/{product.seller.get_whatsapp_number}?text={quote(wa_text)}"
 
     public_comments = product.comments.filter(is_public=True)
     sentiment_counts = {
@@ -405,7 +405,9 @@ def product_create(request):
             "vehicle_rental_category_ids": list(
                 Category.objects.filter(slug=VEHICLE_RENTAL_CATEGORY_SLUG).values_list("id", flat=True)
             ),
-            "is_restaurant_seller": seller.seller_type == SellerType.RESTAURANT,
+            "is_restaurant_seller": seller.business_categories.filter(
+                slug=RESTAURANT_BUSINESS_CATEGORY_SLUG
+            ).exists(),
         },
     )
 
@@ -458,7 +460,9 @@ def product_update(request, slug):
             "vehicle_rental_category_ids": list(
                 Category.objects.filter(slug=VEHICLE_RENTAL_CATEGORY_SLUG).values_list("id", flat=True)
             ),
-            "is_restaurant_seller": product.seller.seller_type == SellerType.RESTAURANT,
+            "is_restaurant_seller": product.seller.business_categories.filter(
+                slug=RESTAURANT_BUSINESS_CATEGORY_SLUG
+            ).exists(),
         },
     )
 
@@ -496,7 +500,7 @@ def _require_restaurant_seller(request):
     below is gated by this instead of a decorator since it needs to render
     a message and redirect, not just 403."""
     seller = request.user.seller
-    if seller.seller_type != SellerType.RESTAURANT:
+    if not seller.business_categories.filter(slug=RESTAURANT_BUSINESS_CATEGORY_SLUG).exists():
         messages.error(request, _("Menu sections are only available for restaurant seller accounts."))
         return None
     return seller

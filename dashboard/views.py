@@ -28,7 +28,7 @@ from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, r
 from olretail.models import (
     Category, Comment, Courier, CourierVerificationStatus, Dispute, DisputeReason, DisputeResolution,
     DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus, PlatformSettings, Product,
-    ProductStatus, Seller, SellerBalance, SellerType, SellerVerificationStatus,
+    ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
 from olretail.payouts import create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
@@ -876,10 +876,8 @@ def courier_verification_action(request, pk):
 @admin_required
 def seller_verification(request):
     sellers = (
-        Seller.objects.filter(
-            seller_type__in=(SellerType.COMPANY, SellerType.RESTAURANT),
-            verification_status=SellerVerificationStatus.PENDING,
-        )
+        Seller.objects.filter(verification_status=SellerVerificationStatus.PENDING)
+        .exclude(seller_type=SellerType.INDIVIDUAL)
         # Nullable ImageField: rows added via migration (or never touched)
         # can have NULL rather than "" — exclude both, not just "".
         .exclude(Q(business_document="") | Q(business_document__isnull=True))
@@ -1068,7 +1066,8 @@ def orders(request):
 @admin_required
 def restaurants(request):
     qs = (
-        Seller.objects.filter(seller_type=SellerType.RESTAURANT)
+        Seller.objects.filter(business_categories__slug=RESTAURANT_BUSINESS_CATEGORY_SLUG)
+        .distinct()
         .select_related("user")
         .annotate(product_count=Count("product"))
         .order_by("user__first_name")
@@ -1080,13 +1079,20 @@ def restaurants(request):
     return render(request, "dashboard/restaurants.html", {"section": "restaurants", "restaurants": qs})
 
 
-# ── Company list (Company + Restaurant sellers) ────────────────────────────
+# ── Business list (every non-individual seller type) ──────────────────────
+
+NON_INDIVIDUAL_SELLER_TYPES = (
+    SellerType.REGISTERED_BUSINESS, SellerType.COOPERATIVE, SellerType.GOVERNMENT, SellerType.NGO,
+)
+NON_INDIVIDUAL_SELLER_TYPE_CHOICES = [
+    (value, label) for value, label in SellerType.choices if value != SellerType.INDIVIDUAL
+]
 
 
 @admin_required
-def company_list(request):
+def business_list(request):
     qs = (
-        Seller.objects.filter(seller_type__in=(SellerType.COMPANY, SellerType.RESTAURANT))
+        Seller.objects.exclude(seller_type=SellerType.INDIVIDUAL)
         .select_related("user")
         .annotate(product_count=Count("product"))
         .order_by("company_name")
@@ -1101,7 +1107,7 @@ def company_list(request):
             | Q(user__username__icontains=q)
         )
     seller_type = request.GET.get("seller_type") or ""
-    if seller_type in (SellerType.COMPANY, SellerType.RESTAURANT):
+    if seller_type in NON_INDIVIDUAL_SELLER_TYPES:
         qs = qs.filter(seller_type=seller_type)
 
     params = request.GET.copy()
@@ -1110,12 +1116,13 @@ def company_list(request):
 
     return render(
         request,
-        "dashboard/company_list.html",
+        "dashboard/business_list.html",
         {
-            "section": "company_list",
+            "section": "business_list",
             "page_obj": page_obj,
             "querystring": params.urlencode(),
             "q": q,
             "seller_type": seller_type,
+            "seller_type_choices": NON_INDIVIDUAL_SELLER_TYPE_CHOICES,
         },
     )

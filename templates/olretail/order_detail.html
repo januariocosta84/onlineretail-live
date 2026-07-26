@@ -407,7 +407,7 @@
             {% if is_buyer %}
             <div class="alert alert-info">
               <i class="fas fa-whatsapp mr-2"></i>
-              <a href="https://wa.me/{{ order.seller.whatsapp_number }}?text=Hi%20about%20order%20{{ order.order_number }}" target="_blank" rel="noopener" class="btn btn-sm btn-success">
+              <a href="https://wa.me/{{ order.seller.get_whatsapp_number }}?text=Hi%20about%20order%20{{ order.order_number }}" target="_blank" rel="noopener" class="btn btn-sm btn-success">
                 {% trans "Chat on WhatsApp" %}
               </a>
             </div>

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
-from olretail.models import SellerType
+from olretail.models import BusinessCategory, SellerType
 from olretail.validators import validate_image_size
 
 from .roles import ACCOUNT_TYPE_CHOICES, ROLE_BUYER, ROLE_BUYER_SELLER, ROLE_COURIER, ROLE_SELLER
@@ -28,49 +28,20 @@ class RegistrationForm(UserCreationForm):
     company_name = forms.CharField(
         max_length=200,
         required=False,
-        label=_("Company name"),
-        widget=forms.TextInput(attrs={"placeholder": _("Acme Trading Lda")}),
+        label=_("Business Name"),
+        widget=forms.TextInput(attrs={"placeholder": _("Your business or organization name")}),
     )
-    company_tin = forms.CharField(
-        max_length=50,
-        required=False,
-        label=_("TIN (Tax Identification Number)"),
-        widget=forms.TextInput(attrs={"placeholder": _("e.g. 123456789")}),
-    )
-    company_address = forms.CharField(
-        max_length=255,
-        required=False,
-        label=_("Company address"),
-        widget=forms.TextInput(attrs={"placeholder": _("Street, City, Region")}),
-    )
-    company_bank_account = forms.CharField(
-        max_length=100,
-        required=False,
-        label=_("Bank account"),
-        widget=forms.TextInput(attrs={"placeholder": _("Bank name, account number, account holder")}),
-    )
-    director_name = forms.CharField(
+    contact_person_name = forms.CharField(
         max_length=200,
         required=False,
-        label=_("Director name"),
+        label=_("Contact Person"),
         widget=forms.TextInput(attrs={"placeholder": _("Full name")}),
     )
-    director_id_number = forms.CharField(
-        max_length=50,
+    business_categories = forms.ModelMultipleChoiceField(
+        queryset=BusinessCategory.objects.all(),
         required=False,
-        label=_("Director ID / TIN number"),
-        widget=forms.TextInput(attrs={"placeholder": _("e.g. 123456789")}),
-    )
-    director_phone = forms.CharField(
-        max_length=40,
-        required=False,
-        label=_("Director phone number"),
-        widget=forms.TextInput(attrs={"placeholder": _("7012345 or +670 7012345")}),
-    )
-    director_email = forms.EmailField(
-        required=False,
-        label=_("Director email"),
-        widget=forms.EmailInput(attrs={"placeholder": _("director@example.com")}),
+        label=_("Business Categories"),
+        widget=forms.CheckboxSelectMultiple,
     )
     id_document = forms.ImageField(
         required=False,
@@ -165,20 +136,11 @@ class RegistrationForm(UserCreationForm):
             return cleaned_data
 
         cleaned_data["seller_type"] = cleaned_data.get("seller_type") or SellerType.INDIVIDUAL
-        if cleaned_data["seller_type"] not in (SellerType.COMPANY, SellerType.RESTAURANT):
-            return cleaned_data
 
-        required_fields = {
-            "company_name": _("Business name is required."),
-            "company_tin": _("TIN is required."),
-            "company_address": _("Business address is required."),
-            "company_bank_account": _("Bank account is required."),
-            "director_name": _("Director name is required."),
-            "director_id_number": _("Director ID / TIN number is required."),
-            "director_phone": _("Director phone number is required."),
-            "director_email": _("Director email is required."),
-        }
-        for field_name, message in required_fields.items():
-            if not cleaned_data.get(field_name):
-                self.add_error(field_name, message)
+        if not cleaned_data.get("business_categories"):
+            self.add_error("business_categories", _("Select at least one business category."))
+
+        if cleaned_data["seller_type"] != SellerType.INDIVIDUAL and not cleaned_data.get("company_name"):
+            self.add_error("company_name", _("Business name is required."))
+
         return cleaned_data

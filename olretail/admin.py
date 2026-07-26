@@ -2,8 +2,8 @@ from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
 from .models import (
-    Buyer, Category, City, Comment, Country, Courier, CourierRating, MenuCategory, Notification, Order, Product,
-    ProductStatus, Rating, Seller,
+    BusinessCategory, Buyer, Category, City, Comment, Country, Courier, CourierRating, MenuCategory, Municipality,
+    Notification, Order, Product, ProductStatus, Rating, Seller,
     VirtualBankAccount, SimulatedBankTransaction, GatewayEventLog,
 )
 
@@ -17,6 +17,16 @@ class CategoryAdmin(TranslationAdmin):
     list_display = ["title", "slug"]
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ["title"]
+
+
+@admin.register(BusinessCategory)
+class BusinessCategoryAdmin(admin.ModelAdmin):
+    list_display = ["title", "slug"]
+    prepopulated_fields = {"slug": ("title",)}
+    search_fields = ["title"]
+
+
+admin.site.register(Municipality)
 
 
 class CommentInline(admin.TabularInline):
@@ -52,6 +62,7 @@ class SellerAdmin(admin.ModelAdmin):
     list_display = ["get_name", "mobile", "address", "seller_type", "company_name"]
     list_filter = ["seller_type"]
     search_fields = ["user__username", "user__first_name", "user__last_name", "mobile", "company_name", "company_tin"]
+    filter_horizontal = ["business_categories"]
 
 
 @admin.register(MenuCategory)
