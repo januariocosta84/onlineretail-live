@@ -265,22 +265,13 @@
             <h5 class="mb-3 font-weight-bold">
               <i class="fas fa-lock text-primary mr-2"></i>{% trans "Account Credentials" %}
             </h5>
-
-            <div class="form-group">
-              <label for="{{ form.username.id_for_label }}">
-                {{ form.username.label }}
-                <span class="text-danger">*</span>
-              </label>
-              {{ form.username }}
-              <small class="form-text text-muted">
-                {% trans "Letters, digits and @/./+/-/_ only. 30 characters or fewer." %}
-              </small>
-              {% if form.username.errors %}
-                <small class="form-text text-danger d-block mt-1">
-                  {{ form.username.errors }}
-                </small>
-              {% endif %}
-            </div>
+            <p class="text-muted small">
+              {% trans "Your username is generated automatically from your name and phone number — you'll see it in the welcome message after signing up, and you'll need it to sign in." %}
+            </p>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="alert alert-danger alert-sm mb-3">{{ form.username.errors }}</div>
+            {% endif %}
 
             <div class="form-group">
               <label for="{{ form.password1.id_for_label }}">

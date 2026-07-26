@@ -96,9 +96,9 @@ class RegistrationForm(UserCreationForm):
         self.fields["password2"].widget = forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": _("Confirm password")}
         )
-        self.fields["username"].widget = forms.TextInput(
-            attrs={"class": "form-control", "placeholder": _("choose_a_username")}
-        )
+        # Auto-generated server-side (see accounts.views._generate_username)
+        # from first/last name + phone number — never typed by the user.
+        self.fields["username"].widget = forms.HiddenInput()
 
     def clean_email(self):
         email = self.cleaned_data["email"].lower()

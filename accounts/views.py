@@ -4,9 +4,11 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
@@ -41,6 +43,23 @@ def _role_home(user):
     return "olretail:index"
 
 
+def _generate_username(first_name, last_name, mobile):
+    """firstname_lastname + the last 2 digits of the phone number, e.g.
+    "Jose"/"Costa"/"+670 7712 1173" -> "jose_costa73". Sellers/buyers never
+    type their own username — this is what they'll use to log in, shown to
+    them in the post-registration welcome message."""
+    base = slugify(f"{first_name}_{last_name}").replace("-", "_") or "user"
+    digits = "".join(c for c in mobile if c.isdigit())
+    suffix = digits[-2:] if len(digits) >= 2 else digits.zfill(2)
+    candidate = f"{base}{suffix}"
+    username = candidate
+    counter = 2
+    while User.objects.filter(username=username).exists():
+        username = f"{candidate}{counter}"
+        counter += 1
+    return username
+
+
 def _safe_next(request):
     next_url = request.POST.get("next") or request.GET.get("next")
     if next_url and url_has_allowed_host_and_scheme(
@@ -56,7 +75,11 @@ def register(request):
         return redirect(_role_home(request.user))
 
     if request.method == "POST":
-        form = RegistrationForm(request.POST, request.FILES)
+        post_data = request.POST.copy()
+        post_data["username"] = _generate_username(
+            post_data.get("first_name", ""), post_data.get("last_name", ""), post_data.get("mobile", "")
+        )
+        form = RegistrationForm(post_data, request.FILES)
         if form.is_valid():
             role = form.cleaned_data["account_type"]
             with transaction.atomic():
@@ -84,21 +107,24 @@ def register(request):
             if role == ROLE_BUYER:
                 messages.success(
                     request,
-                    _("Welcome, %(name)s! Your account is ready — happy shopping.")
-                    % {"name": user.first_name},
+                    _("Welcome, %(name)s! Your account is ready — happy shopping. Your username is "
+                      "%(username)s — you'll need it to sign in.")
+                    % {"name": user.first_name, "username": user.username},
                 )
             elif role == ROLE_COURIER:
                 messages.success(
                     request,
                     _("Welcome, %(name)s! Your courier account is ready — an administrator will "
-                      "review your documents before you can be assigned deliveries.")
-                    % {"name": user.first_name},
+                      "review your documents before you can be assigned deliveries. Your username is "
+                      "%(username)s — you'll need it to sign in.")
+                    % {"name": user.first_name, "username": user.username},
                 )
             else:
                 messages.success(
                     request,
-                    _("Welcome, %(name)s! Your seller account is ready.")
-                    % {"name": user.first_name},
+                    _("Welcome, %(name)s! Your seller account is ready. Your username is "
+                      "%(username)s — you'll need it to sign in.")
+                    % {"name": user.first_name, "username": user.username},
                 )
             return redirect(_role_home(user))
         messages.error(request, _("Please correct the errors below."))
