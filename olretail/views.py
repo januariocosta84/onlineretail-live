@@ -82,7 +82,7 @@ def _parse_price(raw):
 def index(request):
     """Catalog: approved products with category filter, search and sorting."""
     products = Product.objects.filter(status=ProductStatus.APPROVED).select_related(
-        "category", "item_location", "country", "seller__user"
+        "category", "seller__user", "seller__municipality"
     ).annotate(avg_rating=Avg("ratings__score"), rating_count=Count("ratings"))
 
     active_category = None
@@ -146,7 +146,7 @@ def index(request):
         best_sellers = list(
             _with_order_count(
                 Product.objects.filter(status=ProductStatus.APPROVED)
-                .select_related("category", "item_location", "country", "seller__user")
+                .select_related("category", "seller__user", "seller__municipality")
                 .annotate(avg_rating=Avg("ratings__score"), rating_count=Count("ratings"))
             )
             .filter(order_count__gt=0)
@@ -198,7 +198,7 @@ def category_redirect(request, id):
 
 def product_detail(request, slug):
     product = get_object_or_404(
-        Product.objects.select_related("category", "item_location", "country", "seller__user"),
+        Product.objects.select_related("category", "seller__user", "seller__municipality"),
         slug=slug,
     )
     from accounts.roles import is_seller as user_is_seller
@@ -321,7 +321,7 @@ def product_detail(request, slug):
 @seller_required
 def seller_dashboard(request):
     seller = request.user.seller
-    products = seller.product_set.select_related("category", "item_location").order_by("-created")
+    products = seller.product_set.select_related("category").order_by("-created")
 
     totals = products.aggregate(
         inventory_value=Sum(

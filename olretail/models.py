@@ -238,6 +238,20 @@ class Seller(models.Model):
             digits = "670" + digits
         return digits
 
+    @property
+    def display_location(self):
+        """Where to show this seller as being located — on their own
+        products' pages, instead of asking sellers to re-enter a location
+        per listing (see Product.item_location/country, retired for this).
+        Prefers the structured Business Profile municipality set on the
+        Business Profile page; falls back to the plain address every
+        seller has from registration, so this is never blank. Always the
+        seller's *current* location — a seller who moves doesn't need to
+        go back and update old listings, since nothing is snapshotted."""
+        if self.municipality_id:
+            return str(self.municipality)
+        return self.address
+
     def __str__(self):
         return self.get_name
 
@@ -423,8 +437,13 @@ class Product(models.Model):
     tags = models.CharField(
         max_length=255, blank=True, help_text=_('Optional — comma-separated, e.g. "scarf, wool, winter".')
     )
-    country = models.ForeignKey(Country, on_delete=models.PROTECT)
-    item_location = models.ForeignKey(City, on_delete=models.PROTECT)
+    # Retired from the Add Product form — duplicated the seller's own
+    # profile address for no benefit (never used for delivery fees, courier
+    # matching, or search; see Seller.display_location, used instead on the
+    # product pages). Kept nullable rather than dropped so existing rows'
+    # historical values aren't lost.
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True)
+    item_location = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     quantity = models.PositiveIntegerField()

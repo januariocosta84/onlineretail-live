@@ -48,8 +48,6 @@ class ProductForm(forms.ModelForm):
         fields = (
             "price",
             "category",
-            "country",
-            "item_location",
             "quantity",
             "condition",
             "size",
@@ -69,8 +67,6 @@ class ProductForm(forms.ModelForm):
         labels = {
             "price": _("Price"),
             "category": _("Category"),
-            "country": _("Country"),
-            "item_location": _("City"),
             "quantity": _("Quantity"),
             "condition": _("Condition"),
             "size": _("Size"),
@@ -108,8 +104,6 @@ class ProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self._seller = seller
         self.fields["category"].empty_label = _("Select category")
-        self.fields["country"].empty_label = _("Select country")
-        self.fields["item_location"].empty_label = _("Select city")
         self.fields["menu_category"].queryset = (
             MenuCategory.objects.filter(seller=seller) if seller else MenuCategory.objects.none()
         )

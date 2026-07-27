@@ -267,10 +267,12 @@
       </p>
       {% endif %}
 
+      {% if product.seller.display_location %}
       <p class="mb-1 text-muted">
         <i class="fa fa-map-marker-alt mr-1" aria-hidden="true"></i>
-        {{ product.item_location }}, {{ product.country }}
+        {{ product.seller.display_location }}
       </p>
+      {% endif %}
       <p class="mb-3 text-muted small">{% trans 'Listed' %} {{ product.created|date:"j M Y" }}</p>
 
       {% if product.size or product.pieces_per_unit or product.units_per_box %}

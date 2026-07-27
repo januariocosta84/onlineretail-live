@@ -38,7 +38,7 @@ class CommentInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ["name", "seller", "category", "price", "quantity", "condition", "status", "featured", "created"]
-    list_filter = ["status", "featured", "condition", "category", "country"]
+    list_filter = ["status", "featured", "condition", "category"]
     search_fields = ["name", "description", "seller__user__username"]
     prepopulated_fields = {"slug": ("name",)}
     list_select_related = ["seller__user", "category"]
