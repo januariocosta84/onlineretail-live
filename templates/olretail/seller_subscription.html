@@ -106,7 +106,7 @@
 
           <div class="alert alert-secondary">
             <strong>{% trans "Where to pay" %}:</strong>
-            <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ platform_payment_instructions }}</pre>
+            {% include 'olretail/_platform_bank_details.html' %}
           </div>
 
           <div class="card border-0 shadow-sm mb-4">

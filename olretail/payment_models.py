@@ -760,3 +760,24 @@ class PlatformSettings(models.Model):
     def load(cls):
         obj, _created = cls.objects.get_or_create(pk=1)
         return obj
+
+
+class PlatformBankAccount(models.Model):
+    """One of the platform's own bank accounts, shown to sellers paying a
+    subscription fee by transfer — same structured, repeatable shape as
+    Seller.bank_accounts (see olretail.models.SellerBankAccount), just
+    owned by the singleton PlatformSettings instead of a Seller."""
+
+    settings = models.ForeignKey(PlatformSettings, on_delete=models.CASCADE, related_name='bank_accounts')
+    account_holder_name = models.CharField(max_length=200)
+    bank_name = models.CharField(max_length=200)
+    account_number = models.CharField(max_length=50)
+    swift_code = models.CharField(max_length=11, blank=True, verbose_name='SWIFT/BIC code')
+    iban = models.CharField(max_length=34, blank=True, verbose_name='IBAN')
+
+    class Meta:
+        ordering = ['id']
+        verbose_name_plural = 'Platform bank accounts'
+
+    def __str__(self):
+        return f'{self.bank_name} — {self.account_number}'

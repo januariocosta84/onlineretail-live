@@ -31,6 +31,12 @@ urlpatterns = [
     path("subscriptions/<int:pk>/action/", views.subscription_action, name="subscription_action"),
     path("audit/", views.audit, name="audit"),
     path("payment-settings/", views.platform_settings, name="platform_settings"),
+    path("payment-settings/bank-accounts/add/", views.platform_bank_account_add, name="platform_bank_account_add"),
+    path(
+        "payment-settings/bank-accounts/<int:pk>/delete/",
+        views.platform_bank_account_delete,
+        name="platform_bank_account_delete",
+    ),
     path("orders/", views.orders, name="orders"),
     path("orders/<int:order_id>/reassign-courier/", views.order_reassign_courier, name="order_reassign_courier"),
     path("couriers/", views.courier_verification, name="courier_verification"),

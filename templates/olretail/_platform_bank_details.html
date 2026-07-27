@@ -1,0 +1,17 @@
+{% load i18n %}
+{% if platform_bank_accounts %}
+<div class="mt-2">
+  {% for account in platform_bank_accounts %}
+  <div class="mb-2 pb-2 {% if not forloop.last %}border-bottom{% endif %}">
+    <div><strong>{% trans "Bank Name" %}:</strong> {{ account.bank_name }}</div>
+    <div><strong>{% trans "Account Holder Name" %}:</strong> {{ account.account_holder_name }}</div>
+    <div><strong>{% trans "Account Number" %}:</strong> {{ account.account_number }}</div>
+    {% if account.swift_code %}<div><strong>{% trans "SWIFT Code" %}:</strong> {{ account.swift_code }}</div>{% endif %}
+    {% if account.iban %}<div><strong>{% trans "IBAN" %}:</strong> {{ account.iban }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% if platform_payment_instructions %}
+<pre class="mb-0 mt-2" style="white-space: pre-wrap; font-family: inherit;">{{ platform_payment_instructions }}</pre>
+{% endif %}

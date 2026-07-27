@@ -636,7 +636,7 @@ class Comment(models.Model):
 from .payment_models import (  # noqa: E402, F401
     Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
     TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
-    DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings,
+    DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings, PlatformBankAccount,
     Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )
 from .subscription_models import (  # noqa: E402, F401

@@ -27,9 +27,11 @@ from django.db.models import F
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
     Category, Comment, Courier, CourierVerificationStatus, Dispute, DisputeReason, DisputeResolution,
-    DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus, PlatformSettings, Product,
+    DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus, PlatformBankAccount,
+    PlatformSettings, Product,
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
+from olretail.payment_forms import PlatformBankAccountForm
 from olretail.payouts import create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
 
@@ -766,8 +768,40 @@ def platform_settings(request):
     return render(
         request,
         "dashboard/platform_settings.html",
-        {"section": "platform_settings", "settings_obj": settings_obj},
+        {
+            "section": "platform_settings",
+            "settings_obj": settings_obj,
+            "bank_accounts": settings_obj.bank_accounts.all(),
+            "bank_account_form": PlatformBankAccountForm(),
+        },
     )
+
+
+@admin_required
+@require_POST
+def platform_bank_account_add(request):
+    settings_obj = PlatformSettings.load()
+    form = PlatformBankAccountForm(request.POST)
+    if form.is_valid():
+        account = form.save(commit=False)
+        account.settings = settings_obj
+        account.save()
+        log_action(request, "platform_bank_account_added", account.bank_name)
+        messages.success(request, "Bank account added.")
+    else:
+        messages.error(request, "Please correct the errors below.")
+    return redirect("dashboard:platform_settings")
+
+
+@admin_required
+@require_POST
+def platform_bank_account_delete(request, pk):
+    settings_obj = PlatformSettings.load()
+    account = get_object_or_404(PlatformBankAccount, pk=pk, settings=settings_obj)
+    log_action(request, "platform_bank_account_removed", account.bank_name)
+    account.delete()
+    messages.success(request, "Bank account removed.")
+    return redirect("dashboard:platform_settings")
 
 
 # ── Order courier reassignment ───────────────────────────────────────────

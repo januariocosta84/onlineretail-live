@@ -8,21 +8,112 @@
 
 <div class="row">
   <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header py-2 font-weight-bold">Platform payment details</div>
+    <div class="card mb-4">
+      <div class="card-header py-2 font-weight-bold">Platform bank accounts</div>
       <div class="card-body">
         <p class="text-muted small">
           Shown to sellers when they pay the platform directly for a subscription
           upgrade (see <a href="{% url 'dashboard:subscriptions' %}">Subscriptions</a>).
-          Leave blank to fall back to the default configured in settings.
+          Add one account per bank if you have more than one.
+        </p>
+
+        <form method="post" action="{% url 'dashboard:platform_bank_account_add' %}" class="border rounded p-3 mb-3 bg-light">
+          {% csrf_token %}
+          {% if bank_account_form.non_field_errors %}
+            <div class="alert alert-danger py-1 px-2 small">{{ bank_account_form.non_field_errors }}</div>
+          {% endif %}
+          <div class="form-row">
+            <div class="col-md-6 form-group">
+              <label for="{{ bank_account_form.account_holder_name.id_for_label }}">{{ bank_account_form.account_holder_name.label }}</label>
+              {{ bank_account_form.account_holder_name }}
+              {% for error in bank_account_form.account_holder_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="{{ bank_account_form.bank_name.id_for_label }}">{{ bank_account_form.bank_name.label }}</label>
+              {{ bank_account_form.bank_name }}
+              {% for error in bank_account_form.bank_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-4 form-group">
+              <label for="{{ bank_account_form.account_number.id_for_label }}">{{ bank_account_form.account_number.label }}</label>
+              {{ bank_account_form.account_number }}
+              {% for error in bank_account_form.account_number.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="{{ bank_account_form.swift_code.id_for_label }}">{{ bank_account_form.swift_code.label }}</label>
+              {{ bank_account_form.swift_code }}
+              <small class="form-text text-muted">{{ bank_account_form.swift_code.help_text }}</small>
+              {% for error in bank_account_form.swift_code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4 form-group">
+              <label for="{{ bank_account_form.iban.id_for_label }}">{{ bank_account_form.iban.label }}</label>
+              {{ bank_account_form.iban }}
+              <small class="form-text text-muted">{{ bank_account_form.iban.help_text }}</small>
+              {% for error in bank_account_form.iban.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary m-0">
+            <i class="fas fa-plus mr-1" aria-hidden="true"></i>Add bank account
+          </button>
+        </form>
+
+        {% if bank_accounts %}
+        <div class="table-responsive">
+          <table class="table table-sm table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Account Holder Name</th>
+                <th>Bank Name</th>
+                <th>Account Number</th>
+                <th>SWIFT Code</th>
+                <th>IBAN</th>
+                <th class="text-right"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for account in bank_accounts %}
+              <tr>
+                <td>{{ account.account_holder_name }}</td>
+                <td>{{ account.bank_name }}</td>
+                <td>{{ account.account_number }}</td>
+                <td>{{ account.swift_code|default:"—" }}</td>
+                <td>{{ account.iban|default:"—" }}</td>
+                <td class="text-right">
+                  <form method="post" action="{% url 'dashboard:platform_bank_account_delete' account.pk %}" class="d-inline"
+                        onsubmit="return confirm('Remove this bank account?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger my-0" aria-label="Remove" title="Remove">
+                      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted small mb-0">No bank accounts added yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header py-2 font-weight-bold">Additional payment notes</div>
+      <div class="card-body">
+        <p class="text-muted small">
+          Optional — mobile money details or anything else that doesn't fit the bank
+          account fields above. Leave both empty to fall back to the default
+          configured in settings.
         </p>
         <form method="post">
           {% csrf_token %}
           <div class="form-group">
-            <label for="id_payment_instructions" class="font-weight-bold">Payment instructions</label>
-            <textarea id="id_payment_instructions" name="payment_instructions" rows="4"
+            <label for="id_payment_instructions" class="font-weight-bold">Payment notes</label>
+            <textarea id="id_payment_instructions" name="payment_instructions" rows="3"
                       class="form-control form-control-sm"
-                      placeholder="e.g. BNCTL — Account name: TimorMart, Account #: 000-000-0000. Or mobile money to +670 7000-0000.">{{ settings_obj.payment_instructions }}</textarea>
+                      placeholder="e.g. Mobile money to +670 7000-0000.">{{ settings_obj.payment_instructions }}</textarea>
           </div>
           <button type="submit" class="btn btn-sm btn-primary m-0">
             <i class="fas fa-save mr-1" aria-hidden="true"></i>Save

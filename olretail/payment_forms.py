@@ -3,7 +3,7 @@ from django.db.models import Avg, Count
 from django.utils.translation import gettext_lazy as _
 
 from olretail.models import City, Courier, CourierVerificationStatus, Municipality, Seller, SellerBankAccount
-from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod
+from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod, PlatformBankAccount
 from .subscription_models import SubscriptionPlan
 from .validators import validate_iban, validate_image_size, validate_swift_code
 
@@ -317,32 +317,10 @@ class SellerPaymentInstructionsForm(forms.ModelForm):
         }
 
 
-class BankAccountForm(forms.ModelForm):
-    """One of a seller's bank accounts — add one, list them, delete one at
-    a time (same shape as MenuCategoryForm/olretail.views.menu_categories).
-    `seller` is stamped onto the instance in the view, not exposed here."""
-
-    class Meta:
-        model = SellerBankAccount
-        fields = ['account_holder_name', 'bank_name', 'account_number', 'swift_code', 'iban']
-        widgets = {
-            'account_holder_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. Jose Costa')}),
-            'bank_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. BNU Timor-Leste')}),
-            'account_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'swift_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
-            'iban': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
-        }
-        labels = {
-            'account_holder_name': _('Account Holder Name'),
-            'bank_name': _('Bank Name'),
-            'account_number': _('Account Number'),
-            'swift_code': _('SWIFT Code'),
-            'iban': _('IBAN'),
-        }
-        help_texts = {
-            'swift_code': _('Optional — only needed for international transfers, if your bank has one.'),
-            'iban': _('Optional — only needed for international transfers, if your bank uses one.'),
-        }
+class _BankAccountValidationMixin:
+    """Shared SWIFT/IBAN normalize-and-validate logic for any form editing
+    a bank-account-shaped model (SellerBankAccount, PlatformBankAccount —
+    same fields, different owner)."""
 
     def clean_swift_code(self):
         value = self.cleaned_data.get('swift_code', '').strip().upper()
@@ -353,6 +331,53 @@ class BankAccountForm(forms.ModelForm):
         value = self.cleaned_data.get('iban', '').strip().upper().replace(' ', '')
         validate_iban(value)
         return value
+
+
+_BANK_ACCOUNT_WIDGETS = {
+    'account_holder_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. Jose Costa')}),
+    'bank_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. BNU Timor-Leste')}),
+    'account_number': forms.TextInput(attrs={'class': 'form-control'}),
+    'swift_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
+    'iban': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
+}
+_BANK_ACCOUNT_LABELS = {
+    'account_holder_name': _('Account Holder Name'),
+    'bank_name': _('Bank Name'),
+    'account_number': _('Account Number'),
+    'swift_code': _('SWIFT Code'),
+    'iban': _('IBAN'),
+}
+_BANK_ACCOUNT_HELP_TEXTS = {
+    'swift_code': _('Optional — only needed for international transfers, if your bank has one.'),
+    'iban': _('Optional — only needed for international transfers, if your bank uses one.'),
+}
+
+
+class BankAccountForm(_BankAccountValidationMixin, forms.ModelForm):
+    """One of a seller's bank accounts — add one, list them, delete one at
+    a time (same shape as MenuCategoryForm/olretail.views.menu_categories).
+    `seller` is stamped onto the instance in the view, not exposed here."""
+
+    class Meta:
+        model = SellerBankAccount
+        fields = ['account_holder_name', 'bank_name', 'account_number', 'swift_code', 'iban']
+        widgets = _BANK_ACCOUNT_WIDGETS
+        labels = _BANK_ACCOUNT_LABELS
+        help_texts = _BANK_ACCOUNT_HELP_TEXTS
+
+
+class PlatformBankAccountForm(_BankAccountValidationMixin, forms.ModelForm):
+    """One of the platform's own bank accounts — same add/list/delete shape
+    as BankAccountForm, edited by staff on the admin Payment Settings page.
+    `settings` (the singleton PlatformSettings row) is stamped onto the
+    instance in the view, not exposed here."""
+
+    class Meta:
+        model = PlatformBankAccount
+        fields = ['account_holder_name', 'bank_name', 'account_number', 'swift_code', 'iban']
+        widgets = _BANK_ACCOUNT_WIDGETS
+        labels = _BANK_ACCOUNT_LABELS
+        help_texts = _BANK_ACCOUNT_HELP_TEXTS
 
 
 class SellerBusinessIdentityForm(forms.ModelForm):

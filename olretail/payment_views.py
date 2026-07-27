@@ -1358,6 +1358,7 @@ def seller_subscription(request):
     else:
         form = SubscriptionRequestForm()
 
+    platform_settings_obj = PlatformSettings.load()
     return render(
         request,
         'olretail/seller_subscription.html',
@@ -1367,8 +1368,9 @@ def seller_subscription(request):
             'form': form,
             'plan_prices': PLAN_PRICES,
             'free_limit': FREE_PRODUCT_LIMIT,
+            'platform_bank_accounts': platform_settings_obj.bank_accounts.all(),
             'platform_payment_instructions': (
-                PlatformSettings.load().payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS
+                platform_settings_obj.payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS
             ),
             'recent_requests': SubscriptionRequest.objects.filter(seller=seller)[:5],
         },
