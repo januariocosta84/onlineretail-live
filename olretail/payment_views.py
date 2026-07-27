@@ -20,7 +20,7 @@ from django.contrib import messages
 from django.db import transaction
 
 from olretail.models import (
-    Product, RESTAURANT_CATEGORY_SLUG, Seller, SellerType, SellerVerificationStatus,
+    Product, RESTAURANT_CATEGORY_SLUG, Seller, SellerBankAccount, SellerType, SellerVerificationStatus,
     Buyer, Courier, CourierVerificationStatus,
 )
 from olretail.decorators import seller_required, courier_required
@@ -33,7 +33,7 @@ from .push_notifications import send_push
 from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
 from .payment_gateways import SimulatedBankGateway, _settle_simulated_transaction
 from .payment_forms import (
-    CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
+    BankAccountForm, CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
     CourierVerificationForm, SellerBusinessIdentityForm, SellerVerificationForm,
     SellerContactForm, SellerLocationForm, SellerBrandingForm, SellerOperationsForm,
@@ -358,7 +358,7 @@ def checkout(request):
 
     sellers_missing_instructions = {
         item.product.seller.get_name for item in cart_items
-        if not item.product.seller.payment_instructions.strip()
+        if not item.product.seller.has_payment_details
     }
 
     # Flat $1 courier fee, charged once per seller in the cart (one courier
@@ -392,7 +392,7 @@ def _process_checkout(request, form, cart_items):
     if payment_method == PaymentMethod.BANK_TRANSFER:
         missing = {
             item.product.seller.get_name for item in cart_items
-            if not item.product.seller.payment_instructions.strip()
+            if not item.product.seller.has_payment_details
         }
         if missing:
             messages.error(
@@ -1174,6 +1174,8 @@ def seller_payment_settings(request):
     context = {
         'form': form,
         'seller': seller,
+        'bank_accounts': seller.bank_accounts.all(),
+        'bank_account_form': BankAccountForm(),
         'contact_form': SellerContactForm(instance=seller),
         'location_form': SellerLocationForm(instance=seller),
         'branding_form': SellerBrandingForm(instance=seller),
@@ -1183,6 +1185,31 @@ def seller_payment_settings(request):
         context['business_form'] = SellerBusinessIdentityForm(instance=seller)
         context['verification_form'] = SellerVerificationForm()
     return render(request, 'olretail/seller_payment_settings.html', context)
+
+
+@seller_required
+@require_POST
+def seller_bank_account_add(request):
+    seller = request.user.seller
+    form = BankAccountForm(request.POST)
+    if form.is_valid():
+        account = form.save(commit=False)
+        account.seller = seller
+        account.save()
+        messages.success(request, _('Bank account added.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:seller_payment_settings')
+
+
+@seller_required
+@require_POST
+def seller_bank_account_delete(request, pk):
+    seller = request.user.seller
+    account = get_object_or_404(SellerBankAccount, pk=pk, seller=seller)
+    account.delete()
+    messages.success(request, _('Bank account removed.'))
+    return redirect('olretail:seller_payment_settings')
 
 
 @seller_required

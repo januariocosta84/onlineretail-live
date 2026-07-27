@@ -17,10 +17,99 @@
         </div>
 
         <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light">
+            <h2 class="h5 mb-0"><i class="fas fa-university mr-2"></i>{% trans "Bank Accounts" %}</h2>
+          </div>
           <div class="card-body">
             <p class="text-muted">
-              {% trans "When a buyer chooses to pay by bank/mobile transfer, they'll see these details to send you the money directly. Leave this blank to disable that payment option for your products." %}
+              {% trans "Buyers paying by bank transfer see these details to send you the money directly. Add one account per bank if you have more than one — leave all of them and the payment notes below empty to disable that payment option for your products." %}
             </p>
+
+            <form method="post" action="{% url 'olretail:seller_bank_account_add' %}" class="border rounded p-3 mb-3 bg-light" novalidate>
+              {% csrf_token %}
+              {% if bank_account_form.non_field_errors %}
+                <div class="alert alert-danger alert-sm">{{ bank_account_form.non_field_errors }}</div>
+              {% endif %}
+              <div class="form-row">
+                <div class="col-md-6 form-group">
+                  <label for="{{ bank_account_form.account_holder_name.id_for_label }}">{{ bank_account_form.account_holder_name.label }}</label>
+                  {{ bank_account_form.account_holder_name }}
+                  {% for error in bank_account_form.account_holder_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6 form-group">
+                  <label for="{{ bank_account_form.bank_name.id_for_label }}">{{ bank_account_form.bank_name.label }}</label>
+                  {{ bank_account_form.bank_name }}
+                  {% for error in bank_account_form.bank_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md-4 form-group">
+                  <label for="{{ bank_account_form.account_number.id_for_label }}">{{ bank_account_form.account_number.label }}</label>
+                  {{ bank_account_form.account_number }}
+                  {% for error in bank_account_form.account_number.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="{{ bank_account_form.swift_code.id_for_label }}">{{ bank_account_form.swift_code.label }}</label>
+                  {{ bank_account_form.swift_code }}
+                  <small class="form-text text-muted">{{ bank_account_form.swift_code.help_text }}</small>
+                  {% for error in bank_account_form.swift_code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="{{ bank_account_form.iban.id_for_label }}">{{ bank_account_form.iban.label }}</label>
+                  {{ bank_account_form.iban }}
+                  <small class="form-text text-muted">{{ bank_account_form.iban.help_text }}</small>
+                  {% for error in bank_account_form.iban.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus mr-1" aria-hidden="true"></i>{% trans "Add bank account" %}
+              </button>
+            </form>
+
+            {% if bank_accounts %}
+            <div class="table-responsive">
+              <table class="table table-sm table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>{% trans "Account Holder Name" %}</th>
+                    <th>{% trans "Bank Name" %}</th>
+                    <th>{% trans "Account Number" %}</th>
+                    <th>{% trans "SWIFT Code" %}</th>
+                    <th>{% trans "IBAN" %}</th>
+                    <th class="text-right"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for account in bank_accounts %}
+                  <tr>
+                    <td>{{ account.account_holder_name }}</td>
+                    <td>{{ account.bank_name }}</td>
+                    <td>{{ account.account_number }}</td>
+                    <td>{{ account.swift_code|default:"—" }}</td>
+                    <td>{{ account.iban|default:"—" }}</td>
+                    <td class="text-right">
+                      <form method="post" action="{% url 'olretail:seller_bank_account_delete' account.pk %}" class="d-inline"
+                            onsubmit="return confirm('{% trans "Remove this bank account?" %}');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger my-0"
+                                aria-label="{% trans 'Remove bank account' %}" title="{% trans 'Remove' %}">
+                          <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">{% trans "No bank accounts added yet." %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body">
             <form method="post" novalidate>
               {% csrf_token %}
               <div class="form-group">

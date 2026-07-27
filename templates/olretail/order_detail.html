@@ -263,7 +263,7 @@
             {% if is_buyer %}
             <div class="alert alert-secondary">
               <strong>{% trans "Seller payment details" %} — {{ order.seller.get_name }}:</strong>
-              <pre class="mb-0 mt-1" style="white-space: pre-wrap; font-family: inherit;">{{ order.seller.payment_instructions }}</pre>
+              {% include 'olretail/_seller_bank_details.html' %}
               <small class="text-muted d-block mt-2">{% trans "Reference" %}: <code>{{ order.order_number }}</code></small>
             </div>
             {% endif %}

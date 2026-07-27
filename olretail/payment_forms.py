@@ -2,10 +2,10 @@ from django import forms
 from django.db.models import Avg, Count
 from django.utils.translation import gettext_lazy as _
 
-from olretail.models import City, Courier, CourierVerificationStatus, Municipality, Seller
+from olretail.models import City, Courier, CourierVerificationStatus, Municipality, Seller, SellerBankAccount
 from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod
 from .subscription_models import SubscriptionPlan
-from .validators import validate_image_size
+from .validators import validate_iban, validate_image_size, validate_swift_code
 
 
 class CheckoutForm(forms.Form):
@@ -298,21 +298,61 @@ class SubscriptionRequestForm(forms.Form):
 
 
 class SellerPaymentInstructionsForm(forms.ModelForm):
-    """Bank/mobile money details a seller shows buyers who pay by transfer."""
+    """Supplementary payment notes shown alongside a seller's structured
+    Bank Accounts (see BankAccountForm/SellerBankAccount) — mobile money
+    details, or anything else that doesn't fit the bank-account fields."""
 
     class Meta:
         model = Seller
         fields = ['payment_instructions']
         widgets = {
             'payment_instructions': forms.Textarea(attrs={
-                'rows': 5,
-                'placeholder': _('e.g. BNU Timor-Leste, Account: 1234567, Name: Jose Costa'),
+                'rows': 3,
+                'placeholder': _('e.g. Mobile money: +670 7712 1173, or any other payment notes for buyers'),
                 'class': 'form-control'
             }),
         }
         labels = {
-            'payment_instructions': _('Payment details for buyers'),
+            'payment_instructions': _('Additional payment notes (optional)'),
         }
+
+
+class BankAccountForm(forms.ModelForm):
+    """One of a seller's bank accounts — add one, list them, delete one at
+    a time (same shape as MenuCategoryForm/olretail.views.menu_categories).
+    `seller` is stamped onto the instance in the view, not exposed here."""
+
+    class Meta:
+        model = SellerBankAccount
+        fields = ['account_holder_name', 'bank_name', 'account_number', 'swift_code', 'iban']
+        widgets = {
+            'account_holder_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. Jose Costa')}),
+            'bank_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('e.g. BNU Timor-Leste')}),
+            'account_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'swift_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
+            'iban': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Optional')}),
+        }
+        labels = {
+            'account_holder_name': _('Account Holder Name'),
+            'bank_name': _('Bank Name'),
+            'account_number': _('Account Number'),
+            'swift_code': _('SWIFT Code'),
+            'iban': _('IBAN'),
+        }
+        help_texts = {
+            'swift_code': _('Optional — only needed for international transfers, if your bank has one.'),
+            'iban': _('Optional — only needed for international transfers, if your bank uses one.'),
+        }
+
+    def clean_swift_code(self):
+        value = self.cleaned_data.get('swift_code', '').strip().upper()
+        validate_swift_code(value)
+        return value
+
+    def clean_iban(self):
+        value = self.cleaned_data.get('iban', '').strip().upper().replace(' ', '')
+        validate_iban(value)
+        return value
 
 
 class SellerBusinessIdentityForm(forms.ModelForm):

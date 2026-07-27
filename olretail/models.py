@@ -252,6 +252,13 @@ class Seller(models.Model):
             return str(self.municipality)
         return self.address
 
+    @property
+    def has_payment_details(self):
+        """Whether a buyer paying by bank transfer would actually see
+        something — a structured bank account, or (legacy/mobile-money)
+        free-text payment_instructions. Gates BANK_TRANSFER checkout."""
+        return self.bank_accounts.exists() or bool(self.payment_instructions.strip())
+
     def __str__(self):
         return self.get_name
 
@@ -273,6 +280,29 @@ class MenuCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SellerBankAccount(models.Model):
+    """One of a seller's bank accounts, shown to buyers paying by bank
+    transfer. A seller can add more than one (e.g. accounts at different
+    banks) — same "add one, list, delete" shape as MenuCategory above.
+    Structured so buyers see clean labeled fields instead of free text;
+    Seller.payment_instructions still exists alongside this for anything
+    that doesn't fit here (mobile money details, extra notes)."""
+
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="bank_accounts")
+    account_holder_name = models.CharField(max_length=200)
+    bank_name = models.CharField(max_length=200)
+    account_number = models.CharField(max_length=50)
+    swift_code = models.CharField(max_length=11, blank=True, verbose_name="SWIFT/BIC code")
+    iban = models.CharField(max_length=34, blank=True, verbose_name="IBAN")
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name_plural = "Seller bank accounts"
+
+    def __str__(self):
+        return f"{self.bank_name} — {self.account_number}"
 
 
 class Country(models.Model):
