@@ -254,13 +254,13 @@
         </div>
         {% endif %}
 
-        {% if order.payment_method == 'bank_transfer' and order.status != 'paid' %}
+        {% if order.payment_method == 'bank_transfer' %}
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-header bg-light">
             <h5 class="mb-0">{% trans "Bank Transfer" %}</h5>
           </div>
           <div class="card-body">
-            {% if is_buyer %}
+            {% if is_buyer and order.status in 'pending_payment,payment_reported' %}
             <div class="alert alert-secondary">
               <strong>{% trans "TimorMart bank details" %}:</strong>
               {% include 'olretail/_platform_bank_details.html' %}
