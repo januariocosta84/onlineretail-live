@@ -89,6 +89,9 @@
           <form method="get" class="form-inline my-1">
             {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
             {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+            <label class="small text-muted mr-1 mb-0" for="location">{% trans 'Location' %}</label>
+            <input type="text" id="location" name="location" value="{{ location }}"
+                   placeholder="{% trans 'e.g. Dili' %}" class="form-control form-control-sm mr-2" style="width: 110px;">
             <label class="small text-muted mr-1 mb-0" for="min_price">{% trans 'Price' %}</label>
             <input type="number" id="min_price" name="min_price" value="{{ min_price }}" min="0" step="0.01"
                    placeholder="{% trans 'Min' %}" class="form-control form-control-sm mr-1" style="width: 80px;">

@@ -116,6 +116,21 @@ def index(request):
     if max_price is not None:
         products = products.filter(price__lte=max_price)
 
+    # Matches against every location field a seller might have filled in —
+    # not just Municipality, since that's optional (see Seller.display_
+    # location) and a seller who's only ever set their plain registration
+    # address should still be findable by it.
+    location = (request.GET.get("location") or "").strip()
+    if location:
+        products = products.filter(
+            Q(seller__address__icontains=location)
+            | Q(seller__full_address__icontains=location)
+            | Q(seller__administrative_post__icontains=location)
+            | Q(seller__suco__icontains=location)
+            | Q(seller__aldeia__icontains=location)
+            | Q(seller__municipality__name__icontains=location)
+        )
+
     sort = request.GET.get("sort", "newest")
     if sort == "best_selling":
         products = _with_order_count(products)
@@ -142,7 +157,7 @@ def index(request):
     # category/filtered view is the buyer already narrowing down, showing
     # unrelated best sellers there would be noise.
     best_sellers = []
-    if not query and not active_category and not min_price and not max_price:
+    if not query and not active_category and not min_price and not max_price and not location:
         best_sellers = list(
             _with_order_count(
                 Product.objects.filter(status=ProductStatus.APPROVED)
@@ -171,6 +186,7 @@ def index(request):
             "sort": sort,
             "min_price": request.GET.get("min_price", ""),
             "max_price": request.GET.get("max_price", ""),
+            "location": location,
             "querystring": querystring,
             "featured": featured,
             "best_sellers": best_sellers,
