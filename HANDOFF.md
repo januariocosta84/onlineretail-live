@@ -413,7 +413,15 @@ For local testing, set up the Stripe CLI tunnel so the webhook actually
 fires: `stripe listen --forward-to localhost:8033/webhook/stripe/`, then set
 the printed `whsec_...` as `STRIPE_WEBHOOK_SECRET`.
 
-### Bank / mobile transfer — direct buyer → seller payment (added 2026-07-14)
+### Bank / mobile transfer — direct buyer → seller payment (added 2026-07-14, superseded 2026-07-27)
+
+> **Superseded — see the escrow redesign below.** Everything in this
+> section describes the *original* design, kept here as the historical
+> record of why it looked this way. On 2026-07-27, with legal clearance
+> obtained, this was deliberately reversed: the platform now holds bank-
+> transfer funds and pays sellers out later, exactly like Stripe. The
+> money-transmitter concern that motivated the original "never touch this
+> money" design was revisited and cleared, not forgotten.
 
 Timor-Leste has working mobile/bank transfers, so checkout now offers a
 second payment method alongside Stripe: the buyer sends money **directly to
@@ -450,6 +458,51 @@ sidesteps the same money-transmitter licensing question).
 - Verified end-to-end with the test client: missing-instructions guard at
   checkout, instructions save, order creation with $0 commission, buyer
   mark-sent, seller confirm-received, stock/cart/status all correct.
+
+### Bank transfer → escrow-style, platform-held payment (added 2026-07-27)
+
+Reverses the design above: the buyer now transfers to **TimorMart's own
+bank account** (`PlatformBankAccount`, singleton `PlatformSettings`), the
+platform holds the money, charges the same commission as Stripe, and pays
+the seller out later through the existing manual payout batch — see
+"Seller payouts" below, unchanged by this.
+
+- `_process_bank_transfer_checkout` now runs the same cents-based
+  proportional commission split Stripe/the bank simulator use
+  (`commission_amount` is real, `payment_fee` stays `0` — no gateway fee
+  applies to a manual transfer, only the commission).
+- Checkout's Bank Transfer gate moved from per-seller
+  (`Seller.has_payment_details`) to platform-wide
+  (`PlatformSettings.load().has_payment_details`) — it's blocked only if
+  the platform itself has no bank account/instructions configured, never
+  because of an individual seller.
+- Every buyer-facing bank-details display (`bank_transfer_instructions.html`,
+  `mark_payment_sent.html`, `order_detail.html`) now renders
+  `_platform_bank_details.html` instead of `_seller_bank_details.html` — a
+  buyer paying by bank transfer never sees any seller's own account details
+  again; `SellerBankAccount`/`Seller.payment_instructions` still exist and
+  are still seller-editable, they're just no longer shown to buyers.
+- **The seller no longer confirms or denies receipt** — only an admin can
+  see the platform's real bank statement, so `confirm_payment_received`/
+  `deny_payment_received` are deleted outright (views, URLs, templates).
+  `mark_payment_sent` now opens a `Dispute` (reason
+  `DisputeReason.PAYMENT_CLAIM_SUBMITTED`, status `UNDER_REVIEW`)
+  **immediately** when the buyer submits proof — there's no seller-response
+  step to wait through anymore. `escalate_stale_payment_claims` (a
+  scheduled command for "seller never responded") is deleted; that
+  scenario is no longer possible.
+- The admin queue at `/dashboard/payment-disputes/` ("Bank transfer
+  claims") is the primary confirmation path now, not a denial-only
+  fallback — approve calls `_mark_bank_transfer_paid`, which now credits
+  `SellerBalance`/`Transaction` exactly like Stripe's
+  `_mark_payment_succeeded` does (previously a no-op, correct only when the
+  platform never held the money).
+- Verified end-to-end: multi-seller cart produces a correct proportional
+  commission split; platform-wide gate blocks/allows correctly regardless
+  of any individual seller's own bank-account setup; a buyer's claim
+  appears in the admin queue immediately with no seller action possible;
+  admin approve credits the seller's balance by exactly `order.subtotal`
+  and admin reject cancels cleanly; Cash on Delivery/Stripe unaffected.
 
 ### Delivery tracking (added 2026-07-14)
 

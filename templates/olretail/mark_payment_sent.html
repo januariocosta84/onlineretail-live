@@ -24,8 +24,8 @@
           </div>
           <div class="card-body">
             <div class="alert alert-secondary">
-              <strong>{% trans "Seller payment details" %} — {{ order.seller.get_name }}:</strong>
-              {% include 'olretail/_seller_bank_details.html' %}
+              <strong>{% trans "TimorMart bank details" %}:</strong>
+              {% include 'olretail/_platform_bank_details.html' %}
               <small class="text-muted d-block mt-2">{% trans "Reference" %}: <code>{{ order.order_number }}</code></small>
             </div>
 
@@ -68,7 +68,7 @@
 
               <div class="alert alert-warning">
                 <i class="fas fa-info-circle mr-2"></i>
-                {% trans "The seller will be notified to confirm receipt. If they don't respond within a few days, or if they say they haven't received it, an administrator will review this using the receipt and details you provide here." %}
+                {% trans "An administrator will verify this against TimorMart's bank statement using the receipt and details you provide here, then confirm your order." %}
               </div>
 
               <button type="submit" class="btn btn-success btn-lg btn-block mt-3">

@@ -137,11 +137,11 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     payment_reported_at = models.DateTimeField(null=True, blank=True)
 
-    # Bank/mobile-transfer evidence — collected at the "I've sent payment"
-    # step (BANK_TRANSFER orders only) so a seller's confirm/deny decision
-    # and any later admin review has something to look at beyond a bare
-    # claim. See olretail/payment_views.py mark_payment_sent /
-    # deny_payment_received and PAYMENT_VERIFICATION.md for the full flow.
+    # Bank-transfer evidence — collected at the "I've sent payment" step
+    # (BANK_TRANSFER orders only) so the admin who reviews the resulting
+    # claim has something to look at beyond a bare assertion. See
+    # olretail/payment_views.py mark_payment_sent and
+    # PAYMENT_VERIFICATION.md for the full flow.
     payment_proof = models.ImageField(upload_to='payment_proofs/%Y/%m/', null=True, blank=True)
     payment_reference = models.CharField(
         max_length=100, blank=True, help_text=_('Bank/mobile transfer reference or transaction number.')
@@ -639,22 +639,26 @@ class DisputeReason(models.TextChoices):
     NOT_AS_DESCRIBED = 'not_as_described', _('Item Not as Described')
     WRONG_ITEM = 'wrong_item', _('Wrong Item Received')
     OTHER = 'other', _('Other')
-    # Bank-transfer payment disputes — the seller (not the buyer) is the one
-    # raising the issue here, via deny_payment_received; see
-    # PAYMENT_VERIFICATION.md for the full flow this feeds into.
+    # Bank-transfer payment claims now go straight to admin review the
+    # moment a buyer marks payment sent (mark_payment_sent) — the platform
+    # holds the funds, so only an admin (who can see the actual bank
+    # statement) can confirm a claim, not the seller. PAYMENT_NOT_RECEIVED/
+    # PAYMENT_NO_RESPONSE are kept for historical rows from the old
+    # seller-confirms-receipt design (see PAYMENT_VERIFICATION.md) but are
+    # no longer created for new disputes.
+    PAYMENT_CLAIM_SUBMITTED = 'payment_claim_submitted', _('Bank Transfer Payment Claim')
     PAYMENT_NOT_RECEIVED = 'payment_not_received', _('Seller Reports Payment Not Received')
     PAYMENT_NO_RESPONSE = 'payment_no_response', _('Seller Did Not Respond to Payment Claim')
 
 
 class Dispute(models.Model):
     """A contested order — either buyer-initiated (damaged, non-delivery,
-    etc., via open_dispute) or, for bank-transfer orders, seller-initiated
-    when they deny receiving a payment the buyer claims to have sent (via
-    deny_payment_received) or system-initiated when a seller never responds
-    to a payment claim at all (see the escalate_stale_payment_claims
-    management command). A ForeignKey, not OneToOne, since an order that
-    survives a payment dispute can still go on to have a separate later
-    delivery dispute."""
+    etc., via open_dispute) or, for bank-transfer orders, opened
+    automatically the moment a buyer claims to have paid (via
+    mark_payment_sent), pending admin verification against the platform's
+    own bank statement (see PAYMENT_VERIFICATION.md). A ForeignKey, not
+    OneToOne, since an order that survives a payment dispute can still go
+    on to have a separate later delivery dispute."""
 
     # Reference
     order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='disputes')
@@ -755,6 +759,13 @@ class PlatformSettings(models.Model):
 
     def __str__(self):
         return 'Platform settings'
+
+    @property
+    def has_payment_details(self):
+        """True if the platform has anywhere for buyers/sellers to send a
+        bank transfer: a structured bank account or free-text
+        payment_instructions. Gates BANK_TRANSFER checkout platform-wide."""
+        return self.bank_accounts.exists() or bool(self.payment_instructions.strip())
 
     @classmethod
     def load(cls):

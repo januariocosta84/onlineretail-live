@@ -37,7 +37,7 @@ from .payment_forms import (
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
     CourierVerificationForm, SellerBusinessIdentityForm, SellerVerificationForm,
     SellerContactForm, SellerLocationForm, SellerBrandingForm, SellerOperationsForm,
-    PaymentProofForm, PaymentDenialForm,
+    PaymentProofForm,
 )
 from .subscription_models import (
     FREE_PRODUCT_LIMIT, PLAN_PRICES, SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus,
@@ -356,10 +356,17 @@ def checkout(request):
     bank_payment_fee = Decimal(str(settings.SIMULATED_BANK_FEE_FIXED))
     bank_estimated_total = cart_total + platform_fee + bank_payment_fee
 
-    sellers_missing_instructions = {
-        item.product.seller.get_name for item in cart_items
-        if not item.product.seller.has_payment_details
-    }
+    # Real Bank Transfer: the platform holds the funds and pays sellers out
+    # afterward (same as Stripe), so the same commission applies — but
+    # there's no card/gateway processing fee on a manual transfer, so no
+    # extra fee on top of the commission (contrast bank_estimated_total
+    # above, which is for the *simulated* bank gateway, a different method).
+    bank_transfer_estimated_total = cart_total + platform_fee
+
+    # Blocks Bank Transfer platform-wide if the platform itself hasn't set
+    # up anywhere to receive the money — not a per-seller check anymore,
+    # since buyers now pay the platform's account, never a seller's own.
+    platform_accepts_bank_transfer = PlatformSettings.load().has_payment_details
 
     # Flat $1 courier fee, charged once per seller in the cart (one courier
     # pickup = one delivery) — same for every product category, not just
@@ -376,9 +383,10 @@ def checkout(request):
         'estimated_total': estimated_total,
         'bank_payment_fee': bank_payment_fee,
         'bank_estimated_total': bank_estimated_total,
+        'bank_transfer_estimated_total': bank_transfer_estimated_total,
         'seller_count': seller_count,
         'delivery_fee_per_seller': delivery_fee_per_seller,
-        'sellers_missing_instructions': sellers_missing_instructions,
+        'platform_accepts_bank_transfer': platform_accepts_bank_transfer,
         'show_bank_simulator_test_accounts': settings.BANK_SIMULATOR_SHOW_TEST_ACCOUNTS,
     }
     return render(request, 'olretail/checkout.html', context)
@@ -390,15 +398,10 @@ def _process_checkout(request, form, cart_items):
     payment_method = form.cleaned_data['payment_method']
 
     if payment_method == PaymentMethod.BANK_TRANSFER:
-        missing = {
-            item.product.seller.get_name for item in cart_items
-            if not item.product.seller.has_payment_details
-        }
-        if missing:
+        if not PlatformSettings.load().has_payment_details:
             messages.error(
                 request,
-                _('%(sellers)s haven\'t set up payment details yet — choose Card, or contact them.')
-                % {'sellers': ', '.join(missing)},
+                _('Bank Transfer isn\'t available right now — please choose Card instead.'),
             )
             return redirect('olretail:checkout')
         return _process_bank_transfer_checkout(request, form, cart_items)
@@ -425,14 +428,36 @@ def _last_item_index_per_seller(cart_items):
 
 
 def _process_bank_transfer_checkout(request, form, cart_items):
-    """Create one order per cart item, no platform commission — the buyer
-    pays the seller directly and the platform never touches the money."""
-    delivery_city = form.cleaned_data['delivery_city']
-    last_item_index = _last_item_index_per_seller(cart_items)
-
+    """The buyer transfers to the platform's own bank account, not the
+    seller's — the platform holds the funds and pays the seller out later
+    via the same SellerBalance/Payout mechanism Stripe orders use (see
+    _mark_bank_transfer_paid), so the same commission applies. No gateway
+    processing fee applies to a manual transfer, only the commission —
+    same proportional cents-based split already used for Stripe/the bank
+    simulator (remainder cents land on the last item)."""
     with transaction.atomic():
+        cart_items = list(cart_items)
+        delivery_city = form.cleaned_data['delivery_city']
+        last_item_index = _last_item_index_per_seller(cart_items)
+
+        subtotal = sum(item.line_total for item in cart_items)
+        subtotal_cents = int(subtotal * 100)
+
+        commission_percent = Decimal(str(settings.COMMISSION_RATE))
+        commission_cents = int(subtotal_cents * float(commission_percent))
+
         orders = []
+        allocated_commission_cents = 0
         for index, item in enumerate(cart_items):
+            item_cents = int(item.line_total * 100)
+            is_last = index == len(cart_items) - 1
+            if is_last or subtotal_cents == 0:
+                item_commission_cents = commission_cents - allocated_commission_cents
+            else:
+                item_commission_cents = (commission_cents * item_cents) // subtotal_cents
+                allocated_commission_cents += item_commission_cents
+
+            item_commission = Decimal(item_commission_cents) / 100
             delivery_fee = Decimal('0')
             if last_item_index.get(item.product.seller_id) == index:
                 delivery_fee = Decimal(str(settings.DELIVERY_FEE))
@@ -444,10 +469,10 @@ def _process_bank_transfer_checkout(request, form, cart_items):
                 quantity=item.quantity,
                 price_per_unit=item.product.price,
                 subtotal=item.line_total,
-                commission_amount=Decimal('0'),
+                commission_amount=item_commission,
                 payment_fee=Decimal('0'),
                 delivery_fee=delivery_fee,
-                total=item.line_total + delivery_fee,
+                total=item.line_total + item_commission + delivery_fee,
                 status=OrderStatus.PENDING_PAYMENT,
                 payment_method=PaymentMethod.BANK_TRANSFER,
                 delivery_address=form.cleaned_data['delivery_address'],
@@ -458,7 +483,7 @@ def _process_bank_transfer_checkout(request, form, cart_items):
             orders.append(order)
             _notify(
                 order.seller.user,
-                _('New order %(order)s from %(buyer)s for “%(product)s” — awaiting their bank/mobile transfer.')
+                _('New order %(order)s from %(buyer)s for “%(product)s” — awaiting the buyer’s bank transfer to TimorMart.')
                 % {'order': order.order_number, 'buyer': request.user.get_full_name() or request.user.username,
                    'product': order.product.name},
                 order=order,
@@ -466,13 +491,19 @@ def _process_bank_transfer_checkout(request, form, cart_items):
 
         # Unlike Stripe/the bank simulator (which settle within seconds, so
         # clearing the cart on payment success is effectively immediate),
-        # confirming a manual bank/mobile transfer depends on the seller
-        # actually checking their account — that can take hours or days.
-        # Clear the cart now, at order creation, so it doesn't sit showing
-        # items the buyer already committed to buying.
+        # confirming a manual bank/mobile transfer depends on an admin
+        # actually checking the platform's bank statement — that can take
+        # hours or days. Clear the cart now, at order creation, so it
+        # doesn't sit showing items the buyer already committed to buying.
         Cart.objects.filter(buyer=request.user, product__in=[item.product for item in cart_items]).delete()
 
-    return render(request, 'olretail/bank_transfer_instructions.html', {'orders': orders})
+    platform_settings = PlatformSettings.load()
+    context = {
+        'orders': orders,
+        'platform_bank_accounts': platform_settings.bank_accounts.all(),
+        'platform_payment_instructions': platform_settings.payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS,
+    }
+    return render(request, 'olretail/bank_transfer_instructions.html', context)
 
 
 def _process_cash_on_delivery_checkout(request, form, cart_items):
@@ -976,17 +1007,31 @@ def payment_confirmation(request, order_id):
 
 
 # ──────────────────────────────────────────────────────────────────
-# BANK / MOBILE TRANSFER (direct buyer → seller, no platform commission)
+# BANK / MOBILE TRANSFER (buyer → platform, held in escrow, then paid
+# out to the seller later via the same SellerBalance/Payout mechanism
+# Stripe orders use)
 # ──────────────────────────────────────────────────────────────────
 
 def _mark_bank_transfer_paid(order):
-    """Seller confirmed they received the buyer's direct transfer. No
-    commission is taken — the platform never touched this money."""
+    """An admin confirmed the buyer's transfer actually arrived in the
+    platform's bank account. Credits the seller's balance exactly like
+    _mark_payment_succeeded does for Stripe — the platform now holds this
+    money and owes the seller their subtotal, to be paid out later."""
     with transaction.atomic():
         order.status = OrderStatus.PAID
         order.paid_at = timezone.now()
         order.save()
         _mark_food_order_received(order)
+
+        Transaction.objects.create(
+            order=order,
+            seller=order.seller,
+            amount_cents=int(order.subtotal * 100),
+            transaction_type=TransactionType.COMMISSION,
+            description=f"Earnings from order {order.order_number}",
+        )
+        seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+        seller_balance.add_commission(int(order.subtotal * 100))
 
         if not order.product.is_restaurant_category:
             product = Product.objects.select_for_update().get(pk=order.product_id)
@@ -1000,14 +1045,16 @@ def _mark_bank_transfer_paid(order):
 
 @login_required
 def mark_payment_sent(request, order_id):
-    """Buyer confirms they've sent the bank/mobile transfer. Requires a
-    receipt/screenshot, the transfer reference number, and the amount sent
-    (PaymentProofForm) — a bare click was the entire fraud surface before
-    this existed. Auto-flags the order for priority admin attention (but
-    doesn't block the seller's own confirm) if the claimed amount doesn't
-    match the order total, or if the exact same receipt image or reference
-    number was already used on a different order — a soft signal that
-    catches reused evidence, not proof of tampering on its own."""
+    """Buyer confirms they've sent the bank transfer to the platform's
+    account. Requires a receipt/screenshot, the transfer reference number,
+    and the amount sent (PaymentProofForm) — a bare click was the entire
+    fraud surface before this existed. Opens an admin-review Dispute
+    immediately (only an admin can see the platform's real bank statement,
+    so there's no seller-response step to wait through). Flags the claim
+    for priority admin attention if the claimed amount doesn't match the
+    order total, or if the exact same receipt image or reference number was
+    already used on a different order — a soft signal that catches reused
+    evidence, not proof of tampering on its own."""
     order = get_object_or_404(
         Order, id=order_id, buyer=request.user, payment_method=PaymentMethod.BANK_TRANSFER
     )
@@ -1052,100 +1099,37 @@ def mark_payment_sent(request, order_id):
                 'payment_proof', 'payment_reference', 'payment_amount_claimed', 'payment_proof_hash',
                 'payment_flagged', 'payment_flag_reason', 'status', 'payment_reported_at',
             ])
-            _notify(
-                order.seller.user,
-                _('%(buyer)s says they\'ve sent payment for order %(order)s — please confirm receipt.')
-                % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
-                order=order,
-            )
-            messages.success(request, _('Thanks — the seller has been notified to confirm receipt.'))
-            return redirect('olretail:order_detail', order_id=order.id)
-    else:
-        form = PaymentProofForm(initial={'payment_amount_claimed': order.total})
 
-    return render(request, 'olretail/mark_payment_sent.html', {'order': order, 'form': form})
-
-
-@login_required
-@require_POST
-def confirm_payment_received(request, order_id):
-    """Seller confirms they received the buyer's direct transfer."""
-    order = get_object_or_404(Order, id=order_id, payment_method=PaymentMethod.BANK_TRANSFER)
-    try:
-        if order.seller != request.user.seller:
-            messages.error(request, _('Permission denied.'))
-            return redirect('olretail:index')
-    except Seller.DoesNotExist:
-        messages.error(request, _('You must be a seller to confirm payments.'))
-        return redirect('olretail:index')
-
-    if order.status not in (OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_REPORTED):
-        messages.error(request, _('This order is not awaiting payment confirmation.'))
-        return redirect('olretail:order_detail', order_id=order.id)
-
-    _mark_bank_transfer_paid(order)
-    _notify(
-        order.buyer,
-        _('%(seller)s confirmed your payment for order %(order)s.')
-        % {'seller': order.seller.get_name, 'order': order.order_number},
-        order=order,
-    )
-    messages.success(request, _('Payment confirmed — the order is now marked as paid.'))
-    return redirect('olretail:order_detail', order_id=order.id)
-
-
-@login_required
-def deny_payment_received(request, order_id):
-    """Seller reports they have NOT received a buyer's claimed transfer —
-    the explicit alternative to confirm_payment_received, so a buyer isn't
-    left with silence as their only signal something's wrong. Opens a
-    Dispute for admin review rather than resolving it one way or the other
-    immediately, since either side could be the one who's mistaken (or
-    dishonest)."""
-    order = get_object_or_404(Order, id=order_id, payment_method=PaymentMethod.BANK_TRANSFER)
-    try:
-        if order.seller != request.user.seller:
-            messages.error(request, _('Permission denied.'))
-            return redirect('olretail:index')
-    except Seller.DoesNotExist:
-        messages.error(request, _('You must be a seller to do this.'))
-        return redirect('olretail:index')
-
-    if order.status != OrderStatus.PAYMENT_REPORTED:
-        messages.error(request, _('This order has no reported payment to dispute.'))
-        return redirect('olretail:order_detail', order_id=order.id)
-
-    if order.has_active_dispute:
-        messages.warning(request, _('A dispute is already open for this order.'))
-        return redirect('olretail:order_detail', order_id=order.id)
-
-    if request.method == 'POST':
-        form = PaymentDenialForm(request.POST)
-        if form.is_valid():
             dispute = Dispute.objects.create(
                 order=order,
                 buyer=order.buyer,
                 seller=order.seller,
-                reason=DisputeReason.PAYMENT_NOT_RECEIVED,
+                reason=DisputeReason.PAYMENT_CLAIM_SUBMITTED,
                 description=(
-                    _('Buyer claims payment sent for order %(order)s; seller reports not received.')
+                    _('Buyer claims payment sent for order %(order)s — awaiting admin verification against the platform\'s bank statement.')
                     % {'order': order.order_number}
                 ),
-                seller_response=form.cleaned_data['reason'],
                 status=DisputeStatus.UNDER_REVIEW,
             )
             _notify(
-                order.buyer,
-                _('%(seller)s says they have not received your payment for order %(order)s — this is now under review.')
-                % {'seller': order.seller.get_name, 'order': order.order_number},
+                order.seller.user,
+                _('%(buyer)s reported sending payment for order %(order)s — an admin will verify and confirm it.')
+                % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
                 order=order,
             )
-            messages.success(request, _('Reported — an administrator will review this payment claim.'))
+            messages.success(request, _('Thanks — an admin will verify your payment and confirm it shortly.'))
             return redirect('olretail:dispute_detail', dispute_id=dispute.id)
     else:
-        form = PaymentDenialForm()
+        form = PaymentProofForm(initial={'payment_amount_claimed': order.total})
 
-    return render(request, 'olretail/deny_payment_received.html', {'order': order, 'form': form})
+    platform_settings = PlatformSettings.load()
+    context = {
+        'order': order,
+        'form': form,
+        'platform_bank_accounts': platform_settings.bank_accounts.all(),
+        'platform_payment_instructions': platform_settings.payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS,
+    }
+    return render(request, 'olretail/mark_payment_sent.html', context)
 
 
 @seller_required
@@ -1474,8 +1458,17 @@ def order_detail(request, order_id):
         context['courier_rating'] = getattr(order, 'courier_rating', None)
     if order.payment_method == PaymentMethod.BANK_TRANSFER:
         context['payment_dispute'] = order.disputes.filter(
-            reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE]
+            reason__in=[
+                DisputeReason.PAYMENT_CLAIM_SUBMITTED,
+                DisputeReason.PAYMENT_NOT_RECEIVED,
+                DisputeReason.PAYMENT_NO_RESPONSE,
+            ]
         ).order_by('-created_at').first()
+        platform_settings = PlatformSettings.load()
+        context['platform_bank_accounts'] = platform_settings.bank_accounts.all()
+        context['platform_payment_instructions'] = (
+            platform_settings.payment_instructions or settings.PLATFORM_PAYMENT_INSTRUCTIONS
+        )
     return render(request, 'olretail/order_detail.html', context)
 
 

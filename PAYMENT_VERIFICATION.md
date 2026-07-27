@@ -1,19 +1,28 @@
 # Bank-Transfer Payment Verification — Architecture & Fraud Prevention
 
-**Purpose**: the manual "Bank / Mobile Transfer" payment method (buyer pays the
-seller directly, off-platform, no commission — see `BANK_SIMULATOR_ARCHITECTURE.md`
-for how this differs from the platform-mediated automated gateway) previously had
-zero evidence attached to it: "I've sent payment" and "Confirm payment received"
-were bare button clicks with nothing to back either claim. This document covers
-what replaced that: receipt capture, fraud-signal flagging, an explicit seller
-denial path, an admin dispute-resolution queue, and an auto-escalation safety net
-for a seller who simply never responds.
+**Purpose**: the manual "Bank Transfer" payment method (buyer pays
+**TimorMart's own bank account**, the platform holds the funds and pays the
+seller out later — see `BANK_SIMULATOR_ARCHITECTURE.md` for how this differs
+from the platform-mediated *automated* gateway) previously had zero evidence
+attached to it: "I've sent payment" was a bare button click with nothing to
+back the claim. This document covers what replaced that: receipt capture,
+fraud-signal flagging, and an admin dispute-resolution queue that is the
+**only** way a bank-transfer order gets marked Paid.
 
-Two failure modes this was built to close:
-1. **A seller falsely denies receiving a real payment** — a buyer previously had
-   no recourse beyond hoping the seller eventually clicked confirm.
-2. **A buyer submits a fake/edited receipt** — nothing previously stopped a reused
-   or doctored screenshot from being accepted as sufficient evidence.
+> **2026-07-27 redesign**: bank transfer used to be a direct buyer→seller
+> payment the platform never touched, and the seller themselves confirmed or
+> denied receipt (see `HANDOFF.md` for that history). With legal clearance
+> obtained, it was changed to the escrow-style flow described below: the
+> buyer now pays the platform, and only an **admin** — who can actually see
+> the platform's real bank statement — confirms a claim. A seller has no
+> confirm/deny action left; `confirm_payment_received`,
+> `deny_payment_received`, and the `escalate_stale_payment_claims` command
+> (built for "a seller never responds," a scenario that's no longer
+> possible) were all deleted, not just deprecated.
+
+The failure mode this was built to close:
+- **A buyer submits a fake/edited receipt** — nothing previously stopped a
+  reused or doctored screenshot from being accepted as sufficient evidence.
 
 ---
 
@@ -21,7 +30,7 @@ Two failure modes this was built to close:
 
 ```
 Buyer clicks "I've sent payment" (mark_payment_sent)
-        │  now a real form (PaymentProofForm), not a bare click:
+        │  a real form (PaymentProofForm), not a bare click:
         │  receipt image + reference number + claimed amount, all required
         ▼
 Server-side fraud-signal checks (all soft signals, not proof of tampering):
@@ -32,40 +41,31 @@ Server-side fraud-signal checks (all soft signals, not proof of tampering):
     on a different order
         │
         ▼
-Order.status = PAYMENT_REPORTED  (unchanged from before)
+Order.status = PAYMENT_REPORTED
+Dispute created immediately (reason=PAYMENT_CLAIM_SUBMITTED,
+status=UNDER_REVIEW) — there is no seller step to wait through
         │
-        ├─────────────────────────────┬──────────────────────────────┐
-        ▼                              ▼                              ▼
-Seller confirms                Seller denies                  Seller never
-(confirm_payment_received,     (deny_payment_received,         responds
-unchanged) →                   NEW — was previously            (escalate_stale_payment_
-_mark_bank_transfer_paid()     impossible to express) →         claims mgmt command,
-                                Dispute(reason=                  run daily) →
-                                PAYMENT_NOT_RECEIVED,            Dispute(reason=
-                                status=UNDER_REVIEW)             PAYMENT_NO_RESPONSE,
-                                                                  status=UNDER_REVIEW)
-                                        │                              │
-                                        └──────────────┬───────────────┘
-                                                        ▼
-                                    Admin reviews at /dashboard/payment-disputes/
-                                    — sees the receipt, reference/amount, any
-                                    auto-flag reason, the seller's denial reason
-                                    (if any), and each party's prior track record
-                                    on this exact kind of dispute
-                                                        │
-                                        ┌───────────────┴───────────────┐
-                                        ▼                                ▼
-                                    Approve                           Reject
-                                    → _mark_bank_transfer_paid()       → Order.status = CANCELLED
-                                    (the SAME function the seller's
-                                    own confirm click calls)
+        ▼
+Admin reviews at /dashboard/payment-disputes/ ("Bank transfer claims")
+— sees the receipt, reference/amount, any auto-flag reason, and the
+buyer's prior track record on this exact kind of claim, then checks the
+platform's real bank statement for a matching transfer
+        │
+        ┌───────────────┴───────────────┐
+        ▼                                ▼
+    Approve                           Reject
+    → _mark_bank_transfer_paid()      → Order.status = CANCELLED
+    (credits SellerBalance, marks
+    Paid, decrements stock, clears
+    cart)
 ```
 
 **Why the effect function matters**: `_mark_bank_transfer_paid()` in
-`olretail/payment_views.py` is the single place that actually flips an order to
-Paid, decrements stock, and clears the cart. It's called from exactly two places —
-the seller's own confirm click, and an admin's dispute approval — so there is only
-ever one code path with those side effects, never two that could drift apart.
+`olretail/payment_views.py` is the single place that actually flips an order
+to Paid, credits the seller's balance, decrements stock, and clears the
+cart. It is called from exactly one place now — an admin's dispute
+approval (`dashboard.views.payment_dispute_action`) — so there is only ever
+one code path with those side effects.
 
 ---
 
@@ -74,10 +74,10 @@ ever one code path with those side effects, never two that could drift apart.
 | Field | Purpose |
 |---|---|
 | `payment_proof` | The receipt/screenshot image itself |
-| `payment_reference` | Buyer-entered bank/mobile transfer reference number |
+| `payment_reference` | Buyer-entered bank transfer reference number |
 | `payment_amount_claimed` | Buyer-entered amount sent (compared against `order.total`) |
 | `payment_proof_hash` | SHA-256 of the uploaded image — powers duplicate detection |
-| `payment_flagged` / `payment_flag_reason` | Set automatically when a signal fires; shown to the seller and to admin, never blocks the seller's own confirm |
+| `payment_flagged` / `payment_flag_reason` | Set automatically when a signal fires; shown to admin |
 
 ## 3. Fraud signals — what they catch, and what they don't
 
@@ -91,19 +91,23 @@ often as dishonest ones.
 
 This is a known, accepted limitation, not an oversight: closing the "one
 convincingly edited image, never reused" gap requires real bank API integration,
-which is out of scope here (see §5).
+which is out of scope here (see §5). The admin manually checking the
+platform's real bank statement before approving is today's actual backstop
+against this gap, not a signal computed here.
 
 ## 4. Trust signals on the admin dispute screen
 
 Computed live from existing `Dispute` data, not a separate scoring system to
 maintain:
-- **Seller's prior wrongful denials** — times this seller denied a payment that an
-  admin later confirmed (`DisputeResolution.PAYMENT_CONFIRMED`).
 - **Buyer's prior unverified claims** — times this buyer's payment claim was
   rejected as unverifiable (`DisputeResolution.PAYMENT_REJECTED`).
 
-These are cheap `Dispute.objects.filter(...).count()` queries computed per-row in
-`dashboard.views.payment_disputes` — no denormalized counters to keep in sync, no
+(A seller-side "prior wrongful denials" signal existed here before the
+2026-07-27 redesign — it's gone because sellers no longer have a deny
+action to be wrong about.)
+
+This is a cheap `Dispute.objects.filter(...).count()` query computed per-row in
+`dashboard.views.payment_disputes` — no denormalized counter to keep in sync, no
 risk of drifting from the underlying data.
 
 ## 5. Scalability — replacing manual verification with a real bank API later
@@ -114,29 +118,49 @@ tangle together:
 1. **Evidence** — `payment_proof`/`payment_reference`/`payment_amount_claimed` on
    `Order`. A real bank API integration would want exactly this data to reconcile
    a claimed transfer against a real statement line — this isn't throwaway work.
-2. **Decision** — whoever/whatever decides a transfer is genuine. Today that's a
-   seller's click or an admin's dispute resolution. A future automated
-   bank-statement matcher becomes a **third decider**, nothing more.
+2. **Decision** — whoever/whatever decides a transfer is genuine. Today that's
+   an admin's dispute resolution. A future automated bank-statement matcher
+   becomes a **second decider**, nothing more.
 3. **Effect** — `_mark_bank_transfer_paid()`. Every decider, present and future,
-   calls this same function. The order lifecycle, buyer UI, and seller UI never
-   need to change when a new decider is added.
+   calls this same function. The order lifecycle and buyer UI never need to
+   change when a new decider is added.
 
 ## 6. `Dispute` model changes
 
-`Dispute.order` changed from `OneToOneField` to `ForeignKey` (`related_name=
-'disputes'`) — a payment dispute happens before delivery, a damage/non-receipt
-dispute happens after, and an order that survives one should still be able to have
-the other later. `DisputeReason` gained `PAYMENT_NOT_RECEIVED` (seller-initiated
-denial) and `PAYMENT_NO_RESPONSE` (system-initiated escalation); `DisputeResolution`
-gained `PAYMENT_CONFIRMED`/`PAYMENT_REJECTED` (no refund/reshipment concept applies
-before a payment has even been confirmed). `Order.has_active_dispute` gates
-opening a *new* dispute so a resolved/closed one from earlier in the order's life
-doesn't permanently block a later, unrelated one.
+`Dispute.order` is a `ForeignKey` (`related_name='disputes'`), not a
+`OneToOneField` — a payment dispute happens before delivery, a
+damage/non-receipt dispute happens after, and an order that survives one
+should still be able to have the other later. `DisputeReason` includes
+`PAYMENT_CLAIM_SUBMITTED` (the current, only bank-transfer-claim reason —
+added 2026-07-27) alongside the historical `PAYMENT_NOT_RECEIVED`
+(seller-denial) and `PAYMENT_NO_RESPONSE` (system-escalation) values, kept
+so any pre-existing rows from before the redesign still display and filter
+correctly; neither historical reason is created by new code anymore.
+`DisputeResolution` has `PAYMENT_CONFIRMED`/`PAYMENT_REJECTED` (no
+refund/reshipment concept applies before a payment has even been
+confirmed). `Order.has_active_dispute` gates opening a *new* dispute so a
+resolved/closed one from earlier in the order's life doesn't permanently
+block a later, unrelated one.
 
-## 7. Auto-escalation
+## 7. Seller balance crediting (added 2026-07-27)
 
-`python manage.py escalate_stale_payment_claims [--days=3]` — meant to run daily.
-Finds `BANK_TRANSFER` orders sitting in `PAYMENT_REPORTED` past the response
-window with no active dispute already, and escalates them straight to admin
-review. This is what stops a seller from indefinitely stonewalling a buyer by
-simply never clicking confirm *or* deny.
+Since the platform now actually holds the money, `_mark_bank_transfer_paid()`
+credits the seller exactly like Stripe's `_mark_payment_succeeded()` does:
+
+```python
+Transaction.objects.create(
+    order=order, seller=order.seller, amount_cents=int(order.subtotal * 100),
+    transaction_type=TransactionType.COMMISSION,
+    description=f"Earnings from order {order.order_number}",
+)
+seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+seller_balance.add_commission(int(order.subtotal * 100))
+```
+
+This "just works" because checkout (`_process_bank_transfer_checkout`) now
+computes a real proportional `commission_amount` split (the same
+cents-based algorithm Stripe/the bank simulator use), so `order.subtotal`
+already excludes the platform's cut. The credited balance flows into the
+*same* manual payout batch (`olretail/payouts.py`
+`create_scheduled_payouts`) Stripe earnings already use — no new payout
+mechanism was built for this.

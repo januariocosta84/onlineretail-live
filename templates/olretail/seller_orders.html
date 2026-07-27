@@ -94,16 +94,9 @@
                 </td>
                 <td class="text-right text-nowrap">
                   {% if order.payment_method == 'bank_transfer' and order.status == 'payment_reported' %}
-                  <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}" class="d-inline"
-                        onsubmit="return confirm('{% trans "Confirm you received the buyer'\''s transfer?" %}');">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-success">
-                      <i class="fas fa-check mr-1"></i>{% trans "Confirm Payment" %}
-                    </button>
-                  </form>
-                  <a href="{% url 'olretail:deny_payment_received' order.id %}" class="btn btn-sm btn-outline-danger">
-                    <i class="fas fa-times mr-1"></i>{% trans "Not Received" %}
-                  </a>
+                  <span class="badge badge-info">{% trans "Awaiting admin confirmation" %}</span>
+                  {% elif order.payment_method == 'bank_transfer' and order.status == 'pending_payment' %}
+                  <span class="badge badge-light border">{% trans "Awaiting buyer's transfer" %}</span>
                   {% endif %}
                   <a href="{% url 'olretail:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
                     {% trans "View" %}

@@ -38,10 +38,8 @@ urlpatterns = [
     path("order/<int:order_id>/rate/", payment_views.rate_order, name="rate_order"),
     path("order/<int:order_id>/rate-courier/", payment_views.rate_courier, name="rate_courier"),
 
-    # Bank / mobile transfer
+    # Bank transfer (buyer → platform)
     path("order/<int:order_id>/mark-sent/", payment_views.mark_payment_sent, name="mark_payment_sent"),
-    path("order/<int:order_id>/confirm-received/", payment_views.confirm_payment_received, name="confirm_payment_received"),
-    path("order/<int:order_id>/deny-received/", payment_views.deny_payment_received, name="deny_payment_received"),
 
     # Delivery tracking
     path("order/<int:order_id>/delivery-update/", payment_views.add_delivery_update, name="add_delivery_update"),

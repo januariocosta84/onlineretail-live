@@ -956,16 +956,23 @@ def seller_verification_action(request, pk):
 
 
 # ── Bank-transfer payment disputes ─────────────────────────────────────────
-# A seller denying receipt (deny_payment_received) or a seller never
-# responding at all (escalate_stale_payment_claims) both land here as a
-# Dispute for an admin to actually decide — see PAYMENT_VERIFICATION.md.
+# Every bank-transfer claim (mark_payment_sent) lands here the moment the
+# buyer submits it — this is the primary confirmation queue now, not a
+# denial-only fallback, since only an admin can see the platform's real
+# bank statement. The two legacy reasons are kept in the filter so any
+# pre-existing dispute from before this change still surfaces — see
+# PAYMENT_VERIFICATION.md.
 
 
 @admin_required
 def payment_disputes(request):
     disputes = (
         Dispute.objects.filter(
-            reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE],
+            reason__in=[
+                DisputeReason.PAYMENT_CLAIM_SUBMITTED,
+                DisputeReason.PAYMENT_NOT_RECEIVED,
+                DisputeReason.PAYMENT_NO_RESPONSE,
+            ],
             status__in=[DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW],
         )
         .select_related("order", "buyer", "seller__user")
@@ -975,15 +982,16 @@ def payment_disputes(request):
     for d in disputes:
         rows.append({
             "dispute": d,
-            # Prior cases resolved *against* this seller/buyer — cheap trust
-            # signals computed from data already being generated, not a new
+            # Prior claims resolved against this buyer — a cheap trust
+            # signal computed from data already being generated, not a new
             # scoring system to maintain.
-            "seller_prior_wrongful_denials": Dispute.objects.filter(
-                seller=d.seller, reason=DisputeReason.PAYMENT_NOT_RECEIVED,
-                resolution=DisputeResolution.PAYMENT_CONFIRMED,
-            ).exclude(pk=d.pk).count(),
             "buyer_prior_unverified_claims": Dispute.objects.filter(
-                buyer=d.buyer, reason__in=[DisputeReason.PAYMENT_NOT_RECEIVED, DisputeReason.PAYMENT_NO_RESPONSE],
+                buyer=d.buyer,
+                reason__in=[
+                    DisputeReason.PAYMENT_CLAIM_SUBMITTED,
+                    DisputeReason.PAYMENT_NOT_RECEIVED,
+                    DisputeReason.PAYMENT_NO_RESPONSE,
+                ],
                 resolution=DisputeResolution.PAYMENT_REJECTED,
             ).exclude(pk=d.pk).count(),
         })

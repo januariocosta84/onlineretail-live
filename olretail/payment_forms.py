@@ -155,23 +155,6 @@ class PaymentProofForm(forms.Form):
         return photo
 
 
-class PaymentDenialForm(forms.Form):
-    """Seller's reason when they deny having received a buyer's claimed
-    bank/mobile transfer — see payment_views.deny_payment_received. Shown
-    to the buyer and to the admin who reviews the resulting dispute, so a
-    bare "no" isn't accepted."""
-
-    reason = forms.CharField(
-        widget=forms.Textarea(attrs={
-            'rows': 3,
-            'class': 'form-control',
-            'placeholder': _("Explain why you haven't received this payment..."),
-        }),
-        label=_("Reason"),
-        error_messages={'required': _('A reason is required — this is shown to the buyer and reviewed by an administrator.')},
-    )
-
-
 class ShipOrderForm(forms.Form):
     """Courier/tracking details a seller enters when marking an order shipped."""
 

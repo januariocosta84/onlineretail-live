@@ -257,13 +257,13 @@
         {% if order.payment_method == 'bank_transfer' and order.status != 'paid' %}
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-header bg-light">
-            <h5 class="mb-0">{% trans "Bank / Mobile Transfer" %}</h5>
+            <h5 class="mb-0">{% trans "Bank Transfer" %}</h5>
           </div>
           <div class="card-body">
             {% if is_buyer %}
             <div class="alert alert-secondary">
-              <strong>{% trans "Seller payment details" %} — {{ order.seller.get_name }}:</strong>
-              {% include 'olretail/_seller_bank_details.html' %}
+              <strong>{% trans "TimorMart bank details" %}:</strong>
+              {% include 'olretail/_platform_bank_details.html' %}
               <small class="text-muted d-block mt-2">{% trans "Reference" %}: <code>{{ order.order_number }}</code></small>
             </div>
             {% endif %}
@@ -302,26 +302,16 @@
             <a href="{% url 'olretail:mark_payment_sent' order.id %}" class="btn btn-success">
               <i class="fas fa-check mr-1"></i>{% trans "I've sent payment" %}
             </a>
-            {% elif is_buyer and order.status == 'payment_reported' and not payment_dispute %}
+            {% elif order.status == 'pending_payment' %}
             <p class="text-muted mb-0">
               <i class="fas fa-hourglass-half mr-1"></i>
-              {% trans "Waiting for the seller to confirm they received your transfer." %}
+              {% trans "Waiting for the buyer to send payment." %}
             </p>
-            {% endif %}
-
-            {% if is_seller and order.status in 'pending_payment,payment_reported' and not payment_dispute %}
-            <form method="post" action="{% url 'olretail:confirm_payment_received' order.id %}" class="d-inline"
-                  onsubmit="return confirm('{% trans "Confirm you received the buyer'\''s transfer?" %}');">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-check mr-1"></i>{% trans "Confirm payment received" %}
-              </button>
-            </form>
-            {% if order.status == 'payment_reported' %}
-            <a href="{% url 'olretail:deny_payment_received' order.id %}" class="btn btn-outline-danger">
-              <i class="fas fa-times mr-1"></i>{% trans "I have not received this" %}
-            </a>
-            {% endif %}
+            {% elif order.status == 'payment_reported' and not payment_dispute %}
+            <p class="text-muted mb-0">
+              <i class="fas fa-hourglass-half mr-1"></i>
+              {% trans "Payment claim submitted — waiting for an administrator to confirm it." %}
+            </p>
             {% endif %}
           </div>
         </div>
