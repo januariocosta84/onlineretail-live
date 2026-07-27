@@ -109,10 +109,12 @@ There is also a Claude Code launch config named **`onlineretail`** (port 8033)
 in the food-delivery-platform project's `.claude/launch.json`.
 </details>
 
-**GNU gettext is still not installed** on this machine — `compilemessages`
-and `makemessages` fail (`Can't find msgfmt`). Use `compile_translations.py`
-(polib-based, see bottom of this doc) to compile `.po` → `.mo` after editing
-translations by hand.
+**GNU gettext is now installed** on this machine (`AppData\Local\Programs\
+gettext-iconv\bin` — add it to `PATH` if a fresh shell doesn't see it), so
+`manage.py makemessages`/`compilemessages` both work. `compile_translations.py`
+(polib-based, see bottom of this doc) still works too and is the simpler
+option if you're only editing existing `.po` entries by hand, not adding new
+`{% trans %}` strings.
 
 ## Accounts (state on 2026-07-14 evening)
 
@@ -749,13 +751,11 @@ app). New file `olretail/subscription_models.py`, migration `0012`.
   admin approve → immediately unblocks posting → new listing auto-published,
   admin reject → seller stays blocked → can resubmit, and all three renewal
   banner states (expiring-soon / expired-over-limit / normal).
-- **Known gap:** the new user-facing strings in this feature
-  (`{% trans %}`/`{% blocktrans %}` in `seller_subscription.html`,
-  `lista.html`, `product_form.html`, and the new success/warning messages in
-  `views.py`/`payment_views.py`) are **not yet in the Tetum `.po` catalog** —
-  they'll render in English even on `/tet/` pages until someone adds them by
-  hand (gettext isn't installed to auto-extract via `makemessages`, see
-  Translations section).
+- ~~**Known gap:** the new user-facing strings in this feature ... are not
+  yet in the Tetum `.po` catalog~~ **resolved 2026-07-27** — gettext is now
+  installed, and a full `makemessages` sweep (see Translations section)
+  caught up every catalog to current source across all three non-English
+  languages, not just Tetum.
 
 ## Platform payment settings (2026-07-15)
 
@@ -1216,24 +1216,38 @@ platform), not bought through checkout.
 - **Password reset:** works end-to-end; emails print to the server console
   unless SMTP env vars are set (see README table).
 
-## Translations (English / Tetum)
+## Translations (English / Tetum / Portuguese / Indonesian)
 
-- English is the source language (msgids). Tetum lives in
-  `locale/tet/LC_MESSAGES/django.po` — **all strings translated**, including
-  overrides for Django built-ins (password rules, "This field is required.",
-  lowercase model labels like `username`).
-- Category names are translated per-row in the DB (`title_en` / `title_tet`
+- English is the source language (msgids). The other three live in
+  `locale/tet/LC_MESSAGES/django.po`, `locale/pt_PT/LC_MESSAGES/django.po`,
+  `locale/id/LC_MESSAGES/django.po` — **all 850 strings translated in all
+  three as of 2026-07-27**, including overrides for Django built-ins
+  (password rules, "This field is required.", lowercase model labels like
+  `username`). `locale/pt_PT/` is fully populated, not the stale near-empty
+  catalog an earlier version of this doc described.
+- Category names (and Product name/description/etc.) are translated
+  per-row in the DB (`title_en`/`title_tet`/`title_pt_pt`/`title_ind`
   columns, managed by django-modeltranslation; edit them in the admin).
-- After editing any `.po`: `python compile_translations.py` (uses polib; GNU
-  gettext is NOT installed on this machine so `compilemessages` won't work),
-  then restart the server. `makemessages` also needs gettext — if you add new
-  `{% trans %}` strings, add them to the `.po` by hand or install gettext.
+  `BusinessCategory.title` and `Municipality.name` are deliberately
+  **not** modeltranslation-registered (English-only by design — see their
+  model docstrings in `olretail/models.py`), so don't expect per-language
+  columns for those two.
+- GNU gettext is now installed (`AppData\Local\Programs\gettext-iconv\bin`
+  on PATH) — `python manage.py makemessages -l tet -l pt_PT -l id
+  --ignore=mobile/* --ignore=staticfiles/* --ignore=media/* --ignore=.venv/*
+  --ignore=static/*` extracts any new `{% trans %}`/`_()` strings into all
+  three `.po` files at once (the `--ignore` flags matter — without them it
+  chokes on the unrelated `mobile/` Capacitor/Android build directory).
+  After that, translate the newly-added empty `msgstr` entries (and check
+  for `#, fuzzy` entries — `makemessages` sometimes auto-guesses a
+  translation from a similar old string, and the guess is often wrong; see
+  `msgattrib --only-fuzzy`/`--untranslated` to list them).
+- After editing any `.po` (by hand or via the above): `python
+  compile_translations.py` (uses polib, still works and is the simplest
+  option if gettext isn't set up in whatever shell you're in) or `python
+  manage.py compilemessages`, then restart the server.
 - Product condition values are stored in English ("New"/"Second Hand") and
   translated only for display — don't translate the stored values.
-- **Not yet translated:** all the Subscriptions feature's user-facing
-  strings (added 2026-07-14 evening, see Seller subscriptions section) —
-  they fall back to English on `/tet/` pages until added to the `.po` by
-  hand (no gettext on this machine to auto-extract them).
 
 ## Deployment notes
 
@@ -1257,7 +1271,9 @@ platform), not bought through checkout.
 5. Old `/tt/...` bookmarks 404 (language code renamed to `/tet/`).
 6. Tetum shows `$ 16000.00` without thousands separators (locale has no
    number format; enable `USE_THOUSAND_SEPARATOR` if wanted).
-7. `locale/pt-pt/` is a stale near-empty catalog — delete or complete it.
+7. ~~`locale/pt-pt/` is a stale near-empty catalog — delete or complete
+   it.~~ **Resolved 2026-07-27** — `locale/pt_PT/` is fully populated (850
+   strings, same as tet/id).
 8. Payouts still require a human to run the batch, send the actual bank
    transfer, and mark it paid. ~~No multi-seller-cart checkout support for
    the Stripe path~~ — **fixed 2026-07-14 evening**, see "Multi-seller
@@ -1294,18 +1310,17 @@ platform), not bought through checkout.
 14. No email/SMS notification when a subscription is expiring or a
     subscription/payout request is approved/rejected — seller only finds out
     by visiting the relevant page (banners are in-app only).
-15. New Subscriptions feature strings aren't in the Tetum `.po` catalog yet
-    (see Translations section). ~~2026-07-15's own new UI strings
-    (notifications, header info bar, etc.)~~ **were added to the catalog
-    2026-07-15** (see "All 11 Medium UAT findings fixed") — but doing that
-    surfaced a **much bigger, previously-undocumented gap**: the entire
-    Payments/Orders/Delivery/Dispute feature area from 2026-07-14 (cart,
-    checkout, order detail, buyer/seller orders, disputes — dozens of
-    templates, likely 150+ strings) was **never added to the Tetum catalog
-    at all**, not just Subscriptions. Confirmed via direct `.po` lookups
-    for strings like "My Orders"/"Cart"/"Courier" — genuinely absent, not
-    a false negative. This is a substantial standalone translation effort,
-    intentionally out of scope for the UAT fix batch.
+15. ~~New Subscriptions feature strings aren't in the Tetum `.po` catalog
+    yet ... the entire Payments/Orders/Delivery/Dispute feature area from
+    2026-07-14 ... was never added to the Tetum catalog at all~~
+    **Resolved 2026-07-27** — a full `makemessages` sweep (gettext is now
+    installed, see Translations section) caught every string in the
+    project up to date across Tetum, Portuguese, and Indonesian; 850/850
+    translated, 0 fuzzy, in all three. This kind of gap can recur any time
+    new `{% trans %}`/`_()` strings are added without re-running
+    `makemessages` afterward — there's no CI check for it, so it's worth
+    periodically re-running the sweep described in the Translations
+    section rather than assuming the catalogs stay current on their own.
 
 ## File map (the parts that matter)
 

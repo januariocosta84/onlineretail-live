@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 10:36+0900\n"
+"POT-Creation-Date: 2026-07-27 08:58+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,117 +18,160 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: .\accounts\forms.py:19
 msgid "Account type"
 msgstr "Tipo de conta"
 
+#: .\accounts\forms.py:26
 msgid "Seller type"
 msgstr "Tipo de vendedor"
 
-msgid "Company name"
-msgstr "Nome da empresa"
+#: .\accounts\forms.py:31
+msgid "Business Name"
+msgstr "Nome do Negócio"
 
-msgid "Acme Trading Lda"
-msgstr "Acme Trading Lda"
+#: .\accounts\forms.py:32
+msgid "Your business or organization name"
+msgstr "O nome do seu negócio ou organização"
 
-msgid "TIN (Tax Identification Number)"
-msgstr "NIF (Número de Identificação Fiscal)"
+#: .\accounts\forms.py:37 .\olretail\payment_forms.py:369
+msgid "Contact Person"
+msgstr "Pessoa de Contacto"
 
-msgid "e.g. 123456789"
-msgstr "ex.: 123456789"
+#: .\accounts\forms.py:38
+msgid "Full name"
+msgstr "Nome completo"
 
-msgid "Company address"
-msgstr "Morada da empresa"
+#: .\accounts\forms.py:43
+msgid "Business Categories"
+msgstr "Categorias de Negócio"
 
-msgid "Street, City, Region"
-msgstr "Rua, Cidade, Região"
+#: .\accounts\forms.py:48
+msgid "Identity Card Photo"
+msgstr "Foto do Cartão de Identidade"
 
-msgid "Bank account"
-msgstr "Conta bancária"
+#: .\accounts\forms.py:53
+msgid "Driving License Photo"
+msgstr "Foto da Carta de Condução"
 
-msgid "Bank name, account number, account holder"
-msgstr "Nome do banco, número de conta, titular"
-
+#: .\accounts\forms.py:58
 msgid "First name"
 msgstr "Primeiro nome"
 
+#: .\accounts\forms.py:59
 msgid "John"
 msgstr "João"
 
+#: .\accounts\forms.py:63
 msgid "Last name"
 msgstr "Apelido"
 
+#: .\accounts\forms.py:64
 msgid "Doe"
 msgstr "Silva"
 
+#: .\accounts\forms.py:67
+#: .\accounts\templates\accounts\password_reset_form.html:21
 msgid "Email address"
 msgstr "Endereço de email"
 
+#: .\accounts\forms.py:68
 msgid "you@example.com"
 msgstr "voce@exemplo.com"
 
+#: .\accounts\forms.py:72
 msgid "Phone number"
 msgstr "Número de telefone"
 
+#: .\accounts\forms.py:73 .\olretail\payment_forms.py:43
 msgid "7012345 or +670 7012345"
 msgstr "7012345 ou +670 7012345"
 
+#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:459
 msgid "Address"
 msgstr "Morada"
 
+#: .\accounts\forms.py:78 .\olretail\payment_forms.py:25
+msgid "Street, City, Region"
+msgstr "Rua, Cidade, Região"
+
+#: .\accounts\forms.py:94
 msgid "Enter a strong password"
 msgstr "Introduza uma palavra-passe forte"
 
+#: .\accounts\forms.py:97
 msgid "Confirm password"
 msgstr "Confirmar palavra-passe"
 
-msgid "choose_a_username"
-msgstr "escolha_um_nome_utilizador"
-
+#: .\accounts\forms.py:106
 msgid "An account with this email address already exists."
 msgstr "Já existe uma conta com este endereço de email."
 
-msgid "Company name is required for a company seller account."
-msgstr "O nome da empresa é obrigatório para uma conta de vendedor empresa."
+#: .\accounts\forms.py:127
+msgid "A photo of your identity card is required."
+msgstr "É necessária uma foto do seu cartão de identidade."
 
-msgid "TIN is required for a company seller account."
-msgstr "O NIF é obrigatório para uma conta de vendedor empresa."
+#: .\accounts\forms.py:128
+msgid "A photo of your driving license is required."
+msgstr "É necessária uma foto da sua carta de condução."
 
-msgid "Company address is required for a company seller account."
-msgstr "A morada da empresa é obrigatória para uma conta de vendedor empresa."
+#: .\accounts\forms.py:141
+msgid "Select at least one business category."
+msgstr "Selecione pelo menos uma categoria de negócio."
 
-msgid "Bank account is required for a company seller account."
-msgstr "A conta bancária é obrigatória para uma conta de vendedor empresa."
+#: .\accounts\forms.py:144
+msgid "Business name is required."
+msgstr "O nome do negócio é obrigatório."
 
+#: .\accounts\ratelimit.py:29
 msgid "Too many attempts. Please wait a few minutes and try again."
 msgstr "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
 
+#: .\accounts\roles.py:25
 msgid "Buyer — browse products, contact sellers and post comments"
 msgstr "Comprador — ver produtos, contactar vendedores e comentar"
 
+#: .\accounts\roles.py:26
 msgid "Seller — list and manage products for sale"
 msgstr "Vendedor — listar e gerir produtos para venda"
 
+#: .\accounts\roles.py:27
 msgid "Buyer & Seller — everything in one account"
 msgstr "Comprador & Vendedor — tudo numa só conta"
 
+#: .\accounts\roles.py:28
+msgid "Courier — deliver orders and earn per delivery"
+msgstr "Estafeta — entregar encomendas e ganhar por entrega"
+
+#: .\accounts\templates\accounts\password_reset_complete.html:4
+#: .\accounts\templates\accounts\password_reset_complete.html:13
 msgid "Password changed"
 msgstr "Palavra-passe alterada"
 
+#: .\accounts\templates\accounts\password_reset_complete.html:14
 msgid ""
 "Your password has been set. You can now sign in with your new password."
 msgstr ""
 "A sua palavra-passe foi definida. Já pode iniciar sessão com a nova palavra-"
 "passe."
 
+#: .\accounts\templates\accounts\password_reset_complete.html:15
+#: .\accounts\templates\accounts\register.html:62
+#: .\templates\olretail\details.html:372 .\templates\olretail\details.html:494
+#: .\templates\shared\header.html:362
 msgid "Sign in"
 msgstr "Iniciar sessão"
 
+#: .\accounts\templates\accounts\password_reset_confirm.html:4
+#: .\accounts\templates\accounts\password_reset_confirm.html:12
 msgid "Choose a new password"
 msgstr "Escolha uma nova palavra-passe"
 
+#: .\accounts\templates\accounts\password_reset_confirm.html:27
 msgid "Set new password"
 msgstr "Definir nova palavra-passe"
 
+#: .\accounts\templates\accounts\password_reset_confirm.html:31
 msgid ""
 "This password reset link is invalid or has expired. Please request a new "
 "one."
@@ -136,15 +179,19 @@ msgstr ""
 "Este link de redefinição de palavra-passe é inválido ou expirou. Por favor "
 "solicite um novo."
 
+#: .\accounts\templates\accounts\password_reset_confirm.html:32
 msgid "Request a new link"
 msgstr "Solicitar novo link"
 
+#: .\accounts\templates\accounts\password_reset_done.html:4
 msgid "Reset link sent"
 msgstr "Link de redefinição enviado"
 
+#: .\accounts\templates\accounts\password_reset_done.html:13
 msgid "Check your email"
 msgstr "Verifique o seu email"
 
+#: .\accounts\templates\accounts\password_reset_done.html:15
 msgid ""
 "If an account exists with the address you entered, we have emailed a "
 "password reset link."
@@ -152,9 +199,11 @@ msgstr ""
 "Se existir uma conta com o endereço introduzido, enviámos um link de "
 "redefinição de palavra-passe por email."
 
+#: .\accounts\templates\accounts\password_reset_done.html:17
 msgid "Back to sign in"
 msgstr "Voltar ao início de sessão"
 
+#: .\accounts\templates\accounts\password_reset_email.html:2
 msgid ""
 "You are receiving this email because you requested a password reset for your"
 " TimorMart account."
@@ -162,21 +211,27 @@ msgstr ""
 "Está a receber este email porque solicitou a redefinição da palavra-passe da"
 " sua conta TimorMart."
 
+#: .\accounts\templates\accounts\password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
 msgstr "Por favor aceda à página seguinte e escolha uma nova palavra-passe:"
 
+#: .\accounts\templates\accounts\password_reset_email.html:8
 msgid "Your username, in case you have forgotten:"
 msgstr "O seu nome de utilizador, caso se tenha esquecido:"
 
+#: .\accounts\templates\accounts\password_reset_email.html:10
 msgid "If you did not request this, you can safely ignore this email."
 msgstr "Se não solicitou isto, pode ignorar este email com segurança."
 
+#: .\accounts\templates\accounts\password_reset_form.html:4
 msgid "Reset password"
 msgstr "Redefinir palavra-passe"
 
+#: .\accounts\templates\accounts\password_reset_form.html:12
 msgid "Reset your password"
 msgstr "Redefina a sua palavra-passe"
 
+#: .\accounts\templates\accounts\password_reset_form.html:16
 msgid ""
 "Enter the email address you registered with and we will send you a link to "
 "set a new password."
@@ -184,48 +239,90 @@ msgstr ""
 "Introduza o endereço de email com que se registou e enviaremos um link para "
 "definir uma nova palavra-passe."
 
+#: .\accounts\templates\accounts\password_reset_form.html:27
 msgid "Send reset link"
 msgstr "Enviar link de redefinição"
 
+#: .\accounts\templates\accounts\register.html:4
+#: .\accounts\templates\accounts\register.html:58
+#: .\templates\olretail\details.html:373 .\templates\olretail\details.html:495
+#: .\templates\shared\header.html:363
 msgid "Sign up"
 msgstr "Registar"
 
+#: .\accounts\templates\accounts\register.html:12
 msgid "Create an account"
 msgstr "Criar uma conta"
 
+#: .\accounts\templates\accounts\register.html:62
+#: .\templates\accounts\register.html:343
 msgid "Already have an account?"
 msgstr "Já tem uma conta?"
 
+#: .\accounts\views.py:110
 #, python-format
-msgid "Welcome, %(name)s! Your account is ready — happy shopping."
-msgstr "Bem-vindo, %(name)s! A sua conta está pronta — boas compras."
+msgid ""
+"Welcome, %(name)s! Your account is ready — happy shopping. Your username is "
+"%(username)s — you'll need it to sign in."
+msgstr ""
+"Bem-vindo, %(name)s! A sua conta está pronta — boas compras. O seu nome de "
+"utilizador é %(username)s — vai precisar dele para iniciar sessão."
 
+#: .\accounts\views.py:117
 #, python-format
-msgid "Welcome, %(name)s! Your seller account is ready."
-msgstr "Bem-vindo, %(name)s! A sua conta de vendedor está pronta."
+msgid ""
+"Welcome, %(name)s! Your courier account is ready — an administrator will "
+"review your documents before you can be assigned deliveries. Your username "
+"is %(username)s — you'll need it to sign in."
+msgstr ""
+"Bem-vindo, %(name)s! A sua conta de estafeta está pronta — um administrador "
+"irá rever os seus documentos antes de lhe poderem ser atribuídas entregas. O"
+" seu nome de utilizador é %(username)s — vai precisar dele para iniciar "
+"sessão."
 
+#: .\accounts\views.py:125
+#, python-format
+msgid ""
+"Welcome, %(name)s! Your seller account is ready. Your username is "
+"%(username)s — you'll need it to sign in."
+msgstr ""
+"Bem-vindo, %(name)s! A sua conta de vendedor está pronta. O seu nome de "
+"utilizador é %(username)s — vai precisar dele para iniciar sessão."
+
+#: .\accounts\views.py:130 .\olretail\payment_views.py:1215
+#: .\olretail\payment_views.py:1229 .\olretail\payment_views.py:1244
+#: .\olretail\payment_views.py:1258 .\olretail\payment_views.py:1274
+#: .\olretail\payment_views.py:1297 .\olretail\payment_views.py:1330
+#: .\olretail\payment_views.py:1612 .\olretail\payment_views.py:1772
+#: .\olretail\views.py:388 .\olretail\views.py:443 .\olretail\views.py:523
 msgid "Please correct the errors below."
 msgstr "Por favor corrija os erros abaixo."
 
+#: .\accounts\views.py:149
 #, python-format
 msgid "Welcome back, %(name)s!"
 msgstr "Bem-vindo de volta, %(name)s!"
 
+#: .\accounts\views.py:152
 msgid "Invalid username or password."
 msgstr "Nome de utilizador ou palavra-passe inválidos."
 
+#: .\accounts\views.py:163
 msgid "You have been logged out."
 msgstr "Terminou a sessão."
 
+#: .\accounts\views.py:175 .\olretail\decorators.py:22
 msgid ""
 "Administrator accounts manage the platform and cannot buy or sell products."
 msgstr ""
 "As contas de administrador gerem a plataforma e não podem comprar ou vender "
 "produtos."
 
+#: .\accounts\views.py:179
 msgid "Your account already has the buyer role."
 msgstr "A sua conta já tem o papel de comprador."
 
+#: .\accounts\views.py:191
 msgid ""
 "Your account is now Buyer & Seller — you can contact sellers and post "
 "comments."
@@ -233,180 +330,301 @@ msgstr ""
 "A sua conta é agora Comprador & Vendedor — pode contactar vendedores e "
 "comentar."
 
+#: .\olretail\banking_models.py:13
+#: .\templates\olretail\seller_subscription.html:27
 msgid "Active"
 msgstr "Ativo"
 
+#: .\olretail\banking_models.py:14 .\olretail\payment_models.py:619
 msgid "Closed"
 msgstr "Fechado"
 
+#: .\olretail\banking_models.py:15
 msgid "Frozen"
 msgstr "Congelado"
 
+#: .\olretail\banking_models.py:22
 msgid "Automatic (balance-based)"
 msgstr "Automático (baseado no saldo)"
 
+#: .\olretail\banking_models.py:23
 msgid "Always Succeed"
 msgstr "Sempre com Sucesso"
 
+#: .\olretail\banking_models.py:24
 msgid "Always Fail"
 msgstr "Sempre Falha"
 
+#: .\olretail\banking_models.py:25
 msgid "Always Timeout"
 msgstr "Sempre Timeout"
 
+#: .\olretail\banking_models.py:26
 msgid "Always Insufficient Funds"
 msgstr "Sempre Saldo Insuficiente"
 
+#: .\olretail\banking_models.py:27
 msgid "Always Flag as Duplicate"
 msgstr "Sempre Marcar como Duplicado"
 
+#: .\olretail\banking_models.py:62 .\olretail\payment_models.py:362
+#: .\templates\olretail\courier_deliveries.html:48
 msgid "Pending"
 msgstr "Pendente"
 
+#: .\olretail\banking_models.py:63
 msgid "Success"
 msgstr "Sucesso"
 
+#: .\olretail\banking_models.py:64 .\olretail\payment_models.py:365
+#: .\olretail\payment_models.py:550
 msgid "Failed"
 msgstr "Falhou"
 
+#: .\olretail\banking_models.py:65 .\olretail\payment_models.py:66
+#: .\olretail\payment_models.py:366
 msgid "Cancelled"
 msgstr "Cancelado"
 
+#: .\olretail\banking_models.py:66
 msgid "Timeout"
 msgstr "Timeout"
 
+#: .\olretail\banking_models.py:67
 msgid "Insufficient Funds"
 msgstr "Saldo Insuficiente"
 
+#: .\olretail\banking_models.py:68
 msgid "Invalid / Closed Account"
 msgstr "Conta Inválida / Fechada"
 
+#: .\olretail\banking_models.py:69
 msgid "Duplicate Transaction"
 msgstr "Transação Duplicada"
 
+#: .\olretail\banking_models.py:127
 msgid "Outbound"
 msgstr "Saída"
 
+#: .\olretail\banking_models.py:127
 msgid "Inbound"
 msgstr "Entrada"
 
+#: .\olretail\decorators.py:27
 msgid "You need a seller account to access that page."
 msgstr "Precisa de uma conta de vendedor para aceder a esta página."
 
+#: .\olretail\decorators.py:43
 msgid "Administrator accounts manage the platform and cannot act as couriers."
 msgstr ""
 "As contas de administrador gerem a plataforma e não podem atuar como "
 "estafetas."
 
+#: .\olretail\decorators.py:48
 msgid "You need a courier account to access that page."
 msgstr "Precisa de uma conta de estafeta para aceder a esta página."
 
+#: .\olretail\forms.py:34
 msgid "Product name"
 msgstr "Nome do produto"
 
+#: .\olretail\forms.py:35
+msgid "Short description"
+msgstr "Descrição curta"
+
+#: .\olretail\forms.py:36
+msgid "Full description"
+msgstr "Descrição completa"
+
+#: .\olretail\forms.py:37
+msgid "Specifications"
+msgstr "Especificações"
+
+#: .\olretail\forms.py:38
+msgid "Features"
+msgstr "Características"
+
+#: .\olretail\forms.py:39
+msgid "SEO title"
+msgstr "Título SEO"
+
+#: .\olretail\forms.py:40
+msgid "SEO description"
+msgstr "Descrição SEO"
+
+#: .\olretail\forms.py:41
+msgid "Tags"
+msgstr "Etiquetas"
+
+#: .\olretail\forms.py:70 .\templates\olretail\cart.html:32
+#: .\templates\olretail\index.html:92 .\templates\olretail\lista.html:81
 msgid "Price"
 msgstr "Preço"
 
+#: .\olretail\forms.py:71
 msgid "Category"
 msgstr "Categoria"
 
+#: .\olretail\forms.py:72
 msgid "Country"
 msgstr "País"
 
+#: .\olretail\forms.py:73
 msgid "City"
 msgstr "Cidade"
 
+#: .\olretail\forms.py:74 .\templates\olretail\deny_payment_received.html:73
+#: .\templates\olretail\details.html:239
+#: .\templates\olretail\mark_payment_sent.html:89
+#: .\templates\olretail\open_dispute.html:78
+#: .\templates\olretail\order_detail.html:381
+#: .\templates\olretail\payment_confirmation.html:95
 msgid "Quantity"
 msgstr "Quantidade"
 
+#: .\olretail\forms.py:75 .\templates\olretail\lista.html:83
+#: .\templates\olretail\order_detail.html:367
 msgid "Condition"
 msgstr "Condição"
 
+#: .\olretail\forms.py:76 .\templates\olretail\details.html:280
 msgid "Size"
 msgstr "Tamanho"
 
+#: .\olretail\forms.py:77 .\templates\olretail\details.html:284
 msgid "Pieces per unit"
 msgstr "Peças por unidade"
 
+#: .\olretail\forms.py:78 .\templates\olretail\details.html:287
 msgid "Units per box"
 msgstr "Unidades por caixa"
 
+#: .\olretail\forms.py:79
 msgid "Menu section"
 msgstr "Secção do menu"
 
+#: .\olretail\forms.py:80 .\templates\olretail\details.html:209
+#: .\templates\olretail\lista.html:103
 msgid "Available"
 msgstr "Disponível"
 
+#: .\olretail\forms.py:81
 msgid "Prep time (minutes)"
 msgstr "Tempo de preparação (minutos)"
 
-msgid "Description"
-msgstr "Descrição"
-
+#: .\olretail\forms.py:82
 msgid "Main image"
 msgstr "Imagem principal"
 
+#: .\olretail\forms.py:83
 msgid "Extra image 1"
 msgstr "Imagem extra 1"
 
+#: .\olretail\forms.py:84
 msgid "Extra image 2"
 msgstr "Imagem extra 2"
 
+#: .\olretail\forms.py:99
 msgid "Set to 0 when the product is sold out."
 msgstr "Defina como 0 quando o produto se esgotar."
 
+#: .\olretail\forms.py:100
 msgid "Optional — e.g. L, 42, 500ml"
 msgstr "Opcional — ex.: L, 42, 500ml"
 
+#: .\olretail\forms.py:101
 msgid "Optional — e.g. 12 pens in a pack"
 msgstr "Opcional — ex.: 12 canetas num pacote"
 
+#: .\olretail\forms.py:102
 msgid "Optional — e.g. 24 packs in a box"
 msgstr "Opcional — ex.: 24 pacotes numa caixa"
 
+#: .\olretail\forms.py:103
 msgid "Which section of your menu this item belongs to"
 msgstr "A que secção do seu menu este item pertence"
 
+#: .\olretail\forms.py:104
 msgid "Optional — e.g. 20"
 msgstr "Opcional — ex.: 20"
 
+#: .\olretail\forms.py:110
 msgid "Select category"
 msgstr "Selecione a categoria"
 
+#: .\olretail\forms.py:111
 msgid "Select country"
 msgstr "Selecione o país"
 
+#: .\olretail\forms.py:112 .\olretail\payment_forms.py:34
 msgid "Select city"
 msgstr "Selecione a cidade"
 
+#: .\olretail\forms.py:116
 msgid "Select menu section"
 msgstr "Selecione a secção do menu"
 
+#: .\olretail\forms.py:177
 msgid "Price must be greater than zero."
 msgstr "O preço deve ser superior a zero."
 
+#: .\olretail\forms.py:221
 msgid "Section name"
 msgstr "Nome da secção"
 
+#: .\olretail\forms.py:221 .\templates\olretail\menu_categories.html:54
 msgid "Display order"
 msgstr "Ordem de exibição"
 
+#: .\olretail\forms.py:223
 msgid "e.g. Breakfast"
 msgstr "ex.: Pequeno-almoço"
 
+#: .\olretail\forms.py:227
 msgid "Lower numbers show first on the menu."
 msgstr "Números mais baixos aparecem primeiro no menu."
 
+#: .\olretail\forms.py:235
 msgid "Your name"
 msgstr "O seu nome"
 
+#: .\olretail\forms.py:235
 msgid "Comment"
 msgstr "Comentário"
 
+#: .\olretail\management\commands\escalate_stale_payment_claims.py:49
+#, python-format
+msgid ""
+"Buyer claims payment sent for order %(order)s; seller did not confirm or "
+"deny receipt within %(days)d day(s)."
+msgstr ""
+"O comprador afirma ter enviado o pagamento da encomenda %(order)s; o "
+"vendedor não confirmou nem recusou a receção dentro de %(days)d dia(s)."
+
+#: .\olretail\management\commands\escalate_stale_payment_claims.py:57
+#, python-format
+msgid ""
+"Your seller hasn't responded to your payment for order %(order)s — an "
+"administrator is now reviewing it."
+msgstr ""
+"O seu vendedor não respondeu ao seu pagamento da encomenda %(order)s — um "
+"administrador está agora a analisá-lo."
+
+#: .\olretail\management\commands\escalate_stale_payment_claims.py:63
+#, python-format
+msgid ""
+"You didn't confirm or deny the buyer's payment for order %(order)s in time —"
+" an administrator is now reviewing it."
+msgstr ""
+"Não confirmou nem recusou o pagamento do comprador para a encomenda "
+"%(order)s a tempo — um administrador está agora a analisá-lo."
+
+#: .\olretail\management\commands\remind_abandoned_carts.py:42
 #, python-format
 msgid " and %(count)d more"
 msgstr " e mais %(count)d"
 
+#: .\olretail\management\commands\remind_abandoned_carts.py:44
 #, python-format
 msgid ""
 "You still have items in your cart: %(items)s. Complete your purchase before "
@@ -415,21 +633,30 @@ msgstr ""
 "Ainda tem artigos no seu carrinho: %(items)s. Complete a sua compra antes "
 "que se esgotem!"
 
+#: .\olretail\models.py:11 .\templates\olretail\order_detail.html:369
 msgid "New"
 msgstr "Novo"
 
+#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:371
 msgid "Second Hand"
 msgstr "Em Segunda Mão"
 
+#: .\olretail\models.py:17 .\olretail\models.py:109
 msgid "Pending Verification"
 msgstr "Verificação Pendente"
 
+#: .\olretail\models.py:18 .\olretail\models.py:110
+#: .\templates\olretail\courier_deliveries.html:20
+#: .\templates\olretail\seller_payment_settings.html:167
 msgid "Verified"
 msgstr "Verificado"
 
+#: .\olretail\models.py:19 .\olretail\models.py:111 .\olretail\models.py:389
+#: .\olretail\subscription_models.py:121
 msgid "Rejected"
 msgstr "Rejeitado"
 
+#: .\olretail\models.py:54
 msgid ""
 "Cities this courier delivers to. Leave empty if not yet configured (order "
 "dropdowns will show all couriers until this is set)."
@@ -438,15 +665,27 @@ msgstr ""
 "configurado (as listas de encomendas mostrarão todos os estafetas até isto "
 "ser definido)."
 
+#: .\olretail\models.py:101
 msgid "Individual"
 msgstr "Individual"
 
-msgid "Company"
-msgstr "Empresa"
+#: .\olretail\models.py:102
+msgid "Registered Business"
+msgstr "Empresa Registada"
 
-msgid "Restaurant"
-msgstr "Restaurante"
+#: .\olretail\models.py:103
+msgid "Cooperative"
+msgstr "Cooperativa"
 
+#: .\olretail\models.py:104
+msgid "Government Institution"
+msgstr "Instituição Governamental"
+
+#: .\olretail\models.py:105
+msgid "NGO / Non-Profit"
+msgstr "ONG / Sem Fins Lucrativos"
+
+#: .\olretail\models.py:121
 msgid ""
 "Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
 " account number, account holder name)."
@@ -454,288 +693,629 @@ msgstr ""
 "Dados bancários ou de dinheiro móvel que os compradores usam para lhe pagar "
 "diretamente (ex.: nome do banco, número de conta, titular)."
 
+#: .\olretail\models.py:141
+msgid "Official business/company registration number, distinct from the TIN."
+msgstr "Número oficial de registo comercial/empresa, distinto do NIF."
+
+#: .\olretail\models.py:158 .\olretail\payment_forms.py:373
+msgid "Leave blank to use your phone number for WhatsApp."
+msgstr "Deixe em branco para usar o seu número de telefone no WhatsApp."
+
+#: .\olretail\models.py:172
+msgid "Detailed street-level business address."
+msgstr "Morada detalhada do negócio (rua)."
+
+#: .\olretail\models.py:386 .\templates\olretail\lista.html:58
 msgid "Pending approval"
 msgstr "Aprovação pendente"
 
+#: .\olretail\models.py:387 .\templates\olretail\lista.html:50
 msgid "Published"
 msgstr "Publicado"
 
+#: .\olretail\models.py:388
 msgid "Changes requested"
 msgstr "Alterações solicitadas"
 
+#: .\olretail\models.py:390
 msgid "Suspended"
 msgstr "Suspenso"
 
+#: .\olretail\models.py:407
+msgid "A one-line summary shown in listings."
+msgstr "Um resumo de uma linha mostrado nas listagens."
+
+#: .\olretail\models.py:410
+msgid "One per line, e.g. \"Weight: 500g\"."
+msgstr "Um por linha, ex.: \"Peso: 500g\"."
+
+#: .\olretail\models.py:412
+msgid "One per line, e.g. \"Hand-woven\"."
+msgstr "Um por linha, ex.: \"Tecido à mão\"."
+
+#: .\olretail\models.py:416
+msgid "Optional — shown in search engine results instead of the product name."
+msgstr ""
+"Opcional — apresentado nos resultados de pesquisa em vez do nome do produto."
+
+#: .\olretail\models.py:421
+msgid "Optional — shown in search engine results instead of the description."
+msgstr ""
+"Opcional — apresentado nos resultados de pesquisa em vez da descrição."
+
+#: .\olretail\models.py:424
+msgid "Optional — comma-separated, e.g. \"scarf, wool, winter\"."
+msgstr "Opcional — separado por vírgulas, ex.: \"cachecol, lã, inverno\"."
+
+#: .\olretail\models.py:445
 msgid "e.g. L, 42, 500ml"
 msgstr "ex.: L, 42, 500ml"
 
+#: .\olretail\models.py:447
 msgid "e.g. 12 pens in a pack"
 msgstr "ex.: 12 canetas num pacote"
 
+#: .\olretail\models.py:450
 msgid "e.g. 24 packs in a box"
 msgstr "ex.: 24 pacotes numa caixa"
 
+#: .\olretail\models.py:459
 msgid "e.g. 20"
 msgstr "ex.: 20"
 
+#: .\olretail\models.py:553 .\templates\olretail\details.html:447
+#: .\templates\olretail\details.html:508 .\templates\olretail\details.html:509
 msgid "Positive"
 msgstr "Positivo"
 
+#: .\olretail\models.py:554
 msgid "Neutral"
 msgstr "Neutro"
 
+#: .\olretail\models.py:555 .\templates\olretail\details.html:452
+#: .\templates\olretail\details.html:511 .\templates\olretail\details.html:512
 msgid "Negative"
 msgstr "Negativo"
 
+#: .\olretail\payment_forms.py:18 .\templates\olretail\checkout.html:57
 msgid "Payment Method"
 msgstr "Método de Pagamento"
 
+#: .\olretail\payment_forms.py:28
+#: .\templates\olretail\payment_confirmation.html:84
 msgid "Delivery Address"
 msgstr "Morada de Entrega"
 
+#: .\olretail\payment_forms.py:29
 msgid "Where should we deliver your order?"
 msgstr "Onde devemos entregar a sua encomenda?"
 
+#: .\olretail\payment_forms.py:36
 msgid "Delivery City"
 msgstr "Cidade de Entrega"
 
+#: .\olretail\payment_forms.py:37
 msgid "Couriers are matched to this city"
 msgstr "Os estafetas são associados a esta cidade"
 
+#: .\olretail\payment_forms.py:46
 msgid "Delivery Phone"
 msgstr "Telefone de Entrega"
 
+#: .\olretail\payment_forms.py:47
 msgid "Seller will contact you on this number"
 msgstr "O vendedor irá contactá-lo através deste número"
 
+#: .\olretail\payment_forms.py:55
 msgid "Any special instructions? (Optional)"
 msgstr "Alguma instrução especial? (Opcional)"
 
+#: .\olretail\payment_forms.py:58 .\templates\olretail\order_detail.html:468
 msgid "Special Instructions"
 msgstr "Instruções Especiais"
 
+#: .\olretail\payment_forms.py:59
 msgid "E.g., 'Please knock loudly' or 'Leave at door'"
 msgstr "Ex.: 'Bata alto na porta' ou 'Deixar à porta'"
 
+#: .\olretail\payment_forms.py:69
 msgid "e.g. SIM-0001-SUCCESS"
 msgstr "ex.: SIM-0001-SUCCESS"
 
+#: .\olretail\payment_forms.py:72
 msgid "Bank Account Number"
 msgstr "Número de Conta Bancária"
 
+#: .\olretail\payment_forms.py:73
 msgid "The account you're paying from."
 msgstr "A conta a partir da qual está a pagar."
 
+#: .\olretail\payment_forms.py:79
 msgid "Enter the account number you're paying from."
 msgstr "Introduza o número da conta a partir da qual está a pagar."
 
+#: .\olretail\payment_forms.py:93
 msgid "Describe what happened..."
 msgstr "Descreva o que aconteceu..."
 
+#: .\olretail\payment_forms.py:98
 msgid "Upload photos or describe the issue"
 msgstr "Carregue fotografias ou descreva o problema"
 
+#: .\olretail\payment_forms.py:103 .\templates\olretail\dispute_detail.html:50
 msgid "Reason for dispute"
 msgstr "Motivo do litígio"
 
+#: .\olretail\payment_forms.py:104 .\templates\olretail\details.html:292
+#: .\templates\olretail\dispute_detail.html:51
+#: .\templates\olretail\seller_balance.html:84
+msgid "Description"
+msgstr "Descrição"
+
+#: .\olretail\payment_forms.py:105 .\templates\olretail\dispute_detail.html:53
 msgid "Evidence (photos, messages, etc.)"
 msgstr "Provas (fotografias, mensagens, etc.)"
 
+#: .\olretail\payment_forms.py:115 .\templates\olretail\dispute_detail.html:71
 msgid "Provide your response with evidence..."
 msgstr "Forneça a sua resposta com provas..."
 
+#: .\olretail\payment_forms.py:118 .\templates\olretail\dispute_detail.html:62
+#: .\templates\olretail\dispute_detail.html:92
+#: .\templates\olretail\seller_respond_dispute.html:4
+#: .\templates\olretail\seller_respond_dispute.html:12
+#: .\templates\olretail\seller_respond_dispute.html:39
 msgid "Your Response"
 msgstr "A sua Resposta"
 
+#: .\olretail\payment_forms.py:119
 msgid "You have 3 days to respond. Explain your side and provide evidence."
 msgstr "Tem 3 dias para responder. Explique o seu lado e forneça provas."
 
+#: .\olretail\payment_forms.py:134
+msgid "Payment receipt / screenshot"
+msgstr "Recibo de pagamento / captura de ecrã"
+
+#: .\olretail\payment_forms.py:135
+msgid "A receipt or screenshot of the transfer is required."
+msgstr "É necessário um recibo ou captura de ecrã da transferência."
+
+#: .\olretail\payment_forms.py:140
+msgid "e.g. the bank transaction/reference number"
+msgstr "ex.: número de transação/referência bancária"
+
+#: .\olretail\payment_forms.py:141
+msgid "Transfer reference number"
+msgstr "Número de referência da transferência"
+
+#: .\olretail\payment_forms.py:142
+msgid "Enter the reference/transaction number shown on your transfer."
+msgstr ""
+"Introduza o número de referência/transação apresentado na sua transferência."
+
+#: .\olretail\payment_forms.py:149
+msgid "Amount you sent"
+msgstr "Valor que enviou"
+
+#: .\olretail\payment_forms.py:168
+msgid "Explain why you haven't received this payment..."
+msgstr "Explique por que ainda não recebeu este pagamento..."
+
+#: .\olretail\payment_forms.py:170
+msgid "Reason"
+msgstr "Motivo"
+
+#: .\olretail\payment_forms.py:171
+msgid ""
+"A reason is required — this is shown to the buyer and reviewed by an "
+"administrator."
+msgstr ""
+"É necessário um motivo — este será mostrado ao comprador e analisado por um "
+"administrador."
+
+#: .\olretail\payment_forms.py:182
 msgid "e.g. Timor Post, local courier name"
 msgstr "ex.: Timor Post, nome do estafeta local"
 
+#: .\olretail\payment_forms.py:185 .\templates\olretail\order_detail.html:166
 msgid "Courier / Delivery Service"
 msgstr "Estafeta / Serviço de Entrega"
 
+#: .\olretail\payment_forms.py:191
 msgid "Tracking number, if any"
 msgstr "Número de rastreio, se aplicável"
 
+#: .\olretail\payment_forms.py:194 .\templates\olretail\order_detail.html:167
 msgid "Tracking Number"
 msgstr "Número de Rastreio"
 
+#: .\olretail\payment_forms.py:199
 msgid "No courier account (self-delivery / informal courier)"
 msgstr "Sem conta de estafeta (entrega própria / estafeta informal)"
 
+#: .\olretail\payment_forms.py:201
 msgid "Assign Courier"
 msgstr "Atribuir Estafeta"
 
+#: .\olretail\payment_forms.py:224
 #, python-format
 msgid "%(name)s (★ %(avg).1f, %(count)d rating(s))"
 msgstr "%(name)s (★ %(avg).1f, %(count)d avaliação(ões))"
 
+#: .\olretail\payment_forms.py:227
 #, python-format
 msgid "%(name)s (no ratings yet)"
 msgstr "%(name)s (ainda sem avaliações)"
 
+#: .\olretail\payment_forms.py:236
 msgid "Delivery Photo"
 msgstr "Fotografia de Entrega"
 
+#: .\olretail\payment_forms.py:237 .\olretail\payment_views.py:1659
 msgid "A delivery photo is required to confirm delivery."
 msgstr "É necessária uma fotografia de entrega para confirmar a entrega."
 
+#: .\olretail\payment_forms.py:252
 msgid "ID Document Photo"
 msgstr "Fotografia do Documento de Identificação"
 
+#: .\olretail\payment_forms.py:253
 msgid "Please upload a photo of your ID document."
 msgstr "Por favor carregue uma fotografia do seu documento de identificação."
 
+#: .\olretail\payment_forms.py:270
 msgid "e.g. 'Left Dili warehouse, arriving Baucau tomorrow'"
 msgstr "ex.: 'Saiu do armazém de Díli, chega a Baucau amanhã'"
 
+#: .\olretail\payment_forms.py:275
 msgid "Status update"
 msgstr "Atualização de estado"
 
+#: .\olretail\payment_forms.py:287
+#: .\templates\olretail\seller_subscription.html:94
 msgid "Choose a plan"
 msgstr "Escolha um plano"
 
+#: .\olretail\payment_forms.py:293
 msgid "e.g. Bank transfer ref #123, paid 14 Jul 2026"
 msgstr "ex.: Ref. transferência bancária #123, pago em 14 Jul 2026"
 
+#: .\olretail\payment_forms.py:295
+#: .\templates\olretail\seller_subscription.html:114
 msgid "Payment reference"
 msgstr "Referência de pagamento"
 
+#: .\olretail\payment_forms.py:296
 msgid "Tell the admin how and when you paid, so they can confirm it."
 msgstr "Diga ao administrador como e quando pagou, para que possa confirmar."
 
+#: .\olretail\payment_forms.py:309
 msgid "e.g. BNU Timor-Leste, Account: 1234567, Name: Jose Costa"
 msgstr "ex.: BNU Timor-Leste, Conta: 1234567, Nome: Jose Costa"
 
+#: .\olretail\payment_forms.py:314
 msgid "Payment details for buyers"
 msgstr "Dados de pagamento para compradores"
 
+#: .\olretail\payment_forms.py:345
+msgid "Business name"
+msgstr "Nome do negócio"
+
+#: .\olretail\payment_forms.py:346
+msgid "Business Registration Number"
+msgstr "Número de Registo Comercial"
+
+#: .\olretail\payment_forms.py:347
+msgid "TIN (Tax Identification Number)"
+msgstr "NIF (Número de Identificação Fiscal)"
+
+#: .\olretail\payment_forms.py:348
+msgid "Business address (legacy — use Location below instead)"
+msgstr "Morada do negócio (antiga — use Localização abaixo)"
+
+#: .\olretail\payment_forms.py:349
+msgid "Bank account"
+msgstr "Conta bancária"
+
+#: .\olretail\payment_forms.py:350
+msgid "Director name"
+msgstr "Nome do diretor"
+
+#: .\olretail\payment_forms.py:351
+msgid "Director ID / TIN number"
+msgstr "Número de Identificação / NIF do Diretor"
+
+#: .\olretail\payment_forms.py:352
+msgid "Director phone number"
+msgstr "Número de telefone do diretor"
+
+#: .\olretail\payment_forms.py:353
+msgid "Director email"
+msgstr "Email do diretor"
+
+#: .\olretail\payment_forms.py:370
+msgid "WhatsApp Number"
+msgstr "Número de WhatsApp"
+
+#: .\olretail\payment_forms.py:398
+msgid "Municipality"
+msgstr "Município"
+
+#: .\olretail\payment_forms.py:399
+msgid "Administrative Post"
+msgstr "Posto Administrativo"
+
+#: .\olretail\payment_forms.py:400
+msgid "Suco"
+msgstr "Suco"
+
+#: .\olretail\payment_forms.py:401
+msgid "Aldeia"
+msgstr "Aldeia"
+
+#: .\olretail\payment_forms.py:402
+msgid "Full Address"
+msgstr "Morada Completa"
+
+#: .\olretail\payment_forms.py:403
+msgid "GPS Latitude"
+msgstr "Latitude GPS"
+
+#: .\olretail\payment_forms.py:404
+msgid "GPS Longitude"
+msgstr "Longitude GPS"
+
+#: .\olretail\payment_forms.py:410
+msgid "Select municipality"
+msgstr "Selecione o município"
+
+#: .\olretail\payment_forms.py:424
+msgid "Business Logo"
+msgstr "Logótipo do Negócio"
+
+#: .\olretail\payment_forms.py:425
+msgid "Business Cover Image"
+msgstr "Imagem de Capa do Negócio"
+
+#: .\olretail\payment_forms.py:459
+msgid "Opening Hours"
+msgstr "Horário de Abertura"
+
+#: .\olretail\payment_forms.py:460
+msgid "Closing Hours"
+msgstr "Horário de Encerramento"
+
+#: .\olretail\payment_forms.py:461
+msgid "Delivery Available"
+msgstr "Entrega Disponível"
+
+#: .\olretail\payment_forms.py:462
+msgid "Pickup Available"
+msgstr "Levantamento Disponível"
+
+#: .\olretail\payment_forms.py:463
+msgid "Cash on Delivery Available"
+msgstr "Pagamento na Entrega Disponível"
+
+#: .\olretail\payment_forms.py:473
 msgid "Business Registration Document"
 msgstr "Documento de Registo Comercial"
 
+#: .\olretail\payment_forms.py:474
 msgid "Please upload a photo of your business registration document."
 msgstr ""
 "Por favor carregue uma fotografia do seu documento de registo comercial."
 
+#: .\olretail\payment_gateways.py:115
 msgid "No active account found for that account number."
 msgstr "Nenhuma conta ativa encontrada para esse número de conta."
 
+#: .\olretail\payment_gateways.py:122
 msgid "A matching transaction was already submitted recently."
 msgstr "Uma transação correspondente já foi submetida recentemente."
 
+#: .\olretail\payment_gateways.py:188
 msgid "No transaction found."
 msgstr "Nenhuma transação encontrada."
 
+#: .\olretail\payment_gateways.py:209
 msgid "No transaction to retry."
 msgstr "Nenhuma transação para repetir."
 
+#: .\olretail\payment_models.py:60 .\templates\olretail\order_detail.html:31
 msgid "Pending Payment"
 msgstr "Pagamento Pendente"
 
+#: .\olretail\payment_models.py:61 .\olretail\subscription_models.py:119
 msgid "Payment Reported — Awaiting Confirmation"
 msgstr "Pagamento Reportado — A Aguardar Confirmação"
 
+#: .\olretail\payment_models.py:62
 msgid "Payment Received"
 msgstr "Pagamento Recebido"
 
+#: .\olretail\payment_models.py:63 .\olretail\payment_models.py:363
+#: .\olretail\payment_models.py:548
 msgid "Processing"
 msgstr "Em Processamento"
 
+#: .\olretail\payment_models.py:64 .\templates\olretail\order_detail.html:47
 msgid "Shipped"
 msgstr "Enviado"
 
+#: .\olretail\payment_models.py:65
+#: .\templates\olretail\courier_deliveries.html:108
+#: .\templates\olretail\order_detail.html:55
 msgid "Delivered"
 msgstr "Entregue"
 
+#: .\olretail\payment_models.py:67 .\olretail\payment_models.py:367
 msgid "Refunded"
 msgstr "Reembolsado"
 
+#: .\olretail\payment_models.py:76 .\templates\olretail\order_detail.html:82
 msgid "Order Received"
 msgstr "Encomenda Recebida"
 
+#: .\olretail\payment_models.py:77
 msgid "Preparing Food"
 msgstr "A Preparar Comida"
 
+#: .\olretail\payment_models.py:78 .\templates\olretail\order_detail.html:94
 msgid "Ready for Pickup"
 msgstr "Pronto para Recolha"
 
+#: .\olretail\payment_models.py:79 .\templates\olretail\order_detail.html:100
 msgid "Picked Up"
 msgstr "Recolhido"
 
+#: .\olretail\payment_models.py:80 .\templates\olretail\order_detail.html:106
 msgid "On the Way"
 msgstr "A Caminho"
 
+#: .\olretail\payment_models.py:85
 msgid "Card (Stripe)"
 msgstr "Cartão (Stripe)"
 
+#: .\olretail\payment_models.py:86 .\templates\olretail\order_detail.html:260
 msgid "Bank / Mobile Transfer"
 msgstr "Transferência Bancária / Móvel"
 
+#: .\olretail\payment_models.py:87 .\templates\olretail\buyer_orders.html:70
+#: .\templates\olretail\details.html:311
+#: .\templates\olretail\order_detail.html:333
+#: .\templates\olretail\seller_orders.html:74
+msgid "Cash on Delivery"
+msgstr "Pagamento na Entrega"
+
+#: .\olretail\payment_models.py:88
 msgid "Automated Bank Transfer (Test)"
 msgstr "Transferência Bancária Automática (Teste)"
 
+#: .\olretail\payment_models.py:147
+msgid "Bank/mobile transfer reference or transaction number."
+msgstr "Número de referência ou transação da transferência bancária/móvel."
+
+#: .\olretail\payment_models.py:152
+msgid ""
+"SHA-256 of the uploaded proof image — catches the same receipt being reused "
+"across orders."
+msgstr ""
+"SHA-256 da imagem de comprovativo carregada — deteta o mesmo recibo "
+"reutilizado noutra encomenda."
+
+#: .\olretail\payment_models.py:155
+msgid ""
+"Auto-flagged (amount mismatch or reused receipt) for priority admin review."
+msgstr ""
+"Sinalizado automaticamente (valor não corresponde ou recibo reutilizado) "
+"para revisão prioritária do administrador."
+
+#: .\olretail\payment_models.py:285
+msgid "Android"
+msgstr "Android"
+
+#: .\olretail\payment_models.py:286
+msgid "iOS"
+msgstr "iOS"
+
+#: .\olretail\payment_models.py:364
 msgid "Succeeded"
 msgstr "Bem-sucedido"
 
-msgid "Commission"
-msgstr "Comissão"
+#: .\olretail\payment_models.py:441
+msgid "Order earnings"
+msgstr "Rendimento da encomenda"
 
+#: .\olretail\payment_models.py:442
 msgid "Refund"
 msgstr "Reembolso"
 
+#: .\olretail\payment_models.py:443
 msgid "Adjustment"
 msgstr "Ajuste"
 
+#: .\olretail\payment_models.py:444
 msgid "Payout"
 msgstr "Pagamento"
 
+#: .\olretail\payment_models.py:547
 msgid "Scheduled"
 msgstr "Agendado"
 
+#: .\olretail\payment_models.py:549 .\templates\olretail\order_detail.html:39
 msgid "Paid"
 msgstr "Pago"
 
+#: .\olretail\payment_models.py:615
 msgid "Open - Awaiting Seller Response"
 msgstr "Aberto - A Aguardar Resposta do Vendedor"
 
+#: .\olretail\payment_models.py:616
 msgid "Seller Responded"
 msgstr "Vendedor Respondeu"
 
+#: .\olretail\payment_models.py:617
 msgid "Under Admin Review"
 msgstr "Em Revisão pelo Administrador"
 
+#: .\olretail\payment_models.py:618
 msgid "Resolved"
 msgstr "Resolvido"
 
+#: .\olretail\payment_models.py:624
 msgid "Full Refund to Buyer"
 msgstr "Reembolso Total ao Comprador"
 
+#: .\olretail\payment_models.py:625
 msgid "Partial Refund"
 msgstr "Reembolso Parcial"
 
+#: .\olretail\payment_models.py:626
 msgid "Reshipment"
 msgstr "Reenvio"
 
+#: .\olretail\payment_models.py:627
 msgid "Closed - No Action"
 msgstr "Fechado - Sem Ação"
 
+#: .\olretail\payment_models.py:631
+msgid "Payment Confirmed — Order Marked Paid"
+msgstr "Pagamento Confirmado — Encomenda Marcada como Paga"
+
+#: .\olretail\payment_models.py:632
+msgid "Payment Claim Rejected — Order Cancelled"
+msgstr "Reclamação de Pagamento Rejeitada — Encomenda Cancelada"
+
+#: .\olretail\payment_models.py:637
 msgid "Item Not Received"
 msgstr "Artigo Não Recebido"
 
+#: .\olretail\payment_models.py:638
 msgid "Item Damaged"
 msgstr "Artigo Danificado"
 
+#: .\olretail\payment_models.py:639
 msgid "Item Not as Described"
 msgstr "Artigo Não Corresponde à Descrição"
 
+#: .\olretail\payment_models.py:640
 msgid "Wrong Item Received"
 msgstr "Artigo Errado Recebido"
 
+#: .\olretail\payment_models.py:641
 msgid "Other"
 msgstr "Outro"
 
+#: .\olretail\payment_models.py:645
+msgid "Seller Reports Payment Not Received"
+msgstr "Vendedor Reporta Pagamento Não Recebido"
+
+#: .\olretail\payment_models.py:646
+msgid "Seller Did Not Respond to Payment Claim"
+msgstr "Vendedor Não Respondeu à Reclamação de Pagamento"
+
+#: .\olretail\payment_models.py:747
 msgid ""
 "Bank or mobile money details shown to sellers when they pay the platform for"
 " a subscription upgrade."
@@ -743,49 +1323,64 @@ msgstr ""
 "Dados bancários ou de dinheiro móvel mostrados aos vendedores quando pagam a"
 " plataforma por uma atualização de subscrição."
 
+#: .\olretail\payment_views.py:60
 #, python-format
 msgid "TimorMart — order %(order)s"
 msgstr "TimorMart — encomenda %(order)s"
 
+#: .\olretail\payment_views.py:61
 msgid "TimorMart notification"
 msgstr "Notificação TimorMart"
 
+#: .\olretail\payment_views.py:105 .\olretail\payment_views.py:271
 msgid "This item can only be purchased by contacting the seller directly."
 msgstr "Este artigo só pode ser comprado contactando diretamente o vendedor."
 
+#: .\olretail\payment_views.py:112 .\olretail\payment_views.py:274
 msgid "This item is currently unavailable."
 msgstr "Este artigo está atualmente indisponível."
 
+#: .\olretail\payment_views.py:115
 msgid "This product is out of stock."
 msgstr "Este produto está esgotado."
 
+#: .\olretail\payment_views.py:142
 msgid "Product added to cart."
 msgstr "Produto adicionado ao carrinho."
 
+#: .\olretail\payment_views.py:163
 msgid "Cart updated."
 msgstr "Carrinho atualizado."
 
+#: .\olretail\payment_views.py:169 .\olretail\payment_views.py:172
 msgid "Not enough stock available."
 msgstr "Stock insuficiente."
 
+#: .\olretail\payment_views.py:176 .\olretail\payment_views.py:198
 msgid "Item removed from cart."
 msgstr "Artigo removido do carrinho."
 
+#: .\olretail\payment_views.py:207
 msgid "Cart cleared."
 msgstr "Carrinho esvaziado."
 
+#: .\olretail\payment_views.py:246
 msgid "Saved to your wishlist."
 msgstr "Guardado na sua lista de desejos."
 
+#: .\olretail\payment_views.py:248 .\olretail\payment_views.py:258
 msgid "Removed from your wishlist."
 msgstr "Removido da sua lista de desejos."
 
+#: .\olretail\payment_views.py:285
 msgid "Moved to your cart."
 msgstr "Movido para o seu carrinho."
 
+#: .\olretail\payment_views.py:299 .\templates\olretail\cart.html:157
 msgid "Your cart is empty."
 msgstr "O seu carrinho está vazio."
 
+#: .\olretail\payment_views.py:307
 #, python-format
 msgid ""
 "%(product)s can only be purchased by contacting the seller directly — remove"
@@ -794,14 +1389,17 @@ msgstr ""
 "%(product)s só pode ser comprado contactando diretamente o vendedor — "
 "remova-o do seu carrinho."
 
+#: .\olretail\payment_views.py:317
 #, python-format
 msgid "%(product)s is currently unavailable."
 msgstr "%(product)s está atualmente indisponível."
 
+#: .\olretail\payment_views.py:323
 #, python-format
 msgid "%(product)s has only %(qty)d available."
 msgstr "%(product)s tem apenas %(qty)d disponíveis."
 
+#: .\olretail\payment_views.py:400
 #, python-format
 msgid ""
 "%(sellers)s haven't set up payment details yet — choose Card, or contact "
@@ -810,6 +1408,7 @@ msgstr ""
 "%(sellers)s ainda não configuraram os dados de pagamento — escolha Cartão, "
 "ou contacte-os."
 
+#: .\olretail\payment_views.py:461
 #, python-format
 msgid ""
 "New order %(order)s from %(buyer)s for “%(product)s” — awaiting their "
@@ -818,35 +1417,69 @@ msgstr ""
 "Nova encomenda %(order)s de %(buyer)s para “%(product)s” — a aguardar a "
 "transferência bancária/móvel."
 
+#: .\olretail\payment_views.py:514
+#, python-format
+msgid ""
+"New cash-on-delivery order %(order)s from %(buyer)s for “%(product)s” — "
+"collect $%(total)s on delivery."
+msgstr ""
+"Nova encomenda de pagamento na entrega %(order)s de %(buyer)s para "
+"“%(product)s” — receba $%(total)s na entrega."
+
+#: .\olretail\payment_views.py:637
 msgid "Payment processing error. Please try again."
 msgstr "Erro no processamento do pagamento. Por favor tente novamente."
 
+#: .\olretail\payment_views.py:728
 msgid "Your automated bank transfer is being processed."
 msgstr "A sua transferência bancária automática está a ser processada."
 
+#: .\olretail\payment_views.py:741
 msgid "Order received by the restaurant."
 msgstr "Encomenda recebida pelo restaurante."
 
+#: .\olretail\payment_views.py:800
 #, python-format
 msgid "Payment received for order %(order)s from %(buyer)s — “%(product)s”."
 msgstr ""
 "Pagamento recebido para a encomenda %(order)s de %(buyer)s — “%(product)s”."
 
+#: .\olretail\payment_views.py:807
 #, python-format
 msgid "Your payment for order %(order)s was successful."
 msgstr "O seu pagamento para a encomenda %(order)s foi bem-sucedido."
 
+#: .\olretail\payment_views.py:895
 #, python-format
 msgid "Your payment for order %(order)s was refunded."
 msgstr "O seu pagamento para a encomenda %(order)s foi reembolsado."
 
+#: .\olretail\payment_views.py:900
 #, python-format
 msgid "Order %(order)s was refunded to the buyer."
 msgstr "A encomenda %(order)s foi reembolsada ao comprador."
 
+#: .\olretail\payment_views.py:1015
 msgid "This order is not awaiting a transfer."
 msgstr "Esta encomenda não está a aguardar transferência."
 
+#: .\olretail\payment_views.py:1031
+#, python-format
+msgid ""
+"Claimed amount ($%(claimed)s) does not match the order total ($%(total)s)."
+msgstr ""
+"O valor reclamado ($%(claimed)s) não corresponde ao total da encomenda "
+"($%(total)s)."
+
+#: .\olretail\payment_views.py:1035
+msgid "This exact receipt image was already submitted on a different order."
+msgstr "Esta imagem de recibo já foi submetida noutra encomenda."
+
+#: .\olretail\payment_views.py:1041
+msgid "This reference number was already submitted on a different order."
+msgstr "Este número de referência já foi submetido noutra encomenda."
+
+#: .\olretail\payment_views.py:1057
 #, python-format
 msgid ""
 "%(buyer)s says they've sent payment for order %(order)s — please confirm "
@@ -855,45 +1488,113 @@ msgstr ""
 "%(buyer)s diz que enviou o pagamento para a encomenda %(order)s — por favor "
 "confirme a receção."
 
+#: .\olretail\payment_views.py:1061
 msgid "Thanks — the seller has been notified to confirm receipt."
 msgstr "Obrigado — o vendedor foi notificado para confirmar a receção."
 
+#: .\olretail\payment_views.py:1076 .\olretail\payment_views.py:1108
+#: .\olretail\payment_views.py:1574 .\olretail\payment_views.py:1631
+#: .\olretail\payment_views.py:1682 .\olretail\payment_views.py:1727
+#: .\olretail\payment_views.py:1784 .\olretail\payment_views.py:1995
 msgid "Permission denied."
 msgstr "Permissão negada."
 
+#: .\olretail\payment_views.py:1079
 msgid "You must be a seller to confirm payments."
 msgstr "Tem de ser vendedor para confirmar pagamentos."
 
+#: .\olretail\payment_views.py:1083
 msgid "This order is not awaiting payment confirmation."
 msgstr "Esta encomenda não está a aguardar confirmação de pagamento."
 
+#: .\olretail\payment_views.py:1089
 #, python-format
 msgid "%(seller)s confirmed your payment for order %(order)s."
 msgstr "%(seller)s confirmou o seu pagamento para a encomenda %(order)s."
 
+#: .\olretail\payment_views.py:1093
 msgid "Payment confirmed — the order is now marked as paid."
 msgstr "Pagamento confirmado — a encomenda está agora marcada como paga."
 
+#: .\olretail\payment_views.py:1111
+msgid "You must be a seller to do this."
+msgstr "Tem de ter uma conta de vendedor para fazer isto."
+
+#: .\olretail\payment_views.py:1115
+msgid "This order has no reported payment to dispute."
+msgstr "Esta encomenda não tem nenhum pagamento reportado para contestar."
+
+#: .\olretail\payment_views.py:1119 .\olretail\payment_views.py:1935
+msgid "A dispute is already open for this order."
+msgstr "Já existe um litígio aberto para esta encomenda."
+
+#: .\olretail\payment_views.py:1131
+#, python-format
+msgid ""
+"Buyer claims payment sent for order %(order)s; seller reports not received."
+msgstr ""
+"O comprador afirma ter enviado o pagamento da encomenda %(order)s; o "
+"vendedor reporta não ter recebido."
+
+#: .\olretail\payment_views.py:1139
+#, python-format
+msgid ""
+"%(seller)s says they have not received your payment for order %(order)s — "
+"this is now under review."
+msgstr ""
+"%(seller)s diz que não recebeu o seu pagamento da encomenda %(order)s — isto"
+" está agora em análise."
+
+#: .\olretail\payment_views.py:1143
+msgid "Reported — an administrator will review this payment claim."
+msgstr ""
+"Reportado — um administrador irá analisar esta reclamação de pagamento."
+
+#: .\olretail\payment_views.py:1163
 msgid "Payment details saved."
 msgstr "Dados de pagamento guardados."
 
-msgid "Company info only applies to company seller accounts."
+#: .\olretail\payment_views.py:1197
+msgid "Business info only applies to non-individual seller accounts."
 msgstr ""
-"As informações da empresa aplicam-se apenas a contas de vendedor empresa."
+"As informações comerciais aplicam-se apenas a contas de vendedor não "
+"individuais."
 
-msgid "Company information saved."
-msgstr "Informações da empresa guardadas."
+#: .\olretail\payment_views.py:1213
+msgid "Business information saved."
+msgstr "Informações comerciais guardadas."
 
-msgid "Business verification only applies to company seller accounts."
+#: .\olretail\payment_views.py:1227
+msgid "Contact information saved."
+msgstr "Informações de contacto guardadas."
+
+#: .\olretail\payment_views.py:1242
+msgid "Location saved."
+msgstr "Localização guardada."
+
+#: .\olretail\payment_views.py:1256
+msgid "Branding saved."
+msgstr "Identidade visual guardada."
+
+#: .\olretail\payment_views.py:1272
+msgid "Operations saved."
+msgstr "Operações guardadas."
+
+#: .\olretail\payment_views.py:1286
+msgid "Business verification only applies to non-individual seller accounts."
 msgstr ""
-"A verificação comercial aplica-se apenas a contas de vendedor empresa."
+"A verificação comercial aplica-se apenas a contas de vendedor não "
+"individuais."
 
+#: .\olretail\payment_views.py:1295
 msgid "Document submitted — an administrator will review it shortly."
 msgstr "Documento submetido — um administrador irá revê-lo em breve."
 
+#: .\olretail\payment_views.py:1315
 msgid "You already have a pending subscription request awaiting confirmation."
 msgstr "Já tem um pedido de subscrição pendente a aguardar confirmação."
 
+#: .\olretail\payment_views.py:1327
 msgid ""
 "Thanks — your payment report was submitted. An admin will confirm it "
 "shortly."
@@ -901,6 +1602,7 @@ msgstr ""
 "Obrigado — o seu relatório de pagamento foi submetido. Um administrador irá "
 "confirmá-lo em breve."
 
+#: .\olretail\payment_views.py:1383
 msgid ""
 "This order can no longer be cancelled — it has already been paid or is past "
 "that stage."
@@ -908,179 +1610,235 @@ msgstr ""
 "Esta encomenda já não pode ser cancelada — já foi paga ou já passou essa "
 "fase."
 
+#: .\olretail\payment_views.py:1400
 #, python-format
 msgid "%(buyer)s cancelled order %(order)s before paying."
 msgstr "%(buyer)s cancelou a encomenda %(order)s antes de pagar."
 
+#: .\olretail\payment_views.py:1404
 #, python-format
 msgid "Order %(order)s was cancelled."
 msgstr "A encomenda %(order)s foi cancelada."
 
+#: .\olretail\payment_views.py:1424
 msgid "You do not have permission to view this order."
 msgstr "Não tem permissão para ver esta encomenda."
 
+#: .\olretail\payment_views.py:1462
 msgid "You can only rate a product after it has been delivered."
 msgstr "Só pode avaliar um produto depois de ser entregue."
 
+#: .\olretail\payment_views.py:1466
 msgid "You already rated this order."
 msgstr "Já avaliou esta encomenda."
 
+#: .\olretail\payment_views.py:1471 .\olretail\payment_views.py:1503
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Por favor escolha uma avaliação de 1 a 5 estrelas."
 
+#: .\olretail\payment_views.py:1478
 msgid "Thanks for your rating!"
 msgstr "Obrigado pela sua avaliação!"
 
+#: .\olretail\payment_views.py:1490
 msgid "You can only rate a courier after the order has been delivered."
 msgstr "Só pode avaliar um estafeta depois de a encomenda ser entregue."
 
+#: .\olretail\payment_views.py:1494
 msgid "This order has no assigned courier to rate."
 msgstr "Esta encomenda não tem estafeta atribuído para avaliar."
 
+#: .\olretail\payment_views.py:1498
 msgid "You already rated this courier."
 msgstr "Já avaliou este estafeta."
 
+#: .\olretail\payment_views.py:1507
 msgid "Thanks for rating the courier!"
 msgstr "Obrigado por avaliar o estafeta!"
 
+#: .\olretail\payment_views.py:1521 .\olretail\payment_views.py:1547
 msgid "You must be a seller to view this page."
 msgstr "Tem de ser vendedor para ver esta página."
 
+#: .\olretail\payment_views.py:1577 .\olretail\payment_views.py:1685
 msgid "You must be a seller to update orders."
 msgstr "Tem de ser vendedor para atualizar encomendas."
 
+#: .\olretail\payment_views.py:1581
 msgid "Unknown action."
 msgstr "Ação desconhecida."
 
+#: .\olretail\payment_views.py:1585
 msgid "Only paid orders can be marked as shipped."
 msgstr "Só encomendas pagas podem ser marcadas como enviadas."
 
+#: .\olretail\payment_views.py:1598
 #, python-format
 msgid "Your order %(order)s has shipped."
 msgstr "A sua encomenda %(order)s foi enviada."
 
+#: .\olretail\payment_views.py:1607
 #, python-format
 msgid "You have been assigned to deliver order %(order)s."
 msgstr "Foi-lhe atribuída a entrega da encomenda %(order)s."
 
+#: .\olretail\payment_views.py:1610
 msgid "Order marked as shipped."
 msgstr "Encomenda marcada como enviada."
 
+#: .\olretail\payment_views.py:1635
 msgid "Only shipped orders can be marked as delivered."
 msgstr "Só encomendas enviadas podem ser marcadas como entregues."
 
+#: .\olretail\payment_views.py:1652
 #, python-format
 msgid "Your order %(order)s has been delivered."
 msgstr "A sua encomenda %(order)s foi entregue."
 
+#: .\olretail\payment_views.py:1655
 msgid "Order marked as delivered."
 msgstr "Encomenda marcada como entregue."
 
+#: .\olretail\payment_views.py:1665
 msgid "Preparing the food."
 msgstr "A preparar a comida."
 
+#: .\olretail\payment_views.py:1666
 msgid "Order is ready for pickup."
 msgstr "A encomenda está pronta para recolha."
 
+#: .\olretail\payment_views.py:1689
 msgid "This action only applies to restaurant orders."
 msgstr "Esta ação só se aplica a encomendas de restaurante."
 
+#: .\olretail\payment_views.py:1694 .\olretail\payment_views.py:1732
 msgid "This order cannot be advanced from its current status."
 msgstr "Esta encomenda não pode avançar do seu estado atual."
 
+#: .\olretail\payment_views.py:1705
 #, python-format
 msgid "Order %(order)s is ready for collection."
 msgstr "A encomenda %(order)s está pronta para recolha."
 
+#: .\olretail\payment_views.py:1708 .\olretail\payment_views.py:1740
 msgid "Order updated."
 msgstr "Encomenda atualizada."
 
+#: .\olretail\payment_views.py:1713
 msgid "Courier picked up the order."
 msgstr "O estafeta recolheu a encomenda."
 
+#: .\olretail\payment_views.py:1714
 msgid "Courier is on the way."
 msgstr "O estafeta está a caminho."
 
+#: .\olretail\payment_views.py:1770
 msgid "ID submitted — an administrator will review it shortly."
 msgstr ""
 "Documento de identificação submetido — um administrador irá revê-lo em "
 "breve."
 
+#: .\olretail\payment_views.py:1787
 msgid "You must be a seller to post delivery updates."
 msgstr "Tem de ser vendedor para publicar atualizações de entrega."
 
+#: .\olretail\payment_views.py:1797
 #, python-format
 msgid "Delivery update for order %(order)s: %(note)s"
 msgstr "Atualização de entrega da encomenda %(order)s: %(note)s"
 
+#: .\olretail\payment_views.py:1800
 msgid "Update posted."
 msgstr "Atualização publicada."
 
+#: .\olretail\payment_views.py:1802
 msgid "Please enter a status update."
 msgstr "Por favor introduza uma atualização de estado."
 
+#: .\olretail\payment_views.py:1925
 msgid "You can only open disputes for delivered or shipped orders."
 msgstr "Só pode abrir litígios para encomendas entregues ou enviadas."
 
-msgid "A dispute is already open for this order."
-msgstr "Já existe um litígio aberto para esta encomenda."
-
+#: .\olretail\payment_views.py:1947
 msgid "Dispute opened. Seller has 3 days to respond."
 msgstr "Litígio aberto. O vendedor tem 3 dias para responder."
 
+#: .\olretail\payment_views.py:1970
 msgid "You do not have permission to view this dispute."
 msgstr "Não tem permissão para ver este litígio."
 
+#: .\olretail\payment_views.py:1998
 msgid "You must be a seller to respond to disputes."
 msgstr "Tem de ser vendedor para responder a litígios."
 
+#: .\olretail\payment_views.py:2003
+#: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "O prazo de resposta expirou."
 
+#: .\olretail\payment_views.py:2012
 msgid "Your response has been submitted."
 msgstr "A sua resposta foi submetida."
 
+#: .\olretail\payment_views.py:2066
+#, python-format
+msgid "%(time)s ago"
+msgstr "há %(time)s"
+
+#: .\olretail\subscription_models.py:24
 msgid "Free"
 msgstr "Grátis"
 
+#: .\olretail\subscription_models.py:25
 msgid "Monthly — $11/month"
 msgstr "Mensal — $11/mês"
 
+#: .\olretail\subscription_models.py:26
 msgid "Yearly — $100/year"
 msgstr "Anual — $100/ano"
 
+#: .\olretail\subscription_models.py:120
 msgid "Approved"
 msgstr "Aprovado"
 
+#: .\olretail\subscription_models.py:136
 msgid ""
 "How/when you paid — e.g. bank transfer reference, mobile money confirmation."
 msgstr ""
 "Como/quando pagou — ex.: referência de transferência bancária, confirmação "
 "de dinheiro móvel."
 
+#: .\olretail\validators.py:13
 #, python-format
 msgid "Image files must be smaller than %(max)sMB."
 msgstr "Os ficheiros de imagem devem ter menos de %(max)sMB."
 
+#: .\olretail\views.py:95
 msgid "That category does not exist."
 msgstr "Essa categoria não existe."
 
+#: .\olretail\views.py:209
 msgid "That product is awaiting approval."
 msgstr "Esse produto está a aguardar aprovação."
 
+#: .\olretail\views.py:219
 msgid "Only buyer accounts can post comments."
 msgstr "Só contas de comprador podem publicar comentários."
 
+#: .\olretail\views.py:226
 msgid "Your comment was posted."
 msgstr "O seu comentário foi publicado."
 
+#: .\olretail\views.py:228
 msgid "Please correct the errors in your comment."
 msgstr "Por favor corrija os erros no seu comentário."
 
+#: .\olretail\views.py:254
 #, python-format
 msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
 msgstr "Olá, tenho interesse em “%(name)s” (%(url)s) no TimorMart."
 
+#: .\olretail\views.py:360
 #, python-format
 msgid ""
 "You've reached the free plan's %(limit)d listing limit. Subscribe to post "
@@ -1089,40 +1847,50 @@ msgstr ""
 "Atingiu o limite de %(limit)d anúncios do plano grátis. Subscreva para "
 "publicar mais produtos."
 
+#: .\olretail\views.py:379
 #, python-format
 msgid "“%(name)s” was published."
 msgstr "“%(name)s” foi publicado."
 
+#: .\olretail\views.py:384
 #, python-format
 msgid "“%(name)s” was created and is awaiting approval by the administrators."
 msgstr ""
 "“%(name)s” foi criado e está a aguardar aprovação dos administradores."
 
+#: .\olretail\views.py:396
 msgid "Add a new product"
 msgstr "Adicionar um novo produto"
 
+#: .\olretail\views.py:397
 msgid "Create product"
 msgstr "Criar produto"
 
+#: .\olretail\views.py:433
 #, python-format
 msgid "“%(name)s” was resubmitted for approval."
 msgstr "“%(name)s” foi ressubmetido para aprovação."
 
+#: .\olretail\views.py:436
 #, python-format
 msgid "“%(name)s” was updated."
 msgstr "“%(name)s” foi atualizado."
 
+#: .\olretail\views.py:451
 #, python-format
 msgid "Edit “%(name)s”"
 msgstr "Editar “%(name)s”"
 
+#: .\olretail\views.py:452
 msgid "Save changes"
 msgstr "Guardar alterações"
 
+#: .\olretail\views.py:476
 #, python-format
 msgid "“%(name)s” is now marked as sold out."
 msgstr "“%(name)s” está agora marcado como esgotado."
 
+#: .\olretail\views.py:490
 #, python-format
 msgid ""
 "“%(name)s” can't be deleted because it has order history — mark it sold out "
@@ -1131,92 +1899,141 @@ msgstr ""
 "“%(name)s” não pode ser eliminado porque tem histórico de encomendas — "
 "marque-o como esgotado."
 
+#: .\olretail\views.py:494
 #, python-format
 msgid "“%(name)s” was deleted."
 msgstr "“%(name)s” foi eliminado."
 
+#: .\olretail\views.py:504
 msgid "Menu sections are only available for restaurant seller accounts."
 msgstr ""
 "As secções do menu só estão disponíveis para contas de vendedor de "
 "restaurante."
 
+#: .\olretail\views.py:521
 #, python-format
 msgid "“%(name)s” was added to your menu."
 msgstr "“%(name)s” foi adicionado ao seu menu."
 
+#: .\olretail\views.py:547
 #, python-format
 msgid "“%(name)s” was removed from your menu."
 msgstr "“%(name)s” foi removido do seu menu."
 
+#: .\templates\404.html:4 .\templates\404.html:9
 msgid "Page not found"
 msgstr "Página não encontrada"
 
+#: .\templates\404.html:10
 msgid "The page you are looking for does not exist or may have been removed."
 msgstr "A página que procura não existe ou pode ter sido removida."
 
+#: .\templates\404.html:11 .\templates\500.html:11
 msgid "Back to the store"
 msgstr "Voltar à loja"
 
+#: .\templates\500.html:6 .\templates\500.html:9
 msgid "Something went wrong"
 msgstr "Algo correu mal"
 
+#: .\templates\500.html:10
 msgid ""
 "We are sorry — an unexpected error occurred. Please try again in a moment."
 msgstr ""
 "Lamentamos — ocorreu um erro inesperado. Por favor tente novamente dentro de"
 " momentos."
 
+#: .\templates\accounts\login.html:3 .\templates\accounts\login.html:13
+#: .\templates\accounts\login.html:57
 msgid "Sign In"
 msgstr "Iniciar Sessão"
 
+#: .\templates\accounts\login.html:16
 msgid "Welcome back to TimorMart"
 msgstr "Bem-vindo de volta ao TimorMart"
 
+#: .\templates\accounts\login.html:44
 msgid "Forgot password?"
 msgstr "Esqueceu-se da palavra-passe?"
 
+#: .\templates\accounts\login.html:77
 msgid "or"
 msgstr "ou"
 
+#: .\templates\accounts\login.html:85
 msgid "Don't have an account yet?"
 msgstr "Ainda não tem conta?"
 
+#: .\templates\accounts\login.html:88 .\templates\accounts\register.html:326
 msgid "Create Account"
 msgstr "Criar Conta"
 
+#: .\templates\accounts\login.html:96
 msgid "First time here? Sign up to start buying and selling."
 msgstr "Primeira vez aqui? Registe-se para começar a comprar e vender."
 
+#: .\templates\accounts\register.html:3
 msgid "Sign Up"
 msgstr "Registar"
 
+#: .\templates\accounts\register.html:13
 msgid "Create Your Account"
 msgstr "Criar a sua Conta"
 
+#: .\templates\accounts\register.html:16
 msgid "Join thousands of buyers and sellers on TimorMart."
 msgstr "Junte-se a milhares de compradores e vendedores no TimorMart."
 
-msgid "Company Information"
-msgstr "Informações da Empresa"
+#: .\templates\accounts\register.html:91
+#: .\templates\olretail\seller_payment_settings.html:46
+msgid "Business Information"
+msgstr "Informação Comercial"
 
+#: .\templates\accounts\register.html:146
+msgid "Courier Verification"
+msgstr "Verificação de Estafeta"
+
+#: .\templates\accounts\register.html:149
+msgid ""
+"An administrator reviews these before you can be assigned deliveries. Your "
+"phone number below is also used as your WhatsApp contact for delivery "
+"coordination."
+msgstr ""
+"Um administrador irá rever estes documentos antes de lhe poderem ser "
+"atribuídas entregas. O seu número de telefone abaixo também é usado como o "
+"seu contacto de WhatsApp para coordenação de entregas."
+
+#: .\templates\accounts\register.html:183
 msgid "Personal Information"
 msgstr "Informações Pessoais"
 
+#: .\templates\accounts\register.html:221
 msgid "We'll use this to verify your account."
 msgstr "Vamos usar isto para verificar a sua conta."
 
+#: .\templates\accounts\register.html:237
 msgid "Local or international format (e.g., 7012345 or +670 7012345)."
 msgstr "Formato local ou internacional (ex.: 7012345 ou +670 7012345)."
 
+#: .\templates\accounts\register.html:253
 msgid "Your primary delivery or contact address."
 msgstr "A sua morada principal de entrega ou contacto."
 
+#: .\templates\accounts\register.html:266
 msgid "Account Credentials"
 msgstr "Credenciais da Conta"
 
-msgid "Letters, digits and @/./+/-/_ only. 30 characters or fewer."
-msgstr "Apenas letras, dígitos e @/./+/-/_. 30 caracteres ou menos."
+#: .\templates\accounts\register.html:269
+msgid ""
+"Your username is generated automatically from your name and phone number — "
+"you'll see it in the welcome message after signing up, and you'll need it to"
+" sign in."
+msgstr ""
+"O seu nome de utilizador é gerado automaticamente a partir do seu nome e "
+"número de telefone — vai vê-lo na mensagem de boas-vindas após o registo, e "
+"vai precisar dele para iniciar sessão."
 
+#: .\templates\accounts\register.html:283
 msgid ""
 "Your password must be at least 8 characters long and can't be entirely "
 "numeric."
@@ -1224,27 +2041,35 @@ msgstr ""
 "A sua palavra-passe deve ter pelo menos 8 caracteres e não pode ser "
 "inteiramente numérica."
 
+#: .\templates\accounts\register.html:299
 msgid "Enter the same password to verify."
 msgstr "Introduza a mesma palavra-passe para verificar."
 
+#: .\templates\accounts\register.html:312
 msgid "Password requirements:"
 msgstr "Requisitos da palavra-passe:"
 
+#: .\templates\accounts\register.html:314
 msgid "At least 8 characters long"
 msgstr "Pelo menos 8 caracteres"
 
+#: .\templates\accounts\register.html:315
 msgid "Can't be entirely numeric"
 msgstr "Não pode ser inteiramente numérica"
 
+#: .\templates\accounts\register.html:316
 msgid "Can't be the same as your username"
 msgstr "Não pode ser igual ao seu nome de utilizador"
 
+#: .\templates\accounts\register.html:345
 msgid "Sign in here"
 msgstr "Inicie sessão aqui"
 
+#: .\templates\olretail\about.html:4 .\templates\shared\footer.html:21
 msgid "About Us"
 msgstr "Sobre Nós"
 
+#: .\templates\olretail\about.html:5
 msgid ""
 "TimorMart is Timor-Leste's local online marketplace connecting buyers and "
 "sellers across the country."
@@ -1252,9 +2077,11 @@ msgstr ""
 "O TimorMart é o mercado online local de Timor-Leste que liga compradores e "
 "vendedores em todo o país."
 
+#: .\templates\olretail\about.html:12
 msgid "About TimorMart"
 msgstr "Sobre o TimorMart"
 
+#: .\templates\olretail\about.html:14
 msgid ""
 "TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
 "        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
@@ -1262,9 +2089,11 @@ msgstr ""
 "O TimorMart é o mercado online próprio de Timor-Leste — um lugar onde pessoas em todo o país\n"
 "        podem comprar e vender diretamente entre si, sem precisar de uma loja física ou de um grande orçamento para começar."
 
+#: .\templates\olretail\about.html:24
 msgid "Why we built this"
 msgstr "Porque construímos isto"
 
+#: .\templates\olretail\about.html:26
 msgid ""
 "Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
 "            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
@@ -1278,102 +2107,134 @@ msgstr ""
 "            para online: um único lugar de confiança onde qualquer pessoa pode anunciar um produto e qualquer pessoa pode encontrá-lo, seja\n"
 "            novo em folha ou um bom achado em segunda mão."
 
+#: .\templates\olretail\about.html:41
 msgid "For Buyers"
 msgstr "Para Compradores"
 
+#: .\templates\olretail\about.html:43
 msgid "Browse products from home, across every municipality"
 msgstr "Veja produtos a partir de casa, em todos os municípios"
 
+#: .\templates\olretail\about.html:44
 msgid "Clear pricing and condition (new vs. second-hand) on every listing"
 msgstr "Preço e condição claros (novo vs. segunda mão) em todos os anúncios"
 
+#: .\templates\olretail\about.html:45
 msgid "Ratings and comments from other buyers"
 msgstr "Avaliações e comentários de outros compradores"
 
+#: .\templates\olretail\about.html:46
 msgid "Contact sellers directly, including by WhatsApp"
 msgstr "Contacte vendedores diretamente, inclusive por WhatsApp"
 
+#: .\templates\olretail\about.html:47
 msgid "Use the site in English or Tetum"
 msgstr "Use o site em Inglês ou Tétum"
 
+#: .\templates\olretail\about.html:55
 msgid "For Sellers"
 msgstr "Para Vendedores"
 
+#: .\templates\olretail\about.html:57
 msgid "Reach buyers across the country without renting a storefront"
 msgstr "Alcance compradores em todo o país sem alugar uma loja"
 
+#: .\templates\olretail\about.html:58
 msgid "List, edit and track products from a simple dashboard"
 msgstr "Liste, edite e acompanhe produtos a partir de um painel simples"
 
+#: .\templates\olretail\about.html:59
 msgid "Get paid by card, bank transfer or mobile money"
 msgstr ""
 "Receba pagamentos por cartão, transferência bancária ou dinheiro móvel"
 
+#: .\templates\olretail\about.html:60
 msgid "Build a reputation through buyer ratings and reviews"
 msgstr ""
 "Construa uma reputação através das avaliações e comentários dos compradores"
 
+#: .\templates\olretail\about.html:61
 msgid "Start free — upgrade only once you're ready to grow"
 msgstr "Comece grátis — atualize apenas quando estiver pronto para crescer"
 
+#: .\templates\olretail\about.html:69
 msgid "Trust & Safety"
 msgstr "Confiança & Segurança"
 
+#: .\templates\olretail\about.html:71
 msgid "Every listing is reviewed before it goes live"
 msgstr "Todos os anúncios são revistos antes de serem publicados"
 
+#: .\templates\olretail\about.html:72
 msgid "Couriers submit ID and are verified before they can deliver an order"
 msgstr ""
 "Os estafetas submetem identificação e são verificados antes de poderem "
 "entregar uma encomenda"
 
+#: .\templates\olretail\about.html:73
 msgid "Photo proof of delivery on every shipped order"
 msgstr "Prova fotográfica de entrega em todas as encomendas enviadas"
 
+#: .\templates\olretail\about.html:74
 msgid "A dispute process if something goes wrong"
 msgstr "Um processo de litígio caso algo corra mal"
 
+#: .\templates\olretail\about.html:75
 msgid "Buyers and couriers can both be rated after delivery"
 msgstr "Compradores e estafetas podem ambos ser avaliados após a entrega"
 
+#: .\templates\olretail\about.html:86
 msgid "What makes TimorMart different"
 msgstr "O que torna o TimorMart diferente"
 
+#: .\templates\olretail\about.html:89
 msgid ""
 "Built for Timor-Leste — local cities, local languages, local payment options"
 msgstr ""
 "Feito para Timor-Leste — cidades locais, línguas locais, opções de pagamento"
 " locais"
 
+#: .\templates\olretail\about.html:90
 msgid "New and second-hand items side by side, so buying affordably is easy"
 msgstr ""
 "Artigos novos e em segunda mão lado a lado, tornando as compras acessíveis "
 "fáceis"
 
+#: .\templates\olretail\about.html:91
 msgid "Full English and Tetum support throughout the site"
 msgstr "Suporte completo em Inglês e Tétum em todo o site"
 
+#: .\templates\olretail\about.html:94
 msgid "Direct WhatsApp contact between buyers and sellers"
 msgstr "Contacto direto por WhatsApp entre compradores e vendedores"
 
+#: .\templates\olretail\about.html:95
 msgid "Delivery matched to the buyer's city, with verified couriers"
 msgstr "Entrega associada à cidade do comprador, com estafetas verificados"
 
+#: .\templates\olretail\about.html:96
 msgid "Moderation and dispute resolution to keep the marketplace trustworthy"
 msgstr "Moderação e resolução de litígios para manter o mercado confiável"
 
+#: .\templates\olretail\about.html:106
 msgid "Ready to get started?"
 msgstr "Pronto para começar?"
 
+#: .\templates\olretail\about.html:108
 msgid "Browse products"
 msgstr "Ver produtos"
 
+#: .\templates\olretail\about.html:111
+#: .\templates\shared\popular_category.html:96
 msgid "Start selling"
 msgstr "Comece a vender"
 
+#: .\templates\olretail\bank_transfer_instructions.html:4
+#: .\templates\olretail\bank_transfer_instructions.html:14
 msgid "Payment Details"
 msgstr "Dados de Pagamento"
 
+#: .\templates\olretail\bank_transfer_instructions.html:17
 msgid ""
 "Send the amount below to each seller using the details they provided, then "
 "let them know you've paid."
@@ -1381,95 +2242,216 @@ msgstr ""
 "Envie o montante abaixo a cada vendedor usando os dados fornecidos, depois "
 "informe-os de que pagou."
 
+#: .\templates\olretail\bank_transfer_instructions.html:26
+#: .\templates\olretail\cash_on_delivery_confirmation.html:26
+#: .\templates\olretail\deny_payment_received.html:22
+#: .\templates\olretail\dispute_detail.html:121
+#: .\templates\olretail\dispute_detail.html:125
+#: .\templates\olretail\mark_payment_sent.html:22
+#: .\templates\olretail\notifications.html:41
+#: .\templates\olretail\open_dispute.html:22
+#: .\templates\olretail\order_detail.html:4
+#: .\templates\olretail\order_detail.html:12
+#: .\templates\olretail\payment_confirmation.html:62
+#: .\templates\olretail\seller_balance.html:82
 msgid "Order"
 msgstr "Encomenda"
 
+#: .\templates\olretail\bank_transfer_instructions.html:30
+#: .\templates\olretail\mark_payment_sent.html:90
 msgid "Amount to send"
 msgstr "Montante a enviar"
 
+#: .\templates\olretail\bank_transfer_instructions.html:34
 msgid "Reference (include in the transfer memo)"
 msgstr "Referência (incluir na nota de transferência)"
 
+#: .\templates\olretail\bank_transfer_instructions.html:39
+#: .\templates\olretail\mark_payment_sent.html:27
+#: .\templates\olretail\order_detail.html:265
 msgid "Seller payment details"
 msgstr "Dados de pagamento do vendedor"
 
+#: .\templates\olretail\bank_transfer_instructions.html:44
+#: .\templates\olretail\mark_payment_sent.html:75
+#: .\templates\olretail\order_detail.html:303
 msgid "I've sent payment"
 msgstr "Já enviei o pagamento"
 
+#: .\templates\olretail\bank_transfer_instructions.html:51
+#: .\templates\olretail\cash_on_delivery_confirmation.html:38
 msgid "View my orders"
 msgstr "Ver as minhas encomendas"
 
+#: .\templates\olretail\buyer_orders.html:4
+#: .\templates\olretail\buyer_orders.html:12
+#: .\templates\olretail\seller_orders.html:4
+#: .\templates\shared\header.html:349
 msgid "My Orders"
 msgstr "As minhas Encomendas"
 
+#: .\templates\olretail\buyer_orders.html:17
+#: .\templates\olretail\cart.html:147
+#: .\templates\olretail\payment_confirmation.html:161
 msgid "Continue Shopping"
 msgstr "Continuar a Comprar"
 
+#: .\templates\olretail\buyer_orders.html:26
+#: .\templates\olretail\seller_orders.html:26
+#: .\templates\shared\header.html:384
 msgid "All"
 msgstr "Todos"
 
+#: .\templates\olretail\buyer_orders.html:42
+#: .\templates\olretail\courier_deliveries.html:106
+#: .\templates\olretail\payment.html:99
+#: .\templates\olretail\seller_orders.html:42
 msgid "Order #"
 msgstr "Encomenda n.º"
 
+#: .\templates\olretail\buyer_orders.html:43 .\templates\olretail\cart.html:31
+#: .\templates\olretail\checkout.html:29
+#: .\templates\olretail\courier_deliveries.html:107
+#: .\templates\olretail\lista.html:80
+#: .\templates\olretail\payment_confirmation.html:77
+#: .\templates\olretail\seller_orders.html:43
 msgid "Product"
 msgstr "Produto"
 
+#: .\templates\olretail\buyer_orders.html:44 .\templates\olretail\cart.html:46
+#: .\templates\olretail\cart.html:88 .\templates\olretail\details.html:299
+#: .\templates\shared\header.html:284
 msgid "Seller"
 msgstr "Vendedor"
 
+#: .\templates\olretail\buyer_orders.html:45 .\templates\olretail\cart.html:34
+#: .\templates\olretail\checkout.html:32
+#: .\templates\olretail\checkout.html:191
+#: .\templates\olretail\deny_payment_received.html:74
+#: .\templates\olretail\payment.html:130
 msgid "Total"
 msgstr "Total"
 
+#: .\templates\olretail\buyer_orders.html:46
+#: .\templates\olretail\dispute_detail.html:23
+#: .\templates\olretail\lista.html:84
+#: .\templates\olretail\seller_balance.html:135
+#: .\templates\olretail\seller_orders.html:47
+#: .\templates\olretail\seller_subscription.html:135
 msgid "Status"
 msgstr "Estado"
 
+#: .\templates\olretail\buyer_orders.html:47
+#: .\templates\olretail\seller_balance.html:81
+#: .\templates\olretail\seller_orders.html:48
+#: .\templates\olretail\seller_subscription.html:135
 msgid "Date"
 msgstr "Data"
 
+#: .\templates\olretail\buyer_orders.html:93
+#: .\templates\olretail\courier_deliveries.html:119
+#: .\templates\olretail\seller_orders.html:109
 msgid "View"
 msgstr "Ver"
 
+#: .\templates\olretail\buyer_orders.html:106
+#: .\templates\olretail\seller_orders.html:122
 msgid "No orders yet."
 msgstr "Ainda não há encomendas."
 
+#: .\templates\olretail\buyer_orders.html:107
+#: .\templates\olretail\cart.html:158
 msgid "Start shopping now"
 msgstr "Comece a comprar agora"
 
+#: .\templates\olretail\cart.html:4 .\templates\olretail\cart.html:12
 msgid "Shopping Cart"
 msgstr "Carrinho de Compras"
 
+#: .\templates\olretail\cart.html:33 .\templates\olretail\checkout.html:30
+#: .\templates\olretail\lista.html:82
+#: .\templates\olretail\seller_orders.html:45
 msgid "Qty"
 msgstr "Qtd"
 
-msgid "Update"
-msgstr "Atualizar"
+#: .\templates\olretail\cart.html:54 .\templates\olretail\cart.html:102
+msgid "Decrease quantity"
+msgstr "Diminuir quantidade"
 
+#: .\templates\olretail\cart.html:58 .\templates\olretail\cart.html:106
+msgid "Increase quantity"
+msgstr "Aumentar quantidade"
+
+#: .\templates\olretail\cart.html:67 .\templates\olretail\cart.html:92
+#: .\templates\olretail\wishlist.html:53
 msgid "Remove"
 msgstr "Remover"
 
+#: .\templates\olretail\cart.html:111
+msgid "each"
+msgstr "cada"
+
+#: .\templates\olretail\cart.html:125 .\templates\olretail\checkout.html:166
+#: .\templates\olretail\deny_payment_received.html:69
+#: .\templates\olretail\mark_payment_sent.html:85
+#: .\templates\olretail\open_dispute.html:74
+#: .\templates\olretail\order_detail.html:424
+#: .\templates\olretail\payment.html:95
 msgid "Order Summary"
 msgstr "Resumo da Encomenda"
 
+#: .\templates\olretail\cart.html:128 .\templates\olretail\checkout.html:169
+#: .\templates\olretail\order_detail.html:428
+#: .\templates\olretail\payment.html:116
+#: .\templates\olretail\payment_confirmation.html:103
 msgid "Subtotal"
 msgstr "Subtotal"
 
+#: .\templates\olretail\cart.html:133
 #, python-format
 msgid "Commission (15%%) and payment fees will be calculated at checkout."
 msgstr ""
 "A comissão (15%%) e as taxas de pagamento serão calculadas no checkout."
 
+#: .\templates\olretail\cart.html:144
 msgid "Proceed to Checkout"
 msgstr "Prosseguir para o Checkout"
 
+#: .\templates\olretail\cash_on_delivery_confirmation.html:4
+msgid "Order Placed"
+msgstr "Encomenda Efetuada"
+
+#: .\templates\olretail\cash_on_delivery_confirmation.html:14
+msgid "Order Placed — Pay on Delivery"
+msgstr "Encomenda Efetuada — Pague na Entrega"
+
+#: .\templates\olretail\cash_on_delivery_confirmation.html:17
+msgid ""
+"No payment needed now. Have the exact amount in cash ready for the seller or"
+" courier when your order arrives."
+msgstr ""
+"Não é necessário pagar agora. Tenha o valor exato em dinheiro pronto para o "
+"vendedor ou estafeta quando a sua encomenda chegar."
+
+#: .\templates\olretail\cash_on_delivery_confirmation.html:30
+msgid "Amount to pay on delivery"
+msgstr "Valor a pagar na entrega"
+
+#: .\templates\olretail\checkout.html:4 .\templates\olretail\checkout.html:12
 msgid "Checkout"
 msgstr "Checkout"
 
+#: .\templates\olretail\checkout.html:22
 msgid "Order Review"
 msgstr "Revisão da Encomenda"
 
+#: .\templates\olretail\checkout.html:31
+#: .\templates\olretail\order_detail.html:377
+#: .\templates\olretail\payment_confirmation.html:99
 msgid "Unit Price"
 msgstr "Preço Unitário"
 
+#: .\templates\olretail\checkout.html:70
 #, python-format
 msgid ""
 "\n"
@@ -1480,28 +2462,39 @@ msgstr ""
 "                %(sellers)s ainda não configuraram os dados de transferência bancária — escolha Cartão se o seu carrinho incluir os artigos deles.\n"
 "                "
 
+#: .\templates\olretail\checkout.html:87
 msgid "Test accounts:"
 msgstr "Contas de teste:"
 
+#: .\templates\olretail\checkout.html:100
+#: .\templates\olretail\order_detail.html:455
 msgid "Delivery Information"
 msgstr "Informação de Entrega"
 
+#: .\templates\olretail\checkout.html:155
+#: .\templates\olretail\checkout.html:271
 msgid "Proceed to Payment"
 msgstr "Prosseguir para o Pagamento"
 
+#: .\templates\olretail\checkout.html:175
 #, python-format
 msgid "Platform fee (15%%)"
 msgstr "Taxa da plataforma (15%%)"
 
+#: .\templates\olretail\checkout.html:180
+#: .\templates\olretail\payment.html:124
 msgid "Payment fee"
 msgstr "Taxa de pagamento"
 
+#: .\templates\olretail\checkout.html:186
 msgid "Delivery fee"
 msgstr "Taxa de entrega"
 
+#: .\templates\olretail\checkout.html:197
 msgid "Your payment is secure and encrypted."
 msgstr "O seu pagamento é seguro e encriptado."
 
+#: .\templates\olretail\checkout.html:201
 msgid ""
 "You'll pay the seller directly — no platform fee. The next page shows their "
 "payment details."
@@ -1509,6 +2502,15 @@ msgstr ""
 "Vai pagar o vendedor diretamente — sem taxa de plataforma. A próxima página "
 "mostra os dados de pagamento deles."
 
+#: .\templates\olretail\checkout.html:205
+msgid ""
+"Pay in cash when your order arrives — no platform fee. Have the exact amount"
+" ready for the seller/courier."
+msgstr ""
+"Pague em dinheiro quando a sua encomenda chegar — sem taxa da plataforma. "
+"Tenha o valor exato pronto para o vendedor/estafeta."
+
+#: .\templates\olretail\checkout.html:209
 msgid ""
 "Test/dev payment rail — enter one of the test account numbers above to "
 "trigger a specific outcome."
@@ -1516,27 +2518,41 @@ msgstr ""
 "Via de pagamento de teste/dev — introduza um dos números de conta de teste "
 "acima para desencadear um resultado específico."
 
+#: .\templates\olretail\checkout.html:265
 msgid "Continue to Payment Details"
 msgstr "Continuar para os Dados de Pagamento"
 
+#: .\templates\olretail\checkout.html:267
+msgid "Place Order"
+msgstr "Fazer Encomenda"
+
+#: .\templates\olretail\checkout.html:269
 msgid "Submit Bank Transfer"
 msgstr "Submeter Transferência Bancária"
 
+#: .\templates\olretail\courier_deliveries.html:4
+#: .\templates\olretail\courier_deliveries.html:12
 msgid "My Deliveries"
 msgstr "As minhas Entregas"
 
+#: .\templates\olretail\courier_deliveries.html:21
 msgid "You're verified and can be assigned deliveries."
 msgstr "Está verificado e pode ser designado para entregas."
 
+#: .\templates\olretail\courier_deliveries.html:23
+#: .\templates\olretail\seller_payment_settings.html:169
 msgid "Awaiting review"
 msgstr "A aguardar revisão"
 
+#: .\templates\olretail\courier_deliveries.html:24
 msgid "An administrator is reviewing your ID document."
 msgstr "Um administrador está a rever o seu documento de identificação."
 
+#: .\templates\olretail\courier_deliveries.html:29
 msgid "Your ID submission was rejected"
 msgstr "A sua submissão de identificação foi rejeitada"
 
+#: .\templates\olretail\courier_deliveries.html:33
 msgid ""
 "Submit a photo of your ID document to get verified — you can't be assigned "
 "deliveries until then."
@@ -1544,48 +2560,107 @@ msgstr ""
 "Submeta uma fotografia do seu documento de identificação para ser verificado"
 " — não pode ser designado para entregas até lá."
 
+#: .\templates\olretail\courier_deliveries.html:39
+#: .\templates\olretail\deny_payment_received.html:59
+#: .\templates\olretail\seller_payment_settings.html:180
 msgid "Submit"
 msgstr "Submeter"
 
+#: .\templates\olretail\courier_deliveries.html:56
+#: .\templates\olretail\seller_orders.html:44
+#: .\templates\shared\header.html:285
 msgid "Buyer"
 msgstr "Comprador"
 
+#: .\templates\olretail\courier_deliveries.html:59
 msgid "Deliver to"
 msgstr "Entregar a"
 
+#: .\templates\olretail\courier_deliveries.html:65
 msgid "Ready for pickup"
 msgstr "Pronto para recolha"
 
+#: .\templates\olretail\courier_deliveries.html:67
 msgid "Picked up"
 msgstr "Recolhido"
 
+#: .\templates\olretail\courier_deliveries.html:69
 msgid "On the way"
 msgstr "A caminho"
 
+#: .\templates\olretail\courier_deliveries.html:71
 msgid "Awaiting kitchen"
 msgstr "A aguardar cozinha"
 
+#: .\templates\olretail\courier_deliveries.html:79
+#: .\templates\olretail\order_detail.html:140
 msgid "Confirm Pickup"
 msgstr "Confirmar Recolha"
 
+#: .\templates\olretail\courier_deliveries.html:84
+#: .\templates\olretail\order_detail.html:147
 msgid "Mark On the Way"
 msgstr "Marcar como a Caminho"
 
+#: .\templates\olretail\courier_deliveries.html:88
 msgid "View / Mark Delivered"
 msgstr "Ver / Marcar como Entregue"
 
+#: .\templates\olretail\courier_deliveries.html:96
 msgid "No deliveries waiting right now."
 msgstr "Não há entregas à espera neste momento."
 
+#: .\templates\olretail\courier_deliveries.html:99
 msgid "Recently Delivered"
 msgstr "Entregue Recentemente"
 
+#: .\templates\olretail\courier_deliveries.html:128
 msgid "No deliveries completed yet."
 msgstr "Ainda não há entregas concluídas."
 
+#: .\templates\olretail\deny_payment_received.html:4
+#: .\templates\olretail\deny_payment_received.html:12
+msgid "Report Payment Not Received"
+msgstr "Reportar Pagamento Não Recebido"
+
+#: .\templates\olretail\deny_payment_received.html:28
+msgid "Buyer's submitted receipt"
+msgstr "Recibo submetido pelo comprador"
+
+#: .\templates\olretail\deny_payment_received.html:30
+#: .\templates\olretail\order_detail.html:275
+msgid "Payment receipt — opens full size"
+msgstr "Recibo de pagamento — abre em tamanho completo"
+
+#: .\templates\olretail\deny_payment_received.html:33
+#: .\templates\olretail\mark_payment_sent.html:29
+#: .\templates\olretail\order_detail.html:267
+#: .\templates\olretail\order_detail.html:278
+#: .\templates\olretail\payment_confirmation.html:21
+#: .\templates\olretail\payment_confirmation.html:35
+msgid "Reference"
+msgstr "Referência"
+
+#: .\templates\olretail\deny_payment_received.html:34
+#: .\templates\olretail\order_detail.html:279
+msgid "Claimed amount"
+msgstr "Valor reclamado"
+
+#: .\templates\olretail\deny_payment_received.html:55
+msgid ""
+"This will be reviewed by an administrator, who can see the buyer's receipt "
+"and this explanation side by side. The buyer will be notified that this is "
+"under review."
+msgstr ""
+"Isto será analisado por um administrador, que poderá ver o recibo do "
+"comprador e esta explicação lado a lado. O comprador será notificado de que "
+"isto está em análise."
+
+#: .\templates\olretail\details.html:109 .\templates\shared\header.html:181
 msgid "Home"
 msgstr "Início"
 
+#: .\templates\olretail\details.html:119
 msgid ""
 "This listing is awaiting administrator approval and is not yet visible to "
 "buyers."
@@ -1593,54 +2668,100 @@ msgstr ""
 "Este anúncio está a aguardar aprovação do administrador e ainda não é "
 "visível para os compradores."
 
+#: .\templates\olretail\details.html:121
 msgid "This listing is not visible to buyers."
 msgstr "Este anúncio não é visível para os compradores."
 
+#: .\templates\olretail\details.html:124
 msgid "Moderator note:"
 msgstr "Nota do moderador:"
 
+#: .\templates\olretail\details.html:137 .\templates\olretail\details.html:171
 msgid "Previous image"
 msgstr "Imagem anterior"
 
+#: .\templates\olretail\details.html:143 .\templates\olretail\details.html:179
 msgid "Next image"
 msgstr "Imagem seguinte"
 
+#: .\templates\olretail\details.html:147
 msgid "View full screen"
 msgstr "Ver em ecrã completo"
 
+#: .\templates\olretail\details.html:152
 msgid "Product images"
 msgstr "Imagens do produto"
 
+#: .\templates\olretail\details.html:167 .\templates\olretail\lista.html:178
+#: .\templates\shared\messages.html:14
 msgid "Close"
 msgstr "Fechar"
 
+#: .\templates\olretail\details.html:187 .\templates\olretail\details.html:428
+#: .\templates\olretail\index.html:62 .\templates\olretail\wishlist.html:27
+#: .\templates\shared\product_grid.html:23
 msgid "No image available"
 msgstr "Sem imagem disponível"
 
+#: .\templates\olretail\details.html:200 .\templates\olretail\details.html:319
 msgid "rating"
 msgstr "avaliação"
 
+#: .\templates\olretail\details.html:206
 msgid "min"
 msgstr "min"
 
+#: .\templates\olretail\details.html:211 .\templates\olretail\lista.html:105
+#: .\templates\olretail\wishlist.html:39
+#: .\templates\shared\product_grid.html:67
 msgid "Unavailable"
 msgstr "Indisponível"
 
+#: .\templates\olretail\details.html:217
+#: .\templates\olretail\product_form.html:110
+msgid "Vehicles available"
+msgstr "Veículos disponíveis"
+
+#: .\templates\olretail\details.html:217
 msgid "In stock"
 msgstr "Em stock"
 
+#: .\templates\olretail\details.html:221
+msgid "None currently available"
+msgstr "Nenhum disponível atualmente"
+
+#: .\templates\olretail\details.html:221 .\templates\olretail\lista.html:113
+#: .\templates\olretail\wishlist.html:39
+#: .\templates\shared\product_grid.html:67
 msgid "Out of stock"
 msgstr "Esgotado"
 
+#: .\templates\olretail\details.html:232 .\templates\olretail\lista.html:99
+#: .\templates\shared\product_grid.html:43
+msgid "day"
+msgstr "dia"
+
+#: .\templates\olretail\details.html:244
+#: .\templates\shared\product_grid.html:74
 msgid "Add to Cart"
 msgstr "Adicionar ao Carrinho"
 
+#: .\templates\olretail\details.html:253
 msgid "Saved"
 msgstr "Guardado"
 
+#: .\templates\olretail\details.html:253
+#: .\templates\olretail\order_detail.html:250
+#: .\templates\olretail\seller_payment_settings.html:37
+#: .\templates\olretail\seller_payment_settings.html:59
+#: .\templates\olretail\seller_payment_settings.html:84
+#: .\templates\olretail\seller_payment_settings.html:105
+#: .\templates\olretail\seller_payment_settings.html:126
+#: .\templates\olretail\seller_payment_settings.html:152
 msgid "Save"
 msgstr "Guardar"
 
+#: .\templates\olretail\details.html:263
 msgid ""
 "Not booked through the cart — contact the service provider directly to "
 "arrange this."
@@ -1648,27 +2769,53 @@ msgstr ""
 "Não se reserva através do carrinho — contacte o prestador de serviços "
 "diretamente para combinar isto."
 
+#: .\templates\olretail\details.html:265
 msgid ""
 "Not sold through the cart — contact the seller directly to arrange this."
 msgstr ""
 "Não se vende através do carrinho — contacte o vendedor diretamente para "
 "combinar isto."
 
+#: .\templates\olretail\details.html:274
 msgid "Listed"
 msgstr "Publicado"
 
+#: .\templates\olretail\details.html:280
+#: .\templates\olretail\product_form.html:112
+msgid "Seats / capacity"
+msgstr "Lugares / capacidade"
+
+#: .\templates\olretail\details.html:299
+msgid "Restaurant"
+msgstr "Restaurante"
+
+#: .\templates\olretail\details.html:299
 msgid "Service Provider"
 msgstr "Prestador de Serviços"
 
+#: .\templates\olretail\details.html:304
+#: .\templates\shared\product_grid.html:58
 msgid "Verified Business"
 msgstr "Empresa Verificada"
 
+#: .\templates\olretail\details.html:309
+msgid "Delivery available"
+msgstr "Entrega disponível"
+
+#: .\templates\olretail\details.html:310
+msgid "Pickup available"
+msgstr "Levantamento disponível"
+
+#: .\templates\olretail\details.html:330
+#: .\templates\olretail\order_detail.html:411
 msgid "Chat on WhatsApp"
 msgstr "Conversar no WhatsApp"
 
+#: .\templates\olretail\details.html:340
 msgid "Interested in this service?"
 msgstr "Interessado neste serviço?"
 
+#: .\templates\olretail\details.html:342
 msgid ""
 "To view the service provider's phone number and WhatsApp contact, upgrade "
 "your account to Buyer & Seller."
@@ -1676,9 +2823,11 @@ msgstr ""
 "Para ver o número de telefone e o contacto de WhatsApp do prestador de "
 "serviços, atualize a sua conta para Comprador & Vendedor."
 
+#: .\templates\olretail\details.html:345
 msgid "Interested in this product?"
 msgstr "Interessado neste produto?"
 
+#: .\templates\olretail\details.html:347
 msgid ""
 "To view the seller's phone number and WhatsApp contact, upgrade your account"
 " to Buyer & Seller."
@@ -1686,12 +2835,15 @@ msgstr ""
 "Para ver o número de telefone e o contacto de WhatsApp do vendedor, atualize"
 " a sua conta para Comprador & Vendedor."
 
+#: .\templates\olretail\details.html:354
 msgid "Upgrade to Buyer & Seller"
 msgstr "Atualizar para Comprador & Vendedor"
 
+#: .\templates\olretail\details.html:363
 msgid "Sign in to view contact information"
 msgstr "Inicie sessão para ver as informações de contacto"
 
+#: .\templates\olretail\details.html:366
 msgid ""
 "To view the service provider's phone number and WhatsApp contact, please "
 "sign in or create an account."
@@ -1699,6 +2851,7 @@ msgstr ""
 "Para ver o número de telefone e o contacto de WhatsApp do prestador de "
 "serviços, inicie sessão ou crie uma conta."
 
+#: .\templates\olretail\details.html:368
 msgid ""
 "To view the seller's phone number and WhatsApp contact, please sign in or "
 "create an account."
@@ -1706,24 +2859,31 @@ msgstr ""
 "Para ver o número de telefone e o contacto de WhatsApp do vendedor, inicie "
 "sessão ou crie uma conta."
 
+#: .\templates\olretail\details.html:381
 msgid "Edit listing"
 msgstr "Editar anúncio"
 
+#: .\templates\olretail\details.html:392
 msgid "Reviews"
 msgstr "Avaliações"
 
+#: .\templates\olretail\details.html:403
 msgid "Verified Purchase"
 msgstr "Compra Verificada"
 
+#: .\templates\olretail\details.html:420
 msgid "Related products"
 msgstr "Produtos relacionados"
 
+#: .\templates\olretail\details.html:444
 msgid "Comments"
 msgstr "Comentários"
 
+#: .\templates\olretail\details.html:477
 msgid "Post comment"
 msgstr "Publicar comentário"
 
+#: .\templates\olretail\details.html:484
 msgid ""
 "Comments are available to buyer accounts. Seller accounts cannot post "
 "comments."
@@ -1731,89 +2891,122 @@ msgstr ""
 "Os comentários estão disponíveis para contas de comprador. As contas de "
 "vendedor não podem comentar."
 
+#: .\templates\olretail\details.html:492
 msgid "Sign in with a buyer account to post a comment."
 msgstr "Inicie sessão com uma conta de comprador para comentar."
 
+#: .\templates\olretail\details.html:519
 msgid "No comments yet. Be the first to ask about this product!"
 msgstr ""
 "Ainda sem comentários. Seja o primeiro a perguntar sobre este produto!"
 
+#: .\templates\olretail\dispute_detail.html:4
+#: .\templates\olretail\dispute_detail.html:12
+#: .\templates\olretail\seller_respond_dispute.html:22
 msgid "Dispute"
 msgstr "Litígio"
 
+#: .\templates\olretail\dispute_detail.html:38
 msgid "Seller response due by"
 msgstr "Resposta do vendedor até"
 
+#: .\templates\olretail\dispute_detail.html:47
 msgid "Buyer's Report"
 msgstr "Relato do Comprador"
 
+#: .\templates\olretail\dispute_detail.html:104
 msgid "Resolution"
 msgstr "Resolução"
 
+#: .\templates\olretail\dispute_detail.html:109
 msgid "Refund Amount"
 msgstr "Montante do Reembolso"
 
+#: .\templates\olretail\dispute_detail.html:111
 msgid "Resolved on"
 msgstr "Resolvido em"
 
+#: .\templates\olretail\dispute_detail.html:127
 msgid "View Order"
 msgstr "Ver Encomenda"
 
+#: .\templates\olretail\index.html:40 .\templates\shared\pagination.html:8
+#: .\templates\shared\pagination.html:12
 msgid "Previous"
 msgstr "Anterior"
 
+#: .\templates\olretail\index.html:44 .\templates\shared\pagination.html:28
+#: .\templates\shared\pagination.html:32
 msgid "Next"
 msgstr "Seguinte"
 
+#: .\templates\olretail\index.html:52
 msgid "Best sellers"
 msgstr "Mais vendidos"
 
+#: .\templates\olretail\index.html:81
 #, python-format
 msgid "Search results for “%(query)s”"
 msgstr "Resultados da pesquisa para “%(query)s”"
 
+#: .\templates\olretail\index.html:85
 msgid "New arrivals"
 msgstr "Novidades"
 
+#: .\templates\olretail\index.html:87
 #, python-format
 msgid "%(counter)s item"
 msgid_plural "%(counter)s items"
 msgstr[0] "%(counter)s artigo"
 msgstr[1] "%(counter)s artigos"
 
+#: .\templates\olretail\index.html:94
 msgid "Min"
 msgstr "Mín."
 
+#: .\templates\olretail\index.html:96
 msgid "Max"
 msgstr "Máx."
 
+#: .\templates\olretail\index.html:97
 msgid "Sort by"
 msgstr "Ordenar por"
 
+#: .\templates\olretail\index.html:99
 msgid "Newest"
 msgstr "Mais recente"
 
+#: .\templates\olretail\index.html:100
 msgid "Best selling"
 msgstr "Mais vendido"
 
+#: .\templates\olretail\index.html:101
 msgid "Price: low to high"
 msgstr "Preço: do mais baixo ao mais alto"
 
+#: .\templates\olretail\index.html:102
 msgid "Price: high to low"
 msgstr "Preço: do mais alto ao mais baixo"
 
+#: .\templates\olretail\index.html:103
 msgid "Name"
 msgstr "Nome"
 
+#: .\templates\olretail\index.html:105
 msgid "Apply"
 msgstr "Aplicar"
 
+#: .\templates\olretail\lista.html:6 .\templates\olretail\lista.html:11
+#: .\templates\shared\header.html:315
 msgid "My products"
 msgstr "Os meus produtos"
 
+#: .\templates\olretail\lista.html:13 .\templates\olretail\lista.html:203
+#: .\templates\shared\header.html:312
 msgid "Add product"
 msgstr "Adicionar produto"
 
+#: .\templates\olretail\lista.html:22
 #, python-format
 msgid ""
 "Your subscription expired. You have %(used)s listings (over the free limit "
@@ -1822,6 +3015,7 @@ msgstr ""
 "A sua subscrição expirou. Tem %(used)s anúncios (acima do limite grátis de "
 "%(limit)s) — permanecem ativos, mas não pode adicionar novos até renovar."
 
+#: .\templates\olretail\lista.html:25
 #, python-format
 msgid ""
 "Your subscription expires in %(days)s day(s) (%(date)s) — renew to keep "
@@ -1830,272 +3024,429 @@ msgstr ""
 "A sua subscrição expira em %(days)s dia(s) (%(date)s) — renove para "
 "continuar a publicar novos produtos."
 
+#: .\templates\olretail\lista.html:28
 #, python-format
 msgid "%(plan)s — unlimited listings, active until %(date)s."
 msgstr "%(plan)s — anúncios ilimitados, ativo até %(date)s."
 
+#: .\templates\olretail\lista.html:31
 #, python-format
 msgid "%(used)s / %(limit)s free listings used."
 msgstr "%(used)s / %(limit)s anúncios grátis usados."
 
+#: .\templates\olretail\lista.html:34
 msgid "Manage subscription"
 msgstr "Gerir subscrição"
 
+#: .\templates\olretail\lista.html:42
 msgid "Listings"
 msgstr "Anúncios"
 
+#: .\templates\olretail\lista.html:66
 msgid "Inventory value"
 msgstr "Valor do inventário"
 
+#: .\templates\olretail\lista.html:85
 msgid "Created"
 msgstr "Criado"
 
+#: .\templates\olretail\lista.html:86
+#: .\templates\olretail\menu_categories.html:56
 msgid "Actions"
 msgstr "Ações"
 
+#: .\templates\olretail\lista.html:113
+msgid "None available"
+msgstr "Nenhum disponível"
+
+#: .\templates\olretail\lista.html:143
 msgid "Edit"
 msgstr "Editar"
 
+#: .\templates\olretail\lista.html:150 .\templates\olretail\lista.html:151
 msgid "Mark as sold out"
 msgstr "Marcar como esgotado"
 
+#: .\templates\olretail\lista.html:157 .\templates\olretail\lista.html:158
+#: .\templates\olretail\lista.html:189
 msgid "Delete"
 msgstr "Eliminar"
 
+#: .\templates\olretail\lista.html:177
 msgid "Delete product"
 msgstr "Eliminar produto"
 
+#: .\templates\olretail\lista.html:183
 #, python-format
 msgid "Are you sure you want to delete “%(name)s”? This cannot be undone."
 msgstr ""
 "Tem a certeza de que quer eliminar “%(name)s”? Esta ação não pode ser "
 "desfeita."
 
+#: .\templates\olretail\lista.html:186
+#: .\templates\olretail\product_form.html:164
+#: .\templates\olretail\seller_respond_dispute.html:42
 msgid "Cancel"
 msgstr "Cancelar"
 
+#: .\templates\olretail\lista.html:200
 msgid "You have no products yet"
 msgstr "Ainda não tem produtos"
 
+#: .\templates\olretail\lista.html:201
 msgid "Create your first listing — it will appear in the store once approved."
 msgstr ""
 "Crie o seu primeiro anúncio — aparecerá na loja assim que for aprovado."
 
+#: .\templates\olretail\mark_payment_sent.html:4
+#: .\templates\olretail\mark_payment_sent.html:12
+msgid "Confirm Your Payment"
+msgstr "Confirme o Seu Pagamento"
+
+#: .\templates\olretail\mark_payment_sent.html:41
+msgid "A screenshot or photo of your bank/mobile transfer confirmation."
+msgstr ""
+"Uma captura de ecrã ou foto da confirmação da sua transferência "
+"bancária/móvel."
+
+#: .\templates\olretail\mark_payment_sent.html:71
+msgid ""
+"The seller will be notified to confirm receipt. If they don't respond within"
+" a few days, or if they say they haven't received it, an administrator will "
+"review this using the receipt and details you provide here."
+msgstr ""
+"O vendedor será notificado para confirmar a receção. Se não responder dentro"
+" de alguns dias, ou se disser que não recebeu, um administrador irá analisar"
+" isto usando o recibo e os detalhes que fornecer aqui."
+
+#: .\templates\olretail\menu_categories.html:4
+#: .\templates\olretail\menu_categories.html:12
 msgid "Menu Sections"
 msgstr "Secções do Menu"
 
+#: .\templates\olretail\menu_categories.html:14
 msgid "Back to products"
 msgstr "Voltar aos produtos"
 
+#: .\templates\olretail\menu_categories.html:20
 msgid "Add a section"
 msgstr "Adicionar uma secção"
 
+#: .\templates\olretail\menu_categories.html:40
 msgid "Add"
 msgstr "Adicionar"
 
+#: .\templates\olretail\menu_categories.html:53
 msgid "Section"
 msgstr "Secção"
 
+#: .\templates\olretail\menu_categories.html:55
+#: .\templates\olretail\payment.html:103
 msgid "Items"
 msgstr "Artigos"
 
+#: .\templates\olretail\menu_categories.html:67
 msgid "Remove this menu section?"
 msgstr "Remover esta secção do menu?"
 
+#: .\templates\olretail\menu_categories.html:84
 msgid "No menu sections yet"
 msgstr "Ainda sem secções de menu"
 
+#: .\templates\olretail\menu_categories.html:85
 msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
 msgstr ""
 "Adicione secções como Pequeno-almoço, Almoço ou Bebidas para organizar o seu"
 " menu."
 
+#: .\templates\olretail\notifications.html:4
+#: .\templates\olretail\notifications.html:12
+#: .\templates\shared\header.html:259 .\templates\shared\header.html:266
 msgid "Notifications"
 msgstr "Notificações"
 
+#: .\templates\olretail\notifications.html:20
 msgid "Mark all as read"
 msgstr "Marcar tudo como lido"
 
+#: .\templates\olretail\notifications.html:38
+#: .\templates\shared\header.html:272
 msgid "ago"
 msgstr "atrás"
 
+#: .\templates\olretail\notifications.html:50
+#: .\templates\shared\header.html:275 .\templates\shared\header.html:403
 msgid "No notifications yet."
 msgstr "Ainda sem notificações."
 
+#: .\templates\olretail\open_dispute.html:4
+#: .\templates\olretail\open_dispute.html:12
+#: .\templates\olretail\order_detail.html:494
 msgid "Report Issue"
 msgstr "Reportar Problema"
 
+#: .\templates\olretail\open_dispute.html:60
 msgid ""
 "The seller will have 3 days to respond before an admin reviews this dispute."
 msgstr ""
 "O vendedor terá 3 dias para responder antes de um administrador rever este "
 "litígio."
 
+#: .\templates\olretail\open_dispute.html:64
 msgid "Submit Dispute"
 msgstr "Submeter Litígio"
 
+#: .\templates\olretail\open_dispute.html:79
+#: .\templates\olretail\order_detail.html:446
+#: .\templates\olretail\payment_confirmation.html:115
 msgid "Total Paid"
 msgstr "Total Pago"
 
+#: .\templates\olretail\order_detail.html:23
 msgid "Order Status"
 msgstr "Estado da Encomenda"
 
+#: .\templates\olretail\order_detail.html:61
 msgid "Current Status:"
 msgstr "Estado Atual:"
 
+#: .\templates\olretail\order_detail.html:63
 msgid "Paid on"
 msgstr "Pago em"
 
+#: .\templates\olretail\order_detail.html:66
 msgid "Delivered on"
 msgstr "Entregue em"
 
+#: .\templates\olretail\order_detail.html:76
 msgid "Kitchen & Pickup Status"
 msgstr "Estado da Cozinha & Recolha"
 
+#: .\templates\olretail\order_detail.html:88
 msgid "Preparing"
 msgstr "A preparar"
 
+#: .\templates\olretail\order_detail.html:116
 msgid "Start Preparing"
 msgstr "Começar a Preparar"
 
+#: .\templates\olretail\order_detail.html:123
 msgid "Mark Ready for Pickup"
 msgstr "Marcar Pronto para Recolha"
 
+#: .\templates\olretail\order_detail.html:130
 msgid "Pickup location"
 msgstr "Local de recolha"
 
+#: .\templates\olretail\order_detail.html:160
 msgid "Delivery Tracking"
 msgstr "Rastreio de Entrega"
 
+#: .\templates\olretail\order_detail.html:165
+#: .\templates\shared\header.html:286
 msgid "Courier"
 msgstr "Estafeta"
 
+#: .\templates\olretail\order_detail.html:181
 msgid "No status updates yet."
 msgstr "Ainda sem atualizações de estado."
 
+#: .\templates\olretail\order_detail.html:186
 msgid "Proof of Delivery"
 msgstr "Prova de Entrega"
 
+#: .\templates\olretail\order_detail.html:188
 msgid "Proof of delivery"
 msgstr "Prova de entrega"
 
+#: .\templates\olretail\order_detail.html:210
 msgid "Mark as Shipped"
 msgstr "Marcar como Enviado"
 
+#: .\templates\olretail\order_detail.html:220
 msgid "Post update"
 msgstr "Publicar atualização"
 
+#: .\templates\olretail\order_detail.html:231
 msgid "Take a photo of the delivered item to confirm."
 msgstr "Tire uma fotografia do artigo entregue para confirmar."
 
+#: .\templates\olretail\order_detail.html:234
 msgid "Mark as Delivered"
 msgstr "Marcar como Entregue"
 
+#: .\templates\olretail\order_detail.html:243
 msgid "Reassign courier"
 msgstr "Reatribuir estafeta"
 
+#: .\templates\olretail\order_detail.html:245
 msgid "Unassigned (self-delivery)"
 msgstr "Não atribuído (entrega própria)"
 
-msgid "Reference"
-msgstr "Referência"
+#: .\templates\olretail\order_detail.html:273
+msgid "Submitted receipt"
+msgstr "Recibo submetido"
 
+#: .\templates\olretail\order_detail.html:291
+msgid "Payment dispute"
+msgstr "Disputa de pagamento"
+
+#: .\templates\olretail\order_detail.html:296
+msgid "An administrator is reviewing this."
+msgstr "Um administrador está a analisar isto."
+
+#: .\templates\olretail\order_detail.html:308
 msgid "Waiting for the seller to confirm they received your transfer."
 msgstr "A aguardar que o vendedor confirme que recebeu a sua transferência."
 
+#: .\templates\olretail\order_detail.html:314
+#: .\templates\olretail\seller_orders.html:98
 msgid "Confirm you received the buyer'\\''s transfer?"
 msgstr "Confirma que recebeu a transferência do comprador?"
 
+#: .\templates\olretail\order_detail.html:317
 msgid "Confirm payment received"
 msgstr "Confirmar pagamento recebido"
 
+#: .\templates\olretail\order_detail.html:322
+msgid "I have not received this"
+msgstr "Ainda não recebi isto"
+
+#: .\templates\olretail\order_detail.html:339
+#, python-format
+msgid ""
+"Have $%(amount)s in cash ready for the seller/courier when your order "
+"arrives."
+msgstr ""
+"Tenha $%(amount)s em dinheiro pronto para o vendedor/estafeta quando a sua "
+"encomenda chegar."
+
+#: .\templates\olretail\order_detail.html:341
+#, python-format
+msgid ""
+"Collect $%(amount)s in cash from the buyer when you deliver this order."
+msgstr ""
+"Receba $%(amount)s em dinheiro do comprador quando entregar esta encomenda."
+
+#: .\templates\olretail\order_detail.html:351
 msgid "Product Details"
 msgstr "Detalhes do Produto"
 
+#: .\templates\olretail\order_detail.html:385
 msgid "Line Total"
 msgstr "Total da Linha"
 
+#: .\templates\olretail\order_detail.html:397
 msgid "Seller Information"
 msgstr "Informação do Vendedor"
 
+#: .\templates\olretail\order_detail.html:433
+#: .\templates\olretail\payment.html:120
 #, python-format
 msgid "Commission (15%%)"
 msgstr "Comissão (15%%)"
 
+#: .\templates\olretail\order_detail.html:437
+#: .\templates\olretail\payment_confirmation.html:111
 msgid "Payment Fee"
 msgstr "Taxa de Pagamento"
 
+#: .\templates\olretail\order_detail.html:442
 msgid "Paid directly to the seller — no platform fee."
 msgstr "Pago diretamente ao vendedor — sem taxa de plataforma."
 
+#: .\templates\olretail\order_detail.html:463
 msgid "Phone"
 msgstr "Telefone"
 
+#: .\templates\olretail\order_detail.html:480
 msgid "Cancel this order?"
 msgstr "Cancelar esta encomenda?"
 
+#: .\templates\olretail\order_detail.html:483
 msgid "Cancel Order"
 msgstr "Cancelar Encomenda"
 
+#: .\templates\olretail\order_detail.html:503
 msgid "Rate this product"
 msgstr "Avaliar este produto"
 
+#: .\templates\olretail\order_detail.html:511
 msgid "Thanks for rating this purchase."
 msgstr "Obrigado por avaliar esta compra."
 
+#: .\templates\olretail\order_detail.html:526
 msgid "Write a review (optional)"
 msgstr "Escreva uma avaliação (opcional)"
 
+#: .\templates\olretail\order_detail.html:528
 msgid "What did you think of this product?"
 msgstr "O que achou deste produto?"
 
+#: .\templates\olretail\order_detail.html:530
+#: .\templates\olretail\order_detail.html:559
 msgid "Submit rating"
 msgstr "Submeter avaliação"
 
+#: .\templates\olretail\order_detail.html:540
 msgid "Rate the courier"
 msgstr "Avaliar o estafeta"
 
+#: .\templates\olretail\order_detail.html:548
 msgid "Thanks for rating this courier."
 msgstr "Obrigado por avaliar este estafeta."
 
+#: .\templates\olretail\payment.html:4
 msgid "Payment"
 msgstr "Pagamento"
 
+#: .\templates\olretail\payment.html:48
 msgid "Secure Payment"
 msgstr "Pagamento Seguro"
 
+#: .\templates\olretail\payment.html:58
 msgid "Card Information"
 msgstr "Informação do Cartão"
 
+#: .\templates\olretail\payment.html:64
 msgid "Card Details"
 msgstr "Detalhes do Cartão"
 
+#: .\templates\olretail\payment.html:67
 msgid "Your payment information is secure and never stored on our servers."
 msgstr ""
 "As suas informações de pagamento são seguras e nunca são armazenadas nos "
 "nossos servidores."
 
+#: .\templates\olretail\payment.html:75 .\templates\olretail\payment.html:186
 msgid "Pay"
 msgstr "Pagar"
 
+#: .\templates\olretail\payment.html:83
 msgid "Test Card:"
 msgstr "Cartão de Teste:"
 
+#: .\templates\olretail\payment.html:84
 msgid "Exp"
 msgstr "Val."
 
+#: .\templates\olretail\payment.html:136
 msgid "Payment successful! Redirecting..."
 msgstr "Pagamento bem-sucedido! A redirecionar..."
 
+#: .\templates\olretail\payment.html:172
 msgid "Processing..."
 msgstr "A processar..."
 
+#: .\templates\olretail\payment_confirmation.html:4
 msgid "Payment Confirmation"
 msgstr "Confirmação de Pagamento"
 
+#: .\templates\olretail\payment_confirmation.html:19
 msgid "Processing your bank transfer…"
 msgstr "A processar a sua transferência bancária…"
 
+#: .\templates\olretail\payment_confirmation.html:22
 msgid ""
 "this page will show the result once your simulated bank responds. Refresh to"
 " check again."
@@ -2103,45 +3454,84 @@ msgstr ""
 "esta página mostrará o resultado assim que o seu banco simulado responder. "
 "Atualize para verificar novamente."
 
+#: .\templates\olretail\payment_confirmation.html:32
 msgid "Payment did not go through"
 msgstr "O pagamento não foi concluído"
 
+#: .\templates\olretail\payment_confirmation.html:47
 msgid "Payment Successful!"
 msgstr "Pagamento Bem-sucedido!"
 
+#: .\templates\olretail\payment_confirmation.html:50
 msgid "Thank you for your order. Your payment has been received."
 msgstr "Obrigado pela sua encomenda. O seu pagamento foi recebido."
 
+#: .\templates\olretail\payment_confirmation.html:107
+msgid "Commission"
+msgstr "Comissão"
+
+#: .\templates\olretail\payment_confirmation.html:123
 msgid "Next Steps:"
 msgstr "Próximos Passos:"
 
+#: .\templates\olretail\payment_confirmation.html:124
 msgid "Seller will contact you at"
 msgstr "O vendedor irá contactá-lo através de"
 
+#: .\templates\olretail\payment_confirmation.html:125
 msgid "You can track your order status in your"
 msgstr "Pode acompanhar o estado da sua encomenda no seu"
 
+#: .\templates\olretail\payment_confirmation.html:125
 msgid "order history"
 msgstr "histórico de encomendas"
 
+#: .\templates\olretail\payment_confirmation.html:132
 msgid "Other Items in Your Order"
 msgstr "Outros Artigos na sua Encomenda"
 
+#: .\templates\olretail\payment_confirmation.html:156
 msgid "View My Orders"
 msgstr "Ver as Minhas Encomendas"
 
+#: .\templates\olretail\payment_confirmation.html:169
 msgid "A confirmation email has been sent to"
 msgstr "Foi enviado um email de confirmação para"
 
+#: .\templates\olretail\product_form.html:37
 msgid "Manage menu sections"
 msgstr "Gerir secções do menu"
 
+#: .\templates\olretail\product_form.html:48
 msgid ""
 "You're subscribed — this listing will publish immediately, no approval wait."
 msgstr ""
 "Está subscrito — este anúncio será publicado imediatamente, sem espera de "
 "aprovação."
 
+#: .\templates\olretail\product_form.html:55
+#: .\templates\shared\header.html:225
+msgid "Language"
+msgstr "Idioma"
+
+#: .\templates\olretail\product_form.html:65
+#: .\templates\olretail\product_form.html:269
+msgid "Not started"
+msgstr "Não iniciado"
+
+#: .\templates\olretail\product_form.html:108
+msgid "Daily rental rate ($)"
+msgstr "Tarifa diária de aluguer ($)"
+
+#: .\templates\olretail\product_form.html:122
+msgid "Set to 0 when none are currently available to rent."
+msgstr "Defina como 0 quando não houver nenhum disponível para alugar."
+
+#: .\templates\olretail\product_form.html:126
+msgid "Optional — e.g. 5 seats, 7-seater"
+msgstr "Opcional — ex.: 5 lugares, 7 lugares"
+
+#: .\templates\olretail\product_form.html:140
 msgid ""
 "Services don't need a quantity or condition — instead, use the description "
 "to mention things like availability, service area, or turnaround time."
@@ -2150,6 +3540,7 @@ msgstr ""
 "descrição para mencionar disponibilidade, área de serviço ou tempo de "
 "execução."
 
+#: .\templates\olretail\product_form.html:146
 msgid ""
 "Menu items don't need a quantity or condition — use Menu section, Available,"
 " and Prep time instead."
@@ -2157,79 +3548,173 @@ msgstr ""
 "Os itens de menu não precisam de quantidade ou condição — use antes Secção "
 "do menu, Disponível e Tempo de preparação."
 
+#: .\templates\olretail\product_form.html:152
+msgid ""
+"Renting out a car? Put your per-day price under Daily rental rate, seating "
+"under Seats / capacity, and details like transmission, fuel type, year and "
+"mileage under Specifications. Use Features for what's included (insurance, "
+"free delivery, child seat) and Description for the rental terms — minimum "
+"days, security deposit, driver requirements, fuel policy."
+msgstr ""
+"Vai alugar um carro? Coloque o seu preço diário em Tarifa diária de aluguer,"
+" os lugares em Lugares / capacidade, e detalhes como transmissão, tipo de "
+"combustível, ano e quilometragem em Especificações. Use Características para"
+" o que está incluído (seguro, entrega gratuita, cadeira de criança) e "
+"Descrição para os termos do aluguer — dias mínimos, depósito de segurança, "
+"requisitos do condutor, política de combustível."
+
+#: .\templates\olretail\product_form.html:158
+msgid ""
+"You haven't created any menu sections yet, so there's nothing to pick in "
+"Menu section below."
+msgstr ""
+"Ainda não criou nenhuma secção de menu, por isso não há nada para escolher "
+"em Secção do menu abaixo."
+
+#: .\templates\olretail\product_form.html:159
+msgid "Create one now"
+msgstr "Criar uma agora"
+
+#: .\templates\olretail\product_form.html:205
+msgid ""
+"Transmission: Automatic\\nFuel type: Diesel\\nYear: 2022\\nMileage: 45,000 "
+"km"
+msgstr ""
+"Transmissão: Automática\\nTipo de combustível: Diesel\\nAno: "
+"2022\\nQuilometragem: 45.000 km"
+
+#: .\templates\olretail\product_form.html:206
+msgid ""
+"Free delivery\\nFull insurance included\\nUnlimited mileage\\nChild seat "
+"available"
+msgstr ""
+"Entrega gratuita\\nSeguro completo incluído\\nQuilometragem "
+"ilimitada\\nCadeira de criança disponível"
+
+#: .\templates\olretail\product_form.html:207
+msgid ""
+"Rental terms: minimum rental period, security deposit, driver requirements, "
+"fuel policy, pickup/drop-off location..."
+msgstr ""
+"Termos de aluguer: período mínimo de aluguer, depósito de segurança, "
+"requisitos do condutor, política de combustível, local de recolha/entrega..."
+
+#: .\templates\olretail\product_form.html:270
+msgid "Incomplete"
+msgstr "Incompleto"
+
+#: .\templates\olretail\product_form.html:271
+msgid "Completed"
+msgstr "Concluído"
+
+#: .\templates\olretail\seller_balance.html:4
+#: .\templates\olretail\seller_balance.html:12
+#: .\templates\olretail\seller_orders.html:17
 msgid "My Earnings"
 msgstr "Os meus Rendimentos"
 
+#: .\templates\olretail\seller_balance.html:17
 msgid "View Orders"
 msgstr "Ver Encomendas"
 
+#: .\templates\olretail\seller_balance.html:27
 msgid "Total Earnings"
 msgstr "Total de Rendimentos"
 
+#: .\templates\olretail\seller_balance.html:35
 msgid "Available Balance"
 msgstr "Saldo Disponível"
 
+#: .\templates\olretail\seller_balance.html:43
 msgid "Pending Payout"
 msgstr "Pagamento Pendente"
 
+#: .\templates\olretail\seller_balance.html:51
 msgid "Total Paid Out"
 msgstr "Total Pago"
 
+#: .\templates\olretail\seller_balance.html:62
 msgid "Recent Transactions"
 msgstr "Transações Recentes"
 
+#: .\templates\olretail\seller_balance.html:67
 msgid "Payouts"
 msgstr "Pagamentos"
 
+#: .\templates\olretail\seller_balance.html:83
 msgid "Type"
 msgstr "Tipo"
 
+#: .\templates\olretail\seller_balance.html:85
+#: .\templates\olretail\seller_balance.html:134
+#: .\templates\olretail\seller_orders.html:46
+#: .\templates\olretail\seller_subscription.html:135
 msgid "Amount"
 msgstr "Montante"
 
+#: .\templates\olretail\seller_balance.html:120
 msgid "No transactions yet."
 msgstr "Ainda sem transações."
 
+#: .\templates\olretail\seller_balance.html:133
 msgid "Payout ID"
 msgstr "ID de Pagamento"
 
+#: .\templates\olretail\seller_balance.html:136
 msgid "Scheduled Date"
 msgstr "Data Agendada"
 
+#: .\templates\olretail\seller_balance.html:137
 msgid "Paid Date"
 msgstr "Data de Pagamento"
 
+#: .\templates\olretail\seller_balance.html:178
 msgid "No payouts yet."
 msgstr "Ainda sem pagamentos."
 
+#: .\templates\olretail\seller_balance.html:187
 msgid "How does it work?"
 msgstr "Como funciona?"
 
+#: .\templates\olretail\seller_balance.html:189
 #, python-format
 msgid "You earn 85%% of each sale (platform takes 15%% commission)"
 msgstr "Recebe 85%% de cada venda (a plataforma cobra 15%% de comissão)"
 
+#: .\templates\olretail\seller_balance.html:190
 msgid "Earnings are credited when payment is received"
 msgstr "Os rendimentos são creditados quando o pagamento é recebido"
 
+#: .\templates\olretail\seller_balance.html:191
 msgid "Payouts are processed monthly on the 1st of each month"
 msgstr "Os pagamentos são processados mensalmente no dia 1 de cada mês"
 
+#: .\templates\olretail\seller_balance.html:192
 msgid "Minimum payout amount: $500"
 msgstr "Montante mínimo de pagamento: $500"
 
+#: .\templates\olretail\seller_orders.html:12
 msgid "Seller Orders"
 msgstr "Encomendas do Vendedor"
 
+#: .\templates\olretail\seller_orders.html:101
 msgid "Confirm Payment"
 msgstr "Confirmar Pagamento"
 
+#: .\templates\olretail\seller_orders.html:105
+msgid "Not Received"
+msgstr "Não Recebido"
+
+#: .\templates\olretail\seller_orders.html:123
 msgid "View your products"
 msgstr "Ver os seus produtos"
 
+#: .\templates\olretail\seller_payment_settings.html:4
+#: .\templates\olretail\seller_payment_settings.html:14
 msgid "Payment Settings"
 msgstr "Definições de Pagamento"
 
+#: .\templates\olretail\seller_payment_settings.html:22
 msgid ""
 "When a buyer chooses to pay by bank/mobile transfer, they'll see these "
 "details to send you the money directly. Leave this blank to disable that "
@@ -2239,9 +3724,27 @@ msgstr ""
 "estes dados para lhe enviar o dinheiro diretamente. Deixe em branco para "
 "desativar esta opção de pagamento para os seus produtos."
 
+#: .\templates\olretail\seller_payment_settings.html:68
+msgid "Contact Information"
+msgstr "Informação de Contacto"
+
+#: .\templates\olretail\seller_payment_settings.html:92
+msgid "Location"
+msgstr "Localização"
+
+#: .\templates\olretail\seller_payment_settings.html:113
+msgid "Branding"
+msgstr "Identidade Visual"
+
+#: .\templates\olretail\seller_payment_settings.html:134
+msgid "Business Operation"
+msgstr "Operação do Negócio"
+
+#: .\templates\olretail\seller_payment_settings.html:161
 msgid "Business Verification"
 msgstr "Verificação Comercial"
 
+#: .\templates\olretail\seller_payment_settings.html:163
 msgid ""
 "Optional — a verified business shows a trust badge to buyers on your "
 "products. Selling and getting paid work the same either way."
@@ -2250,12 +3753,17 @@ msgstr ""
 "compradores nos seus produtos. Vender e receber pagamentos funciona da mesma"
 " forma."
 
+#: .\templates\olretail\seller_payment_settings.html:174
 msgid "Your document was rejected"
 msgstr "O seu documento foi rejeitado"
 
+#: .\templates\olretail\seller_subscription.html:4
+#: .\templates\olretail\seller_subscription.html:14
+#: .\templates\shared\header.html:332
 msgid "Subscription"
 msgstr "Subscrição"
 
+#: .\templates\olretail\seller_subscription.html:17
 #, python-format
 msgid ""
 "Free accounts can list up to %(free_limit)s products, and each one is "
@@ -2266,10 +3774,12 @@ msgstr ""
 "revisto por um administrador antes de ser publicado. Os subscritores podem "
 "listar sem limite e publicar instantaneamente — sem espera de aprovação."
 
+#: .\templates\olretail\seller_subscription.html:31
 #, python-format
 msgid "Unlimited listings — active until %(date)s."
 msgstr "Anúncios ilimitados — ativo até %(date)s."
 
+#: .\templates\olretail\seller_subscription.html:36
 #, python-format
 msgid ""
 "Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
@@ -2278,12 +3788,15 @@ msgstr ""
 "Expira em %(days)s dia(s) — renove abaixo para não perder a capacidade de "
 "publicar novos produtos."
 
+#: .\templates\olretail\seller_subscription.html:41
 msgid "Expired"
 msgstr "Expirado"
 
+#: .\templates\olretail\seller_subscription.html:42
 msgid "listings"
 msgstr "anúncios"
 
+#: .\templates\olretail\seller_subscription.html:46
 #, python-format
 msgid ""
 "Over the free limit of %(limit)s — your existing listings stay live, but you"
@@ -2292,22 +3805,28 @@ msgstr ""
 "Acima do limite grátis de %(limit)s — os seus anúncios existentes permanecem"
 " ativos, mas não pode adicionar novos até renovar."
 
+#: .\templates\olretail\seller_subscription.html:50
 msgid "free listings used"
 msgstr "anúncios grátis usados"
 
+#: .\templates\olretail\seller_subscription.html:59
 msgid "You've used all your free listings — subscribe below to post more."
 msgstr ""
 "Já usou todos os seus anúncios grátis — subscreva abaixo para publicar mais."
 
+#: .\templates\olretail\seller_subscription.html:70
 msgid "Awaiting confirmation"
 msgstr "A aguardar confirmação"
 
+#: .\templates\olretail\seller_subscription.html:74
 msgid "Submitted"
 msgstr "Submetido"
 
+#: .\templates\olretail\seller_subscription.html:77
 msgid "Your reference"
 msgstr "A sua referência"
 
+#: .\templates\olretail\seller_subscription.html:89
 #, python-format
 msgid ""
 "You already have an active subscription until %(date)s. Submitting a new "
@@ -2318,155 +3837,220 @@ msgstr ""
 "iniciará uma subscrição separada — depois de confirmado, prolonga a atual a "
 "partir dessa data."
 
+#: .\templates\olretail\seller_subscription.html:108
 msgid "Where to pay"
 msgstr "Onde pagar"
 
+#: .\templates\olretail\seller_subscription.html:124
 msgid "I've paid — submit for confirmation"
 msgstr "Já paguei — submeter para confirmação"
 
+#: .\templates\olretail\seller_subscription.html:131
 msgid "Request history"
 msgstr "Histórico de pedidos"
 
+#: .\templates\olretail\seller_subscription.html:135
 msgid "Plan"
 msgstr "Plano"
 
+#: .\templates\olretail\wishlist.html:5 .\templates\shared\header.html:346
 msgid "Wishlist"
 msgstr "Lista de Desejos"
 
+#: .\templates\olretail\wishlist.html:13
 msgid "My Wishlist"
 msgstr "A minha Lista de Desejos"
 
+#: .\templates\olretail\wishlist.html:45
 msgid "Move to Cart"
 msgstr "Mover para o Carrinho"
 
+#: .\templates\olretail\wishlist.html:65
 msgid "Your wishlist is empty."
 msgstr "A sua lista de desejos está vazia."
 
+#: .\templates\olretail\wishlist.html:66
 msgid "Start browsing"
 msgstr "Comece a explorar"
 
+#: .\templates\shared\base.html:89
 msgid "Skip to main content"
 msgstr "Saltar para o conteúdo principal"
 
+#: .\templates\shared\footer.html:35
 msgid "We accept"
 msgstr "Aceitamos"
 
+#: .\templates\shared\footer.html:36
 msgid "VISA Card"
 msgstr "Cartão VISA"
 
+#: .\templates\shared\footer.html:37
 msgid "Bank Transfer"
 msgstr "Transferência Bancária"
 
+#: .\templates\shared\footer.html:38
 msgid "Mobile Money"
 msgstr "Dinheiro Móvel"
 
+#: .\templates\shared\header.html:169
 msgid "Hotline"
 msgstr "Linha de Apoio"
 
+#: .\templates\shared\header.html:174
 msgid "Currency"
 msgstr "Moeda"
 
+#: .\templates\shared\header.html:174
 msgid "US Dollar (USD)"
 msgstr "Dólar Americano (USD)"
 
+#: .\templates\shared\header.html:189
 msgid "Search by product"
 msgstr "Pesquisar por produto"
 
+#: .\templates\shared\header.html:193
 msgid "Search"
 msgstr "Pesquisar"
 
-msgid "View all"
-msgstr "Ver tudo"
-
-msgid "Administrator"
-msgstr "Administrador"
-
-msgid "Buyer & Seller"
-msgstr "Comprador & Vendedor"
-
-msgid "Admin"
-msgstr "Admin"
-
-msgid "Log out"
-msgstr "Terminar sessão"
-
-msgid "Toggle navigation"
-msgstr "Alternar navegação"
-
-msgid "Categories"
-msgstr "Categorias"
-
-msgid "Orders"
-msgstr "Encomendas"
-
-msgid "Earnings"
-msgstr "Rendimentos"
-
+#: .\templates\shared\header.html:209
 msgid "Cart"
 msgstr "Carrinho"
 
-msgid "Language"
-msgstr "Idioma"
+#: .\templates\shared\header.html:279
+msgid "View all"
+msgstr "Ver tudo"
 
+#: .\templates\shared\header.html:282
+msgid "Administrator"
+msgstr "Administrador"
+
+#: .\templates\shared\header.html:283
+msgid "Buyer & Seller"
+msgstr "Comprador & Vendedor"
+
+#: .\templates\shared\header.html:293
+msgid "Account menu"
+msgstr "Menu da conta"
+
+#: .\templates\shared\header.html:307
+msgid "Admin dashboard"
+msgstr "Painel de administração"
+
+#: .\templates\shared\header.html:318
+msgid "Orders"
+msgstr "Encomendas"
+
+#: .\templates\shared\header.html:321
+msgid "Earnings"
+msgstr "Rendimentos"
+
+#: .\templates\shared\header.html:325
+msgid "Business profile"
+msgstr "Perfil comercial"
+
+#: .\templates\shared\header.html:329
+msgid "Payment settings"
+msgstr "Definições de pagamento"
+
+#: .\templates\shared\header.html:337
+msgid "My deliveries"
+msgstr "As minhas entregas"
+
+#: .\templates\shared\header.html:356
+msgid "Log out"
+msgstr "Terminar sessão"
+
+#: .\templates\shared\header.html:372
+msgid "Toggle navigation"
+msgstr "Alternar navegação"
+
+#: .\templates\shared\header.html:381
+msgid "Categories"
+msgstr "Categorias"
+
+#: .\templates\shared\pagination.html:3
 msgid "Product pages"
 msgstr "Páginas de produto"
 
+#: .\templates\shared\popular_category.html:22
+#: .\templates\shared\popular_category.html:33
+#: .\templates\shared\popular_category.html:44
+#: .\templates\shared\popular_category.html:55
 msgid "Ad"
 msgstr "Anúncio"
 
+#: .\templates\shared\popular_category.html:24
 msgid "Latest phones, laptops and accessories — in stock now."
 msgstr "Últimos telemóveis, portáteis e acessórios — em stock agora."
 
+#: .\templates\shared\popular_category.html:26
 msgid "Shop Electronics"
 msgstr "Comprar Eletrónicos"
 
+#: .\templates\shared\popular_category.html:35
 msgid "Cement, tools and building materials for every project."
 msgstr ""
 "Cimento, ferramentas e materiais de construção para todos os projetos."
 
+#: .\templates\shared\popular_category.html:37
 msgid "Browse Materials"
 msgstr "Ver Materiais"
 
+#: .\templates\shared\popular_category.html:46
 msgid "Quality used vehicles and motorcycles, inspected."
 msgstr "Veículos e motociclos usados de qualidade, inspecionados."
 
+#: .\templates\shared\popular_category.html:48
 msgid "Browse Vehicles"
 msgstr "Ver Veículos"
 
+#: .\templates\shared\popular_category.html:57
 msgid "Explore Timor-Leste — book a local tour today."
 msgstr "Explore Timor-Leste — reserve um tour local hoje."
 
+#: .\templates\shared\popular_category.html:59
 msgid "Learn More"
 msgstr "Saber Mais"
 
+#: .\templates\shared\popular_category.html:66
 msgid "Shop by category"
 msgstr "Comprar por categoria"
 
+#: .\templates\shared\popular_category.html:76
 msgid "No categories yet."
 msgstr "Ainda sem categorias."
 
+#: .\templates\shared\popular_category.html:84
 msgid "Sell on TimorMart"
 msgstr "Vender no TimorMart"
 
+#: .\templates\shared\popular_category.html:88
 msgid "Create a free seller account and reach buyers across Timor-Leste."
 msgstr ""
 "Crie uma conta de vendedor grátis e alcance compradores em todo o Timor-"
 "Leste."
 
+#: .\templates\shared\popular_category.html:92
 msgid "Add a product"
 msgstr "Adicionar um produto"
 
+#: .\templates\shared\product_grid.html:32
 msgid "Toggle wishlist"
 msgstr "Alternar lista de desejos"
 
+#: .\templates\shared\product_grid.html:85
 msgid "No products found"
 msgstr "Nenhum produto encontrado"
 
+#: .\templates\shared\product_grid.html:86
 msgid "Try a different search term or category."
 msgstr "Tente um termo de pesquisa ou categoria diferente."
 
+#: .\templates\shared\product_grid.html:87
 msgid "Browse all products"
 msgstr "Ver todos os produtos"
 
+#: .\templates\shared\product_grid.html:114
 msgid "Added"
 msgstr "Adicionado"
