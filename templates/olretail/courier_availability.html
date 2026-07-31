@@ -35,10 +35,16 @@
           <div class="col-md-3 mb-2">
             <label class="small text-muted mb-1">{{ availability_form.start_time.label }}</label>
             {{ availability_form.start_time }}
+            {% for error in availability_form.start_time.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="col-md-3 mb-2">
             <label class="small text-muted mb-1">{{ availability_form.end_time.label }}</label>
             {{ availability_form.end_time }}
+            {% for error in availability_form.end_time.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="col-md-2 mb-2">
             <button type="submit" class="btn btn-primary btn-sm btn-block">{% trans "Add" %}</button>

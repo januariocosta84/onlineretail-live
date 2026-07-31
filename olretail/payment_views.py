@@ -1796,14 +1796,18 @@ def courier_submit_verification(request):
 
 
 @courier_required
-def courier_availability(request):
+def courier_availability(request, form=None):
     """Courier's weekly working-hours schedule — the windows used to filter
-    who shows up as assignable in ShipOrderForm (see payment_forms.py)."""
+    who shows up as assignable in ShipOrderForm (see payment_forms.py).
+    `form` is passed in by courier_availability_add on a validation failure
+    so the page can show *why* it failed instead of silently resetting to a
+    blank form (the add view renders this directly rather than redirecting,
+    for that reason)."""
     courier = request.user.courier
     context = {
         'courier': courier,
         'windows': courier.availability_windows.all(),
-        'availability_form': CourierAvailabilityForm(),
+        'availability_form': form or CourierAvailabilityForm(),
     }
     return render(request, 'olretail/courier_availability.html', context)
 
@@ -1818,9 +1822,9 @@ def courier_availability_add(request):
         window.courier = courier
         window.save()
         messages.success(request, _('Availability window added.'))
-    else:
-        messages.error(request, _('Please correct the errors below.'))
-    return redirect('olretail:courier_availability')
+        return redirect('olretail:courier_availability')
+    messages.error(request, _('Please correct the errors below.'))
+    return courier_availability(request, form=form)
 
 
 @courier_required

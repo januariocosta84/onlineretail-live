@@ -269,15 +269,36 @@ class CourierVerificationForm(forms.Form):
 
 class CourierAvailabilityForm(forms.ModelForm):
     """One working-hours window a courier adds to their weekly schedule —
-    add one, list them, delete one at a time (same shape as BankAccountForm)."""
+    add one, list them, delete one at a time (same shape as BankAccountForm).
+
+    start_time/end_time explicitly pin input_formats to what the HTML5
+    <input type="time"> widget actually sends ("HH:MM", occasionally
+    "HH:MM:SS" on browsers that include seconds) rather than trusting
+    Django's per-locale TIME_INPUT_FORMATS — some locales (e.g. "id") list a
+    period-separated format first, which is irrelevant to what this widget
+    ever produces and only risked confusing the format used to redisplay a
+    value after a validation error."""
+
+    start_time = forms.TimeField(
+        input_formats=['%H:%M', '%H:%M:%S'],
+        widget=forms.TimeInput(
+            attrs={'class': 'form-control form-control-sm', 'type': 'time'}, format='%H:%M',
+        ),
+        label=_("Start time"),
+    )
+    end_time = forms.TimeField(
+        input_formats=['%H:%M', '%H:%M:%S'],
+        widget=forms.TimeInput(
+            attrs={'class': 'form-control form-control-sm', 'type': 'time'}, format='%H:%M',
+        ),
+        label=_("End time"),
+    )
 
     class Meta:
         model = CourierAvailability
         fields = ['weekday', 'start_time', 'end_time']
         widgets = {
             'weekday': forms.Select(attrs={'class': 'form-control form-control-sm'}),
-            'start_time': forms.TimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'time'}),
-            'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'time'}),
         }
 
     def clean(self):
