@@ -307,7 +307,15 @@ def product_feature(request, slug):
 def product_remove(request, slug):
     product = get_object_or_404(Product, slug=slug)
     name = product.name
-    product.delete()
+    try:
+        product.delete()
+    except ProtectedError:
+        messages.error(
+            request,
+            f"“{name}” has order history on record — it can't be permanently deleted. "
+            "Use “Suspend” instead to remove it from the store.",
+        )
+        return redirect("dashboard:products")
     log_action(request, "product_removed", name, request.POST.get("reason", ""))
     messages.success(request, f"“{name}” was permanently removed.")
     return redirect("dashboard:products")
