@@ -1796,17 +1796,21 @@ def courier_submit_verification(request):
 
 
 @courier_required
-def courier_availability(request, form=None):
+def courier_availability(request, form=None, edit_pk=None, edit_form=None):
     """Courier's weekly working-hours schedule — the windows used to filter
     who shows up as assignable in ShipOrderForm (see payment_forms.py).
-    `form` is passed in by courier_availability_add on a validation failure
-    so the page can show *why* it failed instead of silently resetting to a
-    blank form (the add view renders this directly rather than redirecting,
-    for that reason)."""
+    `form`/`edit_pk`+`edit_form` are passed in by courier_availability_add/
+    _edit on a validation failure so the page can show *why* it failed
+    instead of silently resetting to blank/original values (those views
+    render this directly rather than redirecting, for that reason)."""
     courier = request.user.courier
+    window_forms = [
+        (window, edit_form if window.pk == edit_pk else CourierAvailabilityForm(instance=window))
+        for window in courier.availability_windows.all()
+    ]
     context = {
         'courier': courier,
-        'windows': courier.availability_windows.all(),
+        'window_forms': window_forms,
         'availability_form': form or CourierAvailabilityForm(),
     }
     return render(request, 'olretail/courier_availability.html', context)
@@ -1825,6 +1829,20 @@ def courier_availability_add(request):
         return redirect('olretail:courier_availability')
     messages.error(request, _('Please correct the errors below.'))
     return courier_availability(request, form=form)
+
+
+@courier_required
+@require_POST
+def courier_availability_edit(request, pk):
+    courier = request.user.courier
+    window = get_object_or_404(CourierAvailability, pk=pk, courier=courier)
+    form = CourierAvailabilityForm(request.POST, instance=window)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Availability window updated.'))
+        return redirect('olretail:courier_availability')
+    messages.error(request, _('Please correct the errors below.'))
+    return courier_availability(request, edit_pk=pk, edit_form=form)
 
 
 @courier_required

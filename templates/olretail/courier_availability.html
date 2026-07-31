@@ -59,38 +59,51 @@
     </div>
 
     <div class="card border-0 shadow-sm">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>{% trans "Day" %}</th>
-              <th>{% trans "From" %}</th>
-              <th>{% trans "To" %}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for window in windows %}
-            <tr>
-              <td>{{ window.get_weekday_display }}</td>
-              <td>{{ window.start_time|time:"H:i" }}</td>
-              <td>{{ window.end_time|time:"H:i" }}</td>
-              <td class="text-right">
-                <form method="post" action="{% url 'olretail:courier_availability_delete' window.pk %}" onsubmit="return confirm('{% trans "Remove this window?" %}');">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger">{% trans "Remove" %}</button>
-                </form>
-              </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="4" class="text-muted text-center py-3">
-                {% trans "No schedule set — you'll be shown as available at all times until you add one." %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="card-body">
+        <h2 class="h6 mb-3">{% trans "Your schedule" %}</h2>
+        {% if window_forms %}
+          {% for window, w_form in window_forms %}
+          <div class="row align-items-end border-bottom py-3 mx-0{% if not forloop.last %} mb-2{% endif %}">
+            <form method="post" action="{% url 'olretail:courier_availability_edit' window.pk %}" class="col-md-10 form-row align-items-end mb-0">
+              {% csrf_token %}
+              <div class="col-md-4 mb-2">
+                {{ w_form.weekday }}
+                {% for error in w_form.weekday.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-md-3 mb-2">
+                {{ w_form.start_time }}
+                {% for error in w_form.start_time.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-md-3 mb-2">
+                {{ w_form.end_time }}
+                {% for error in w_form.end_time.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-sm btn-outline-primary btn-block">{% trans "Save" %}</button>
+              </div>
+              {% if w_form.non_field_errors %}
+              <div class="col-12">
+                <div class="text-danger small mt-1">{{ w_form.non_field_errors }}</div>
+              </div>
+              {% endif %}
+            </form>
+            <form method="post" action="{% url 'olretail:courier_availability_delete' window.pk %}" class="col-md-2 mb-2" onsubmit="return confirm('{% trans "Remove this window?" %}');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger btn-block">{% trans "Remove" %}</button>
+            </form>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-muted text-center py-3">
+            {% trans "No schedule set — you'll be shown as available at all times until you add one." %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

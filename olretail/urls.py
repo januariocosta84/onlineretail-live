@@ -54,6 +54,7 @@ urlpatterns = [
     path("courier/verification/", payment_views.courier_submit_verification, name="courier_submit_verification"),
     path("courier/availability/", payment_views.courier_availability, name="courier_availability"),
     path("courier/availability/add/", payment_views.courier_availability_add, name="courier_availability_add"),
+    path("courier/availability/<int:pk>/edit/", payment_views.courier_availability_edit, name="courier_availability_edit"),
     path("courier/availability/<int:pk>/delete/", payment_views.courier_availability_delete, name="courier_availability_delete"),
 
     # Disputes
