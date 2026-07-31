@@ -110,6 +110,7 @@ TEMPLATES = [
                 "olretail.context_processors.notifications",
                 "olretail.context_processors.cart_count",
                 "olretail.context_processors.wishlist_count",
+                "dashboard.context_processors.finance_flags",
             ],
         },
     },

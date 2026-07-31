@@ -68,6 +68,16 @@ def _notify(user, message, order=None):
     send_push(user, subject, message)
 
 
+def _finance_officers():
+    """Staff users who can act on payouts/subscription payments — see
+    dashboard.decorators.FINANCE_GROUP_NAME. A plain queryset, not cached:
+    call sites loop it once per event, which is rare enough (a delivery, a
+    subscription request) that a fresh query each time is fine."""
+    from django.contrib.auth.models import User
+    from dashboard.decorators import FINANCE_GROUP_NAME
+    return User.objects.filter(is_staff=True, groups__name=FINANCE_GROUP_NAME)
+
+
 def _parse_int(raw, default=1):
     """Parse an integer POST value (cart quantity, rating score), tolerating
     non-numeric input (e.g. a hand-crafted or garbled request) instead of
@@ -775,11 +785,15 @@ def _mark_food_order_received(order):
 def _mark_payment_succeeded(payment, charge_id, source):
     """Apply payment-succeeded side effects to every order that shares this
     Payment (a single Stripe charge can cover a cart spanning several
-    sellers): mark each order paid, record its commission, credit its
-    seller's balance, decrement its stock, and clear its cart entry. Shared
-    by the webhook and the confirmation-page reconciliation fallback
-    (Stripe may confirm the card before the webhook arrives, or the webhook
-    may never arrive in local dev)."""
+    sellers): mark each order paid, decrement its stock, and clear its cart
+    entry. Shared by the webhook and the confirmation-page reconciliation
+    fallback (Stripe may confirm the card before the webhook arrives, or the
+    webhook may never arrive in local dev).
+
+    Does NOT credit the seller's balance — the platform holds the money in
+    escrow until the order is actually delivered (see mark_delivered, which
+    is where SellerBalance.add_commission fires instead), so a Finance
+    Officer never has to pay out for something that was never delivered."""
     with transaction.atomic():
         if payment.gateway == PaymentMethod.STRIPE:
             payment.stripe_charge_id = charge_id
@@ -798,23 +812,6 @@ def _mark_payment_succeeded(payment, charge_id, source):
             order.paid_at = now
             order.save()
             _mark_food_order_received(order)
-
-            # The seller is owed their sale proceeds (subtotal) — commission_amount
-            # is the platform's own cut of the buyer's payment, kept by the
-            # platform, not credited here. See order_detail.html's price
-            # breakdown: Subtotal is shown as the seller's line, Commission is
-            # shown as a separate fee subtracted from what the buyer pays on
-            # top of it.
-            Transaction.objects.create(
-                order=order,
-                seller=order.seller,
-                amount_cents=int(order.subtotal * 100),
-                transaction_type=TransactionType.COMMISSION,
-                description=f"Earnings from order {order.order_number}",
-            )
-
-            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-            seller_balance.add_commission(int(order.subtotal * 100))
 
             if not order.product.is_restaurant_category:
                 # Menu items don't track a real stock count — quantity is a
@@ -883,10 +880,9 @@ def _process_bank_refund(payment, amount_cents=None):
     """Refund a settled simulated-bank payment: credits the virtual test
     account back (SimulatedBankGateway.refund, the gateway-side effect) and
     reverses every sibling order sharing this Payment (business-logic side
-    effect — commission, inventory, notifications), the mirror image of
-    _mark_payment_succeeded. Full refund only — amount_cents is accepted
-    for REST API shape parity with a real bank but a partial amount isn't
-    prorated across orders today."""
+    effect — commission, inventory, notifications). Full refund only —
+    amount_cents is accepted for REST API shape parity with a real bank but
+    a partial amount isn't prorated across orders today."""
     if payment.status != PaymentStatus.SUCCEEDED:
         raise ValueError('Only a succeeded payment can be refunded.')
 
@@ -900,21 +896,24 @@ def _process_bank_refund(payment, amount_cents=None):
             order.status = OrderStatus.REFUNDED
             order.save(update_fields=['status'])
 
-            # Mirrors the credit in _mark_payment_succeeded — reverse the
-            # same amount that was actually credited (subtotal), not the
-            # platform's commission cut.
-            Transaction.objects.create(
-                order=order,
-                seller=order.seller,
-                amount_cents=-int(order.subtotal * 100),
-                transaction_type=TransactionType.REFUND,
-                description=f"Refund on order {order.order_number}",
-            )
+            # The seller's balance is only credited at delivery (see
+            # mark_delivered) — an order refunded before it was ever
+            # delivered never credited anything, so there's nothing to
+            # reverse here. Only undo the credit if delivery actually
+            # happened first.
+            if order.delivered_at:
+                Transaction.objects.create(
+                    order=order,
+                    seller=order.seller,
+                    amount_cents=-int(order.subtotal * 100),
+                    transaction_type=TransactionType.REFUND,
+                    description=f"Refund on order {order.order_number}",
+                )
 
-            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-            seller_balance.available_balance -= int(order.subtotal * 100)
-            seller_balance.total_earnings -= int(order.subtotal * 100)
-            seller_balance.save()
+                seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+                seller_balance.available_balance -= int(order.subtotal * 100)
+                seller_balance.total_earnings -= int(order.subtotal * 100)
+                seller_balance.save()
 
             if not order.product.is_restaurant_category:
                 product = Product.objects.select_for_update().get(pk=order.product_id)
@@ -1014,24 +1013,15 @@ def payment_confirmation(request, order_id):
 
 def _mark_bank_transfer_paid(order):
     """An admin confirmed the buyer's transfer actually arrived in the
-    platform's bank account. Credits the seller's balance exactly like
-    _mark_payment_succeeded does for Stripe — the platform now holds this
-    money and owes the seller their subtotal, to be paid out later."""
+    platform's bank account. Mirrors _mark_payment_succeeded for Stripe:
+    the platform now holds this money, but does NOT credit the seller's
+    balance yet — that happens at delivery (see mark_delivered), so a
+    payout can never be scheduled for an order that hasn't shipped out."""
     with transaction.atomic():
         order.status = OrderStatus.PAID
         order.paid_at = timezone.now()
         order.save()
         _mark_food_order_received(order)
-
-        Transaction.objects.create(
-            order=order,
-            seller=order.seller,
-            amount_cents=int(order.subtotal * 100),
-            transaction_type=TransactionType.COMMISSION,
-            description=f"Earnings from order {order.order_number}",
-        )
-        seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-        seller_balance.add_commission(int(order.subtotal * 100))
 
         if not order.product.is_restaurant_category:
             product = Product.objects.select_for_update().get(pk=order.product_id)
@@ -1328,12 +1318,18 @@ def seller_subscription(request):
         form = SubscriptionRequestForm(request.POST)
         if form.is_valid():
             plan = form.cleaned_data['plan']
-            SubscriptionRequest.objects.create(
+            sub_request = SubscriptionRequest.objects.create(
                 seller=seller,
                 plan=plan,
                 amount=PLAN_PRICES[plan],
                 payment_reference=form.cleaned_data['payment_reference'],
             )
+            for finance_user in _finance_officers():
+                _notify(
+                    finance_user,
+                    _('%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting confirmation.')
+                    % {'seller': seller.get_name, 'plan': sub_request.get_plan_display(), 'amount': sub_request.amount},
+                )
             messages.success(
                 request, _("Thanks — your payment report was submitted. An admin will confirm it shortly.")
             )
@@ -1665,15 +1661,40 @@ def mark_delivered(request, order_id):
             # clear) that a bank-transfer seller's confirm click triggers,
             # just fired by the delivery event instead of a separate step.
             _mark_bank_transfer_paid(order)
-        order.status = OrderStatus.DELIVERED
-        order.delivered_at = timezone.now()
-        order.delivery_photo = form.cleaned_data['photo']
-        order.save()
+
+        with transaction.atomic():
+            order.status = OrderStatus.DELIVERED
+            order.delivered_at = timezone.now()
+            order.delivery_photo = form.cleaned_data['photo']
+            order.save()
+
+            # The seller is only owed their sale proceeds (subtotal) once
+            # delivery is confirmed — see _mark_payment_succeeded and
+            # _mark_bank_transfer_paid, which deliberately don't do this at
+            # payment time anymore. This is the one place a Finance Officer's
+            # payout balance actually gets credited.
+            Transaction.objects.create(
+                order=order,
+                seller=order.seller,
+                amount_cents=int(order.subtotal * 100),
+                transaction_type=TransactionType.COMMISSION,
+                description=f"Earnings from order {order.order_number}",
+            )
+            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+            seller_balance.add_commission(int(order.subtotal * 100))
+
         _notify(
             order.buyer,
             _('Your order %(order)s has been delivered.') % {'order': order.order_number},
             order=order,
         )
+        for finance_user in _finance_officers():
+            _notify(
+                finance_user,
+                _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
+                % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
+                order=order,
+            )
         messages.success(request, _('Order marked as delivered.'))
         if is_assigned_courier:
             return redirect('olretail:courier_deliveries')

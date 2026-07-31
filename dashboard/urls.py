@@ -7,6 +7,7 @@ app_name = "dashboard"
 
 urlpatterns = [
     path("", views.overview, name="overview"),
+    path("finance/", views.finance_overview, name="finance_overview"),
     path("queue/", views.queue, name="queue"),
     path("queue/bulk/", views.queue_bulk, name="queue_bulk"),
     path("products/", views.products, name="products"),
@@ -18,6 +19,8 @@ urlpatterns = [
     path("users/<int:pk>/toggle-active/", views.user_toggle_active, name="user_toggle_active"),
     path("users/<int:pk>/grant-role/", views.user_grant_role, name="user_grant_role"),
     path("users/<int:pk>/revoke-role/", views.user_revoke_role, name="user_revoke_role"),
+    path("users/<int:pk>/grant-finance/", views.user_grant_finance, name="user_grant_finance"),
+    path("users/<int:pk>/revoke-finance/", views.user_revoke_finance, name="user_revoke_finance"),
     path("users/<int:pk>/reset-password/", views.user_reset_password, name="user_reset_password"),
     path("comments/", views.comments, name="comments"),
     path("comments/<int:pk>/toggle/", views.comment_toggle, name="comment_toggle"),

@@ -54,6 +54,7 @@
           <td>
             {% if u.is_superuser %}<span class="badge badge-dark">Superuser</span>
             {% elif u.is_staff %}<span class="badge badge-dark">Staff</span>{% endif %}
+            {% if u.is_finance %}<span class="badge badge-success">Finance</span>{% endif %}
             {% if u.buyer %}<span class="badge badge-info">Buyer</span>{% endif %}
             {% if u.seller %}
             <span class="badge badge-primary">Seller</span>
@@ -107,6 +108,20 @@
                   onsubmit="return confirm('Revoke the courier role from “{{ u.username }}”?');">
               {% csrf_token %}<input type="hidden" name="role" value="courier">
               <button type="submit" class="btn btn-sm btn-outline-warning my-0" title="Revoke courier role">-Courier</button>
+            </form>
+            {% endif %}
+            {% endif %}
+            {% if u.is_staff and not u.is_superuser %}
+            {% if not u.is_finance %}
+            <form method="post" action="{% url 'dashboard:user_grant_finance' u.pk %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-success my-0" title="Grant finance access">+Finance</button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'dashboard:user_revoke_finance' u.pk %}" class="d-inline"
+                  onsubmit="return confirm('Revoke finance access from “{{ u.username }}”?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-success my-0" title="Revoke finance access">-Finance</button>
             </form>
             {% endif %}
             {% endif %}

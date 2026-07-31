@@ -12,9 +12,9 @@ from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Exists, OuterRef, Q, Sum
 from django.db.models.deletion import ProtectedError
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse
@@ -35,7 +35,7 @@ from olretail.payment_forms import PlatformBankAccountForm
 from olretail.payouts import create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
 
-from .decorators import admin_required
+from .decorators import FINANCE_GROUP_NAME, admin_required, finance_required
 from .models import AuditLog
 from .utils import log_action
 
@@ -151,6 +151,39 @@ def overview(request):
             "recent_logs": AuditLog.objects.select_related("admin")[:8],
             "recent_pending": Product.objects.filter(status__in=REVIEW_STATUSES)
             .select_related("seller__user")[:5],
+        },
+    )
+
+
+@finance_required
+def finance_overview(request):
+    """Focused landing page for the Finance Officer role: sellers with
+    money ready to pay out (delivery-gated — see mark_delivered), and
+    pending subscription payments. A finance-only account (see
+    _is_finance_only in .decorators) only ever sees this, Payouts and
+    Subscriptions — everything else in the admin dashboard redirects here."""
+    eligible_balances = SellerBalance.objects.filter(
+        available_balance__gt=0, available_balance__gte=F("min_payout_cents")
+    )
+    total_available_cents = SellerBalance.objects.aggregate(total=Sum("available_balance"))["total"] or 0
+    stats = {
+        "eligible_sellers": eligible_balances.count(),
+        "total_available_dollars": total_available_cents / 100,
+        "pending_subscriptions": SubscriptionRequest.objects.filter(
+            status=SubscriptionRequestStatus.PENDING
+        ).count(),
+    }
+    return render(
+        request,
+        "dashboard/finance_overview.html",
+        {
+            "section": "finance_overview",
+            "stats": stats,
+            "recent_delivered": Order.objects.filter(status=OrderStatus.DELIVERED)
+            .select_related("seller__user", "product").order_by("-delivered_at")[:15],
+            "pending_subscription_requests": SubscriptionRequest.objects.filter(
+                status=SubscriptionRequestStatus.PENDING
+            ).select_related("seller__user").order_by("-created_at")[:10],
         },
     )
 
@@ -326,7 +359,9 @@ def product_remove(request, slug):
 
 @admin_required
 def users(request):
-    qs = User.objects.select_related("buyer", "seller", "courier").order_by("-date_joined")
+    qs = User.objects.select_related("buyer", "seller", "courier").annotate(
+        is_finance=Exists(Group.objects.filter(name=FINANCE_GROUP_NAME, user=OuterRef("pk")))
+    ).order_by("-date_joined")
     q = (request.GET.get("q") or "").strip()
     role = request.GET.get("role") or ""
 
@@ -500,6 +535,45 @@ def user_revoke_role(request, pk):
     return redirect("dashboard:users")
 
 
+@admin_required
+@require_POST
+def user_grant_finance(request, pk):
+    """Add a staff account to the Finance Officer group — see
+    dashboard.decorators.FINANCE_GROUP_NAME. Staff-only (buyer/seller/
+    courier roles use accounts.roles.assign_role instead, which explicitly
+    rejects staff users, so this is a separate, staff-side mechanism)."""
+    target = get_object_or_404(User, pk=pk)
+    if not target.is_staff:
+        messages.error(request, "Only staff accounts can be given finance access.")
+        return redirect("dashboard:users")
+    error = _guard_user_change(request, target)
+    if error:
+        messages.error(request, error)
+        return redirect("dashboard:users")
+
+    group, _created = Group.objects.get_or_create(name=FINANCE_GROUP_NAME)
+    target.groups.add(group)
+    log_action(request, "user_finance_granted", target.username)
+    messages.success(request, f"“{target.username}” now has finance access.")
+    return redirect("dashboard:users")
+
+
+@admin_required
+@require_POST
+def user_revoke_finance(request, pk):
+    target = get_object_or_404(User, pk=pk)
+    error = _guard_user_change(request, target)
+    if error:
+        messages.error(request, error)
+        return redirect("dashboard:users")
+
+    group, _created = Group.objects.get_or_create(name=FINANCE_GROUP_NAME)
+    target.groups.remove(group)
+    log_action(request, "user_finance_revoked", target.username)
+    messages.success(request, f"“{target.username}” no longer has finance access.")
+    return redirect("dashboard:users")
+
+
 # ── Comment moderation ─────────────────────────────────────────────────
 
 
@@ -558,7 +632,7 @@ def audit(request):
 # a payout and lets an admin record that it was sent. See HANDOFF.md.
 
 
-@admin_required
+@finance_required
 def payouts(request):
     qs = Payout.objects.select_related("seller__user").order_by("-created_at")
     status = request.GET.get("status") or ""
@@ -581,7 +655,7 @@ def payouts(request):
     )
 
 
-@admin_required
+@finance_required
 @require_POST
 def payouts_run(request):
     created = create_scheduled_payouts()
@@ -594,13 +668,13 @@ def payouts_run(request):
     return redirect("dashboard:payouts")
 
 
-@admin_required
+@finance_required
 def payout_detail(request, pk):
     payout = get_object_or_404(Payout.objects.select_related("seller__user"), pk=pk)
     return render(request, "dashboard/payout_detail.html", {"section": "payouts", "payout": payout})
 
 
-@admin_required
+@finance_required
 @require_POST
 def payout_action(request, pk):
     payout = get_object_or_404(Payout, pk=pk)
@@ -646,7 +720,7 @@ def payout_action(request, pk):
 # receipt here before it activates — no automated billing.
 
 
-@admin_required
+@finance_required
 def subscriptions(request):
     qs = SubscriptionRequest.objects.select_related("seller__user").order_by("-created_at")
     status = request.GET.get("status") or ""
@@ -668,7 +742,7 @@ def subscriptions(request):
     )
 
 
-@admin_required
+@finance_required
 def subscription_detail(request, pk):
     sub_request = get_object_or_404(
         SubscriptionRequest.objects.select_related("seller__user"), pk=pk
@@ -692,7 +766,7 @@ def subscription_detail(request, pk):
     )
 
 
-@admin_required
+@finance_required
 @require_POST
 def subscription_action(request, pk):
     sub_request = get_object_or_404(SubscriptionRequest, pk=pk)
