@@ -21,7 +21,7 @@ from django.db import transaction
 
 from olretail.models import (
     Product, RESTAURANT_CATEGORY_SLUG, Seller, SellerBankAccount, SellerType, SellerVerificationStatus,
-    Buyer, Courier, CourierVerificationStatus,
+    Buyer, Courier, CourierAvailability, CourierVerificationStatus,
 )
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
@@ -35,7 +35,7 @@ from .payment_gateways import SimulatedBankGateway, _settle_simulated_transactio
 from .payment_forms import (
     BankAccountForm, CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
-    CourierVerificationForm, SellerBusinessIdentityForm, SellerVerificationForm,
+    CourierAvailabilityForm, CourierVerificationForm, SellerBusinessIdentityForm, SellerVerificationForm,
     SellerContactForm, SellerLocationForm, SellerBrandingForm, SellerOperationsForm,
     PaymentProofForm,
 )
@@ -1793,6 +1793,44 @@ def courier_submit_verification(request):
     else:
         messages.error(request, _('Please correct the errors below.'))
     return redirect('olretail:courier_deliveries')
+
+
+@courier_required
+def courier_availability(request):
+    """Courier's weekly working-hours schedule — the windows used to filter
+    who shows up as assignable in ShipOrderForm (see payment_forms.py)."""
+    courier = request.user.courier
+    context = {
+        'courier': courier,
+        'windows': courier.availability_windows.all(),
+        'availability_form': CourierAvailabilityForm(),
+    }
+    return render(request, 'olretail/courier_availability.html', context)
+
+
+@courier_required
+@require_POST
+def courier_availability_add(request):
+    courier = request.user.courier
+    form = CourierAvailabilityForm(request.POST)
+    if form.is_valid():
+        window = form.save(commit=False)
+        window.courier = courier
+        window.save()
+        messages.success(request, _('Availability window added.'))
+    else:
+        messages.error(request, _('Please correct the errors below.'))
+    return redirect('olretail:courier_availability')
+
+
+@courier_required
+@require_POST
+def courier_availability_delete(request, pk):
+    courier = request.user.courier
+    window = get_object_or_404(CourierAvailability, pk=pk, courier=courier)
+    window.delete()
+    messages.success(request, _('Availability window removed.'))
+    return redirect('olretail:courier_availability')
 
 
 @login_required

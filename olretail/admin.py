@@ -2,7 +2,8 @@ from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
 from .models import (
-    BusinessCategory, Buyer, Category, City, Comment, Country, Courier, CourierRating, MenuCategory, Municipality,
+    BusinessCategory, Buyer, Category, City, Comment, Country, Courier, CourierAvailability, CourierRating,
+    MenuCategory, Municipality,
     Notification, Order, Product, ProductStatus, Rating, Seller,
     VirtualBankAccount, SimulatedBankTransaction, GatewayEventLog,
 )
@@ -77,12 +78,18 @@ class BuyerAdmin(admin.ModelAdmin):
     list_display = ["get_name", "mobile", "address"]
 
 
+class CourierAvailabilityInline(admin.TabularInline):
+    model = CourierAvailability
+    extra = 0
+
+
 @admin.register(Courier)
 class CourierAdmin(admin.ModelAdmin):
     list_display = ["get_name", "mobile", "verification_status", "deposit_amount"]
     list_filter = ["verification_status"]
     search_fields = ["user__username", "user__first_name", "user__last_name", "mobile"]
     filter_horizontal = ["service_cities"]
+    inlines = [CourierAvailabilityInline]
 
 
 @admin.register(Order)

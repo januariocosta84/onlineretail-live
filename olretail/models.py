@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -89,6 +90,46 @@ class Courier(models.Model):
 
     def __str__(self):
         return self.get_name
+
+    def is_available_at(self, dt):
+        return self.availability_windows.filter(
+            weekday=dt.weekday(), start_time__lte=dt.time(), end_time__gte=dt.time(),
+        ).exists()
+
+
+class Weekday(models.IntegerChoices):
+    MONDAY = 0, _("Monday")
+    TUESDAY = 1, _("Tuesday")
+    WEDNESDAY = 2, _("Wednesday")
+    THURSDAY = 3, _("Thursday")
+    FRIDAY = 4, _("Friday")
+    SATURDAY = 5, _("Saturday")
+    SUNDAY = 6, _("Sunday")
+
+
+class CourierAvailability(models.Model):
+    """One working time-window for a courier on a given weekday. A courier
+    can have several rows for the same weekday (split shifts, e.g. 8-12 and
+    14-18). No rows at all means "not yet configured" — treated as always
+    available, same fallback philosophy as Courier.service_cities, so a
+    courier who hasn't set a schedule isn't silently locked out of every
+    order (see ShipOrderForm)."""
+
+    courier = models.ForeignKey(Courier, on_delete=models.CASCADE, related_name="availability_windows")
+    weekday = models.PositiveSmallIntegerField(choices=Weekday.choices)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        ordering = ["weekday", "start_time"]
+        verbose_name_plural = "Courier availability windows"
+
+    def clean(self):
+        if self.start_time and self.end_time and self.end_time <= self.start_time:
+            raise ValidationError(_("End time must be after start time."))
+
+    def __str__(self):
+        return f"{self.courier.get_name} — {self.get_weekday_display()} {self.start_time}-{self.end_time}"
 
 
 class SellerType(models.TextChoices):

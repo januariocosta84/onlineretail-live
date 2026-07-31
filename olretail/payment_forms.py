@@ -1,8 +1,11 @@
 from django import forms
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Exists, OuterRef, Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from olretail.models import City, Courier, CourierVerificationStatus, Municipality, Seller, SellerBankAccount
+from olretail.models import (
+    City, Courier, CourierAvailability, CourierVerificationStatus, Municipality, Seller, SellerBankAccount,
+)
 from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod, PlatformBankAccount
 from .subscription_models import SubscriptionPlan
 from .validators import validate_iban, validate_image_size, validate_swift_code
@@ -186,11 +189,23 @@ class ShipOrderForm(forms.Form):
 
     def __init__(self, *args, order=None, **kwargs):
         super().__init__(*args, **kwargs)
+        now = timezone.localtime(timezone.now())
         # Only verified couriers are assignable — an unverified one has no
         # ID/deposit on file yet, so there's nothing to trust them with.
         queryset = Courier.objects.select_related('user').filter(
             verification_status=CourierVerificationStatus.VERIFIED
-        ).annotate(avg_rating=Avg('ratings__score'), rating_count=Count('ratings'))
+        ).annotate(
+            avg_rating=Avg('ratings__score'), rating_count=Count('ratings'),
+            # A courier who hasn't configured any schedule at all is treated
+            # as always available (see CourierAvailability) — otherwise
+            # every freshly-registered courier would silently disappear
+            # from this dropdown the moment we start filtering by it.
+            has_schedule=Exists(CourierAvailability.objects.filter(courier=OuterRef('pk'))),
+            is_available_now=Exists(CourierAvailability.objects.filter(
+                courier=OuterRef('pk'), weekday=now.weekday(),
+                start_time__lte=now.time(), end_time__gte=now.time(),
+            )),
+        )
         if order is not None and order.delivery_city_id is not None:
             # Only narrow the list when at least one courier actually
             # covers that city — an empty dropdown (besides "no courier
@@ -198,16 +213,26 @@ class ShipOrderForm(forms.Form):
             matched = queryset.filter(service_cities=order.delivery_city_id)
             if matched.exists():
                 queryset = matched
+        # Same non-empty-dropdown philosophy for hours: prefer couriers who
+        # are within a configured working window right now, but don't hide
+        # everyone else if that would leave nothing to pick from.
+        available_now = queryset.filter(Q(has_schedule=False) | Q(is_available_now=True))
+        if available_now.exists():
+            queryset = available_now
         self.fields['assigned_courier'].queryset = queryset
         self.fields['assigned_courier'].label_from_instance = self._courier_label
 
     @staticmethod
     def _courier_label(courier):
         if courier.rating_count:
-            return _("%(name)s (★ %(avg).1f, %(count)d rating(s))") % {
+            label = _("%(name)s (★ %(avg).1f, %(count)d rating(s))") % {
                 'name': courier.get_name, 'avg': courier.avg_rating, 'count': courier.rating_count,
             }
-        return _("%(name)s (no ratings yet)") % {'name': courier.get_name}
+        else:
+            label = _("%(name)s (no ratings yet)") % {'name': courier.get_name}
+        if courier.is_available_now:
+            label = _("%(label)s — Available now") % {'label': label}
+        return label
 
 
 class DeliveryProofForm(forms.Form):
@@ -240,6 +265,27 @@ class CourierVerificationForm(forms.Form):
         photo = self.cleaned_data.get('id_document')
         validate_image_size(photo)
         return photo
+
+
+class CourierAvailabilityForm(forms.ModelForm):
+    """One working-hours window a courier adds to their weekly schedule —
+    add one, list them, delete one at a time (same shape as BankAccountForm)."""
+
+    class Meta:
+        model = CourierAvailability
+        fields = ['weekday', 'start_time', 'end_time']
+        widgets = {
+            'weekday': forms.Select(attrs={'class': 'form-control form-control-sm'}),
+            'start_time': forms.TimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'time'}),
+            'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'time'}),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        start, end = cleaned.get('start_time'), cleaned.get('end_time')
+        if start and end and end <= start:
+            raise forms.ValidationError(_("End time must be after start time."))
+        return cleaned
 
 
 class DeliveryUpdateForm(forms.ModelForm):

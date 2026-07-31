@@ -7,10 +7,13 @@
 <main class="py-5">
   <div class="container-fluid">
     <div class="row mb-4">
-      <div class="col-12">
-        <h1 class="h2 page-header-bar">
+      <div class="col-12 d-flex justify-content-between align-items-center flex-wrap">
+        <h1 class="h2 page-header-bar mb-2">
           <i class="fas fa-truck mr-2"></i>{% trans "My Deliveries" %}
         </h1>
+        <a href="{% url 'olretail:courier_availability' %}" class="btn btn-outline-primary btn-sm mb-2">
+          <i class="fas fa-clock mr-1" aria-hidden="true"></i>{% trans "My Availability" %}
+        </a>
       </div>
     </div>
 

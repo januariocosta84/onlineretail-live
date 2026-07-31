@@ -1,0 +1,92 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My Availability" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container-fluid">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h2 page-header-bar">
+          <i class="fas fa-clock mr-2"></i>{% trans "My Availability" %}
+        </h1>
+        <p class="text-muted small mb-0">
+          {% trans "Set the days and hours you're working. Sellers see couriers marked \"Available now\" first when assigning a delivery — leave this empty if you're always available." %}
+        </p>
+        <a href="{% url 'olretail:courier_deliveries' %}" class="btn btn-sm btn-outline-secondary mt-2">
+          <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{% trans "Back to My Deliveries" %}
+        </a>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h6 mb-3">{% trans "Add a working-hours window" %}</h2>
+        <form method="post" action="{% url 'olretail:courier_availability_add' %}" class="form-row align-items-end">
+          {% csrf_token %}
+          <div class="col-md-4 mb-2">
+            <label class="small text-muted mb-1">{{ availability_form.weekday.label }}</label>
+            {{ availability_form.weekday }}
+            {% for error in availability_form.weekday.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-3 mb-2">
+            <label class="small text-muted mb-1">{{ availability_form.start_time.label }}</label>
+            {{ availability_form.start_time }}
+          </div>
+          <div class="col-md-3 mb-2">
+            <label class="small text-muted mb-1">{{ availability_form.end_time.label }}</label>
+            {{ availability_form.end_time }}
+          </div>
+          <div class="col-md-2 mb-2">
+            <button type="submit" class="btn btn-primary btn-sm btn-block">{% trans "Add" %}</button>
+          </div>
+          {% if availability_form.non_field_errors %}
+          <div class="col-12">
+            <div class="text-danger small mt-1">{{ availability_form.non_field_errors }}</div>
+          </div>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>{% trans "Day" %}</th>
+              <th>{% trans "From" %}</th>
+              <th>{% trans "To" %}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for window in windows %}
+            <tr>
+              <td>{{ window.get_weekday_display }}</td>
+              <td>{{ window.start_time|time:"H:i" }}</td>
+              <td>{{ window.end_time|time:"H:i" }}</td>
+              <td class="text-right">
+                <form method="post" action="{% url 'olretail:courier_availability_delete' window.pk %}" onsubmit="return confirm('{% trans "Remove this window?" %}');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger">{% trans "Remove" %}</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-muted text-center py-3">
+                {% trans "No schedule set — you'll be shown as available at all times until you add one." %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
