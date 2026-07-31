@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # "tet" is the correct ISO 639 code for Tetum and has no bundled translations.
 
 LANGUAGE_CODE = "en"
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
 USE_TZ = True
 
