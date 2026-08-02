@@ -125,6 +125,26 @@ class _EarningsScreenState extends State<EarningsScreen> {
                         subtitle: Text('Earned \$${e.deliveredTotalDollars.toStringAsFixed(2)}'),
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _StatTile(
+                            label: 'Cash on delivery',
+                            value: '\$${e.codTotalDollars.toStringAsFixed(2)}',
+                            hint: 'Already in your hands',
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _StatTile(
+                            label: 'Bank / card orders',
+                            value: '\$${e.bankTotalDollars.toStringAsFixed(2)}',
+                            hint: 'Owed by the platform',
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 );
               },

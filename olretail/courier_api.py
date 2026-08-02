@@ -26,7 +26,7 @@ from django.utils import timezone
 
 from .models import CourierAvailability
 from .payment_forms import DeliveryProofForm
-from .payment_models import CourierBalance, Order, OrderStatus
+from .payment_models import CourierBalance, Order, OrderStatus, PaymentMethod
 from .payment_views import _apply_order_delivered, _courier_can_mark_delivered
 
 
@@ -70,12 +70,21 @@ class MeView(APIView):
 
 class EarningsView(APIView):
     """GET ?month=YYYY-MM (defaults to the current month) -> this month's
-    delivered-order fee total, plus the running CourierBalance figures:
-    available (earned, not yet scheduled) and pending (scheduled/
-    processing) — both surfaced so the app can explain *why* something is
-    outstanding, alongside a combined outstanding_cents headline figure.
-    See CourierBalance/CourierPayout (payment_models.py) and
-    create_scheduled_courier_payouts (payouts.py) for what happens next."""
+    delivered-order fee totals, split by how the order was paid, plus the
+    running CourierBalance figures: available (earned, not yet scheduled)
+    and pending (scheduled/processing) — both surfaced so the app can
+    explain *why* something is outstanding, alongside a combined
+    outstanding_cents headline figure.
+
+    The COD/bank split matters because they're accounted for completely
+    differently — see _apply_order_delivered (payment_views.py): a cash-
+    on-delivery fee is money the courier already collected directly from
+    the buyer (cod_total_cents is informational only, it was never added
+    to CourierBalance), while a non-COD fee is money the platform still
+    owes and will eventually pay out (bank_total_cents feeds directly into
+    outstanding_cents via CourierBalance). See CourierBalance/CourierPayout
+    (payment_models.py) and create_scheduled_courier_payouts (payouts.py)
+    for what happens next."""
 
     permission_classes = [IsCourier]
 
@@ -98,11 +107,19 @@ class EarningsView(APIView):
             assigned_courier=courier, status=OrderStatus.DELIVERED,
             delivered_at__year=year, delivered_at__month=month,
         )
+        cod_total = delivered.filter(payment_method=PaymentMethod.CASH_ON_DELIVERY).aggregate(
+            total=Sum('courier_fee_cents')
+        )['total'] or 0
+        bank_total = delivered.exclude(payment_method=PaymentMethod.CASH_ON_DELIVERY).aggregate(
+            total=Sum('courier_fee_cents')
+        )['total'] or 0
         balance, _created = CourierBalance.objects.get_or_create(courier=courier)
         return Response({
             'month': f'{year:04d}-{month:02d}',
             'delivered_count': delivered.count(),
-            'delivered_total_cents': delivered.aggregate(total=Sum('courier_fee_cents'))['total'] or 0,
+            'delivered_total_cents': cod_total + bank_total,
+            'cod_total_cents': cod_total,
+            'bank_total_cents': bank_total,
             'available_balance_cents': balance.available_balance,
             'pending_payout_cents': balance.pending_payout,
             'outstanding_cents': balance.available_balance + balance.pending_payout,

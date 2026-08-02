@@ -1657,10 +1657,21 @@ def _apply_order_delivered(order, photo):
     """The actual business logic of confirming delivery — shared by the
     HTML view (mark_delivered) and the courier API
     (courier_api.MarkDeliveredView) so there's exactly one place that
-    settles COD payment, credits the seller's payout balance, and fans out
-    notifications. Callers are responsible for their own permission/status
-    checks and photo validation (DeliveryProofForm) before calling this."""
-    if order.payment_method == PaymentMethod.CASH_ON_DELIVERY and not order.paid_at:
+    settles COD payment, credits the seller's/courier's payout balances,
+    and fans out notifications. Callers are responsible for their own
+    permission/status checks and photo validation (DeliveryProofForm)
+    before calling this.
+
+    Cash-on-delivery is special-cased throughout: the buyer pays the full
+    order amount straight to whoever delivers it, so the platform never
+    actually holds that money — crediting SellerBalance/CourierBalance
+    the same way as a Stripe/bank-transfer order would mean Finance later
+    sends a *second* payment for money the seller/courier already has in
+    hand. Earnings are still recorded (Transaction, order.courier_fee_cents)
+    so there's a full history and the courier app can show what a COD
+    delivery was worth — they just never enter the payout balance."""
+    is_cod = order.payment_method == PaymentMethod.CASH_ON_DELIVERY
+    if is_cod and not order.paid_at:
         # Cash changes hands at the door — reuse the same "payment
         # confirmed" side effects (paid_at, stock decrement, cart
         # clear) that a bank-transfer seller's confirm click triggers,
@@ -1674,7 +1685,7 @@ def _apply_order_delivered(order, photo):
         # A courier (not a self-delivering seller) earns the platform's
         # configured flat delivery fee — snapshotted here so it survives a
         # later change to the rate, and included in this same save() rather
-        # than a second write.
+        # than a second write. Recorded even for COD (see docstring).
         if order.assigned_courier_id:
             order.courier_fee_cents = PlatformSettings.load().courier_delivery_fee_cents
         order.save()
@@ -1683,18 +1694,23 @@ def _apply_order_delivered(order, photo):
         # delivery is confirmed — see _mark_payment_succeeded and
         # _mark_bank_transfer_paid, which deliberately don't do this at
         # payment time anymore. This is the one place a Finance Officer's
-        # payout balance actually gets credited.
+        # payout balance actually gets credited — except for COD, where
+        # there's nothing for the platform to pay out (see docstring).
         Transaction.objects.create(
             order=order,
             seller=order.seller,
             amount_cents=int(order.subtotal * 100),
             transaction_type=TransactionType.COMMISSION,
-            description=f"Earnings from order {order.order_number}",
+            description=(
+                f"Earnings from order {order.order_number}"
+                + (' (cash on delivery — collected directly, not part of the payout balance)' if is_cod else '')
+            ),
         )
-        seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-        seller_balance.add_commission(int(order.subtotal * 100))
+        if not is_cod:
+            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+            seller_balance.add_commission(int(order.subtotal * 100))
 
-        if order.assigned_courier_id and order.courier_fee_cents:
+        if order.assigned_courier_id and order.courier_fee_cents and not is_cod:
             courier_balance, _created = CourierBalance.objects.get_or_create(courier=order.assigned_courier)
             courier_balance.add_commission(order.courier_fee_cents)
 
@@ -1703,13 +1719,16 @@ def _apply_order_delivered(order, photo):
         _('Your order %(order)s has been delivered.') % {'order': order.order_number},
         order=order,
     )
-    for finance_user in _finance_officers():
-        _notify(
-            finance_user,
-            _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
-            % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
-            order=order,
-        )
+    if not is_cod:
+        # Nothing for Finance to act on for a COD order — no payout was
+        # ever created for it, so a "ready for payout" ping would be noise.
+        for finance_user in _finance_officers():
+            _notify(
+                finance_user,
+                _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
+                % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
+                order=order,
+            )
 
 
 @login_required

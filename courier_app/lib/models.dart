@@ -85,6 +85,12 @@ class CourierEarnings {
   final String month; // "YYYY-MM"
   final int deliveredCount;
   final int deliveredTotalCents;
+  // Cash-on-delivery fees the courier already collected in person — not
+  // part of outstandingCents, since the platform never held that money.
+  final int codTotalCents;
+  // Fees from non-COD deliveries — genuinely owed by the platform, this
+  // is what feeds availableBalanceCents/outstandingCents.
+  final int bankTotalCents;
   final int availableBalanceCents;
   final int pendingPayoutCents;
   final int outstandingCents;
@@ -93,12 +99,16 @@ class CourierEarnings {
     required this.month,
     required this.deliveredCount,
     required this.deliveredTotalCents,
+    required this.codTotalCents,
+    required this.bankTotalCents,
     required this.availableBalanceCents,
     required this.pendingPayoutCents,
     required this.outstandingCents,
   });
 
   double get deliveredTotalDollars => deliveredTotalCents / 100;
+  double get codTotalDollars => codTotalCents / 100;
+  double get bankTotalDollars => bankTotalCents / 100;
   double get availableBalanceDollars => availableBalanceCents / 100;
   double get pendingPayoutDollars => pendingPayoutCents / 100;
   double get outstandingDollars => outstandingCents / 100;
@@ -107,6 +117,8 @@ class CourierEarnings {
         month: json['month'] as String,
         deliveredCount: json['delivered_count'] as int,
         deliveredTotalCents: json['delivered_total_cents'] as int,
+        codTotalCents: json['cod_total_cents'] as int,
+        bankTotalCents: json['bank_total_cents'] as int,
         availableBalanceCents: json['available_balance_cents'] as int,
         pendingPayoutCents: json['pending_payout_cents'] as int,
         outstandingCents: json['outstanding_cents'] as int,
