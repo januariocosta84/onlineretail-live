@@ -3,6 +3,7 @@ import hmac
 import json
 import stripe
 import logging
+import threading
 from decimal import Decimal
 
 from django.conf import settings
@@ -54,18 +55,26 @@ def _notify(user, message, order=None):
     checking the site (console-only in dev unless EMAIL_HOST is set — see
     settings.py), and push it to their phone if they have the mobile app
     installed (see push_notifications.py — a silent no-op until Firebase is
-    configured). All three are best-effort and never break the caller."""
+    configured). The in-app row is created synchronously (the UI depends on
+    it immediately); email/push are dispatched on a background thread since
+    both are real network calls (SMTP handshake, FCM) that can take
+    seconds and must never make a buyer/seller/courier wait on a request
+    (checkout, mark-delivered, payout) for a notification side effect."""
     Notification.objects.create(recipient=user, order=order, message=message)
     subject = (
         _('TimorMart — order %(order)s') % {'order': order.order_number}
         if order else _('TimorMart notification')
     )
-    if user.email:
-        try:
-            send_mail(subject, message, None, [user.email], fail_silently=True)
-        except Exception:
-            logger.warning(f"Failed to email notification to {user.email}", exc_info=True)
-    send_push(user, subject, message)
+
+    def _send_async():
+        if user.email:
+            try:
+                send_mail(subject, message, None, [user.email], fail_silently=True)
+            except Exception:
+                logger.warning(f"Failed to email notification to {user.email}", exc_info=True)
+        send_push(user, subject, message)
+
+    threading.Thread(target=_send_async, daemon=True).start()
 
 
 def _finance_officers():
