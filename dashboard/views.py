@@ -26,13 +26,13 @@ from django.db.models import F
 
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
-    Category, Comment, Courier, CourierVerificationStatus, Dispute, DisputeReason, DisputeResolution,
-    DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus, PlatformBankAccount,
-    PlatformSettings, Product,
+    Category, Comment, Courier, CourierBalance, CourierPayout, CourierVerificationStatus, Dispute,
+    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus,
+    PlatformBankAccount, PlatformSettings, Product,
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
 from olretail.payment_forms import PlatformBankAccountForm
-from olretail.payouts import create_scheduled_payouts
+from olretail.payouts import create_scheduled_courier_payouts, create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
 
 from .decorators import FINANCE_GROUP_NAME, admin_required, finance_required
@@ -166,9 +166,13 @@ def finance_overview(request):
         available_balance__gt=0, available_balance__gte=F("min_payout_cents")
     )
     total_available_cents = SellerBalance.objects.aggregate(total=Sum("available_balance"))["total"] or 0
+    eligible_courier_balances = CourierBalance.objects.filter(
+        available_balance__gt=0, available_balance__gte=F("min_payout_cents")
+    )
     stats = {
         "eligible_sellers": eligible_balances.count(),
         "total_available_dollars": total_available_cents / 100,
+        "eligible_couriers": eligible_courier_balances.count(),
         "pending_subscriptions": SubscriptionRequest.objects.filter(
             status=SubscriptionRequestStatus.PENDING
         ).count(),
@@ -713,6 +717,93 @@ def payout_action(request, pk):
     return redirect("dashboard:payout_detail", pk=payout.pk)
 
 
+# ── Courier payouts ─────────────────────────────────────────────────────
+# Same shape as seller payouts above, for delivery-fee earnings
+# (CourierBalance, credited per delivery — see
+# payment_views._apply_order_delivered) instead of seller commissions.
+
+
+@finance_required
+def courier_payouts(request):
+    qs = CourierPayout.objects.select_related("courier__user").order_by("-created_at")
+    status = request.GET.get("status") or ""
+    if status:
+        qs = qs.filter(status=status)
+    page_obj = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
+    eligible_count = CourierBalance.objects.filter(
+        available_balance__gt=0, available_balance__gte=F("min_payout_cents")
+    ).count()
+    return render(
+        request,
+        "dashboard/courier_payouts.html",
+        {
+            "section": "courier_payouts",
+            "page_obj": page_obj,
+            "status": status,
+            "status_choices": PayoutStatus.choices,
+            "eligible_count": eligible_count,
+        },
+    )
+
+
+@finance_required
+@require_POST
+def courier_payouts_run(request):
+    created = create_scheduled_courier_payouts()
+    if created:
+        total = sum(p.amount_cents for p in created) / 100
+        log_action(request, "courier_payouts_scheduled", f"{len(created)} payout(s)", f"${total:.2f} total")
+        messages.success(request, f"Scheduled {len(created)} courier payout(s) totaling ${total:.2f}.")
+    else:
+        messages.info(request, "No couriers are currently eligible for a payout.")
+    return redirect("dashboard:courier_payouts")
+
+
+@finance_required
+def courier_payout_detail(request, pk):
+    payout = get_object_or_404(CourierPayout.objects.select_related("courier__user"), pk=pk)
+    return render(request, "dashboard/courier_payout_detail.html", {"section": "courier_payouts", "payout": payout})
+
+
+@finance_required
+@require_POST
+def courier_payout_action(request, pk):
+    payout = get_object_or_404(CourierPayout, pk=pk)
+    action = request.POST.get("action")
+    balance, _ = CourierBalance.objects.get_or_create(courier=payout.courier)
+
+    if action == "save_details":
+        payout.bank_name = request.POST.get("bank_name", "").strip()
+        payout.account_number = request.POST.get("account_number", "").strip()
+        payout.account_holder = request.POST.get("account_holder", "").strip()
+        payout.notes = request.POST.get("notes", "").strip()
+        payout.save(update_fields=["bank_name", "account_number", "account_holder", "notes"])
+        log_action(request, "courier_payout_details_updated", payout.payout_id)
+        messages.success(request, "Bank details saved.")
+    elif action == "mark_processing" and payout.status == PayoutStatus.SCHEDULED:
+        payout.status = PayoutStatus.PROCESSING
+        payout.save(update_fields=["status"])
+        log_action(request, "courier_payout_processing", payout.payout_id)
+        messages.success(request, f"{payout.payout_id} marked as processing.")
+    elif action == "mark_paid" and payout.status in (PayoutStatus.SCHEDULED, PayoutStatus.PROCESSING):
+        payout.status = PayoutStatus.PAID
+        payout.paid_date = timezone.localdate()
+        payout.save(update_fields=["status", "paid_date"])
+        balance.complete_payout(payout.amount_cents)
+        log_action(request, "courier_payout_paid", payout.payout_id, f"${payout.amount_dollars:.2f}")
+        messages.success(request, f"{payout.payout_id} marked as paid.")
+    elif action == "mark_failed" and payout.status in (PayoutStatus.SCHEDULED, PayoutStatus.PROCESSING):
+        payout.status = PayoutStatus.FAILED
+        payout.save(update_fields=["status"])
+        balance.fail_payout(payout.amount_cents)
+        log_action(request, "courier_payout_failed", payout.payout_id, f"${payout.amount_dollars:.2f}")
+        messages.warning(request, f"{payout.payout_id} marked as failed — balance returned to the courier.")
+    else:
+        messages.error(request, "That action isn't valid for this payout's current status.")
+
+    return redirect("dashboard:courier_payout_detail", pk=payout.pk)
+
+
 # ── Seller subscriptions ───────────────────────────────────────────────
 # Free sellers are capped at FREE_PRODUCT_LIMIT listings (see
 # olretail.subscription_models). Upgrading is bank-transfer-style: the
@@ -842,7 +933,15 @@ def platform_settings(request):
     settings_obj = PlatformSettings.load()
     if request.method == "POST":
         settings_obj.payment_instructions = (request.POST.get("payment_instructions") or "").strip()
-        settings_obj.save(update_fields=["payment_instructions", "updated_at"])
+        try:
+            fee_dollars = Decimal(request.POST.get("courier_delivery_fee_dollars") or "0")
+            if fee_dollars < 0:
+                raise InvalidOperation
+        except InvalidOperation:
+            messages.error(request, "Courier delivery fee must be a non-negative amount.")
+            return redirect("dashboard:platform_settings")
+        settings_obj.courier_delivery_fee_cents = int(fee_dollars * 100)
+        settings_obj.save(update_fields=["payment_instructions", "courier_delivery_fee_cents", "updated_at"])
         log_action(request, "platform_payment_instructions_updated", "")
         messages.success(request, "Payment settings saved.")
         return redirect("dashboard:platform_settings")

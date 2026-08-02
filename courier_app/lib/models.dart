@@ -80,3 +80,35 @@ class CourierMe {
         verificationStatus: json['verification_status'] as String,
       );
 }
+
+class CourierEarnings {
+  final String month; // "YYYY-MM"
+  final int deliveredCount;
+  final int deliveredTotalCents;
+  final int availableBalanceCents;
+  final int pendingPayoutCents;
+  final int outstandingCents;
+
+  CourierEarnings({
+    required this.month,
+    required this.deliveredCount,
+    required this.deliveredTotalCents,
+    required this.availableBalanceCents,
+    required this.pendingPayoutCents,
+    required this.outstandingCents,
+  });
+
+  double get deliveredTotalDollars => deliveredTotalCents / 100;
+  double get availableBalanceDollars => availableBalanceCents / 100;
+  double get pendingPayoutDollars => pendingPayoutCents / 100;
+  double get outstandingDollars => outstandingCents / 100;
+
+  factory CourierEarnings.fromJson(Map<String, dynamic> json) => CourierEarnings(
+        month: json['month'] as String,
+        deliveredCount: json['delivered_count'] as int,
+        deliveredTotalCents: json['delivered_total_cents'] as int,
+        availableBalanceCents: json['available_balance_cents'] as int,
+        pendingPayoutCents: json['pending_payout_cents'] as int,
+        outstandingCents: json['outstanding_cents'] as int,
+      );
+}

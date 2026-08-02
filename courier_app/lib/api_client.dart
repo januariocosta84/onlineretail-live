@@ -87,6 +87,16 @@ class ApiClient {
     return CourierMe.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  /// [month] defaults to the current month server-side when omitted.
+  Future<CourierEarnings> earnings({DateTime? month}) async {
+    final query = month == null
+        ? ''
+        : '?month=${month.year.toString().padLeft(4, '0')}-${month.month.toString().padLeft(2, '0')}';
+    final response = await http.get(_url('/earnings/$query'), headers: await _authHeaders());
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+    return CourierEarnings.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
   Future<({List<DeliveryOrder> pending, List<DeliveryOrder> delivered})> deliveries() async {
     final response = await http.get(_url('/deliveries/'), headers: await _authHeaders());
     if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));

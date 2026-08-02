@@ -676,7 +676,7 @@ class Comment(models.Model):
 # they live in payment_models.py to keep the marketplace and payment domains separate.
 from .payment_models import (  # noqa: E402, F401
     Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
-    TransactionType, SellerBalance, Payout, PayoutStatus, Dispute,
+    TransactionType, SellerBalance, Payout, PayoutStatus, CourierBalance, CourierPayout, Dispute,
     DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings, PlatformBankAccount,
     Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )

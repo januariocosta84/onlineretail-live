@@ -173,7 +173,14 @@ class Order(models.Model):
         'olretail.Courier', on_delete=models.SET_NULL, null=True, blank=True, related_name='deliveries'
     )
     delivery_photo = models.ImageField(upload_to='delivery_proofs/%Y/%m/', null=True, blank=True)
-    
+    # Snapshot of what this delivery earned the assigned courier, set once
+    # at delivery time (see _apply_order_delivered in payment_views.py) from
+    # PlatformSettings.courier_delivery_fee_cents — kept per-order (not just
+    # summed into CourierBalance) so "earnings this month" is a plain
+    # aggregate query and the fee rate can change over time without
+    # rewriting history. Zero for self-delivery orders (no assigned_courier).
+    courier_fee_cents = models.BigIntegerField(default=0)
+
     # Notes
     buyer_notes = models.TextField(blank=True)
     admin_notes = models.TextField(blank=True)
@@ -538,6 +545,68 @@ class SellerBalance(models.Model):
         return self.total_payouts / 100
 
 
+class CourierBalance(models.Model):
+    """Courier's account balance: delivery fees earned - payouts. Exact
+    structural mirror of SellerBalance — credited per delivery in
+    _apply_order_delivered (payment_views.py) from
+    PlatformSettings.courier_delivery_fee_cents, paid out via CourierPayout/
+    create_scheduled_courier_payouts (olretail/payouts.py), same as sellers."""
+
+    courier = models.OneToOneField('olretail.Courier', on_delete=models.CASCADE, related_name='balance')
+
+    # Totals (in cents)
+    total_earnings = models.BigIntegerField(default=0)
+    total_payouts = models.BigIntegerField(default=0)
+    pending_payout = models.BigIntegerField(default=0)
+    available_balance = models.BigIntegerField(default=0)
+
+    # Minimum payout threshold — much lower than a seller's $500 default:
+    # at a few dollars per delivery, that many deliveries before a courier
+    # ever gets paid would be unreasonable.
+    min_payout_cents = models.BigIntegerField(default=2000)  # $20 minimum
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Balance: {self.courier.user.username} - ${self.available_balance_dollars:.2f}"
+
+    def add_commission(self, amount_cents):
+        self.total_earnings += amount_cents
+        self.available_balance += amount_cents
+        self.save()
+
+    def schedule_payout(self, amount_cents):
+        self.available_balance -= amount_cents
+        self.pending_payout += amount_cents
+        self.save()
+
+    def complete_payout(self, amount_cents):
+        self.pending_payout -= amount_cents
+        self.total_payouts += amount_cents
+        self.save()
+
+    def fail_payout(self, amount_cents):
+        self.pending_payout -= amount_cents
+        self.available_balance += amount_cents
+        self.save()
+
+    @property
+    def available_balance_dollars(self):
+        return self.available_balance / 100
+
+    @property
+    def pending_payout_dollars(self):
+        return self.pending_payout / 100
+
+    @property
+    def total_earnings_dollars(self):
+        return self.total_earnings / 100
+
+    @property
+    def total_payouts_dollars(self):
+        return self.total_payouts / 100
+
+
 # ──────────────────────────────────────────────────────────────────
 # PAYOUT MODEL
 # ──────────────────────────────────────────────────────────────────
@@ -601,6 +670,54 @@ class Payout(models.Model):
             self.payout_id = f'PAY-{date_str}-{count + 1:03d}'
         super().save(*args, **kwargs)
     
+    @property
+    def amount_dollars(self):
+        return self.amount_cents / 100
+
+
+class CourierPayout(models.Model):
+    """Courier payout batch — mirror of Payout, for CourierBalance instead
+    of SellerBalance. payout_id uses a CPAY- prefix (Payout uses PAY-) so
+    the two series stay visually distinct in the dashboard/exports."""
+
+    payout_id = models.CharField(max_length=20, unique=True)
+    courier = models.ForeignKey('olretail.Courier', on_delete=models.PROTECT, related_name='payouts')
+
+    amount_cents = models.BigIntegerField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=PayoutStatus.choices,
+        default=PayoutStatus.SCHEDULED,
+    )
+
+    bank_name = models.CharField(max_length=255, blank=True)
+    account_number = models.CharField(max_length=50, blank=True)
+    account_holder = models.CharField(max_length=255, blank=True)
+
+    scheduled_date = models.DateField()
+    paid_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-scheduled_date']
+        indexes = [
+            models.Index(fields=['courier', 'status']),
+            models.Index(fields=['status', '-scheduled_date']),
+        ]
+
+    def __str__(self):
+        return f"{self.payout_id} - {self.courier.user.username} - ${self.amount_dollars:.2f}"
+
+    def save(self, *args, **kwargs):
+        if not self.payout_id:
+            date_str = timezone.now().strftime('%Y%m%d')
+            count = CourierPayout.objects.filter(payout_id__startswith=f'CPAY-{date_str}').count()
+            self.payout_id = f'CPAY-{date_str}-{count + 1:03d}'
+        super().save(*args, **kwargs)
+
     @property
     def amount_dollars(self):
         return self.amount_cents / 100
@@ -742,8 +859,9 @@ class Dispute(models.Model):
 
 class PlatformSettings(models.Model):
     """Single row of platform-level config editable from the admin
-    dashboard — currently just where sellers send subscription payments
-    (falls back to settings.PLATFORM_PAYMENT_INSTRUCTIONS until set)."""
+    dashboard — where sellers send subscription payments (falls back to
+    settings.PLATFORM_PAYMENT_INSTRUCTIONS until set), and the flat fee a
+    courier earns per delivery."""
 
     payment_instructions = models.TextField(
         blank=True,
@@ -751,6 +869,15 @@ class PlatformSettings(models.Model):
             "Bank or mobile money details shown to sellers when they pay the "
             "platform for a subscription upgrade."
         ),
+    )
+    # Cents — see _apply_order_delivered (payment_views.py), which snapshots
+    # this onto Order.courier_fee_cents and credits CourierBalance at the
+    # moment a courier confirms delivery. A policy decision, not a
+    # day-to-day finance operation — stays admin-only, not finance-editable
+    # (same boundary as the platform commission rate).
+    courier_delivery_fee_cents = models.BigIntegerField(
+        default=200,
+        help_text=_("Flat fee (in cents) a courier earns for each delivery they confirm. $2.00 = 200."),
     )
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -766,6 +893,10 @@ class PlatformSettings(models.Model):
         bank transfer: a structured bank account or free-text
         payment_instructions. Gates BANK_TRANSFER checkout platform-wide."""
         return self.bank_accounts.exists() or bool(self.payment_instructions.strip())
+
+    @property
+    def courier_delivery_fee_dollars(self):
+        return self.courier_delivery_fee_cents / 100
 
     @classmethod
     def load(cls):

@@ -4,6 +4,7 @@ import '../api_client.dart';
 import '../models.dart';
 import 'availability_screen.dart';
 import 'delivery_detail_screen.dart';
+import 'earnings_screen.dart';
 import 'login_screen.dart';
 
 class DeliveriesScreen extends StatefulWidget {
@@ -56,6 +57,13 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
           Tab(text: 'Delivered'),
         ]),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.payments_outlined),
+            tooltip: 'My Earnings',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const EarningsScreen()),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.schedule),
             tooltip: 'My Availability',

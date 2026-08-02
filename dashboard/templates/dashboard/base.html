@@ -77,6 +77,8 @@
           {% endif %}
           <a class="list-group-item list-group-item-action {% if section == 'payouts' %}active text-white{% endif %}"
              href="{% url 'dashboard:payouts' %}"><i class="fas fa-money-check-alt mr-2" aria-hidden="true"></i>Payouts</a>
+          <a class="list-group-item list-group-item-action {% if section == 'courier_payouts' %}active text-white{% endif %}"
+             href="{% url 'dashboard:courier_payouts' %}"><i class="fas fa-truck-loading mr-2" aria-hidden="true"></i>Courier Payouts</a>
           {% if not is_finance_only %}
           <a class="list-group-item list-group-item-action {% if section == 'bank_accounts' %}active text-white{% endif %}"
              href="{% url 'dashboard:bank_accounts' %}"><i class="fas fa-university mr-2" aria-hidden="true"></i>Bank simulator accounts</a>

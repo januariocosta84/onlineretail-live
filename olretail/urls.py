@@ -118,6 +118,7 @@ urlpatterns = [
     # Independent courier app (Flutter, courier_app/) REST API
     path("api/courier/v1/login/", courier_api.CourierLoginView.as_view(), name="courier_api_login"),
     path("api/courier/v1/me/", courier_api.MeView.as_view(), name="courier_api_me"),
+    path("api/courier/v1/earnings/", courier_api.EarningsView.as_view(), name="courier_api_earnings"),
     path("api/courier/v1/deliveries/", courier_api.DeliveriesListView.as_view(), name="courier_api_deliveries"),
     path(
         "api/courier/v1/deliveries/<int:order_id>/mark-delivered/",

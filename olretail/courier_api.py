@@ -20,11 +20,13 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from .models import CourierAvailability
 from .payment_forms import DeliveryProofForm
-from .payment_models import Order, OrderStatus
+from .payment_models import CourierBalance, Order, OrderStatus
 from .payment_views import _apply_order_delivered, _courier_can_mark_delivered
 
 
@@ -63,6 +65,47 @@ class MeView(APIView):
         return Response({
             'name': courier.get_name,
             'verification_status': courier.verification_status,
+        })
+
+
+class EarningsView(APIView):
+    """GET ?month=YYYY-MM (defaults to the current month) -> this month's
+    delivered-order fee total, plus the running CourierBalance figures:
+    available (earned, not yet scheduled) and pending (scheduled/
+    processing) — both surfaced so the app can explain *why* something is
+    outstanding, alongside a combined outstanding_cents headline figure.
+    See CourierBalance/CourierPayout (payment_models.py) and
+    create_scheduled_courier_payouts (payouts.py) for what happens next."""
+
+    permission_classes = [IsCourier]
+
+    def get(self, request):
+        courier = request.user.courier
+        month_param = request.query_params.get('month')
+        if month_param:
+            try:
+                year_str, month_str = month_param.split('-')
+                year, month = int(year_str), int(month_str)
+                if not 1 <= month <= 12:
+                    raise ValueError
+            except ValueError:
+                return Response({'detail': 'month must be in YYYY-MM format.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            today = timezone.localdate()
+            year, month = today.year, today.month
+
+        delivered = Order.objects.filter(
+            assigned_courier=courier, status=OrderStatus.DELIVERED,
+            delivered_at__year=year, delivered_at__month=month,
+        )
+        balance, _created = CourierBalance.objects.get_or_create(courier=courier)
+        return Response({
+            'month': f'{year:04d}-{month:02d}',
+            'delivered_count': delivered.count(),
+            'delivered_total_cents': delivered.aggregate(total=Sum('courier_fee_cents'))['total'] or 0,
+            'available_balance_cents': balance.available_balance,
+            'pending_payout_cents': balance.pending_payout,
+            'outstanding_cents': balance.available_balance + balance.pending_payout,
         })
 
 

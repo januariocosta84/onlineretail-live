@@ -5,21 +5,28 @@
 <h1 class="h4 page-header-bar mb-3">Finance overview</h1>
 
 <div class="row">
-  <div class="col-6 col-md-4 mb-3">
+  <div class="col-6 col-md-3 mb-3">
     <div class="card stat-card ok h-100"><div class="card-body py-3">
       <p class="text-muted small text-uppercase mb-1">Sellers eligible for payout</p>
       <p class="h3 mb-0 text-success">{{ stats.eligible_sellers }}</p>
       <p class="small mb-0"><a href="{% url 'dashboard:payouts' %}">Go to Payouts »</a></p>
     </div></div>
   </div>
-  <div class="col-6 col-md-4 mb-3">
+  <div class="col-6 col-md-3 mb-3">
     <div class="card stat-card h-100"><div class="card-body py-3">
       <p class="text-muted small text-uppercase mb-1">Total available balance</p>
       <p class="h3 mb-0">${{ stats.total_available_dollars|floatformat:2 }}</p>
       <p class="small text-muted mb-0">across all sellers</p>
     </div></div>
   </div>
-  <div class="col-6 col-md-4 mb-3">
+  <div class="col-6 col-md-3 mb-3">
+    <div class="card stat-card ok h-100"><div class="card-body py-3">
+      <p class="text-muted small text-uppercase mb-1">Couriers eligible for payout</p>
+      <p class="h3 mb-0 text-success">{{ stats.eligible_couriers }}</p>
+      <p class="small mb-0"><a href="{% url 'dashboard:courier_payouts' %}">Go to Courier Payouts »</a></p>
+    </div></div>
+  </div>
+  <div class="col-6 col-md-3 mb-3">
     <div class="card stat-card warn h-100"><div class="card-body py-3">
       <p class="text-muted small text-uppercase mb-1">Pending subscription requests</p>
       <p class="h3 mb-0 text-warning">{{ stats.pending_subscriptions }}</p>

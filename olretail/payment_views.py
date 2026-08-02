@@ -26,8 +26,8 @@ from olretail.models import (
 from olretail.decorators import seller_required, courier_required
 from .payment_models import (
     Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
-    TransactionType, SellerBalance, Dispute, DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate,
-    PlatformSettings, Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
+    TransactionType, SellerBalance, CourierBalance, Dispute, DisputeStatus, DisputeResolution, DisputeReason,
+    DeliveryUpdate, PlatformSettings, Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )
 from .push_notifications import send_push
 from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
@@ -915,6 +915,14 @@ def _process_bank_refund(payment, amount_cents=None):
                 seller_balance.total_earnings -= int(order.subtotal * 100)
                 seller_balance.save()
 
+                # Same reasoning for the courier's delivery fee, if one was
+                # credited (see _apply_order_delivered).
+                if order.assigned_courier_id and order.courier_fee_cents:
+                    courier_balance, _created = CourierBalance.objects.get_or_create(courier=order.assigned_courier)
+                    courier_balance.available_balance -= order.courier_fee_cents
+                    courier_balance.total_earnings -= order.courier_fee_cents
+                    courier_balance.save()
+
             if not order.product.is_restaurant_category:
                 product = Product.objects.select_for_update().get(pk=order.product_id)
                 product.quantity += order.quantity
@@ -1663,6 +1671,12 @@ def _apply_order_delivered(order, photo):
         order.status = OrderStatus.DELIVERED
         order.delivered_at = timezone.now()
         order.delivery_photo = photo
+        # A courier (not a self-delivering seller) earns the platform's
+        # configured flat delivery fee — snapshotted here so it survives a
+        # later change to the rate, and included in this same save() rather
+        # than a second write.
+        if order.assigned_courier_id:
+            order.courier_fee_cents = PlatformSettings.load().courier_delivery_fee_cents
         order.save()
 
         # The seller is only owed their sale proceeds (subtotal) once
@@ -1679,6 +1693,10 @@ def _apply_order_delivered(order, photo):
         )
         seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
         seller_balance.add_commission(int(order.subtotal * 100))
+
+        if order.assigned_courier_id and order.courier_fee_cents:
+            courier_balance, _created = CourierBalance.objects.get_or_create(courier=order.assigned_courier)
+            courier_balance.add_commission(order.courier_fee_cents)
 
     _notify(
         order.buyer,
