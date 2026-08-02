@@ -31,7 +31,7 @@ from .payment_models import (
 )
 from .push_notifications import send_push
 from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
-from .payment_gateways import SimulatedBankGateway, _settle_simulated_transaction
+from .payment_gateways import SimulatedBankGateway, _retry_on_sqlite_lock, _settle_simulated_transaction
 from .payment_forms import (
     BankAccountForm, CheckoutForm, DisputeForm, SellerDisputeResponseForm, SellerPaymentInstructionsForm,
     ShipOrderForm, DeliveryUpdateForm, DeliveryProofForm, SubscriptionRequestForm,
@@ -853,6 +853,7 @@ def _mark_payment_failed(payment, error_message, source):
     logger.warning(f"Payment failed for payment id={payment.id} (via {source}): {error_message}")
 
 
+@_retry_on_sqlite_lock
 def _process_bank_callback(txn, source):
     """Single entrypoint for 'the simulated bank told us the final
     outcome' — called by the settlement timer, the sweep command, the

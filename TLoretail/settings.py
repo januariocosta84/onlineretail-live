@@ -142,6 +142,40 @@ DATABASES = {
     )
 }
 
+if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
+    # SQLite has no real row-level locking — select_for_update() (used by
+    # e.g. payment_gateways._settle_simulated_transaction) is a silent
+    # no-op on this backend, so two concurrent writers (the background
+    # settlement timer racing the reconcile-on-access path when a buyer
+    # reloads the payment confirmation page at the wrong moment) can hit a
+    # hard "database is locked" error instead of one briefly waiting its
+    # turn. A longer busy timeout alone isn't enough — SQLite's default
+    # "delete" journal mode takes an exclusive lock on the whole file for
+    # the duration of a write, so two near-simultaneous writers still
+    # collide immediately. WAL mode lets a writer proceed without blocking
+    # readers and makes the busy-timeout retry actually effective for the
+    # writer-vs-writer case handled here. The code on both sides already
+    # re-checks status before writing (see _settle_simulated_transaction /
+    # _process_bank_callback's idempotency guards), so the loser of the
+    # race just no-ops once it gets its turn instead of erroring.
+    # Postgres in production has real row locking via SELECT ... FOR
+    # UPDATE and never hits this — this block is a no-op there.
+    # Kept short (not the 20-60s some guides suggest): a WAL write here
+    # normally clears in milliseconds, and this timeout stacks with
+    # _retry_on_sqlite_lock's own 5x retry loop in payment_gateways.py —
+    # a large per-attempt timeout there would mean a single genuinely
+    # contended request (e.g. two overlapping browser reloads) could
+    # block for up to 5x this value before surfacing anything to the user.
+    DATABASES["default"].setdefault("OPTIONS", {})["timeout"] = 5
+
+    from django.db.backends.signals import connection_created
+
+    def _enable_sqlite_wal(sender, connection, **kwargs):
+        if connection.vendor == "sqlite":
+            connection.cursor().execute("PRAGMA journal_mode=WAL;")
+
+    connection_created.connect(_enable_sqlite_wal)
+
 # Keep legacy AutoField primary keys (project predates BigAutoField default).
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 

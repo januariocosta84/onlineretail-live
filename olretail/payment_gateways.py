@@ -13,10 +13,12 @@ the simulated bank gateway to work.
 
 import logging
 import threading
+import time
 from datetime import timedelta
+from functools import wraps
 
 from django.conf import settings
-from django.db import transaction as db_transaction
+from django.db import OperationalError, transaction as db_transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -26,6 +28,32 @@ from .banking_models import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _retry_on_sqlite_lock(func):
+    """SQLite has no real row-level locking, so select_for_update() below
+    is a silent no-op there — two near-simultaneous callers (the
+    background settlement timer racing reconcile-on-access, e.g. a buyer
+    reloading the payment confirmation page at the wrong moment) can hit
+    "database is locked" even with a raised busy_timeout and WAL mode (see
+    TLoretail/settings.py) — Python's stdlib sqlite3 driver doesn't always
+    honor the busy handler reliably through Django's transaction handling.
+    A short retry at this level is the practical fix. Postgres in
+    production has real row locking and never raises this, so the retry
+    loop simply never triggers there. Not general-purpose — only wrap
+    functions that are already idempotent/safe to re-run (this one
+    re-checks status under the lock before writing anything)."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        attempts = 5
+        for attempt in range(1, attempts + 1):
+            try:
+                return func(*args, **kwargs)
+            except OperationalError as e:
+                if "database is locked" not in str(e) or attempt == attempts:
+                    raise
+                time.sleep(0.2 * attempt)
+    return wrapper
 
 
 class PaymentGatewayResult:
@@ -298,6 +326,7 @@ def _schedule_settlement(transaction_id):
     timer.start()
 
 
+@_retry_on_sqlite_lock
 def _settle_simulated_transaction(transaction_id):
     """Idempotent/re-entrant-safe — callable from the Timer, the sweep
     command, and the admin 'Settle now' action without risk of double-
