@@ -1,11 +1,21 @@
-from django.urls import path
+from django.urls import include, path
 from django.views.generic import RedirectView
+from rest_framework.routers import DefaultRouter
 
 from . import views
 from . import payment_views
 from . import banking_api
+from . import courier_api
 
 app_name = "olretail"
+
+# Independent courier app (Flutter, courier_app/) REST API — only the
+# availability CRUD needs a full viewset/router, everything else is a
+# single action per URL. See olretail/courier_api.py.
+_courier_api_router = DefaultRouter()
+_courier_api_router.register(
+    "availability", courier_api.CourierAvailabilityViewSet, basename="courier-api-availability"
+)
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -104,6 +114,16 @@ urlpatterns = [
     path("api/bank-simulator/v1/payments/<str:reference>/cancel/", banking_api.cancel_payment, name="banking_api_cancel_payment"),
     path("api/bank-simulator/v1/payments/<str:reference>/refund/", banking_api.refund_payment, name="banking_api_refund_payment"),
     path("api/bank-simulator/v1/accounts/<str:account_number>/", banking_api.get_account, name="banking_api_get_account"),
+
+    # Independent courier app (Flutter, courier_app/) REST API
+    path("api/courier/v1/login/", courier_api.CourierLoginView.as_view(), name="courier_api_login"),
+    path("api/courier/v1/me/", courier_api.MeView.as_view(), name="courier_api_me"),
+    path("api/courier/v1/deliveries/", courier_api.DeliveriesListView.as_view(), name="courier_api_deliveries"),
+    path(
+        "api/courier/v1/deliveries/<int:order_id>/mark-delivered/",
+        courier_api.MarkDeliveredView.as_view(), name="courier_api_mark_delivered",
+    ),
+    path("api/courier/v1/", include(_courier_api_router.urls)),
 
     # Legacy routes kept so old bookmarks keep working
     path("login/", RedirectView.as_view(pattern_name="accounts:login", permanent=False), name="login"),

@@ -1,6 +1,6 @@
 # HANDOFF — TimorMart
 
-Last updated: 2026-07-15 (role revocation + bugfix, full-width layout, platform payment settings, order notifications, full UAT pass + 8 launch-blocker fixes, all 11 Medium UAT fixes incl. product ratings + order cancellation, 4 dummy sidebar ads, pitch deck, subscription renewal/extension bugfix, services-category contact wording, product-delete image cleanup)
+Last updated: 2026-07-31 (deployed to Render — Heroku is dead, courier day/hour availability + booking filter, app timezone switched to Asia/Seoul, product-delete-with-order-history crash fixed, Finance Officer role + payout-on-delivery escrow timing change). Everything below the 2026-07-15 entries in this changelog predates a large gap in updates — the repo moved a lot (bank simulator, escrow bank-transfer redemption, Render deployment) without this doc being kept current; treat anything not corroborated by a recent dated section here with suspicion and check the actual code.
 
 ## What this is
 
@@ -17,13 +17,36 @@ button — see Cart-restricted categories. UI is bilingual: **English**
 (default) and **Tetum** (`/tet/` URL prefix).
 
 - Project root: `C:\Users\DACOSTAJA\OneDrive - Food and Agriculture Organization\Desktop\My App\onlineretail-live`
-- **Is now a git repository** (this was not true as of the 2026-07-12 entry
-  below — it has since been initialized, with commits and a GitHub remote:
-  `origin` → `https://github.com/januariocosta84/onlineretail-live.git`).
-  `git status` currently shows a very large uncommitted diff (~1780 files) —
-  most of that is generated/vendor content (`__pycache__`, `media/`,
-  `staticfiles/`) plus every change described in this document; nothing has
-  been committed by Claude in any session — commit only when explicitly asked.
+- **Is a git repository with real commit history now** — `origin` →
+  `https://github.com/januariocosta84/onlineretail-live.git`, branch
+  `master`. Claude has committed and pushed to `origin/master` in sessions
+  since 2026-07-31 (courier availability, timezone, product-delete fix,
+  Finance Officer role — see dated sections below) — the older claim above
+  that "nothing has been committed" is no longer true. `git status` still
+  shows a standing set of unstaged, uncommitted changes to `__pycache__/*`,
+  `db.sqlite3`, and a few deleted `staticfiles/mdb/img/*` files that predate
+  Claude's sessions and are deliberately left alone (not this project's
+  editable source) — only stage/commit files actually relevant to the task
+  at hand, never a blanket `git add -A`.
+- **Live production is on Render, not Heroku** — see `render.yaml`
+  (service name `timormart`, free plan). The `onlineretails2021.herokuapp.com`
+  URL referenced throughout the older parts of this doc is dead (returns
+  Heroku's "No such app"); the real URL is **`https://timormart.onrender.com`**.
+  Render auto-deploys from `origin/master` on push — a `git push` to
+  `master` is a real production deploy, act accordingly. See "Deployment
+  notes" further down for the corrected, current version of this info.
+- **Production DB is directly reachable from a local shell** via the
+  `RENDER_DATABASE_URL` value in `.env` (Postgres — separate from the local
+  `db.sqlite3` used by `manage.py runserver`). To run any `manage.py`
+  command against production: extract that URL and pass it as the
+  `DATABASE_URL` env var for that one command (see git history around
+  2026-07-31 for the exact one-liner used to do this safely without ever
+  writing the credential to disk). **This is real customer data — treat
+  every command run this way as a production action**, prefer read-only
+  queries, and take a backup (`manage.py dumpdata`, with `PYTHONUTF8=1` set
+  — Windows' default `cp1252` file encoding corrupts non-ASCII data
+  otherwise, e.g. Korean/Portuguese text in product listings) before
+  anything destructive.
 - **Working venv is `.venv/` in the project root** (not an external temp
   path — that was true for an earlier session/machine setup, no longer
   accurate). Run everything via `.venv\Scripts\python.exe manage.py ...`.
@@ -1302,16 +1325,30 @@ platform), not bought through checkout.
 - Product condition values are stored in English ("New"/"Second Hand") and
   translated only for display — don't translate the stored values.
 
-## Deployment notes
+## Deployment notes (corrected 2026-07-31 — this whole section was stale)
 
-- `Procfile` (gunicorn) + `runtime.txt` (python-3.13.5) target Heroku; the old
-  `onlineretails2021.herokuapp.com` deployment is long dead. Before deploying:
-  set `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`,
-  `DJANGO_SSL_REDIRECT=true`; run `collectstatic` (WhiteNoise serves static).
-- **Media is on local disk** (`media/`) and served by Django — fine for one
-  small server, ephemeral on Heroku. Move to S3-compatible storage before real use.
-- SQLite is fine at this scale; switch to Postgres via `DATABASES` if needed
-  (psycopg/dj-database-url are commented in requirements.txt).
+- **Live on Render**, not Heroku — `render.yaml` is the source of truth
+  (Blueprint: web service `timormart` + Postgres `timormart-db`, both free
+  tier). Real URL: **`https://timormart.onrender.com`**. The `Procfile` /
+  `runtime.txt` files are Heroku leftovers, unused by the current deploy;
+  don't trust them for how the app actually starts in production — that's
+  `render.yaml`'s `startCommand` (`migrate --noinput && update_translation_fields
+  olretail && (createsuperuser --noinput || true) && gunicorn ...`).
+- **Deploys automatically on every push to `origin/master`** (Render's
+  GitHub integration) — there is no separate staging step. Free-tier web
+  service sleeps after 15 min idle; first request after waking takes
+  30-60s.
+- **Database is Postgres** (`DATABASE_URL` env var, wired via
+  `dj_database_url.config()` in `TLoretail/settings.py`), not SQLite —
+  `db.sqlite3` in the repo is local-dev-only. See the `RENDER_DATABASE_URL`
+  bullet earlier in this doc for how to reach the real production DB from a
+  local shell when needed.
+- Media is on local disk (`media/`), served by Django — ephemeral on
+  Render's free tier (wiped on redeploy/restart). Move to S3-compatible or
+  Cloudinary storage before relying on uploaded images surviving a deploy —
+  `CLOUDINARY_URL` is already a recognized env var in `render.yaml`, just
+  not necessarily wired into `DEFAULT_FILE_STORAGE` yet; check
+  `TLoretail/settings.py` before assuming either way.
 
 ## Known gaps / next steps
 

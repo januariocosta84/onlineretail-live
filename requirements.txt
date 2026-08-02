@@ -5,6 +5,11 @@ whitenoise>=6.6
 django-modeltranslation>=0.19
 python-dotenv>=1.0
 
+# REST API for the independent courier mobile app (courier_app/) — token
+# auth, not session/CSRF, since a native app can't carry Django's session
+# cookie. See olretail/courier_api.py.
+djangorestframework>=3.15
+
 # Payment Processing
 stripe>=5.4
 

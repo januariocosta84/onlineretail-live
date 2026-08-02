@@ -1632,6 +1632,68 @@ def seller_update_order_status(request, order_id):
     return redirect('olretail:order_detail', order_id=order.id)
 
 
+def _courier_can_mark_delivered(user, order):
+    """Same authorization rule for both the HTML view and the API: the
+    owning seller (self-delivery) or the courier this order is assigned
+    to. Returns (is_owning_seller, is_assigned_courier)."""
+    is_owning_seller = hasattr(user, 'seller') and order.seller_id == user.seller.id
+    is_assigned_courier = (
+        order.assigned_courier_id
+        and hasattr(user, 'courier')
+        and order.assigned_courier_id == user.courier.id
+    )
+    return is_owning_seller, is_assigned_courier
+
+
+def _apply_order_delivered(order, photo):
+    """The actual business logic of confirming delivery — shared by the
+    HTML view (mark_delivered) and the courier API
+    (courier_api.MarkDeliveredView) so there's exactly one place that
+    settles COD payment, credits the seller's payout balance, and fans out
+    notifications. Callers are responsible for their own permission/status
+    checks and photo validation (DeliveryProofForm) before calling this."""
+    if order.payment_method == PaymentMethod.CASH_ON_DELIVERY and not order.paid_at:
+        # Cash changes hands at the door — reuse the same "payment
+        # confirmed" side effects (paid_at, stock decrement, cart
+        # clear) that a bank-transfer seller's confirm click triggers,
+        # just fired by the delivery event instead of a separate step.
+        _mark_bank_transfer_paid(order)
+
+    with transaction.atomic():
+        order.status = OrderStatus.DELIVERED
+        order.delivered_at = timezone.now()
+        order.delivery_photo = photo
+        order.save()
+
+        # The seller is only owed their sale proceeds (subtotal) once
+        # delivery is confirmed — see _mark_payment_succeeded and
+        # _mark_bank_transfer_paid, which deliberately don't do this at
+        # payment time anymore. This is the one place a Finance Officer's
+        # payout balance actually gets credited.
+        Transaction.objects.create(
+            order=order,
+            seller=order.seller,
+            amount_cents=int(order.subtotal * 100),
+            transaction_type=TransactionType.COMMISSION,
+            description=f"Earnings from order {order.order_number}",
+        )
+        seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+        seller_balance.add_commission(int(order.subtotal * 100))
+
+    _notify(
+        order.buyer,
+        _('Your order %(order)s has been delivered.') % {'order': order.order_number},
+        order=order,
+    )
+    for finance_user in _finance_officers():
+        _notify(
+            finance_user,
+            _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
+            % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
+            order=order,
+        )
+
+
 @login_required
 @require_POST
 def mark_delivered(request, order_id):
@@ -1639,12 +1701,7 @@ def mark_delivered(request, order_id):
     A photo is required — see DeliveryProofForm."""
     order = get_object_or_404(Order, id=order_id)
 
-    is_owning_seller = hasattr(request.user, 'seller') and order.seller_id == request.user.seller.id
-    is_assigned_courier = (
-        order.assigned_courier_id
-        and hasattr(request.user, 'courier')
-        and order.assigned_courier_id == request.user.courier.id
-    )
+    is_owning_seller, is_assigned_courier = _courier_can_mark_delivered(request.user, order)
     if not (is_owning_seller or is_assigned_courier):
         messages.error(request, _('Permission denied.'))
         return redirect('olretail:index')
@@ -1655,46 +1712,7 @@ def mark_delivered(request, order_id):
 
     form = DeliveryProofForm(request.POST, request.FILES)
     if form.is_valid():
-        if order.payment_method == PaymentMethod.CASH_ON_DELIVERY and not order.paid_at:
-            # Cash changes hands at the door — reuse the same "payment
-            # confirmed" side effects (paid_at, stock decrement, cart
-            # clear) that a bank-transfer seller's confirm click triggers,
-            # just fired by the delivery event instead of a separate step.
-            _mark_bank_transfer_paid(order)
-
-        with transaction.atomic():
-            order.status = OrderStatus.DELIVERED
-            order.delivered_at = timezone.now()
-            order.delivery_photo = form.cleaned_data['photo']
-            order.save()
-
-            # The seller is only owed their sale proceeds (subtotal) once
-            # delivery is confirmed — see _mark_payment_succeeded and
-            # _mark_bank_transfer_paid, which deliberately don't do this at
-            # payment time anymore. This is the one place a Finance Officer's
-            # payout balance actually gets credited.
-            Transaction.objects.create(
-                order=order,
-                seller=order.seller,
-                amount_cents=int(order.subtotal * 100),
-                transaction_type=TransactionType.COMMISSION,
-                description=f"Earnings from order {order.order_number}",
-            )
-            seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
-            seller_balance.add_commission(int(order.subtotal * 100))
-
-        _notify(
-            order.buyer,
-            _('Your order %(order)s has been delivered.') % {'order': order.order_number},
-            order=order,
-        )
-        for finance_user in _finance_officers():
-            _notify(
-                finance_user,
-                _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
-                % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
-                order=order,
-            )
+        _apply_order_delivered(order, form.cleaned_data['photo'])
         messages.success(request, _('Order marked as delivered.'))
         if is_assigned_courier:
             return redirect('olretail:courier_deliveries')
