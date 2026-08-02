@@ -16,7 +16,7 @@ from django.contrib.auth.models import Group, User
 from django.core.paginator import Paginator
 from django.db.models import Count, Exists, OuterRef, Q, Sum
 from django.db.models.deletion import ProtectedError
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -27,8 +27,8 @@ from django.db.models import F
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
     Category, Comment, Courier, CourierBalance, CourierPayout, CourierVerificationStatus, Dispute,
-    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, Payout, PayoutStatus,
-    PlatformBankAccount, PlatformSettings, Product,
+    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, PaymentMethod, Payout,
+    PayoutStatus, PlatformBankAccount, PlatformSettings, Product,
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
 from olretail.payment_forms import PlatformBankAccountForm
@@ -92,6 +92,89 @@ def _monthly_series(queryset, date_field, months=6):
     peak = max((item["count"] for item in series), default=0) or 1
     for item in series:
         item["pct"] = round(item["count"] * 100 / peak)
+    return series
+
+
+def _revenue_orders():
+    """Orders that actually generated commission revenue for the platform.
+    Excludes cash-on-delivery — the buyer pays the courier/seller directly
+    at the door, so the platform never collects its commission on those
+    (a known, accepted gap, see HANDOFF.md) — and refunded orders, since a
+    refund returns the full charge, commission included, to the buyer."""
+    return Order.objects.filter(paid_at__isnull=False).exclude(
+        payment_method=PaymentMethod.CASH_ON_DELIVERY
+    ).exclude(status=OrderStatus.REFUNDED)
+
+
+def _daily_revenue_series(days=30):
+    """Commission revenue per calendar day for the last `days` days (today
+    included), oldest first."""
+    today = timezone.localdate()
+    start = today - timedelta(days=days - 1)
+    rows = (
+        _revenue_orders().filter(paid_at__date__gte=start)
+        .annotate(day=TruncDate("paid_at"))
+        .values("day")
+        .annotate(total=Sum("commission_amount"))
+    )
+    totals = {row["day"]: row["total"] or Decimal("0") for row in rows}
+    series = []
+    cursor = start
+    for _ in range(days):
+        series.append({"label": cursor.strftime("%d %b"), "total": totals.get(cursor, Decimal("0"))})
+        cursor += timedelta(days=1)
+    peak = max((item["total"] for item in series), default=Decimal("0")) or Decimal("1")
+    for item in series:
+        item["pct"] = round(float(item["total"]) * 100 / float(peak))
+    return series
+
+
+def _monthly_revenue_series(months=12):
+    """Commission revenue per calendar month for the last `months` months
+    (current month included), oldest first."""
+    now = timezone.now()
+    total = now.year * 12 + (now.month - 1) - (months - 1)
+    start = now.replace(
+        year=total // 12, month=total % 12 + 1, day=1,
+        hour=0, minute=0, second=0, microsecond=0,
+    )
+    rows = (
+        _revenue_orders().filter(paid_at__gte=start)
+        .annotate(month=TruncMonth("paid_at"))
+        .values("month")
+        .annotate(total=Sum("commission_amount"))
+    )
+    totals = {row["month"].strftime("%Y-%m"): row["total"] or Decimal("0") for row in rows}
+    series = []
+    cursor = start
+    for _ in range(months):
+        key = cursor.strftime("%Y-%m")
+        series.append({"label": cursor.strftime("%b %Y"), "total": totals.get(key, Decimal("0"))})
+        cursor = (cursor + timedelta(days=32)).replace(day=1)
+    peak = max((item["total"] for item in series), default=Decimal("0")) or Decimal("1")
+    for item in series:
+        item["pct"] = round(float(item["total"]) * 100 / float(peak))
+    return series
+
+
+def _yearly_revenue_series(years=5):
+    """Commission revenue per calendar year for the last `years` years
+    (current year included), oldest first."""
+    now = timezone.now()
+    start_year = now.year - (years - 1)
+    rows = (
+        _revenue_orders().filter(paid_at__year__gte=start_year)
+        .annotate(year=TruncYear("paid_at"))
+        .values("year")
+        .annotate(total=Sum("commission_amount"))
+    )
+    totals = {row["year"].year: row["total"] or Decimal("0") for row in rows}
+    series = []
+    for y in range(start_year, now.year + 1):
+        series.append({"label": str(y), "total": totals.get(y, Decimal("0"))})
+    peak = max((item["total"] for item in series), default=Decimal("0")) or Decimal("1")
+    for item in series:
+        item["pct"] = round(float(item["total"]) * 100 / float(peak))
     return series
 
 
@@ -188,6 +271,25 @@ def finance_overview(request):
             "pending_subscription_requests": SubscriptionRequest.objects.filter(
                 status=SubscriptionRequestStatus.PENDING
             ).select_related("seller__user").order_by("-created_at")[:10],
+        },
+    )
+
+
+@finance_required
+def revenue(request):
+    """Platform commission revenue over time, bucketed by day/month/year —
+    see _revenue_orders for exactly what counts (excludes COD and refunded
+    orders, since the platform never actually keeps that money)."""
+    total_all_time = _revenue_orders().aggregate(total=Sum("commission_amount"))["total"] or Decimal("0")
+    return render(
+        request,
+        "dashboard/revenue.html",
+        {
+            "section": "revenue",
+            "total_all_time": total_all_time,
+            "daily": _daily_revenue_series(),
+            "monthly": _monthly_revenue_series(),
+            "yearly": _yearly_revenue_series(),
         },
     )
 

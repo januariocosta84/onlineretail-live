@@ -1706,27 +1706,45 @@ def _apply_order_delivered(order, photo):
                 + (' (cash on delivery — collected directly, not part of the payout balance)' if is_cod else '')
             ),
         )
+        # Finance gets pinged when a balance actually crosses into
+        # payout-eligible territory, not on every single delivery — a $2
+        # "ready for payout" message on every sale is noise that buries the
+        # moment there's genuinely money to send (see HANDOFF.md).
+        seller_crossed_eligible = False
+        courier_crossed_eligible = False
         if not is_cod:
             seller_balance, _created = SellerBalance.objects.get_or_create(seller=order.seller)
+            was_eligible = seller_balance.available_balance >= seller_balance.min_payout_cents
             seller_balance.add_commission(int(order.subtotal * 100))
+            seller_crossed_eligible = not was_eligible and seller_balance.available_balance >= seller_balance.min_payout_cents
 
-        if order.assigned_courier_id and order.courier_fee_cents and not is_cod:
-            courier_balance, _created = CourierBalance.objects.get_or_create(courier=order.assigned_courier)
-            courier_balance.add_commission(order.courier_fee_cents)
+            if order.assigned_courier_id and order.courier_fee_cents:
+                courier_balance, _created = CourierBalance.objects.get_or_create(courier=order.assigned_courier)
+                was_eligible = courier_balance.available_balance >= courier_balance.min_payout_cents
+                courier_balance.add_commission(order.courier_fee_cents)
+                courier_crossed_eligible = (
+                    not was_eligible and courier_balance.available_balance >= courier_balance.min_payout_cents
+                )
 
     _notify(
         order.buyer,
         _('Your order %(order)s has been delivered.') % {'order': order.order_number},
         order=order,
     )
-    if not is_cod:
-        # Nothing for Finance to act on for a COD order — no payout was
-        # ever created for it, so a "ready for payout" ping would be noise.
+    if seller_crossed_eligible:
         for finance_user in _finance_officers():
             _notify(
                 finance_user,
-                _('Order %(order)s delivered — $%(amount)s ready for payout to %(seller)s.')
-                % {'order': order.order_number, 'amount': order.subtotal, 'seller': order.seller.get_name},
+                _('%(seller)s just became eligible for payout — $%(amount)s available.')
+                % {'seller': order.seller.get_name, 'amount': seller_balance.available_balance_dollars},
+                order=order,
+            )
+    if courier_crossed_eligible:
+        for finance_user in _finance_officers():
+            _notify(
+                finance_user,
+                _('%(courier)s just became eligible for payout — $%(amount)s available.')
+                % {'courier': order.assigned_courier.get_name, 'amount': courier_balance.available_balance_dollars},
                 order=order,
             )
 

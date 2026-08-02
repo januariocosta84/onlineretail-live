@@ -8,6 +8,7 @@ app_name = "dashboard"
 urlpatterns = [
     path("", views.overview, name="overview"),
     path("finance/", views.finance_overview, name="finance_overview"),
+    path("revenue/", views.revenue, name="revenue"),
     path("queue/", views.queue, name="queue"),
     path("queue/bulk/", views.queue_bulk, name="queue_bulk"),
     path("products/", views.products, name="products"),
