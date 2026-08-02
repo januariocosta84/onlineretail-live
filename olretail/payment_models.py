@@ -876,8 +876,8 @@ class PlatformSettings(models.Model):
     # day-to-day finance operation — stays admin-only, not finance-editable
     # (same boundary as the platform commission rate).
     courier_delivery_fee_cents = models.BigIntegerField(
-        default=200,
-        help_text=_("Flat fee (in cents) a courier earns for each delivery they confirm. $2.00 = 200."),
+        default=100,
+        help_text=_("Flat fee (in cents) a courier earns for each delivery they confirm. $1.00 = 100."),
     )
     updated_at = models.DateTimeField(auto_now=True)
 

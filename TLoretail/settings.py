@@ -315,7 +315,7 @@ STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "whsec_test_demo
 
 # Payment settings
 STRIPE_CURRENCY = os.environ.get("STRIPE_CURRENCY", "USD")
-COMMISSION_RATE = 0.15  # 15% platform commission
+COMMISSION_RATE = 0.02  # 2% platform commission
 STRIPE_FEE_PERCENT = 0.029  # 2.9% Stripe processing fee
 STRIPE_FEE_FIXED = 0.30  # $0.30 fixed fee per transaction
 
