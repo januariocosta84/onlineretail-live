@@ -105,6 +105,46 @@ class CourierMe {
       );
 }
 
+/// Mirrors olretail/courier_api.py's CourierProfileSerializer — used by
+/// the profile screen (view + edit mobile/address/documents).
+class CourierProfile {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String mobile;
+  final String address;
+  final String verificationStatus;
+  final String verificationNote;
+  final bool hasIdDocument;
+  final bool hasDrivingLicense;
+
+  CourierProfile({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.mobile,
+    required this.address,
+    required this.verificationStatus,
+    required this.verificationNote,
+    required this.hasIdDocument,
+    required this.hasDrivingLicense,
+  });
+
+  String get fullName => '$firstName $lastName'.trim();
+
+  factory CourierProfile.fromJson(Map<String, dynamic> json) => CourierProfile(
+        firstName: json['first_name'] as String? ?? '',
+        lastName: json['last_name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        mobile: json['mobile'] as String? ?? '',
+        address: json['address'] as String? ?? '',
+        verificationStatus: json['verification_status'] as String? ?? '',
+        verificationNote: json['verification_note'] as String? ?? '',
+        hasIdDocument: json['has_id_document'] as bool? ?? false,
+        hasDrivingLicense: json['has_driving_license'] as bool? ?? false,
+      );
+}
+
 class CourierEarnings {
   final String month; // "YYYY-MM"
   final int deliveredCount;

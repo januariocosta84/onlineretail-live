@@ -17,17 +17,29 @@ from rest_framework import serializers, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import AllowAny, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.core.cache import cache
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db import transaction as db_transaction
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
-from .models import CourierAvailability
+# Registration deliberately reuses the exact web registration building
+# blocks (form, username generator, role assignment) rather than
+# reimplementing them, so a courier account created from this app can never
+# drift from one created through the website — see CourierRegisterView.
+from accounts.forms import RegistrationForm
+from accounts.roles import ROLE_COURIER, assign_role
+from accounts.views import _generate_username
+
+from .models import Courier, CourierAvailability, CourierVerificationStatus
 from .payment_forms import DeliveryProofForm
 from .payment_models import CourierBalance, DevicePlatform, DeviceToken, Order, OrderStatus, PaymentMethod
 from .payment_views import _apply_order_delivered, _courier_can_mark_delivered
+from .validators import validate_image_size
 
 
 class IsCourier(BasePermission):
@@ -37,6 +49,67 @@ class IsCourier(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated and hasattr(request.user, 'courier'))
+
+
+def _rate_limited(key, request, limit=10, window_seconds=300):
+    """Same per-IP throttle as accounts.ratelimit.rate_limit, reimplemented
+    rather than reused directly: that decorator responds with a Django
+    messages-framework redirect on the limit being hit, which doesn't mean
+    anything to a JSON API client — this returns a plain bool so the
+    caller can respond with a proper 429 instead."""
+    ip = request.META.get('REMOTE_ADDR', 'unknown')
+    cache_key = f'ratelimit:{key}:{ip}'
+    attempts = cache.get(cache_key, 0)
+    if attempts >= limit:
+        return True
+    cache.set(cache_key, attempts + 1, window_seconds)
+    return False
+
+
+class CourierRegisterView(APIView):
+    """POST multipart {first_name, last_name, email, password1, password2,
+    mobile, address, id_document, driving_license} -> {token, courier_name},
+    201. Courier-only equivalent of accounts.views.register — reuses the
+    exact same RegistrationForm, with account_type forced to ROLE_COURIER
+    server-side (never client-supplied, since this endpoint has no other
+    purpose), so validation and side effects can't drift from the web
+    flow: auto-generated unique username, email-uniqueness check, both
+    id_document/driving_license required, Courier group + profile created
+    via assign_role. No email verification step, same as the web — the
+    account is usable immediately, returning a token the app can log in
+    with right away. verification_status starts 'pending', which only
+    blocks being assigned deliveries (see ShipOrderForm), not using the
+    app."""
+
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        if _rate_limited('courier_register', request):
+            return Response(
+                {'detail': 'Too many attempts. Please wait a few minutes and try again.'},
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+
+        data = request.data.copy()
+        data['account_type'] = ROLE_COURIER
+        data['username'] = _generate_username(
+            data.get('first_name', ''), data.get('last_name', ''), data.get('mobile', ''),
+        )
+        form = RegistrationForm(data, request.FILES)
+        if not form.is_valid():
+            return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        with db_transaction.atomic():
+            user = form.save()
+            assign_role(user, ROLE_COURIER, address=form.cleaned_data['address'], mobile=form.cleaned_data['mobile'])
+            courier = user.courier
+            courier.id_document = form.cleaned_data['id_document']
+            courier.driving_license = form.cleaned_data['driving_license']
+            courier.save()
+
+        token, _created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key, 'courier_name': courier.get_name}, status=status.HTTP_201_CREATED)
 
 
 class CourierLoginView(ObtainAuthToken):
@@ -54,6 +127,21 @@ class CourierLoginView(ObtainAuthToken):
         return Response({'token': token.key, 'courier_name': user.courier.get_name})
 
 
+class CourierLogoutView(APIView):
+    """POST -> deletes this courier's auth token(s), so a leaked/stolen
+    token stops working immediately. The token-auth equivalent of
+    accounts.views.user_logout, which ends the Django session itself
+    rather than just having the client forget its cookie — the app
+    calling this and then discarding the token locally (see
+    lib/api_client.dart) is the same two-sided guarantee."""
+
+    permission_classes = [IsCourier]
+
+    def post(self, request):
+        Token.objects.filter(user=request.user).delete()
+        return Response({'status': 'ok'})
+
+
 class MeView(APIView):
     """Read-only courier identity for the app's home/header — verification
     status is shown but not submittable here (see HANDOFF.md v1 scope)."""
@@ -66,6 +154,97 @@ class MeView(APIView):
             'name': courier.get_name,
             'verification_status': courier.verification_status,
         })
+
+
+class CourierProfileSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    has_id_document = serializers.SerializerMethodField()
+    has_driving_license = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Courier
+        fields = [
+            'first_name', 'last_name', 'email', 'mobile', 'address',
+            'verification_status', 'verification_note', 'has_id_document', 'has_driving_license',
+        ]
+
+    def get_has_id_document(self, obj):
+        return bool(obj.id_document)
+
+    def get_has_driving_license(self, obj):
+        return bool(obj.driving_license)
+
+
+class CourierProfileView(APIView):
+    """GET -> the current courier's profile. PATCH multipart -> update
+    mobile/address and/or resubmit id_document/driving_license. The
+    document-resubmission behavior mirrors
+    olretail.payment_views.courier_submit_verification exactly: uploading
+    either document unconditionally resets verification_status back to
+    pending and clears verification_note, even if already verified — same
+    rule as the web, not a new one. mobile/address have no web precedent
+    to mirror (couriers can't edit them there at all today), so this is
+    new territory scoped down to what a courier should reasonably expect
+    to self-manage — service_cities/deposit_amount stay admin-only, same
+    as on the web."""
+
+    permission_classes = [IsCourier]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get(self, request):
+        return Response(CourierProfileSerializer(request.user.courier).data)
+
+    def patch(self, request):
+        courier = request.user.courier
+        errors = {}
+        update_fields = []
+
+        if 'mobile' in request.data:
+            mobile = (request.data.get('mobile') or '').strip()
+            if not mobile:
+                errors['mobile'] = ['This field may not be blank.']
+            else:
+                courier.mobile = mobile
+                update_fields.append('mobile')
+
+        if 'address' in request.data:
+            address = (request.data.get('address') or '').strip()
+            if not address:
+                errors['address'] = ['This field may not be blank.']
+            else:
+                courier.address = address
+                update_fields.append('address')
+
+        id_document = request.FILES.get('id_document')
+        driving_license = request.FILES.get('driving_license')
+        for field_name, photo in (('id_document', id_document), ('driving_license', driving_license)):
+            if not photo:
+                continue
+            try:
+                validate_image_size(photo)
+            except DjangoValidationError as e:
+                errors[field_name] = e.messages
+
+        if errors:
+            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        if id_document:
+            courier.id_document = id_document
+            update_fields.append('id_document')
+        if driving_license:
+            courier.driving_license = driving_license
+            update_fields.append('driving_license')
+        if id_document or driving_license:
+            courier.verification_status = CourierVerificationStatus.PENDING
+            courier.verification_note = ''
+            update_fields += ['verification_status', 'verification_note']
+
+        if update_fields:
+            courier.save(update_fields=update_fields)
+
+        return Response(CourierProfileSerializer(courier).data)
 
 
 class EarningsView(APIView):

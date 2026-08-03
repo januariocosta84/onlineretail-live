@@ -77,9 +77,89 @@ class ApiClient {
     return courierName;
   }
 
-  Future<void> logout() => _authStorage.clear();
+  /// Creates a courier account (see olretail/courier_api.py
+  /// CourierRegisterView — reuses the same validation/side effects as
+  /// registering through the website, restricted to the courier role).
+  /// Stores the returned token, same as [login] — no separate sign-in
+  /// step needed afterward, matching the website's auto-login on
+  /// registration.
+  Future<String> register({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password1,
+    required String password2,
+    required String mobile,
+    required String address,
+    required File idDocument,
+    required File drivingLicense,
+  }) async {
+    final request = http.MultipartRequest('POST', _url('/register/'))
+      ..fields['first_name'] = firstName
+      ..fields['last_name'] = lastName
+      ..fields['email'] = email
+      ..fields['password1'] = password1
+      ..fields['password2'] = password2
+      ..fields['mobile'] = mobile
+      ..fields['address'] = address
+      ..files.add(await http.MultipartFile.fromPath('id_document', idDocument.path))
+      ..files.add(await http.MultipartFile.fromPath('driving_license', drivingLicense.path));
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    if (response.statusCode != 201) {
+      throw ApiException(response.statusCode, _errorMessage(response));
+    }
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final token = body['token'] as String;
+    final courierName = body['courier_name'] as String;
+    await _authStorage.saveSession(token, courierName);
+    return courierName;
+  }
+
+  /// Invalidates the token server-side (see CourierLogoutView) before
+  /// forgetting it locally — best-effort: even if the request fails
+  /// (offline, token already gone), local storage is always cleared so
+  /// the user can still get back to the login screen.
+  Future<void> logout() async {
+    try {
+      await http.post(_url('/logout/'), headers: await _authHeaders());
+    } catch (_) {
+      // See docstring above.
+    }
+    await _authStorage.clear();
+  }
 
   Future<bool> isLoggedIn() async => (await _authStorage.readToken()) != null;
+
+  Future<CourierProfile> getProfile() async {
+    final response = await http.get(_url('/profile/'), headers: await _authHeaders());
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+    return CourierProfile.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  /// Partial update — only pass the fields being changed. Re-uploading
+  /// either document resets verification back to pending server-side
+  /// (see CourierProfileView), same as the website's ID resubmission.
+  Future<CourierProfile> updateProfile({
+    String? mobile,
+    String? address,
+    File? idDocument,
+    File? drivingLicense,
+  }) async {
+    final request = http.MultipartRequest('PATCH', _url('/profile/'))..headers.addAll(await _authHeaders());
+    if (mobile != null) request.fields['mobile'] = mobile;
+    if (address != null) request.fields['address'] = address;
+    if (idDocument != null) {
+      request.files.add(await http.MultipartFile.fromPath('id_document', idDocument.path));
+    }
+    if (drivingLicense != null) {
+      request.files.add(await http.MultipartFile.fromPath('driving_license', drivingLicense.path));
+    }
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+    return CourierProfile.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
 
   Future<CourierMe> me() async {
     final response = await http.get(_url('/me/'), headers: await _authHeaders());
