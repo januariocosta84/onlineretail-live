@@ -87,6 +87,20 @@ def _finance_officers():
     return User.objects.filter(is_staff=True, groups__name=FINANCE_GROUP_NAME)
 
 
+def _admins():
+    """Staff users who can act on the general admin dashboard — bank
+    transfer claims, products, users, etc. Deliberately mirrors
+    admin_required's own access rule (dashboard.decorators), not just
+    is_staff: a Finance-Officer-only account is redirected away from
+    /dashboard/payment-disputes/ entirely, so notifying one about a new
+    claim to review would point them at a page they can't reach. A plain
+    list, not cached: this is rare enough (one buyer claim at a time) that
+    a fresh query per call is fine."""
+    from django.contrib.auth.models import User
+    from dashboard.decorators import _is_finance_only
+    return [u for u in User.objects.filter(is_staff=True) if not _is_finance_only(u)]
+
+
 def _parse_int(raw, default=1):
     """Parse an integer POST value (cart quantity, rating score), tolerating
     non-numeric input (e.g. a hand-crafted or garbled request) instead of
@@ -1133,6 +1147,13 @@ def mark_payment_sent(request, order_id):
                 % {'buyer': order.buyer.get_full_name() or order.buyer.username, 'order': order.order_number},
                 order=order,
             )
+            for admin_user in _admins():
+                _notify(
+                    admin_user,
+                    _('New bank transfer claim for order %(order)s — awaiting review.')
+                    % {'order': order.order_number},
+                    order=order,
+                )
             messages.success(request, _('Thanks — an admin will verify your payment and confirm it shortly.'))
             return redirect('olretail:dispute_detail', dispute_id=dispute.id)
     else:
