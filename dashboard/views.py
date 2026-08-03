@@ -1462,13 +1462,30 @@ def firebase_diagnostic(request):
     Added to debug push notifications silently no-op-ing in production
     despite working locally — see olretail/push_notifications.py. Meant to
     be removed once that's resolved, not a permanent admin feature."""
+    import base64
+    import json
+    import os
+
     from django.conf import settings
     from olretail import push_notifications
     from olretail.payment_models import DeviceToken
 
+    raw = os.environ.get("FIREBASE_SERVICE_ACCOUNT_B64", "")
     result = {
+        # settings.py treats "not set" and "set but corrupted" identically
+        # (both end up None) — these three fields tell them apart without
+        # ever printing the actual secret value.
+        "env_var_present": bool(raw),
+        "env_var_length": len(raw),
         "firebase_service_account_configured": bool(settings.FIREBASE_SERVICE_ACCOUNT),
     }
+    if raw and not settings.FIREBASE_SERVICE_ACCOUNT:
+        try:
+            json.loads(base64.b64decode(raw))
+            result["decode_error"] = "Decoded and parsed fine here, but settings.py's own attempt at " \
+                "startup set FIREBASE_SERVICE_ACCOUNT to None anyway — inconsistent, worth a second look."
+        except Exception as e:
+            result["decode_error"] = f"{type(e).__name__}: {e}"
     app = push_notifications._get_firebase_app()
     result["firebase_app_initialized"] = app is not None
 
