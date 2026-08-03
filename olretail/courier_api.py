@@ -207,6 +207,23 @@ class RegisterDeviceView(APIView):
         return Response({'status': 'ok'})
 
 
+class UnregisterDeviceView(APIView):
+    """POST {token} -> called on logout so a signed-out device stops
+    receiving pushes meant for the account that just left it. Mirrors
+    payment_views.unregister_device_token (session-authenticated, same as
+    RegisterDeviceView's web counterpart). Without this, a courier who
+    logs out keeps every future push for whoever's account they were
+    signed into — see lib/screens/deliveries_screen.dart's logout."""
+
+    permission_classes = [IsCourier]
+
+    def post(self, request):
+        token = (request.data.get('token') or '').strip()
+        if token:
+            DeviceToken.objects.filter(token=token, user=request.user).delete()
+        return Response({'status': 'ok'})
+
+
 class CourierAvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CourierAvailability

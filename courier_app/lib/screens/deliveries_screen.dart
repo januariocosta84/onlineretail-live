@@ -47,6 +47,9 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
   }
 
   Future<void> _logout() async {
+    // Must happen before _api.logout() clears the stored auth token —
+    // unregisterDeviceToken needs it to authenticate the request.
+    await PushNotifications.unregister(_api);
     await _api.logout();
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(

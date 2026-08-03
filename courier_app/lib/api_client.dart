@@ -160,6 +160,19 @@ class ApiClient {
     );
     if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
   }
+
+  /// Called on logout (see push_notifications.dart/deliveries_screen.dart)
+  /// so a signed-out device stops receiving pushes meant for the account
+  /// that just left it — without this, the token stays registered
+  /// server-side indefinitely.
+  Future<void> unregisterDeviceToken(String token) async {
+    final response = await http.post(
+      _url('/unregister-device/'),
+      headers: await _authHeaders(),
+      body: {'token': token},
+    );
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+  }
 }
 
 extension _FirstOrNull<T> on Iterable<T> {

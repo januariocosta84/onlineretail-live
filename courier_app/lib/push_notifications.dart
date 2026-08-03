@@ -59,6 +59,24 @@ class PushNotifications {
     }
   }
 
+  /// Call right before clearing the locally stored auth token on logout
+  /// (see deliveries_screen.dart) — without this, the device keeps
+  /// getting pushed to for whichever account it was last signed into,
+  /// since the server has no other way to know it signed out. Resets
+  /// [_initialized] so a different courier logging in on this same
+  /// device re-registers (a token is unique per install, not per user —
+  /// see RegisterDeviceView — but re-running init() also re-subscribes
+  /// the onMessage/onTokenRefresh listeners cleanly for the new session).
+  static Future<void> unregister(ApiClient api) async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token != null) await api.unregisterDeviceToken(token);
+    } catch (_) {
+      // Best-effort — see docstring above.
+    }
+    _initialized = false;
+  }
+
   static Future<void> _createAndroidChannel() async {
     const channel = AndroidNotificationChannel(
       _channelId,
