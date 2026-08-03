@@ -44,6 +44,7 @@ urlpatterns = [
     # Buyer Orders
     path("orders/", payment_views.buyer_orders, name="buyer_orders"),
     path("order/<int:order_id>/", payment_views.order_detail, name="order_detail"),
+    path("order/<int:order_id>/status-poll/", payment_views.order_status_poll, name="order_status_poll"),
     path("order/<int:order_id>/cancel/", payment_views.cancel_order, name="cancel_order"),
     path("order/<int:order_id>/rate/", payment_views.rate_order, name="rate_order"),
     path("order/<int:order_id>/rate-courier/", payment_views.rate_courier, name="rate_courier"),

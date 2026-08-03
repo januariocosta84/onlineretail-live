@@ -632,4 +632,40 @@
     color: #ffc107;
   }
 </style>
+
+{% if order.status not in 'delivered,cancelled,refunded' %}
+<script>
+(function () {
+  var pollUrl = "{% url 'olretail:order_status_poll' order.id %}";
+  var currentStatus = "{{ order.status }}";
+  var currentFoodStatus = "{{ order.food_status }}";
+
+  function poll() {
+    fetch(pollUrl, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        if (data.status !== currentStatus || data.food_status !== currentFoodStatus) {
+          window.location.reload();
+        }
+      })
+      .catch(function () { /* silent — the next tick just tries again */ });
+  }
+
+  // An order's status rarely changes, but when it does (courier marks
+  // delivered, seller ships, kitchen advances) whoever's watching this
+  // exact page should see it without hitting refresh. Reloading wholesale
+  // — rather than hand-patching the timeline/delivery-tracking/rating
+  // sections individually — keeps the whole page trivially consistent.
+  // Skipped while the tab is backgrounded, same reasoning as the header's
+  // notification poll (see shared/header.html).
+  setInterval(function () {
+    if (!document.hidden) poll();
+  }, 10000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) poll();
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}

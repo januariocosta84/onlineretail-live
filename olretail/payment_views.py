@@ -1536,6 +1536,29 @@ def order_detail(request, order_id):
 
 
 @login_required
+def order_status_poll(request, order_id):
+    """Lightweight poll so order_detail.html can refresh itself the
+    moment a courier/seller updates an order (e.g. marks it delivered) —
+    same plain-JsonResponse pattern as notifications_poll, not
+    websockets/SSE, since a single order's status changes rarely enough
+    that a periodic GET is the simplest thing that works. Same permission
+    rule as order_detail itself, so this never leaks an order's status to
+    someone who couldn't otherwise see the page."""
+    order = get_object_or_404(Order, id=order_id)
+    is_buyer = order.buyer == request.user
+    is_seller = request.user.groups.filter(name='Seller').exists() and order.seller.user == request.user
+    is_courier = bool(
+        order.assigned_courier_id
+        and hasattr(request.user, 'courier')
+        and order.assigned_courier_id == request.user.courier.id
+    )
+    is_admin = request.user.is_staff
+    if not (is_buyer or is_seller or is_courier or is_admin):
+        return JsonResponse({'detail': 'Not found.'}, status=404)
+    return JsonResponse({'status': order.status, 'food_status': order.food_status})
+
+
+@login_required
 @require_POST
 def rate_order(request, order_id):
     """Buyer rates the product on a Delivered order — one rating per order
