@@ -1,3 +1,6 @@
+import logging
+
+import requests
 from django import forms
 from django.db.models import Avg, Count, Exists, OuterRef, Q
 from django.utils import timezone
@@ -9,6 +12,45 @@ from olretail.models import (
 from .payment_models import Cart, Order, Dispute, DeliveryUpdate, PaymentMethod, PlatformBankAccount
 from .subscription_models import SubscriptionPlan
 from .validators import validate_iban, validate_image_size, validate_swift_code
+
+logger = logging.getLogger(__name__)
+
+
+def _reverse_geocode_city(lat, lng):
+    """Best-effort reverse geocode of a buyer-shared GPS pin via
+    OpenStreetMap's free Nominatim API (no key/billing needed — matches this
+    project's existing City model, which has no coordinates of its own,
+    see olretail.models.City). Returns a matching City if the geocoded
+    locality text lines up with one already in the database, else None —
+    the caller falls back to asking the buyer to pick a city manually
+    rather than guessing or creating one, since City also drives the
+    courier-matching and delivery-fee logic and a wrong guess there would
+    misroute the order."""
+    try:
+        response = requests.get(
+            'https://nominatim.openstreetmap.org/reverse',
+            params={'format': 'jsonv2', 'lat': str(lat), 'lon': str(lng), 'zoom': 10, 'addressdetails': 1},
+            headers={'User-Agent': 'TimorMart/1.0 (https://timormart.onrender.com)'},
+            timeout=5,
+        )
+        response.raise_for_status()
+        address = response.json().get('address', {})
+    except Exception:
+        logger.warning(f"Reverse geocoding failed for ({lat}, {lng})", exc_info=True)
+        return None
+
+    # 'state' is last but included deliberately: Nominatim tags Timor-Leste's
+    # municipalities (Dili, Baucau, ...) — this project's City model — as
+    # 'state' in its address hierarchy, not 'city'/'town'. Checked last since
+    # it's the broadest field and would be wrong to prioritize in most other
+    # countries; here it's the one that actually matches.
+    for key in ('city', 'town', 'municipality', 'village', 'county', 'state'):
+        name = address.get(key)
+        if name:
+            match = City.objects.filter(city__iexact=name).first()
+            if match:
+                return match
+    return None
 
 
 class CheckoutForm(forms.Form):
@@ -32,12 +74,30 @@ class CheckoutForm(forms.Form):
         help_text=_("Where should we deliver your order?")
     )
 
+    # Not required at the field level — normally resolved automatically
+    # from delivery_latitude/delivery_longitude (see clean() below) once the
+    # buyer shares their location, so most buyers never touch this. It's
+    # still here (rendered hidden by default, see checkout.html) as the
+    # manual fallback for whoever skips sharing a location, or whose pin
+    # doesn't reverse-geocode to a known city.
     delivery_city = forms.ModelChoiceField(
         queryset=City.objects.select_related('country'),
         empty_label=_("Select city"),
+        required=False,
         widget=forms.Select(attrs={'class': 'form-control'}),
         label=_("Delivery City"),
         help_text=_("Couriers are matched to this city"),
+    )
+
+    # Hidden inputs populated by checkout.html's "share my location" /
+    # "point on map" widget (browser geolocation or a dragged Leaflet
+    # marker) — optional, since a buyer who'd rather just pick a city
+    # manually should still be able to check out.
+    delivery_latitude = forms.DecimalField(
+        max_digits=9, decimal_places=6, required=False, widget=forms.HiddenInput(),
+    )
+    delivery_longitude = forms.DecimalField(
+        max_digits=9, decimal_places=6, required=False, widget=forms.HiddenInput(),
     )
 
     delivery_phone = forms.CharField(
@@ -80,6 +140,17 @@ class CheckoutForm(forms.Form):
         cleaned_data = super().clean()
         if cleaned_data.get('payment_method') == PaymentMethod.SIMULATED_BANK and not cleaned_data.get('bank_account_number'):
             self.add_error('bank_account_number', _('Enter the account number you\'re paying from.'))
+
+        if not cleaned_data.get('delivery_city'):
+            lat, lng = cleaned_data.get('delivery_latitude'), cleaned_data.get('delivery_longitude')
+            if lat is not None and lng is not None:
+                cleaned_data['delivery_city'] = _reverse_geocode_city(lat, lng)
+            if not cleaned_data.get('delivery_city'):
+                self.add_error(
+                    'delivery_city',
+                    _("We couldn't tell your city from the shared location — please select it."),
+                )
+
         return cleaned_data
 
 

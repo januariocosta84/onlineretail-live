@@ -449,6 +449,13 @@
               <strong>{% trans "Address" %}:</strong><br>
               {{ order.delivery_address }}
             </p>
+            {% if order.delivery_latitude and order.delivery_longitude %}
+            <p>
+              <a href="https://www.openstreetmap.org/?mlat={{ order.delivery_latitude }}&mlon={{ order.delivery_longitude }}#map=17/{{ order.delivery_latitude }}/{{ order.delivery_longitude }}" target="_blank" rel="noopener">
+                <i class="fas fa-map-marker-alt mr-1"></i>{% trans "View exact location on map" %}
+              </a>
+            </p>
+            {% endif %}
             <p>
               <strong>{% trans "Phone" %}:</strong><br>
               <a href="tel:{{ order.delivery_phone }}">{{ order.delivery_phone }}</a>

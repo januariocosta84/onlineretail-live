@@ -3,6 +3,12 @@
 
 {% block title %}{% trans "Checkout" %} | TimorMart{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<style>#location-map { height: 260px; border-radius: 4px; }</style>
+{% endblock %}
+
 {% block content %}
 <main class="py-5">
   <div class="container-fluid">
@@ -114,9 +120,30 @@
               </div>
 
               <div class="form-group">
+                <label class="font-weight-bold">{% trans "Your Location" %}</label>
+                <div>
+                  <button type="button" id="share-location-btn" class="btn btn-outline-primary btn-sm mr-2">
+                    <i class="fas fa-location-arrow mr-1"></i>{% trans "Share my location" %}
+                  </button>
+                  <button type="button" id="pick-on-map-btn" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-map-marked-alt mr-1"></i>{% trans "Point it on a map" %}
+                  </button>
+                </div>
+                <div id="location-status" class="small text-muted mt-2"></div>
+                <div id="location-map" class="d-none mt-2"></div>
+                {{ form.delivery_latitude }}
+                {{ form.delivery_longitude }}
+                <small class="form-text text-muted">
+                  {% trans "Helps the courier find you precisely. Optional, but recommended." %}
+                </small>
+              </div>
+
+              <button type="button" id="toggle-city-link" class="btn btn-link btn-sm p-0 mb-2">
+                {% trans "Or select your city manually" %}
+              </button>
+              <div class="form-group {% if not form.delivery_city.errors %}d-none{% endif %}" id="city-manual-group">
                 <label for="{{ form.delivery_city.id_for_label }}" class="font-weight-bold">
                   {{ form.delivery_city.label }}
-                  <span class="text-danger">*</span>
                 </label>
                 {{ form.delivery_city }}
                 {% if form.delivery_city.errors %}
@@ -281,6 +308,91 @@
 
   radios.forEach(function (r) { r.addEventListener('change', update); });
   update();
+})();
+
+(function () {
+  'use strict';
+  var shareBtn = document.getElementById('share-location-btn');
+  var pickBtn = document.getElementById('pick-on-map-btn');
+  var statusEl = document.getElementById('location-status');
+  var mapContainer = document.getElementById('location-map');
+  var latInput = document.getElementById('{{ form.delivery_latitude.id_for_label }}');
+  var lngInput = document.getElementById('{{ form.delivery_longitude.id_for_label }}');
+  var toggleCityLink = document.getElementById('toggle-city-link');
+  var cityGroup = document.getElementById('city-manual-group');
+
+  var DEFAULT_CENTER = [-8.5569, 125.5603]; // Dili, Timor-Leste
+  var map = null;
+  var marker = null;
+
+  function ensureMap(center) {
+    mapContainer.classList.remove('d-none');
+    if (!map) {
+      map = L.map(mapContainer).setView(center, 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+      marker = L.marker(center, { draggable: true }).addTo(map);
+      marker.on('dragend', function () {
+        var pos = marker.getLatLng();
+        setLocation(pos.lat, pos.lng, false);
+      });
+      map.on('click', function (e) {
+        marker.setLatLng(e.latlng);
+        setLocation(e.latlng.lat, e.latlng.lng, false);
+      });
+    } else {
+      map.setView(center, 13);
+      marker.setLatLng(center);
+    }
+    setTimeout(function () { map.invalidateSize(); }, 100);
+  }
+
+  function setLocation(lat, lng, recenterMap) {
+    latInput.value = lat.toFixed(6);
+    lngInput.value = lng.toFixed(6);
+    statusEl.innerHTML = '<i class="fas fa-check-circle text-success mr-1"></i>' +
+      '{% trans "Location set" %} (' + lat.toFixed(5) + ', ' + lng.toFixed(5) + ')';
+    cityGroup.classList.add('d-none');
+    if (recenterMap) {
+      ensureMap([lat, lng]);
+    }
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function () {
+      if (!navigator.geolocation) {
+        statusEl.textContent = '{% trans "Your browser does not support location sharing." %}';
+        return;
+      }
+      statusEl.textContent = '{% trans "Locating..." %}';
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          setLocation(pos.coords.latitude, pos.coords.longitude, true);
+        },
+        function () {
+          statusEl.textContent = '{% trans "Could not get your location - try pointing it on the map instead." %}';
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+  }
+
+  if (pickBtn) {
+    pickBtn.addEventListener('click', function () {
+      var current = (latInput.value && lngInput.value)
+        ? [parseFloat(latInput.value), parseFloat(lngInput.value)]
+        : DEFAULT_CENTER;
+      ensureMap(current);
+    });
+  }
+
+  if (toggleCityLink) {
+    toggleCityLink.addEventListener('click', function () {
+      cityGroup.classList.toggle('d-none');
+    });
+  }
 })();
 </script>
 {% endblock %}

@@ -496,6 +496,8 @@ def _process_bank_transfer_checkout(request, form, cart_items):
                 payment_method=PaymentMethod.BANK_TRANSFER,
                 delivery_address=form.cleaned_data['delivery_address'],
                 delivery_city=delivery_city,
+                delivery_latitude=form.cleaned_data.get('delivery_latitude'),
+                delivery_longitude=form.cleaned_data.get('delivery_longitude'),
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -555,6 +557,8 @@ def _process_cash_on_delivery_checkout(request, form, cart_items):
                 payment_method=PaymentMethod.CASH_ON_DELIVERY,
                 delivery_address=form.cleaned_data['delivery_address'],
                 delivery_city=delivery_city,
+                delivery_latitude=form.cleaned_data.get('delivery_latitude'),
+                delivery_longitude=form.cleaned_data.get('delivery_longitude'),
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -641,6 +645,8 @@ def _process_stripe_checkout(request, form, cart_items):
                 payment_method=PaymentMethod.STRIPE,
                 delivery_address=form.cleaned_data['delivery_address'],
                 delivery_city=delivery_city,
+                delivery_latitude=form.cleaned_data.get('delivery_latitude'),
+                delivery_longitude=form.cleaned_data.get('delivery_longitude'),
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
@@ -753,6 +759,8 @@ def _process_simulated_bank_checkout(request, form, cart_items):
                 payment_method=PaymentMethod.SIMULATED_BANK,
                 delivery_address=form.cleaned_data['delivery_address'],
                 delivery_city=delivery_city,
+                delivery_latitude=form.cleaned_data.get('delivery_latitude'),
+                delivery_longitude=form.cleaned_data.get('delivery_longitude'),
                 delivery_phone=form.cleaned_data['delivery_phone'],
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )

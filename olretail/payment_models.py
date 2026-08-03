@@ -165,6 +165,13 @@ class Order(models.Model):
     delivery_city = models.ForeignKey(
         'olretail.City', on_delete=models.PROTECT, null=True, blank=True, related_name='deliveries',
     )
+    # Buyer-shared GPS pin (browser geolocation or a manually-dropped map
+    # marker at checkout — see CheckoutForm._reverse_geocode_city) so a
+    # courier can find the exact spot rather than relying on the free-text
+    # address alone. Optional: null when the buyer skipped sharing a
+    # location, in which case delivery_city was picked manually instead.
+    delivery_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    delivery_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     delivery_phone = models.CharField(max_length=40)
     estimated_delivery = models.DateField(null=True, blank=True)
     courier_name = models.CharField(max_length=100, blank=True)

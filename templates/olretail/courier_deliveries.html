@@ -61,6 +61,11 @@
             <div class="col-md-4">
               <small class="text-muted d-block">{% trans "Deliver to" %}:</small>
               {{ order.delivery_address }}<br>
+              {% if order.delivery_latitude and order.delivery_longitude %}
+              <a href="https://www.openstreetmap.org/?mlat={{ order.delivery_latitude }}&mlon={{ order.delivery_longitude }}#map=17/{{ order.delivery_latitude }}/{{ order.delivery_longitude }}" target="_blank" rel="noopener">
+                <i class="fas fa-map-marker-alt mr-1"></i>{% trans "View exact location" %}
+              </a><br>
+              {% endif %}
               <a href="tel:{{ order.delivery_phone }}">{{ order.delivery_phone }}</a>
               {% if order.product.is_restaurant_category %}
               <br>

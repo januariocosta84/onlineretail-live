@@ -85,6 +85,12 @@
                 <p class="mb-0">
                   {{ order.delivery_address }}<br>
                   <strong>{{ order.delivery_phone }}</strong>
+                  {% if order.delivery_latitude and order.delivery_longitude %}
+                  <br>
+                  <a href="https://www.openstreetmap.org/?mlat={{ order.delivery_latitude }}&mlon={{ order.delivery_longitude }}#map=17/{{ order.delivery_latitude }}/{{ order.delivery_longitude }}" target="_blank" rel="noopener">
+                    <i class="fas fa-map-marker-alt mr-1"></i>{% trans "View shared location" %}
+                  </a>
+                  {% endif %}
                 </p>
               </div>
             </div>
