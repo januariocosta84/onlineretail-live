@@ -10,6 +10,7 @@ class DeliveryOrder {
   final String deliveryAddress;
   final String deliveryPhone;
   final String subtotal;
+  final String paymentMethod;
   final String status;
   final String? shippedAt;
   final String? deliveredAt;
@@ -27,6 +28,7 @@ class DeliveryOrder {
     required this.deliveryAddress,
     required this.deliveryPhone,
     required this.subtotal,
+    required this.paymentMethod,
     required this.status,
     this.shippedAt,
     this.deliveredAt,
@@ -35,6 +37,11 @@ class DeliveryOrder {
   });
 
   bool get hasPin => deliveryLatitude != null && deliveryLongitude != null;
+  // Cash on delivery is the only method where the courier actually
+  // collects money — every electronic method (card, bank transfer) is
+  // already settled with the platform, so the amount is none of the
+  // courier's business to see.
+  bool get isCashOnDelivery => paymentMethod == 'cash_on_delivery';
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
         id: json['id'] as int,
@@ -44,6 +51,7 @@ class DeliveryOrder {
         deliveryAddress: json['delivery_address'] as String? ?? '',
         deliveryPhone: json['delivery_phone'] as String? ?? '',
         subtotal: json['subtotal'] as String? ?? '0',
+        paymentMethod: json['payment_method'] as String? ?? '',
         status: json['status'] as String,
         shippedAt: json['shipped_at'] as String?,
         deliveredAt: json['delivered_at'] as String?,

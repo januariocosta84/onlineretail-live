@@ -135,7 +135,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'order_number', 'product_name', 'buyer_name', 'delivery_address', 'delivery_phone',
             'delivery_latitude', 'delivery_longitude',
-            'subtotal', 'status', 'shipped_at', 'delivered_at', 'food_status',
+            'subtotal', 'payment_method', 'status', 'shipped_at', 'delivered_at', 'food_status',
         ]
 
     def get_buyer_name(self, obj):

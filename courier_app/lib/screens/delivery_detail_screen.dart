@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../api_client.dart';
 import '../maps_launcher.dart';
 import '../models.dart';
+import '../whatsapp_launcher.dart';
 
 class DeliveryDetailScreen extends StatefulWidget {
   final DeliveryOrder order;
@@ -85,8 +86,18 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
           _DetailRow(label: 'Product', value: order.productName),
           _DetailRow(label: 'Buyer', value: order.buyerName),
           _DetailRow(label: 'Deliver to', value: order.deliveryAddress),
-          _DetailRow(label: 'Phone', value: order.deliveryPhone),
-          _DetailRow(label: 'Amount', value: '\$${order.subtotal}'),
+          _DetailRow(
+            label: 'Phone',
+            value: order.deliveryPhone,
+            onTap: () => _openWhatsApp(context, order.deliveryPhone),
+            trailing: const Icon(Icons.chat, size: 18, color: Colors.green),
+          ),
+          // Cash on delivery is the only method where the courier actually
+          // collects money from the buyer — for every electronic method
+          // (card, bank transfer) the platform already has it, so showing
+          // an amount here would just invite confusion about what's owed.
+          if (order.isCashOnDelivery)
+            _DetailRow(label: 'Collect (cash)', value: '\$${order.subtotal}'),
           if (order.hasPin) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(
@@ -141,22 +152,39 @@ Future<void> _openRoute(BuildContext context, DeliveryOrder order) async {
   }
 }
 
+Future<void> _openWhatsApp(BuildContext context, String phone) async {
+  try {
+    await launchWhatsApp(phone);
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open WhatsApp.')),
+      );
+    }
+  }
+}
+
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
-  const _DetailRow({required this.label, required this.value});
+  final VoidCallback? onTap;
+  final Widget? trailing;
+  const _DetailRow({required this.label, required this.value, this.onTap, this.trailing});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final row = Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(width: 90, child: Text(label, style: const TextStyle(color: Colors.grey))),
           Expanded(child: Text(value)),
+          ?trailing,
         ],
       ),
     );
+    if (onTap == null) return row;
+    return InkWell(onTap: onTap, child: row);
   }
 }
