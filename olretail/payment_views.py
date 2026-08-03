@@ -577,6 +577,13 @@ def _process_cash_on_delivery_checkout(request, form, cart_items):
                 buyer_notes=form.cleaned_data.get('buyer_notes', ''),
             )
             orders.append(order)
+            # Cash-on-delivery never goes through _mark_payment_succeeded
+            # (payment happens in person at delivery, not at checkout) —
+            # that's the only other place food_status gets initialized, so
+            # a COD restaurant order needs it done here or the kitchen
+            # never sees it (is_restaurant_category and food_status gates
+            # the whole "Kitchen & Pickup Status" card in order_detail.html).
+            _mark_food_order_received(order)
             _notify(
                 order.seller.user,
                 _('New cash-on-delivery order %(order)s from %(buyer)s for “%(product)s” — collect $%(total)s on delivery.')
@@ -807,6 +814,13 @@ def _mark_food_order_received(order):
     for them to do at this step, unlike Preparing/Ready which the
     restaurant marks manually (see update_food_status)."""
     if order.product.category.slug != RESTAURANT_CATEGORY_SLUG:
+        return
+    if order.food_status:
+        # Already initialized — for cash-on-delivery this same "payment
+        # confirmed" codepath (_mark_bank_transfer_paid) runs a second
+        # time at the delivery step (see _apply_order_delivered), by which
+        # point the kitchen/courier may have already advanced food_status
+        # well past Received. Don't clobber that progress.
         return
     order.food_status = FoodOrderStatus.RECEIVED
     order.save(update_fields=['food_status'])
@@ -1488,8 +1502,14 @@ def order_detail(request, order_id):
         'is_admin': is_admin,
         'delivery_updates': order.delivery_updates.all(),
     }
-    if is_seller and order.can_ship:
+    if is_seller and order.can_ship and not order.product.is_restaurant_category:
         context['ship_form'] = ShipOrderForm(order=order)
+    if is_seller and order.product.is_restaurant_category and order.food_status == FoodOrderStatus.PREPARING:
+        # The "Mark Ready for Pickup" step in the Kitchen & Pickup card
+        # below now also assigns a courier and ships the order — see
+        # update_food_status — so it needs the same courier-picker
+        # ShipOrderForm uses for every other product type.
+        context['food_ship_form'] = ShipOrderForm(order=order)
     if is_seller and order.status == OrderStatus.SHIPPED:
         context['delivery_update_form'] = DeliveryUpdateForm()
     if (is_seller or is_courier) and order.status == OrderStatus.SHIPPED:
@@ -1826,10 +1846,15 @@ _SELLER_FOOD_STATUS_TRANSITIONS = {
 @require_POST
 def update_food_status(request, order_id):
     """Restaurant advances a food order through Received -> Preparing ->
-    Ready for Pickup. Courier assignment (who delivers it) is a separate,
-    unrelated action via the existing seller_update_order_status/
-    ShipOrderForm — a courier can be assigned before or after the kitchen
-    marks the order ready."""
+    Ready for Pickup. The last step also does what
+    seller_update_order_status/ShipOrderForm does for every other product
+    type — assigns a courier and flips order.status to Shipped — because
+    that status, not food_status, is what makes an order visible in a
+    courier's own deliveries list/app (courier_deliveries,
+    courier_api.DeliveriesListView both filter on it). Without this, a
+    restaurant order marked "ready for pickup" here never actually reached
+    a courier: this used to be a separate, disconnected action a seller
+    could just as easily forget."""
     order = get_object_or_404(Order, id=order_id)
 
     try:
@@ -1850,8 +1875,27 @@ def update_food_status(request, order_id):
         return redirect('olretail:order_detail', order_id=order.id)
 
     next_status, note = transition
+
+    ship_form = None
+    if next_status == FoodOrderStatus.READY_FOR_PICKUP:
+        if not order.can_ship:
+            messages.error(request, _('Only paid orders can be marked as shipped.'))
+            return redirect('olretail:order_detail', order_id=order.id)
+        ship_form = ShipOrderForm(request.POST, order=order)
+        if not ship_form.is_valid():
+            messages.error(request, _('Please correct the errors below.'))
+            return redirect('olretail:order_detail', order_id=order.id)
+
     order.food_status = next_status
-    order.save(update_fields=['food_status'])
+    update_fields = ['food_status']
+    if ship_form is not None:
+        order.status = OrderStatus.SHIPPED
+        order.shipped_at = timezone.now()
+        order.courier_name = ship_form.cleaned_data['courier_name']
+        order.tracking_number = ship_form.cleaned_data['tracking_number']
+        order.assigned_courier = ship_form.cleaned_data['assigned_courier']
+        update_fields += ['status', 'shipped_at', 'courier_name', 'tracking_number', 'assigned_courier']
+    order.save(update_fields=update_fields)
     DeliveryUpdate.objects.create(order=order, note=note)
     _notify(order.buyer, note, order=order)
     if next_status == FoodOrderStatus.READY_FOR_PICKUP and order.assigned_courier_id:

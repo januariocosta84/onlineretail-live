@@ -116,9 +116,24 @@
                 <i class="fas fa-utensils mr-1" aria-hidden="true"></i>{% trans "Start Preparing" %}
               </button>
             </form>
-            {% elif order.food_status == 'preparing' %}
+            {% elif order.food_status == 'preparing' and food_ship_form %}
             <form method="post" action="{% url 'olretail:update_food_status' order.id %}" class="mt-4">
               {% csrf_token %}
+              <p class="text-muted small mb-2">
+                {% trans "Assign who will pick this up — this is also what makes it appear in the courier's own delivery list." %}
+              </p>
+              <div class="form-group">
+                <label for="{{ food_ship_form.courier_name.id_for_label }}">{{ food_ship_form.courier_name.label }}</label>
+                {{ food_ship_form.courier_name }}
+              </div>
+              <div class="form-group">
+                <label for="{{ food_ship_form.tracking_number.id_for_label }}">{{ food_ship_form.tracking_number.label }}</label>
+                {{ food_ship_form.tracking_number }}
+              </div>
+              <div class="form-group">
+                <label for="{{ food_ship_form.assigned_courier.id_for_label }}">{{ food_ship_form.assigned_courier.label }}</label>
+                {{ food_ship_form.assigned_courier }}
+              </div>
               <button type="submit" class="btn btn-primary btn-sm">
                 <i class="fas fa-shopping-bag mr-1" aria-hidden="true"></i>{% trans "Mark Ready for Pickup" %}
               </button>
