@@ -126,27 +126,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
             }
             final profile = snapshot.data!;
+            final initial = profile.fullName.isNotEmpty ? profile.fullName[0].toUpperCase() : '?';
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Text(profile.fullName, style: Theme.of(context).textTheme.titleLarge),
-                Text(profile.email, style: const TextStyle(color: Colors.grey)),
+                Center(
+                  child: CircleAvatar(
+                    radius: 36,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      initial,
+                      style: const TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 12),
-                _VerificationBadge(status: profile.verificationStatus),
+                Text(profile.fullName, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                Text(profile.email, style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                Center(child: _VerificationBadge(status: profile.verificationStatus)),
                 if (profile.verificationNote.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  Text(profile.verificationNote, style: const TextStyle(color: Colors.grey)),
+                  Text(profile.verificationNote, style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
                 ],
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 TextField(
                   controller: _mobileController,
-                  decoration: const InputDecoration(labelText: 'Phone number', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'Phone number', prefixIcon: Icon(Icons.phone_outlined)),
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Address', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Address', prefixIcon: Icon(Icons.location_on_outlined),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text('Documents', style: Theme.of(context).textTheme.titleMedium),

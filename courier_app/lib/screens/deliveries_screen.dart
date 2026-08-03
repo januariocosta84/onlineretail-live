@@ -63,7 +63,14 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Deliveries'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/timormart_mark.png', height: 28),
+            const SizedBox(width: 10),
+            const Text('My Deliveries'),
+          ],
+        ),
         bottom: TabBar(controller: _tabController, tabs: const [
           Tab(text: 'Pending'),
           Tab(text: 'Delivered'),

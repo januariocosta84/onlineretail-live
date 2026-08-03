@@ -6,6 +6,7 @@ import 'api_client.dart';
 import 'push_notifications.dart';
 import 'screens/deliveries_screen.dart';
 import 'screens/login_screen.dart';
+import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +28,7 @@ class CourierApp extends StatelessWidget {
     return MaterialApp(
       title: 'TimorMart Courier',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1266F1)),
-        useMaterial3: true,
-      ),
+      theme: buildAppTheme(),
       home: const _StartupGate(),
     );
   }

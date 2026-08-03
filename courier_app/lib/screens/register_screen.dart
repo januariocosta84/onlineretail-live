@@ -116,27 +116,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'An administrator reviews your documents before you can be assigned deliveries — '
-                  'you can still log in and use the app right away.',
-                  style: Theme.of(context).textTheme.bodySmall,
+                Center(child: Image.asset('assets/timormart_mark.png', height: 72)),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'An administrator reviews your documents before you can be assigned '
+                          'deliveries — you can still log in and use the app right away.',
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _firstNameController,
-                  decoration: const InputDecoration(labelText: 'First name', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'First name', prefixIcon: Icon(Icons.badge_outlined)),
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _lastNameController,
-                  decoration: const InputDecoration(labelText: 'Last name', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'Last name', prefixIcon: Icon(Icons.badge_outlined)),
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email address', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'Email address', prefixIcon: Icon(Icons.mail_outline)),
                   keyboardType: TextInputType.emailAddress,
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),
@@ -144,7 +161,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _mobileController,
                   decoration: const InputDecoration(
-                    labelText: 'Phone number', hintText: '7012345 or +670 7012345', border: OutlineInputBorder(),
+                    labelText: 'Phone number', hintText: '7012345 or +670 7012345',
+                    prefixIcon: Icon(Icons.phone_outlined),
                   ),
                   keyboardType: TextInputType.phone,
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
@@ -152,20 +170,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Address', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Address', prefixIcon: Icon(Icons.location_on_outlined),
+                  ),
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _password1Controller,
-                  decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock_outline)),
                   obscureText: true,
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _password2Controller,
-                  decoration: const InputDecoration(labelText: 'Confirm password', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm password', prefixIcon: Icon(Icons.lock_outline),
+                  ),
                   obscureText: true,
                   validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                 ),

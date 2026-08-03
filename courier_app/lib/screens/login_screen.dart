@@ -67,21 +67,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(Icons.local_shipping, size: 64, color: Color(0xFF1266F1)),
-                  const SizedBox(height: 12),
-                  Text('TimorMart Courier', style: Theme.of(context).textTheme.headlineSmall,
-                      textAlign: TextAlign.center),
-                  const SizedBox(height: 32),
+                  Image.asset('assets/timormart_logo.png', height: 120),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Courier Partner',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          letterSpacing: 0.5,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 36),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(labelText: 'Username', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                      labelText: 'Username', prefixIcon: Icon(Icons.person_outline),
+                    ),
                     textInputAction: TextInputAction.next,
                     validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                      labelText: 'Password', prefixIcon: Icon(Icons.lock_outline),
+                    ),
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _submit(),
