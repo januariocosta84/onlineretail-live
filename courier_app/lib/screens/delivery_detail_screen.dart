@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../api_client.dart';
+import '../maps_launcher.dart';
 import '../models.dart';
 
 class DeliveryDetailScreen extends StatefulWidget {
@@ -86,6 +87,14 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
           _DetailRow(label: 'Deliver to', value: order.deliveryAddress),
           _DetailRow(label: 'Phone', value: order.deliveryPhone),
           _DetailRow(label: 'Amount', value: '\$${order.subtotal}'),
+          if (order.hasPin) ...[
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => _openRoute(context, order),
+              icon: const Icon(Icons.directions),
+              label: const Text('Route to buyer'),
+            ),
+          ],
           const SizedBox(height: 24),
           Text('Delivery photo', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -117,6 +126,18 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
         ],
       ),
     );
+  }
+}
+
+Future<void> _openRoute(BuildContext context, DeliveryOrder order) async {
+  try {
+    await launchRouteTo(order.deliveryLatitude!, order.deliveryLongitude!);
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open a maps app.')),
+      );
+    }
   }
 }
 

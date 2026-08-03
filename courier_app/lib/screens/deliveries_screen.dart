@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../api_client.dart';
+import '../maps_launcher.dart';
 import '../models.dart';
 import 'availability_screen.dart';
 import 'delivery_detail_screen.dart';
@@ -130,7 +131,20 @@ class _DeliveryList extends StatelessWidget {
               title: Text('${order.orderNumber} — ${order.productName}'),
               subtitle: Text('${order.buyerName}\n${order.deliveryAddress}'),
               isThreeLine: true,
-              trailing: showMarkDelivered ? const Icon(Icons.chevron_right) : const Icon(Icons.check_circle, color: Colors.green),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (order.hasPin)
+                    IconButton(
+                      icon: const Icon(Icons.pin_drop, color: Colors.redAccent),
+                      tooltip: 'Route to buyer',
+                      onPressed: () => _openRoute(context, order),
+                    ),
+                  showMarkDelivered
+                      ? const Icon(Icons.chevron_right)
+                      : const Icon(Icons.check_circle, color: Colors.green),
+                ],
+              ),
               onTap: showMarkDelivered
                   ? () async {
                       final delivered = await Navigator.of(context).push<bool>(
@@ -144,6 +158,18 @@ class _DeliveryList extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+Future<void> _openRoute(BuildContext context, DeliveryOrder order) async {
+  try {
+    await launchRouteTo(order.deliveryLatitude!, order.deliveryLongitude!);
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open a maps app.')),
+      );
+    }
   }
 }
 

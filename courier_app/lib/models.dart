@@ -13,6 +13,11 @@ class DeliveryOrder {
   final String status;
   final String? shippedAt;
   final String? deliveredAt;
+  // Buyer-shared GPS pin from checkout (see olretail/courier_api.py
+  // OrderSerializer) — null when the buyer picked a city manually instead
+  // of sharing a location.
+  final double? deliveryLatitude;
+  final double? deliveryLongitude;
 
   DeliveryOrder({
     required this.id,
@@ -25,7 +30,11 @@ class DeliveryOrder {
     required this.status,
     this.shippedAt,
     this.deliveredAt,
+    this.deliveryLatitude,
+    this.deliveryLongitude,
   });
+
+  bool get hasPin => deliveryLatitude != null && deliveryLongitude != null;
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
         id: json['id'] as int,
@@ -38,6 +47,13 @@ class DeliveryOrder {
         status: json['status'] as String,
         shippedAt: json['shipped_at'] as String?,
         deliveredAt: json['delivered_at'] as String?,
+        // DRF serializes DecimalField as a string, not a JSON number.
+        deliveryLatitude: json['delivery_latitude'] != null
+            ? double.tryParse(json['delivery_latitude'] as String)
+            : null,
+        deliveryLongitude: json['delivery_longitude'] != null
+            ? double.tryParse(json['delivery_longitude'] as String)
+            : null,
       );
 }
 
