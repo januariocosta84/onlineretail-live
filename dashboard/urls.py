@@ -53,6 +53,7 @@ urlpatterns = [
     path("sellers/verification/<int:pk>/action/", views.seller_verification_action, name="seller_verification_action"),
     path("restaurants/", views.restaurants, name="restaurants"),
     path("sellers/businesses/", views.business_list, name="business_list"),
+    path("diagnostics/firebase/", views.firebase_diagnostic, name="firebase_diagnostic"),
     path("payment-disputes/", views.payment_disputes, name="payment_disputes"),
     path("payment-disputes/<int:pk>/action/", views.payment_dispute_action, name="payment_dispute_action"),
     path("bank-simulator/accounts/", banking_views.bank_accounts, name="bank_accounts"),

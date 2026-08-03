@@ -17,7 +17,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Exists, OuterRef, Q, Sum
 from django.db.models.deletion import ProtectedError
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -1451,3 +1451,53 @@ def business_list(request):
             "seller_type_choices": NON_INDIVIDUAL_SELLER_TYPE_CHOICES,
         },
     )
+
+
+@admin_required
+def firebase_diagnostic(request):
+    """Temporary, admin-only: reports whether *this running process* (not
+    a local shell — the actual production server) has FIREBASE_SERVICE_ACCOUNT
+    configured and can authenticate to Firebase, and optionally does a real
+    test send to ?username=<courier>'s most recently registered device.
+    Added to debug push notifications silently no-op-ing in production
+    despite working locally — see olretail/push_notifications.py. Meant to
+    be removed once that's resolved, not a permanent admin feature."""
+    from django.conf import settings
+    from olretail import push_notifications
+    from olretail.payment_models import DeviceToken
+
+    result = {
+        "firebase_service_account_configured": bool(settings.FIREBASE_SERVICE_ACCOUNT),
+    }
+    app = push_notifications._get_firebase_app()
+    result["firebase_app_initialized"] = app is not None
+
+    username = request.GET.get("username")
+    if username:
+        token_row = DeviceToken.objects.filter(user__username=username).order_by("-created_at").first()
+        if token_row is None:
+            result["test_send"] = f"No device token registered for '{username}'."
+        elif app is None:
+            result["test_send"] = "Skipped — Firebase app did not initialize (see firebase_app_initialized above)."
+        else:
+            from firebase_admin import messaging
+            message = messaging.Message(
+                token=token_row.token,
+                notification=messaging.Notification(
+                    title="TimorMart diagnostic",
+                    body="Sent from the live production server — if this arrives, production push works.",
+                ),
+                android=messaging.AndroidConfig(
+                    priority="high",
+                    notification=messaging.AndroidNotification(
+                        channel_id=push_notifications.ANDROID_CHANNEL_ID, sound="default", default_vibrate_timings=True,
+                    ),
+                ),
+            )
+            try:
+                message_id = messaging.send(message, app=app)
+                result["test_send"] = f"OK: {message_id}"
+            except Exception as e:
+                result["test_send"] = f"FAILED: {type(e).__name__}: {e}"
+
+    return JsonResponse(result)
