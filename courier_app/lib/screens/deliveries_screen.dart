@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../api_client.dart';
+import '../auth_storage.dart';
 import '../maps_launcher.dart';
 import '../models.dart';
 import '../push_notifications.dart';
@@ -75,31 +76,8 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
           Tab(text: 'Pending'),
           Tab(text: 'Delivered'),
         ]),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            tooltip: 'My Profile',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.payments_outlined),
-            tooltip: 'My Earnings',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const EarningsScreen()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.schedule),
-            tooltip: 'My Availability',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const AvailabilityScreen()),
-            ),
-          ),
-          IconButton(icon: const Icon(Icons.logout), tooltip: 'Log out', onPressed: _logout),
-        ],
       ),
+      drawer: _AppDrawer(onLogout: _logout),
       body: FutureBuilder<({List<DeliveryOrder> pending, List<DeliveryOrder> delivered})>(
         future: _future,
         builder: (context, snapshot) {
@@ -118,6 +96,80 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _AppDrawer extends StatelessWidget {
+  final Future<void> Function() onLogout;
+  const _AppDrawer({required this.onLogout});
+
+  void _go(BuildContext context, Widget screen) {
+    Navigator.of(context).pop(); // close the drawer first
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 26,
+                    backgroundColor: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Image.asset('assets/timormart_mark.png'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FutureBuilder<String?>(
+                      future: AuthStorage().readCourierName(),
+                      builder: (context, snapshot) => Text(
+                        snapshot.data ?? 'TimorMart Courier',
+                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: const Text('My Profile'),
+              onTap: () => _go(context, const ProfileScreen()),
+            ),
+            ListTile(
+              leading: const Icon(Icons.payments_outlined),
+              title: const Text('My Earnings'),
+              onTap: () => _go(context, const EarningsScreen()),
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('My Availability'),
+              onTap: () => _go(context, const AvailabilityScreen()),
+            ),
+            const Spacer(),
+            const Divider(height: 1),
+            ListTile(
+              leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+              title: Text('Log out', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              onTap: () {
+                Navigator.of(context).pop();
+                onLogout();
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
