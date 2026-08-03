@@ -3,6 +3,20 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Not applied here — see the conditional block below. Declaring it
+    // with `apply false` still resolves/downloads the plugin so the
+    // conditional `apply(plugin = ...)` below can find it, without
+    // hard-failing every build before google-services.json exists.
+    id("com.google.gms.google-services") apply false
+}
+
+// google-services.json (from the TimorMart Firebase project) isn't
+// committed — see android/.gitignore — so a fresh checkout has to keep
+// building without push notifications until it's dropped in, rather than
+// hard-failing on "file is missing" the way applying the plugin
+// unconditionally would. See lib/push_notifications.dart.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {
@@ -13,6 +27,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Required by flutter_local_notifications (see
+        // lib/push_notifications.dart) — it uses java.time APIs that need
+        // desugaring on minSdk below 26.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -41,4 +59,8 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

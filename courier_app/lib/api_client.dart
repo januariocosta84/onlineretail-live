@@ -146,6 +146,20 @@ class ApiClient {
     final response = await http.delete(_url('/availability/$id/'), headers: await _authHeaders());
     if (response.statusCode != 204) throw ApiException(response.statusCode, _errorMessage(response));
   }
+
+  /// Registers this device's FCM token so _notify()/send_push (see
+  /// payment_views.py) can reach it — see lib/push_notifications.dart for
+  /// where this gets called. Silently does nothing on failure (no token,
+  /// logged out, offline): push is a nice-to-have, never something that
+  /// should block using the app.
+  Future<void> registerDeviceToken(String token, {String platform = 'android'}) async {
+    final response = await http.post(
+      _url('/register-device/'),
+      headers: await _authHeaders(),
+      body: {'token': token, 'platform': platform},
+    );
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+  }
 }
 
 extension _FirstOrNull<T> on Iterable<T> {

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../api_client.dart';
+import '../push_notifications.dart';
 import 'deliveries_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,6 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       await _api.login(_usernameController.text.trim(), _passwordController.text);
+      // Best-effort — a failure here (permission denied, no Firebase
+      // config yet) should never block getting into the app.
+      unawaited(PushNotifications.init(_api));
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const DeliveriesScreen()),

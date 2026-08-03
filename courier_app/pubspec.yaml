@@ -48,6 +48,17 @@ dependencies:
   # buyer-shared delivery pin — no maps SDK/API key needed, see
   # lib/maps_launcher.dart.
   url_launcher: ^6.3.1
+  # Push notifications (courier assigned, etc.) — see lib/push_notifications.dart.
+  # Requires android/app/google-services.json from the TimorMart Firebase
+  # project (already exists server-side, see olretail/push_notifications.py)
+  # before these do anything; harmless to build without it, just never
+  # gets a token.
+  firebase_core: ^3.8.0
+  firebase_messaging: ^15.1.6
+  # Shows a heads-up notification (with sound/vibration) while the app is
+  # open in the foreground — FCM only auto-displays a system-tray
+  # notification when the app is backgrounded/closed.
+  flutter_local_notifications: ^18.0.1
 
 dev_dependencies:
   flutter_test:

@@ -26,7 +26,7 @@ from django.utils import timezone
 
 from .models import CourierAvailability
 from .payment_forms import DeliveryProofForm
-from .payment_models import CourierBalance, Order, OrderStatus, PaymentMethod
+from .payment_models import CourierBalance, DevicePlatform, DeviceToken, Order, OrderStatus, PaymentMethod
 from .payment_views import _apply_order_delivered, _courier_can_mark_delivered
 
 
@@ -183,6 +183,28 @@ class MarkDeliveredView(APIView):
             return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
         _apply_order_delivered(order, form.cleaned_data['photo'])
         return Response({'status': 'delivered'})
+
+
+class RegisterDeviceView(APIView):
+    """POST {token, platform} -> registers this device for push
+    notifications (courier assigned, etc. — see _notify()/send_push in
+    payment_views.py and push_notifications.py). Mirrors
+    payment_views.register_device_token, which is session-authenticated
+    and unreachable from this token-authenticated native app. Re-posting
+    an existing token just reassigns it — tokens are unique per install,
+    not per user, same as the web/Capacitor version."""
+
+    permission_classes = [IsCourier]
+
+    def post(self, request):
+        token = (request.data.get('token') or '').strip()
+        platform = request.data.get('platform') or ''
+        if not token or platform not in DevicePlatform.values:
+            return Response(
+                {'detail': 'token and a valid platform are required.'}, status=status.HTTP_400_BAD_REQUEST,
+            )
+        DeviceToken.objects.update_or_create(token=token, defaults={'user': request.user, 'platform': platform})
+        return Response({'status': 'ok'})
 
 
 class CourierAvailabilitySerializer(serializers.ModelSerializer):

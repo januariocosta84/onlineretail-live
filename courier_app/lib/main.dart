@@ -1,10 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'api_client.dart';
+import 'push_notifications.dart';
 import 'screens/deliveries_screen.dart';
 import 'screens/login_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    // Fails gracefully (no google-services.json yet, misconfigured, no
+    // network) — push notifications just stay unavailable rather than
+    // crashing the app on startup. See push_notifications.dart.
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
+  } catch (_) {}
   runApp(const CourierApp());
 }
 

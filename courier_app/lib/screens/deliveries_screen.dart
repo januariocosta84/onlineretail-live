@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../api_client.dart';
 import '../maps_launcher.dart';
 import '../models.dart';
+import '../push_notifications.dart';
 import 'availability_screen.dart';
 import 'delivery_detail_screen.dart';
 import 'earnings_screen.dart';
@@ -25,6 +28,10 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _future = _api.deliveries();
+    // Covers app-restart-while-already-logged-in — login_screen.dart
+    // handles the fresh-login case. init() is idempotent (no-ops if
+    // already run this app session).
+    unawaited(PushNotifications.init(_api));
   }
 
   @override

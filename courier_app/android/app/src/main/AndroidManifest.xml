@@ -3,6 +3,12 @@
          builds (the ones that matter — this app is all API calls) need it
          declared explicitly. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Android 13+ requires this declared here, on top of the runtime
+         request lib/push_notifications.dart makes via
+         FirebaseMessaging.requestPermission() — a courier assigned a
+         delivery without ever granting it just gets the in-app/email
+         notification _notify() already sends, no push. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:label="TimorMart Courier"
         android:name="${applicationName}"
@@ -34,6 +40,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Must match ANDROID_CHANNEL_ID in olretail/push_notifications.py
+             and the channel created in lib/push_notifications.dart — this
+             is what routes an incoming push into a HIGH-importance channel
+             with sound/vibration on, instead of Android's silent default. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

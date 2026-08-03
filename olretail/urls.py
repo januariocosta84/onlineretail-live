@@ -124,6 +124,7 @@ urlpatterns = [
         "api/courier/v1/deliveries/<int:order_id>/mark-delivered/",
         courier_api.MarkDeliveredView.as_view(), name="courier_api_mark_delivered",
     ),
+    path("api/courier/v1/register-device/", courier_api.RegisterDeviceView.as_view(), name="courier_api_register_device"),
     path("api/courier/v1/", include(_courier_api_router.urls)),
 
     # Legacy routes kept so old bookmarks keep working

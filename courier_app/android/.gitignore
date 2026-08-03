@@ -12,3 +12,9 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firebase config — project-specific, downloaded from the Firebase console
+# per app/package name (see lib/push_notifications.dart and
+# mobile/android/.gitignore for the same rule on the other app). Not
+# committed, same as that app.
+google-services.json
