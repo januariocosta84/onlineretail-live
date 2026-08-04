@@ -1552,6 +1552,12 @@ def order_detail(request, order_id):
         context['delivery_proof_form'] = DeliveryProofForm()
     if is_admin and order.status == OrderStatus.SHIPPED:
         context['couriers'] = Courier.objects.select_related('user').order_by('user__first_name')
+    elif is_seller and order.status == OrderStatus.SHIPPED:
+        # Lets the seller reassign or unassign a courier who turns out to be
+        # unavailable after being assigned — same verified/city-matched
+        # queryset ShipOrderForm uses at the initial Paid→Shipped step, not
+        # the admin's unfiltered list of every courier on the platform.
+        context['couriers'] = ShipOrderForm(order=order).fields['assigned_courier'].queryset.order_by('user__first_name')
     if is_buyer and order.status == OrderStatus.DELIVERED:
         context['rating'] = getattr(order, 'rating', None)
         context['courier_rating'] = getattr(order, 'courier_rating', None)

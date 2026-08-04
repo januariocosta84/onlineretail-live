@@ -258,7 +258,7 @@
             </form>
             {% endif %}
 
-            {% if is_admin and couriers is not None %}
+            {% if couriers is not None %}
             <hr>
             <form method="post" action="{% url 'dashboard:order_reassign_courier' order.id %}" class="form-inline">
               {% csrf_token %}
@@ -270,6 +270,9 @@
                 {% endfor %}
               </select>
               <button type="submit" class="btn btn-outline-secondary btn-sm">{% trans "Save" %}</button>
+              {% if is_seller %}
+              <small class="form-text text-muted w-100">{% trans "If the assigned courier can't take this delivery, reassign it to someone else or unassign it to deliver it yourself." %}</small>
+              {% endif %}
             </form>
             {% endif %}
           </div>

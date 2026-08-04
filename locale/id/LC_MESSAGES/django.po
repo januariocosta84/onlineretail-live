@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 15:36+0900\n"
+"POT-Creation-Date: 2026-08-04 16:10+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr "Nomor telepon"
 msgid "7012345 or +670 7012345"
 msgstr "7012345 atau +670 7012345"
 
-#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:471
+#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:474
 msgid "Address"
 msgstr "Alamat"
 
@@ -294,9 +294,9 @@ msgstr ""
 #: .\olretail\payment_views.py:1313 .\olretail\payment_views.py:1327
 #: .\olretail\payment_views.py:1342 .\olretail\payment_views.py:1356
 #: .\olretail\payment_views.py:1372 .\olretail\payment_views.py:1395
-#: .\olretail\payment_views.py:1434 .\olretail\payment_views.py:1756
-#: .\olretail\payment_views.py:1951 .\olretail\payment_views.py:2036
-#: .\olretail\payment_views.py:2072 .\olretail\payment_views.py:2086
+#: .\olretail\payment_views.py:1434 .\olretail\payment_views.py:1762
+#: .\olretail\payment_views.py:1957 .\olretail\payment_views.py:2042
+#: .\olretail\payment_views.py:2078 .\olretail\payment_views.py:2092
 #: .\olretail\views.py:415 .\olretail\views.py:470 .\olretail\views.py:550
 msgid "Please correct the errors below."
 msgstr "Silakan perbaiki kesalahan di bawah ini."
@@ -471,13 +471,13 @@ msgstr "Kategori"
 #: .\olretail\forms.py:70 .\templates\olretail\details.html:239
 #: .\templates\olretail\mark_payment_sent.html:89
 #: .\templates\olretail\open_dispute.html:78
-#: .\templates\olretail\order_detail.html:393
+#: .\templates\olretail\order_detail.html:396
 #: .\templates\olretail\payment_confirmation.html:101
 msgid "Quantity"
 msgstr "Jumlah"
 
 #: .\olretail\forms.py:71 .\templates\olretail\lista.html:83
-#: .\templates\olretail\order_detail.html:379
+#: .\templates\olretail\order_detail.html:382
 msgid "Condition"
 msgstr "Kondisi"
 
@@ -592,11 +592,11 @@ msgstr ""
 "Anda masih memiliki barang di keranjang: %(items)s. Selesaikan pembelian "
 "sebelum kehabisan stok!"
 
-#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:381
+#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:384
 msgid "New"
 msgstr "Baru"
 
-#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:383
+#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:386
 msgid "Second Hand"
 msgstr "Bekas"
 
@@ -802,7 +802,7 @@ msgstr "Penjual akan menghubungi Anda di nomor ini"
 msgid "Any special instructions? (Optional)"
 msgstr "Ada instruksi khusus? (Opsional)"
 
-#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:487
+#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:490
 msgid "Special Instructions"
 msgstr "Instruksi Khusus"
 
@@ -940,7 +940,7 @@ msgstr "%(label)s — Tersedia sekarang"
 msgid "Delivery Photo"
 msgstr "Foto Pengiriman"
 
-#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1899
+#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1905
 msgid "A delivery photo is required to confirm delivery."
 msgstr "Foto pengiriman diperlukan untuk mengonfirmasi pengiriman."
 
@@ -1244,7 +1244,7 @@ msgstr "Transfer Bank / Seluler"
 
 #: .\olretail\payment_models.py:87 .\templates\olretail\buyer_orders.html:70
 #: .\templates\olretail\details.html:313
-#: .\templates\olretail\order_detail.html:345
+#: .\templates\olretail\order_detail.html:348
 #: .\templates\olretail\seller_orders.html:74
 #: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
@@ -1666,198 +1666,198 @@ msgstr "Pesanan %(order)s telah dibatalkan."
 msgid "You do not have permission to view this order."
 msgstr "Anda tidak memiliki izin untuk melihat pesanan ini."
 
-#: .\olretail\payment_views.py:1606
+#: .\olretail\payment_views.py:1612
 msgid "You can only rate a product after it has been delivered."
 msgstr "Anda hanya bisa menilai produk setelah dikirim."
 
-#: .\olretail\payment_views.py:1610
+#: .\olretail\payment_views.py:1616
 msgid "You already rated this order."
 msgstr "Anda sudah menilai pesanan ini."
 
-#: .\olretail\payment_views.py:1615 .\olretail\payment_views.py:1647
+#: .\olretail\payment_views.py:1621 .\olretail\payment_views.py:1653
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Silakan pilih penilaian dari 1 hingga 5 bintang."
 
-#: .\olretail\payment_views.py:1622
+#: .\olretail\payment_views.py:1628
 msgid "Thanks for your rating!"
 msgstr "Terima kasih atas penilaian Anda!"
 
-#: .\olretail\payment_views.py:1634
+#: .\olretail\payment_views.py:1640
 msgid "You can only rate a courier after the order has been delivered."
 msgstr "Anda hanya bisa menilai kurir setelah pesanan dikirim."
 
-#: .\olretail\payment_views.py:1638
+#: .\olretail\payment_views.py:1644
 msgid "This order has no assigned courier to rate."
 msgstr "Pesanan ini tidak memiliki kurir yang ditugaskan untuk dinilai."
 
-#: .\olretail\payment_views.py:1642
+#: .\olretail\payment_views.py:1648
 msgid "You already rated this courier."
 msgstr "Anda sudah menilai kurir ini."
 
-#: .\olretail\payment_views.py:1651
+#: .\olretail\payment_views.py:1657
 msgid "Thanks for rating the courier!"
 msgstr "Terima kasih telah menilai kurir!"
 
-#: .\olretail\payment_views.py:1665 .\olretail\payment_views.py:1691
+#: .\olretail\payment_views.py:1671 .\olretail\payment_views.py:1697
 msgid "You must be a seller to view this page."
 msgstr "Anda harus menjadi penjual untuk melihat halaman ini."
 
-#: .\olretail\payment_views.py:1718 .\olretail\payment_views.py:1885
-#: .\olretail\payment_views.py:1927 .\olretail\payment_views.py:1991
-#: .\olretail\payment_views.py:2108 .\olretail\payment_views.py:2319
+#: .\olretail\payment_views.py:1724 .\olretail\payment_views.py:1891
+#: .\olretail\payment_views.py:1933 .\olretail\payment_views.py:1997
+#: .\olretail\payment_views.py:2114 .\olretail\payment_views.py:2325
 msgid "Permission denied."
 msgstr "Izin ditolak."
 
-#: .\olretail\payment_views.py:1721 .\olretail\payment_views.py:1930
+#: .\olretail\payment_views.py:1727 .\olretail\payment_views.py:1936
 msgid "You must be a seller to update orders."
 msgstr "Anda harus menjadi penjual untuk memperbarui pesanan."
 
-#: .\olretail\payment_views.py:1725
+#: .\olretail\payment_views.py:1731
 msgid "Unknown action."
 msgstr "Tindakan tidak dikenal."
 
-#: .\olretail\payment_views.py:1729 .\olretail\payment_views.py:1947
+#: .\olretail\payment_views.py:1735 .\olretail\payment_views.py:1953
 msgid "Only paid orders can be marked as shipped."
 msgstr "Hanya pesanan yang sudah dibayar yang bisa ditandai sebagai dikirim."
 
-#: .\olretail\payment_views.py:1742
+#: .\olretail\payment_views.py:1748
 #, python-format
 msgid "Your order %(order)s has shipped."
 msgstr "Pesanan Anda %(order)s telah dikirim."
 
-#: .\olretail\payment_views.py:1751
+#: .\olretail\payment_views.py:1757
 #, python-format
 msgid "You have been assigned to deliver order %(order)s."
 msgstr "Anda telah ditugaskan untuk mengirimkan pesanan %(order)s."
 
-#: .\olretail\payment_views.py:1754
+#: .\olretail\payment_views.py:1760
 msgid "Order marked as shipped."
 msgstr "Pesanan ditandai sebagai dikirim."
 
-#: .\olretail\payment_views.py:1855
+#: .\olretail\payment_views.py:1861
 #, python-format
 msgid "Your order %(order)s has been delivered."
 msgstr "Pesanan Anda %(order)s telah terkirim."
 
-#: .\olretail\payment_views.py:1862
+#: .\olretail\payment_views.py:1868
 #, python-format
 msgid "%(seller)s just became eligible for payout — $%(amount)s available."
 msgstr ""
 "%(seller)s kini memenuhi syarat untuk pencairan dana — $%(amount)s tersedia."
 
-#: .\olretail\payment_views.py:1870
+#: .\olretail\payment_views.py:1876
 #, python-format
 msgid "%(courier)s just became eligible for payout — $%(amount)s available."
 msgstr ""
 "%(courier)s kini memenuhi syarat untuk pencairan dana — $%(amount)s "
 "tersedia."
 
-#: .\olretail\payment_views.py:1889
+#: .\olretail\payment_views.py:1895
 msgid "Only shipped orders can be marked as delivered."
 msgstr "Hanya pesanan yang sudah dikirim yang bisa ditandai sebagai terkirim."
 
-#: .\olretail\payment_views.py:1895
+#: .\olretail\payment_views.py:1901
 msgid "Order marked as delivered."
 msgstr "Pesanan ditandai sebagai terkirim."
 
-#: .\olretail\payment_views.py:1905
+#: .\olretail\payment_views.py:1911
 msgid "Preparing the food."
 msgstr "Sedang menyiapkan makanan."
 
-#: .\olretail\payment_views.py:1906
+#: .\olretail\payment_views.py:1912
 msgid "Order is ready for pickup."
 msgstr "Pesanan siap untuk diambil."
 
-#: .\olretail\payment_views.py:1934
+#: .\olretail\payment_views.py:1940
 msgid "This action only applies to restaurant orders."
 msgstr "Tindakan ini hanya berlaku untuk pesanan restoran."
 
-#: .\olretail\payment_views.py:1939 .\olretail\payment_views.py:1996
+#: .\olretail\payment_views.py:1945 .\olretail\payment_views.py:2002
 msgid "This order cannot be advanced from its current status."
 msgstr "Pesanan ini tidak dapat dilanjutkan dari status saat ini."
 
-#: .\olretail\payment_views.py:1969
+#: .\olretail\payment_views.py:1975
 #, python-format
 msgid "Order %(order)s is ready for collection."
 msgstr "Pesanan %(order)s siap untuk diambil."
 
-#: .\olretail\payment_views.py:1972 .\olretail\payment_views.py:2004
+#: .\olretail\payment_views.py:1978 .\olretail\payment_views.py:2010
 msgid "Order updated."
 msgstr "Pesanan diperbarui."
 
-#: .\olretail\payment_views.py:1977
+#: .\olretail\payment_views.py:1983
 msgid "Courier picked up the order."
 msgstr "Kurir telah mengambil pesanan."
 
-#: .\olretail\payment_views.py:1978
+#: .\olretail\payment_views.py:1984
 msgid "Courier is on the way."
 msgstr "Kurir sedang dalam perjalanan."
 
-#: .\olretail\payment_views.py:2034
+#: .\olretail\payment_views.py:2040
 msgid "ID submitted — an administrator will review it shortly."
 msgstr "Identitas telah dikirim — admin akan segera meninjaunya."
 
-#: .\olretail\payment_views.py:2070
+#: .\olretail\payment_views.py:2076
 msgid "Availability window added."
 msgstr "Jadwal ketersediaan ditambahkan."
 
-#: .\olretail\payment_views.py:2084
+#: .\olretail\payment_views.py:2090
 msgid "Availability window updated."
 msgstr "Jadwal ketersediaan diperbarui."
 
-#: .\olretail\payment_views.py:2096
+#: .\olretail\payment_views.py:2102
 msgid "Availability window removed."
 msgstr "Jadwal ketersediaan dihapus."
 
-#: .\olretail\payment_views.py:2111
+#: .\olretail\payment_views.py:2117
 msgid "You must be a seller to post delivery updates."
 msgstr "Anda harus menjadi penjual untuk memposting pembaruan pengiriman."
 
-#: .\olretail\payment_views.py:2121
+#: .\olretail\payment_views.py:2127
 #, python-format
 msgid "Delivery update for order %(order)s: %(note)s"
 msgstr "Pembaruan pengiriman untuk pesanan %(order)s: %(note)s"
 
-#: .\olretail\payment_views.py:2124
+#: .\olretail\payment_views.py:2130
 msgid "Update posted."
 msgstr "Pembaruan telah diposting."
 
-#: .\olretail\payment_views.py:2126
+#: .\olretail\payment_views.py:2132
 msgid "Please enter a status update."
 msgstr "Silakan masukkan pembaruan status."
 
-#: .\olretail\payment_views.py:2249
+#: .\olretail\payment_views.py:2255
 msgid "You can only open disputes for delivered or shipped orders."
 msgstr ""
 "Anda hanya bisa membuka sengketa untuk pesanan yang sudah terkirim atau "
 "dikirim."
 
-#: .\olretail\payment_views.py:2259
+#: .\olretail\payment_views.py:2265
 msgid "A dispute is already open for this order."
 msgstr "Sengketa sudah terbuka untuk pesanan ini."
 
-#: .\olretail\payment_views.py:2271
+#: .\olretail\payment_views.py:2277
 msgid "Dispute opened. Seller has 3 days to respond."
 msgstr "Sengketa dibuka. Penjual memiliki 3 hari untuk menanggapi."
 
-#: .\olretail\payment_views.py:2294
+#: .\olretail\payment_views.py:2300
 msgid "You do not have permission to view this dispute."
 msgstr "Anda tidak memiliki izin untuk melihat sengketa ini."
 
-#: .\olretail\payment_views.py:2322
+#: .\olretail\payment_views.py:2328
 msgid "You must be a seller to respond to disputes."
 msgstr "Anda harus menjadi penjual untuk menanggapi sengketa."
 
-#: .\olretail\payment_views.py:2327
+#: .\olretail\payment_views.py:2333
 #: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "Batas waktu tanggapan telah berlalu."
 
-#: .\olretail\payment_views.py:2336
+#: .\olretail\payment_views.py:2342
 msgid "Your response has been submitted."
 msgstr "Tanggapan Anda telah dikirim."
 
-#: .\olretail\payment_views.py:2390
+#: .\olretail\payment_views.py:2396
 #, python-format
 msgid "%(time)s ago"
 msgstr "%(time)s yang lalu"
@@ -2324,7 +2324,7 @@ msgstr ""
 
 #: .\templates\olretail\bank_transfer_instructions.html:23
 #: .\templates\olretail\mark_payment_sent.html:27
-#: .\templates\olretail\order_detail.html:287
+#: .\templates\olretail\order_detail.html:290
 msgid "TimorMart bank details"
 msgstr "Detail bank TimorMart"
 
@@ -2353,7 +2353,7 @@ msgstr "Referensi (sertakan dalam catatan transfer)"
 
 #: .\templates\olretail\bank_transfer_instructions.html:44
 #: .\templates\olretail\mark_payment_sent.html:75
-#: .\templates\olretail\order_detail.html:325
+#: .\templates\olretail\order_detail.html:328
 msgid "I've sent payment"
 msgstr "Saya sudah mengirim pembayaran"
 
@@ -2475,13 +2475,13 @@ msgstr "masing-masing"
 #: .\templates\olretail\cart.html:125 .\templates\olretail\checkout.html:191
 #: .\templates\olretail\mark_payment_sent.html:85
 #: .\templates\olretail\open_dispute.html:74
-#: .\templates\olretail\order_detail.html:436
+#: .\templates\olretail\order_detail.html:439
 #: .\templates\olretail\payment.html:95
 msgid "Order Summary"
 msgstr "Ringkasan Pesanan"
 
 #: .\templates\olretail\cart.html:128 .\templates\olretail\checkout.html:194
-#: .\templates\olretail\order_detail.html:440
+#: .\templates\olretail\order_detail.html:443
 #: .\templates\olretail\payment.html:116
 #: .\templates\olretail\payment_confirmation.html:109
 msgid "Subtotal"
@@ -2529,7 +2529,7 @@ msgid "Order Review"
 msgstr "Tinjauan Pesanan"
 
 #: .\templates\olretail\checkout.html:37
-#: .\templates\olretail\order_detail.html:389
+#: .\templates\olretail\order_detail.html:392
 #: .\templates\olretail\payment_confirmation.html:105
 msgid "Unit Price"
 msgstr "Harga Satuan"
@@ -2545,7 +2545,7 @@ msgid "Test accounts:"
 msgstr "Akun uji coba:"
 
 #: .\templates\olretail\checkout.html:104
-#: .\templates\olretail\order_detail.html:467
+#: .\templates\olretail\order_detail.html:470
 msgid "Delivery Information"
 msgstr "Informasi Pengiriman"
 
@@ -2933,7 +2933,7 @@ msgid "Pickup available"
 msgstr "Ambil sendiri tersedia"
 
 #: .\templates\olretail\details.html:332
-#: .\templates\olretail\order_detail.html:423
+#: .\templates\olretail\order_detail.html:426
 msgid "Chat on WhatsApp"
 msgstr "Chat di WhatsApp"
 
@@ -3238,8 +3238,8 @@ msgid "Confirm Your Payment"
 msgstr "Konfirmasi Pembayaran Anda"
 
 #: .\templates\olretail\mark_payment_sent.html:29
-#: .\templates\olretail\order_detail.html:289
-#: .\templates\olretail\order_detail.html:300
+#: .\templates\olretail\order_detail.html:292
+#: .\templates\olretail\order_detail.html:303
 #: .\templates\olretail\payment_confirmation.html:21
 #: .\templates\olretail\payment_confirmation.html:35
 msgid "Reference"
@@ -3316,7 +3316,7 @@ msgstr "Belum ada notifikasi."
 
 #: .\templates\olretail\open_dispute.html:4
 #: .\templates\olretail\open_dispute.html:12
-#: .\templates\olretail\order_detail.html:513
+#: .\templates\olretail\order_detail.html:516
 msgid "Report Issue"
 msgstr "Laporkan Masalah"
 
@@ -3332,7 +3332,7 @@ msgid "Submit Dispute"
 msgstr "Kirim Sengketa"
 
 #: .\templates\olretail\open_dispute.html:79
-#: .\templates\olretail\order_detail.html:458
+#: .\templates\olretail\order_detail.html:461
 #: .\templates\olretail\payment_confirmation.html:121
 msgid "Total Paid"
 msgstr "Total Dibayar"
@@ -3417,7 +3417,6 @@ msgstr "Ambil foto barang yang dikirim untuk konfirmasi."
 
 #: .\templates\olretail\order_detail.html:249
 #: .\templates\olretail\order_detail.html:252
-#| msgid "This order has no assigned courier to rate."
 msgid "This order is assigned to a courier — only they can confirm delivery."
 msgstr ""
 "Pesanan ini ditugaskan ke kurir — hanya mereka yang dapat mengonfirmasi "
@@ -3436,41 +3435,50 @@ msgstr "Tetapkan ulang kurir"
 msgid "Unassigned (self-delivery)"
 msgstr "Belum ditugaskan (kirim sendiri)"
 
-#: .\templates\olretail\order_detail.html:282
+#: .\templates\olretail\order_detail.html:274
+msgid ""
+"If the assigned courier can't take this delivery, reassign it to someone "
+"else or unassign it to deliver it yourself."
+msgstr ""
+"Jika kurir yang ditugaskan tidak dapat melakukan pengiriman ini, tugaskan "
+"kembali ke kurir lain atau batalkan penugasan agar Anda dapat mengirimkannya"
+" sendiri."
+
+#: .\templates\olretail\order_detail.html:285
 #: .\templates\olretail\terms_of_service.html:115
 #: .\templates\shared\footer.html:41
 msgid "Bank Transfer"
 msgstr "Transfer Bank"
 
-#: .\templates\olretail\order_detail.html:295
+#: .\templates\olretail\order_detail.html:298
 msgid "Submitted receipt"
 msgstr "Struk yang diajukan"
 
-#: .\templates\olretail\order_detail.html:297
+#: .\templates\olretail\order_detail.html:300
 msgid "Payment receipt — opens full size"
 msgstr "Struk pembayaran — buka ukuran penuh"
 
-#: .\templates\olretail\order_detail.html:301
+#: .\templates\olretail\order_detail.html:304
 msgid "Claimed amount"
 msgstr "Jumlah yang diklaim"
 
-#: .\templates\olretail\order_detail.html:313
+#: .\templates\olretail\order_detail.html:316
 msgid "Payment dispute"
 msgstr "Sengketa pembayaran"
 
-#: .\templates\olretail\order_detail.html:318
+#: .\templates\olretail\order_detail.html:321
 msgid "An administrator is reviewing this."
 msgstr "Admin sedang meninjau ini."
 
-#: .\templates\olretail\order_detail.html:330
+#: .\templates\olretail\order_detail.html:333
 msgid "Waiting for the buyer to send payment."
 msgstr "Menunggu pembeli mengirim pembayaran."
 
-#: .\templates\olretail\order_detail.html:335
+#: .\templates\olretail\order_detail.html:338
 msgid "Payment claim submitted — waiting for an administrator to confirm it."
 msgstr "Klaim pembayaran telah dikirim — menunggu admin mengonfirmasinya."
 
-#: .\templates\olretail\order_detail.html:351
+#: .\templates\olretail\order_detail.html:354
 #, python-format
 msgid ""
 "Have $%(amount)s in cash ready for the seller/courier when your order "
@@ -3478,7 +3486,7 @@ msgid ""
 msgstr ""
 "Siapkan $%(amount)s uang tunai untuk penjual/kurir saat pesanan Anda tiba."
 
-#: .\templates\olretail\order_detail.html:353
+#: .\templates\olretail\order_detail.html:356
 #, python-format
 msgid ""
 "Collect $%(amount)s in cash from the buyer when you deliver this order."
@@ -3486,75 +3494,75 @@ msgstr ""
 "Terima $%(amount)s uang tunai dari pembeli saat Anda mengirimkan pesanan "
 "ini."
 
-#: .\templates\olretail\order_detail.html:363
+#: .\templates\olretail\order_detail.html:366
 msgid "Product Details"
 msgstr "Detail Produk"
 
-#: .\templates\olretail\order_detail.html:397
+#: .\templates\olretail\order_detail.html:400
 msgid "Line Total"
 msgstr "Total Baris"
 
-#: .\templates\olretail\order_detail.html:409
+#: .\templates\olretail\order_detail.html:412
 msgid "Seller Information"
 msgstr "Informasi Penjual"
 
-#: .\templates\olretail\order_detail.html:445
+#: .\templates\olretail\order_detail.html:448
 #: .\templates\olretail\payment.html:120
 #, python-format
 msgid "Commission (%(commission_rate_percent)s%%)"
 msgstr "Komisi (%(commission_rate_percent)s%%)"
 
-#: .\templates\olretail\order_detail.html:449
+#: .\templates\olretail\order_detail.html:452
 #: .\templates\olretail\payment_confirmation.html:117
 msgid "Payment Fee"
 msgstr "Biaya Pembayaran"
 
-#: .\templates\olretail\order_detail.html:454
+#: .\templates\olretail\order_detail.html:457
 msgid "Paid directly to the seller — no platform fee."
 msgstr "Dibayar langsung ke penjual — tanpa biaya platform."
 
-#: .\templates\olretail\order_detail.html:477
+#: .\templates\olretail\order_detail.html:480
 msgid "View exact location on map"
 msgstr "Lihat lokasi tepat di peta"
 
-#: .\templates\olretail\order_detail.html:482
+#: .\templates\olretail\order_detail.html:485
 msgid "Phone"
 msgstr "Telepon"
 
-#: .\templates\olretail\order_detail.html:499
+#: .\templates\olretail\order_detail.html:502
 msgid "Cancel this order?"
 msgstr "Batalkan pesanan ini?"
 
-#: .\templates\olretail\order_detail.html:502
+#: .\templates\olretail\order_detail.html:505
 msgid "Cancel Order"
 msgstr "Batalkan Pesanan"
 
-#: .\templates\olretail\order_detail.html:522
+#: .\templates\olretail\order_detail.html:525
 msgid "Rate this product"
 msgstr "Nilai produk ini"
 
-#: .\templates\olretail\order_detail.html:530
+#: .\templates\olretail\order_detail.html:533
 msgid "Thanks for rating this purchase."
 msgstr "Terima kasih telah menilai pembelian ini."
 
-#: .\templates\olretail\order_detail.html:545
+#: .\templates\olretail\order_detail.html:548
 msgid "Write a review (optional)"
 msgstr "Tulis ulasan (opsional)"
 
-#: .\templates\olretail\order_detail.html:547
+#: .\templates\olretail\order_detail.html:550
 msgid "What did you think of this product?"
 msgstr "Bagaimana pendapat Anda tentang produk ini?"
 
-#: .\templates\olretail\order_detail.html:549
-#: .\templates\olretail\order_detail.html:578
+#: .\templates\olretail\order_detail.html:552
+#: .\templates\olretail\order_detail.html:581
 msgid "Submit rating"
 msgstr "Kirim penilaian"
 
-#: .\templates\olretail\order_detail.html:559
+#: .\templates\olretail\order_detail.html:562
 msgid "Rate the courier"
 msgstr "Nilai kurir"
 
-#: .\templates\olretail\order_detail.html:567
+#: .\templates\olretail\order_detail.html:570
 msgid "Thanks for rating this courier."
 msgstr "Terima kasih telah menilai kurir ini."
 

@@ -11,6 +11,7 @@ from datetime import timedelta
 from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import Group, User
 from django.core.paginator import Paginator
@@ -1091,20 +1092,35 @@ def platform_bank_account_delete(request, pk):
 # ── Order courier reassignment ───────────────────────────────────────────
 
 
-@admin_required
+@login_required
 @require_POST
 def order_reassign_courier(request, order_id):
     """The seller-facing 'Mark as Shipped' form only offers the courier
     picker at the Paid→Shipped transition — this is the only supported way
     to correct it afterward (while still Shipped, before Delivered), and
-    unlike editing the order directly in Django admin, it's audit-logged."""
+    unlike editing the order directly in Django admin, it's audit-logged.
+
+    Open to admins (any order) and the owning seller (their own orders only)
+    — a seller needs this to recover when an assigned courier turns out to
+    be unavailable, not just to wait on an admin."""
     order = get_object_or_404(Order, id=order_id)
+    is_owning_seller = hasattr(request.user, 'seller') and order.seller_id == request.user.seller.id
+    if not (request.user.is_staff or is_owning_seller):
+        messages.error(request, "You don't have permission to reassign this order's courier.")
+        return redirect("olretail:order_detail", order_id=order.id)
     if order.status != OrderStatus.SHIPPED:
         messages.error(request, "Courier can only be reassigned while an order is Shipped (not yet Delivered).")
         return redirect("olretail:order_detail", order_id=order.id)
 
     courier_id = request.POST.get("courier_id") or None
-    courier = get_object_or_404(Courier, pk=courier_id) if courier_id else None
+    # A seller submitting this only ever sees verified couriers in their
+    # dropdown (see olretail.views.order_detail) — enforce that server-side
+    # too, so a crafted request can't assign an unverified one. Admins keep
+    # the unfiltered list.
+    courier_qs = Courier.objects.all() if request.user.is_staff else Courier.objects.filter(
+        verification_status=CourierVerificationStatus.VERIFIED
+    )
+    courier = get_object_or_404(courier_qs, pk=courier_id) if courier_id else None
     previous = order.assigned_courier
     if courier == previous:
         messages.info(request, "No change — that courier is already assigned.")
