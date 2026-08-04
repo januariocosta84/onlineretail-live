@@ -1,0 +1,206 @@
+{% extends 'shared/base.html' %}
+{% load i18n %}
+
+{% block title %}Terms of Service — TimorMart{% endblock %}
+{% block meta_description %}The terms that govern using TimorMart as a buyer, seller, or courier.{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-9 py-4">
+      <h1 class="h3 font-weight-bold mb-2">Terms of Service</h1>
+      <p class="text-muted">Last updated: {% now "F j, Y" %}</p>
+
+      <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+        This is a working draft describing how TimorMart actually operates today. It has not been
+        reviewed by a lawyer qualified in Timor-Leste, and should be before it's relied on as a binding
+        legal document.
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-9">
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">1. What TimorMart Is</h2>
+          <p class="text-justify mb-0">
+            TimorMart is an online marketplace that connects independent buyers, sellers, and delivery
+            couriers across Timor-Leste. TimorMart does not manufacture, own, or sell the products listed
+            on the platform — each product is listed and sold by an independent seller, and each delivery
+            is carried out by an independent courier. By using TimorMart, you agree to these terms.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">2. Accounts</h2>
+          <p class="text-justify">
+            You can register as a Buyer, a Seller, a Courier, or both a Buyer and Seller on one account.
+            You're responsible for the accuracy of the information you provide and for keeping your login
+            details secure. One account per person — don't create multiple accounts to get around a
+            suspension or a platform rule.
+          </p>
+          <p class="text-justify mb-0">
+            Courier accounts must submit a photo of a valid ID and driving license, and are only assigned
+            deliveries once an administrator has verified those documents.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">3. Listings</h2>
+          <p class="text-justify mb-0">
+            Every product a seller submits is reviewed by an administrator before it becomes visible to
+            buyers, and can be rejected, sent back for changes, or suspended later if it breaks these
+            terms (for example: prohibited items, misleading pricing or condition, or counterfeit goods).
+            Sellers are responsible for the accuracy of their own listings — the price, description,
+            condition (new or second-hand), and photos.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">4. Payment Methods &amp; Fees</h2>
+          <p class="text-justify">TimorMart currently supports two ways to pay at checkout:</p>
+          <ul class="mb-3">
+            <li class="mb-2">
+              <strong>Cash on Delivery</strong> — you pay the courier or seller directly, in cash, when
+              your order arrives. You pay only the item price plus a flat $1.00 delivery fee. TimorMart
+              never holds or handles this money.
+            </li>
+            <li class="mb-0">
+              <strong>Bank Transfer</strong> — you transfer the full amount to TimorMart's own bank
+              account before the order ships. This total includes a 2% platform service fee on top of the
+              item price, plus the $1.00 delivery fee. TimorMart holds these funds and pays the seller
+              once delivery is confirmed.
+            </li>
+          </ul>
+          <p class="text-justify mb-0">
+            Card payments are not currently available. Sellers receive the full listed price of each item
+            they sell once it's delivered — the platform's fee on Bank Transfer orders is charged to the
+            buyer, not deducted from the seller.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">5. Delivery</h2>
+          <p class="text-justify mb-0">
+            Orders are delivered by a courier matched to the buyer's city, or arranged directly by the
+            seller. The courier confirms delivery with a photo, and both the product and the courier can
+            be rated by the buyer afterward. Estimated delivery timing is set by the seller and isn't
+            guaranteed by TimorMart.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">6. Cancellations</h2>
+          <p class="text-justify mb-0">
+            You can cancel an order yourself only before payment has been confirmed — that is, while it's
+            still awaiting payment or awaiting confirmation of a bank transfer you've reported. Once a
+            payment is confirmed, an order can no longer be self-cancelled; see the Refund Policy below
+            for what happens if something goes wrong after that point.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">7. Disputes</h2>
+          <p class="text-justify">
+            If an order arrives damaged, wrong, or never arrives, you can open a dispute on that order.
+            The seller has 3 days to respond. An administrator reviews the dispute — including any
+            evidence submitted — and makes the final decision, which may include a refund (see the
+            Refund Policy).
+          </p>
+          <p class="text-justify mb-0">
+            For Bank Transfer orders, a buyer's claim that they've sent payment is verified directly by an
+            administrator against TimorMart's actual bank statement, not by the seller.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">8. Prohibited Conduct</h2>
+          <p class="text-justify mb-0">You may not use TimorMart to:</p>
+          <ul class="mb-0">
+            <li>List illegal, counterfeit, stolen, or unsafe goods</li>
+            <li>Post fake reviews or ratings, or manipulate another user's rating</li>
+            <li>Submit a fraudulent payment claim, reused receipt, or fake delivery/ID document</li>
+            <li>Harass, threaten, or discriminate against another user</li>
+            <li>Attempt to circumvent an account suspension by creating a new account</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">9. Suspension &amp; Termination</h2>
+          <p class="text-justify mb-0">
+            TimorMart may suspend or remove a listing, or restrict or close an account, for breaking these
+            terms — including fraud, repeated unverifiable payment claims, or prohibited listings. Where
+            reasonably possible, you'll be told why.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">10. TimorMart's Role &amp; Limitation of Liability</h2>
+          <p class="text-justify mb-0">
+            TimorMart is an intermediary connecting buyers, sellers, and couriers — it is not the seller
+            of any product listed on the platform and does not manufacture, inspect, or guarantee the
+            products sold by independent sellers. To the fullest extent permitted by law, TimorMart is not
+            liable for the quality, safety, or legality of listed products, the accuracy of a seller's
+            listing, or a courier's conduct during delivery, beyond the dispute-resolution process
+            described above.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">11. Changes to These Terms</h2>
+          <p class="text-justify mb-0">
+            TimorMart may update these terms from time to time. Continuing to use the platform after a
+            change takes effect means you accept the updated terms.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">12. Governing Law</h2>
+          <p class="text-justify mb-0">
+            These terms are governed by the laws of the Democratic Republic of Timor-Leste.
+            <em>[Specific business registration/entity details to be added here once confirmed.]</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h5 page-header-bar mb-3">13. Contact</h2>
+          <p class="text-justify mb-0">
+            Questions about these terms? Reach us on WhatsApp at
+            <a href="https://wa.me/67077121173" target="_blank" rel="noopener">+670 7712 1173</a>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

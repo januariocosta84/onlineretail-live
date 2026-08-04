@@ -19,6 +19,8 @@
           <!-- Section: Links -->
           <section class="mb-4">
             <a class="text-dark mx-2" href="{% url 'olretail:about' %}">{% trans 'About Us' %}</a>
+            <a class="text-dark mx-2" href="{% url 'olretail:terms_of_service' %}">Terms of Service</a>
+            <a class="text-dark mx-2" href="{% url 'olretail:refund_policy' %}">Refund Policy</a>
           </section>
           <!-- Section: Links -->
 
@@ -30,12 +32,14 @@
           </section>
           <!-- Section: Social media -->
 
-          <!-- Section: Payment methods -->
+          <!-- Section: Payment methods — Stripe/card is currently disabled
+               at checkout (doesn't work for Timor-Leste cards yet), so
+               listing VISA here would be misleading; re-add it if that's
+               ever re-enabled (see olretail/payment_forms.py CheckoutForm). -->
           <section class="mb-4">
             <p class="text-dark small mb-2">{% trans 'We accept' %}</p>
-            <span class="text-dark mx-2"><i class="fab fa-cc-visa fa-lg mr-1" aria-hidden="true"></i>{% trans 'VISA Card' %}</span>
             <span class="text-dark mx-2"><i class="fas fa-university fa-lg mr-1" aria-hidden="true"></i>{% trans 'Bank Transfer' %}</span>
-            <span class="text-dark mx-2"><i class="fas fa-mobile-alt fa-lg mr-1" aria-hidden="true"></i>{% trans 'Mobile Money' %}</span>
+            <span class="text-dark mx-2"><i class="fas fa-money-bill-wave fa-lg mr-1" aria-hidden="true"></i>{% trans 'Cash on Delivery' %}</span>
           </section>
           <!-- Section: Payment methods -->
         </div>

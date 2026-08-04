@@ -922,18 +922,23 @@ def _process_bank_callback(txn, source):
         _mark_payment_failed(payment, message, source=source)
 
 
-def _process_bank_refund(payment, amount_cents=None):
-    """Refund a settled simulated-bank payment: credits the virtual test
-    account back (SimulatedBankGateway.refund, the gateway-side effect) and
-    reverses every sibling order sharing this Payment (business-logic side
-    effect — commission, inventory, notifications). Full refund only —
-    amount_cents is accepted for REST API shape parity with a real bank but
-    a partial amount isn't prorated across orders today."""
-    if payment.status != PaymentStatus.SUCCEEDED:
-        raise ValueError('Only a succeeded payment can be refunded.')
+def _reverse_order_payment(payment):
+    """The gateway-agnostic half of a refund: marks the Payment (and every
+    sibling order sharing it — a single checkout can span several
+    sellers) refunded, reverses whatever SellerBalance/CourierBalance
+    credit already happened (only if the order had actually been
+    delivered — see mark_delivered, balances are credited at delivery,
+    not at payment), restocks non-restaurant products, and notifies
+    buyer/seller. Deliberately does NOT talk to any payment gateway
+    itself — callers are responsible for that (or, for a manual Bank
+    Transfer, for having actually already sent the money back via
+    TimorMart's real bank account before calling this). Full refund
+    only — a partial amount isn't prorated across sibling orders today.
 
-    SimulatedBankGateway().refund(payment, amount_cents=amount_cents)
-
+    Split out of the old _process_bank_refund so a manual Bank Transfer
+    refund (_process_manual_bank_transfer_refund, below) can reuse this
+    same order/balance-reversal logic without going through
+    SimulatedBankGateway, which only exists for the test/dev rail."""
     with transaction.atomic():
         payment.status = PaymentStatus.REFUNDED
         payment.save(update_fields=['status'])
@@ -986,6 +991,37 @@ def _process_bank_refund(payment, amount_cents=None):
             )
 
     logger.info(f"Refund processed for payment id={payment.id}")
+
+
+def _process_bank_refund(payment, amount_cents=None):
+    """Refund a settled Simulated Bank payment (the test/dev rail):
+    credits the virtual test account back (SimulatedBankGateway.refund,
+    the gateway-side effect), then reverses the order/balance side
+    (_reverse_order_payment). NOT usable for a real Bank Transfer order —
+    those never have a SimulatedBankTransaction to refund (see
+    _process_manual_bank_transfer_refund for that case) — or for Stripe,
+    which was never retrofitted onto this interface."""
+    if payment.status != PaymentStatus.SUCCEEDED:
+        raise ValueError('Only a succeeded payment can be refunded.')
+
+    SimulatedBankGateway().refund(payment, amount_cents=amount_cents)
+    _reverse_order_payment(payment)
+
+
+def _process_manual_bank_transfer_refund(payment):
+    """Refund a real Bank Transfer payment. There's no gateway API to call
+    — the admin resolving the dispute has to actually send the money back
+    from TimorMart's real bank account themselves first, the same way
+    _mark_bank_transfer_paid already relies on an admin manually checking
+    the real bank statement rather than an automated confirmation. This
+    only updates TimorMart's own records (order/balance reversal) to
+    match — see dashboard.views.order_dispute_action, the only caller."""
+    if payment.gateway != PaymentMethod.BANK_TRANSFER:
+        raise ValueError('This is not a Bank Transfer payment.')
+    if payment.status != PaymentStatus.SUCCEEDED:
+        raise ValueError('Only a succeeded payment can be refunded.')
+
+    _reverse_order_payment(payment)
 
 
 def _reconcile_simulated_bank_payment(payment):

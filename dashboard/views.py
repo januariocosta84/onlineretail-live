@@ -27,7 +27,8 @@ from django.db.models import F
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
     Category, Comment, Courier, CourierBalance, CourierPayout, CourierVerificationStatus, Dispute,
-    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, PaymentMethod, Payout,
+    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, PaymentMethod,
+    PaymentStatus, Payout,
     PayoutStatus, PlatformBankAccount, PlatformSettings, Product,
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
@@ -1338,6 +1339,123 @@ def payment_dispute_action(request, pk):
     _notify(order.seller.user, seller_message, order=order)
 
     return redirect("dashboard:payment_disputes")
+
+
+# Damage/non-delivery disputes (item not received, damaged, not as
+# described, wrong item, other) — the counterpart to payment_disputes
+# above, which only covers pre-delivery bank-transfer payment claims.
+# Before this, a dispute here had a buyer-open / seller-respond flow but
+# nothing ever closed it: no admin action existed to actually resolve one.
+ORDER_DISPUTE_REASONS = [
+    DisputeReason.NOT_RECEIVED,
+    DisputeReason.DAMAGED,
+    DisputeReason.NOT_AS_DESCRIBED,
+    DisputeReason.WRONG_ITEM,
+    DisputeReason.OTHER,
+]
+
+
+@admin_required
+def order_disputes(request):
+    disputes = (
+        Dispute.objects.filter(
+            reason__in=ORDER_DISPUTE_REASONS,
+            status__in=[DisputeStatus.OPEN, DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW],
+        )
+        .select_related("order__payment", "order__seller", "buyer", "seller__user")
+        .order_by("-created_at")
+    )
+    return render(request, "dashboard/order_disputes.html", {"section": "order_disputes", "disputes": disputes})
+
+
+@admin_required
+@require_POST
+def order_dispute_action(request, pk):
+    """Refund only works for Cash-on-delivery-free payment methods
+    TimorMart actually held money for: a real Bank Transfer (manual —
+    the admin has to have actually sent the money back from TimorMart's
+    real bank account first, same trust boundary
+    _mark_bank_transfer_paid already relies on for confirming a payment
+    in) or a lingering Simulated Bank order (automated, via the test
+    gateway). Cash on Delivery was paid straight to the seller/courier —
+    TimorMart never held it, so there's nothing here to refund; that has
+    to be arranged directly between buyer and seller. Reshipment/no-action
+    just record the decision — TimorMart doesn't orchestrate a second
+    shipment itself."""
+    dispute = get_object_or_404(Dispute, pk=pk)
+    order = dispute.order
+    action = request.POST.get("action")
+    note = (request.POST.get("admin_notes") or "").strip()
+
+    if action not in ("refund", "reshipment", "no_action"):
+        messages.error(request, "Unknown action.")
+        return redirect("dashboard:order_disputes")
+    if dispute.status not in (DisputeStatus.OPEN, DisputeStatus.SELLER_RESPONSE, DisputeStatus.UNDER_REVIEW):
+        messages.error(request, "This dispute has already been resolved.")
+        return redirect("dashboard:order_disputes")
+
+    from olretail.payment_views import (
+        _notify, _process_bank_refund, _process_manual_bank_transfer_refund,
+    )
+
+    if action == "refund":
+        if order.payment_method == PaymentMethod.CASH_ON_DELIVERY or not order.payment_id:
+            messages.error(
+                request,
+                "This order was paid Cash on Delivery — TimorMart never held that money, so it can't be "
+                "refunded here. Arrange this directly with the buyer/seller instead.",
+            )
+            return redirect("dashboard:order_disputes")
+        if order.payment.status != PaymentStatus.SUCCEEDED:
+            messages.error(request, "This order was never actually paid — there's nothing to refund.")
+            return redirect("dashboard:order_disputes")
+        try:
+            if order.payment.gateway == PaymentMethod.BANK_TRANSFER:
+                _process_manual_bank_transfer_refund(order.payment)
+            else:
+                _process_bank_refund(order.payment)
+        except ValueError as e:
+            messages.error(request, str(e))
+            return redirect("dashboard:order_disputes")
+        dispute.resolution = DisputeResolution.REFUND_FULL
+        outcome_message = (
+            f"An administrator reviewed your dispute for order {order.order_number} and issued a full refund."
+        )
+        seller_message = (
+            f"An administrator reviewed a dispute for order {order.order_number} and refunded the buyer."
+        )
+        log_action(request, "order_dispute_refunded", order.order_number, note)
+        messages.success(request, f"Order {order.order_number} refunded.")
+    elif action == "reshipment":
+        dispute.resolution = DisputeResolution.RESHIPMENT
+        outcome_message = (
+            f"An administrator reviewed your dispute for order {order.order_number} — "
+            "the seller will arrange a reshipment."
+        )
+        seller_message = (
+            f"An administrator reviewed a dispute for order {order.order_number} and asked for a "
+            "reshipment — please coordinate directly with the buyer."
+        )
+        log_action(request, "order_dispute_reshipment", order.order_number, note)
+        messages.success(request, f"Order {order.order_number} marked for reshipment.")
+    else:
+        dispute.resolution = DisputeResolution.CLOSED_NO_ACTION
+        outcome_message = (
+            f"An administrator reviewed your dispute for order {order.order_number} and closed it with no action."
+        )
+        seller_message = outcome_message
+        log_action(request, "order_dispute_closed", order.order_number, note)
+        messages.success(request, f"Dispute for order {order.order_number} closed.")
+
+    dispute.status = DisputeStatus.RESOLVED
+    dispute.admin_notes = note
+    dispute.resolved_at = timezone.now()
+    dispute.resolved_by = request.user
+    dispute.save(update_fields=["status", "resolution", "admin_notes", "resolved_at", "resolved_by"])
+    _notify(order.buyer, outcome_message, order=order)
+    _notify(order.seller.user, seller_message, order=order)
+
+    return redirect("dashboard:order_disputes")
 
 
 # ── Orders (all types — restaurant food orders included) ─────────────────

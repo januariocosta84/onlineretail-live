@@ -20,6 +20,8 @@ _courier_api_router.register(
 urlpatterns = [
     path("", views.index, name="index"),
     path("about/", views.about, name="about"),
+    path("terms/", views.terms_of_service, name="terms_of_service"),
+    path("refund-policy/", views.refund_policy, name="refund_policy"),
     path("search/", views.search, name="search"),
     path("details/<slug:slug>/", views.product_detail, name="details"),
     path("category/<int:id>", views.category_redirect, name="category"),

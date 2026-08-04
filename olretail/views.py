@@ -201,6 +201,17 @@ def about(request):
     return render(request, "olretail/about.html")
 
 
+def terms_of_service(request):
+    """Public Terms of Service — see templates/olretail/terms_of_service.html
+    for the content itself and its own disclaimer about legal review."""
+    return render(request, "olretail/terms_of_service.html")
+
+
+def refund_policy(request):
+    """Public Refund Policy — see templates/olretail/refund_policy.html."""
+    return render(request, "olretail/refund_policy.html")
+
+
 def search(request):
     """Legacy /search/ endpoint — same catalog view, kept for old links."""
     return index(request)

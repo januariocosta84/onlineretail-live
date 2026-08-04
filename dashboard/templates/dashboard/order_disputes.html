@@ -1,0 +1,100 @@
+{% extends 'dashboard/base.html' %}
+{% block dash_title %}Order disputes{% endblock %}
+
+{% block dash_content %}
+<h1 class="h4 page-header-bar mb-3">Order disputes <small class="text-muted h6">({{ disputes|length }} waiting)</small></h1>
+<p class="text-muted small">
+  Buyer-reported problems with a delivered/shipped order — item not received, damaged, not as described,
+  or wrong item. Refund only works for orders TimorMart actually held the money for (Bank Transfer, or a
+  lingering Simulated Bank order) — for a Bank Transfer refund, send the money back from TimorMart's real
+  bank account yourself before clicking Refund here, the same way you'd check the bank statement before
+  approving a payment claim. Cash on Delivery was paid directly to the seller/courier, so there's nothing
+  to refund through TimorMart — arrange that directly with them instead.
+</p>
+
+{% if disputes %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Reason</th>
+          <th>Buyer's report</th>
+          <th>Seller's response</th>
+          <th style="width:340px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in disputes %}
+        {% with o=d.order %}
+        <tr>
+          <td>
+            <a href="{% url 'olretail:order_detail' o.id %}" target="_blank" rel="noopener">{{ o.order_number }}</a>
+            <br><small class="text-muted">{{ o.product.name }}</small>
+            <br><small class="text-muted">Buyer: {{ d.buyer.username }}</small>
+            <br><small class="text-muted">Seller: {{ d.seller.get_name }}</small>
+            <br><small class="text-muted">Paid via: {{ o.get_payment_method_display }} &middot; ${{ o.total }}</small>
+          </td>
+          <td class="small">
+            {{ d.get_reason_display }}
+            <br>
+            {% if d.status == 'open' %}
+              <span class="badge badge-warning">Awaiting seller</span>
+            {% elif d.status == 'seller_response' %}
+              <span class="badge badge-info">Seller responded</span>
+            {% else %}
+              <span class="badge badge-primary">Under review</span>
+            {% endif %}
+          </td>
+          <td class="small">
+            {{ d.description|linebreaksbr }}
+            {% if d.buyer_evidence %}
+            <br><strong>Evidence:</strong> {{ d.buyer_evidence|linebreaksbr }}
+            {% endif %}
+          </td>
+          <td class="small">
+            {% if d.seller_response %}
+              {{ d.seller_response|linebreaksbr }}
+            {% else %}
+              <span class="text-muted">
+                {% if d.status == 'open' %}Not yet responded (due {{ d.seller_response_deadline|date:"M d, Y" }}){% else %}—{% endif %}
+              </span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="post" action="{% url 'dashboard:order_dispute_action' d.pk %}">
+              {% csrf_token %}
+              <textarea name="admin_notes" class="form-control form-control-sm mb-2" rows="2"
+                        placeholder="Admin note (optional, kept on the dispute record)"></textarea>
+              {% if o.payment_method != 'cash_on_delivery' and o.payment %}
+              <button type="submit" name="action" value="refund" class="btn btn-success btn-sm"
+                      onclick="return confirm('Refund order {{ o.order_number }}? Make sure you\'ve actually sent the money back first if this is a Bank Transfer order.');">
+                <i class="fas fa-undo mr-1" aria-hidden="true"></i>Refund
+              </button>
+              {% endif %}
+              <button type="submit" name="action" value="reshipment" class="btn btn-primary btn-sm"
+                      onclick="return confirm('Mark order {{ o.order_number }} for reshipment? The seller will be asked to coordinate directly with the buyer.');">
+                <i class="fas fa-box mr-1" aria-hidden="true"></i>Reshipment
+              </button>
+              <button type="submit" name="action" value="no_action" class="btn btn-outline-secondary btn-sm"
+                      onclick="return confirm('Close this dispute with no action?');">
+                <i class="fas fa-times mr-1" aria-hidden="true"></i>Close
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body text-center text-muted py-5">
+  <i class="fas fa-check-circle fa-3x mb-3" aria-hidden="true"></i>
+  <h2 class="h5">No order disputes waiting</h2>
+  <p class="mb-0">Buyer-reported item problems (not received, damaged, wrong item) will appear here.</p>
+</div></div>
+{% endif %}
+{% endblock %}
