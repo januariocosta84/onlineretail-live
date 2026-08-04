@@ -88,6 +88,11 @@
                   {% if order.food_status %}
                     <span class="badge badge-light border d-block mt-1">{{ order.get_food_status_display }}</span>
                   {% endif %}
+                  {% if order.courier_response_overdue or order.courier_pickup_overdue %}
+                    <span class="badge badge-warning d-block mt-1">
+                      <i class="fas fa-clock mr-1" aria-hidden="true"></i>{% trans "Needs attention" %}
+                    </span>
+                  {% endif %}
                 </td>
                 <td class="text-center text-muted">
                   <small>{{ order.created_at|date:"M d, Y" }}</small>

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import IntegrityError, models, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -78,6 +80,28 @@ class FoodOrderStatus(models.TextChoices):
     READY_FOR_PICKUP = 'ready_for_pickup', _('Ready for Pickup')
     PICKED_UP = 'picked_up', _('Picked Up')
     ON_THE_WAY = 'on_the_way', _('On the Way')
+
+
+class CourierAssignmentStatus(models.TextChoices):
+    """Accept/reject handshake for a *non-food* order's assigned_courier —
+    layered on top of Order.status the same way FoodOrderStatus is (see
+    above), not a replacement for it. Blank on Order means no handshake
+    applies: self-delivery, a restaurant order (which keeps its own
+    FoodOrderStatus pickup flow untouched), or not shipped yet. Every
+    (re)assignment (seller_update_order_status, dashboard's
+    order_reassign_courier) resets this back to AWAITING_RESPONSE."""
+    AWAITING_RESPONSE = 'awaiting_response', _('Awaiting Courier Response')
+    ACCEPTED = 'accepted', _('Accepted — Awaiting Pickup')
+    PICKED_UP = 'picked_up', _('Picked Up')
+    REJECTED = 'rejected', _('Rejected')
+
+
+# How long a courier has to respond to a new assignment, or to actually
+# pick the package up after accepting, before Order.courier_response_overdue
+# / courier_pickup_overdue starts flagging it to the seller. No background
+# job re-checks this on a timer (see render.yaml — no cron/worker service
+# exists) — it's computed on demand wherever these properties are read.
+COURIER_RESPONSE_TIMEOUT = timedelta(minutes=20)
 
 
 class PaymentMethod(models.TextChoices):
@@ -188,6 +212,13 @@ class Order(models.Model):
     # rewriting history. Zero for self-delivery orders (no assigned_courier).
     courier_fee_cents = models.BigIntegerField(default=0)
 
+    # Accept/reject handshake — see CourierAssignmentStatus docstring.
+    courier_assignment_status = models.CharField(
+        max_length=20, choices=CourierAssignmentStatus.choices, blank=True,
+    )
+    courier_assigned_at = models.DateTimeField(null=True, blank=True)
+    courier_responded_at = models.DateTimeField(null=True, blank=True)
+
     # Notes
     buyer_notes = models.TextField(blank=True)
     admin_notes = models.TextField(blank=True)
@@ -212,6 +243,31 @@ class Order(models.Model):
         if self.status == OrderStatus.PAID:
             return True
         return self.payment_method == PaymentMethod.CASH_ON_DELIVERY and self.status == OrderStatus.PENDING_PAYMENT
+
+    @property
+    def courier_response_overdue(self):
+        """True once the assigned courier has sat on a fresh assignment
+        for longer than COURIER_RESPONSE_TIMEOUT without accepting or
+        rejecting it — surfaced to the seller so they know to reassign."""
+        return bool(
+            self.assigned_courier_id
+            and self.courier_assignment_status == CourierAssignmentStatus.AWAITING_RESPONSE
+            and self.courier_assigned_at
+            and timezone.now() - self.courier_assigned_at > COURIER_RESPONSE_TIMEOUT
+        )
+
+    @property
+    def courier_pickup_overdue(self):
+        """True once the assigned courier accepted the delivery but the
+        seller still hasn't confirmed physical pickup after
+        COURIER_RESPONSE_TIMEOUT — likely means the courier never actually
+        showed up despite accepting."""
+        return bool(
+            self.assigned_courier_id
+            and self.courier_assignment_status == CourierAssignmentStatus.ACCEPTED
+            and self.courier_responded_at
+            and timezone.now() - self.courier_responded_at > COURIER_RESPONSE_TIMEOUT
+        )
 
     @property
     def has_active_dispute(self):

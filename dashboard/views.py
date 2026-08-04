@@ -27,8 +27,8 @@ from django.db.models import F
 
 from accounts.roles import ROLE_BUYER, ROLE_COURIER, ROLE_SELLER, assign_role, revoke_role
 from olretail.models import (
-    Category, Comment, Courier, CourierBalance, CourierPayout, CourierVerificationStatus, Dispute,
-    DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, PaymentMethod,
+    Category, Comment, Courier, CourierAssignmentStatus, CourierBalance, CourierPayout, CourierVerificationStatus,
+    Dispute, DisputeReason, DisputeResolution, DisputeStatus, FoodOrderStatus, Order, OrderStatus, PaymentMethod,
     PaymentStatus, Payout,
     PayoutStatus, PlatformBankAccount, PlatformSettings, Product,
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
@@ -1127,7 +1127,20 @@ def order_reassign_courier(request, order_id):
         return redirect("olretail:order_detail", order_id=order.id)
 
     order.assigned_courier = courier
-    order.save(update_fields=["assigned_courier"])
+    update_fields = ["assigned_courier"]
+    if not order.product.is_restaurant_category:
+        # Every (re)assignment restarts the accept/reject handshake — see
+        # CourierAssignmentStatus. Restaurant orders keep their own
+        # FoodOrderStatus pickup flow and never get this field set at all.
+        if courier:
+            order.courier_assignment_status = CourierAssignmentStatus.AWAITING_RESPONSE
+            order.courier_assigned_at = timezone.now()
+        else:
+            order.courier_assignment_status = ""
+            order.courier_assigned_at = None
+        order.courier_responded_at = None
+        update_fields += ["courier_assignment_status", "courier_assigned_at", "courier_responded_at"]
+    order.save(update_fields=update_fields)
     log_action(
         request, "order_courier_reassigned", order.order_number,
         f"{previous.get_name if previous else 'unassigned'} → {courier.get_name if courier else 'unassigned'}",

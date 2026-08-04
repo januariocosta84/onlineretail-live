@@ -29,6 +29,7 @@ from .payment_models import (
     Cart, Order, Payment, OrderStatus, FoodOrderStatus, PaymentMethod, PaymentStatus, Transaction,
     TransactionType, SellerBalance, CourierBalance, Dispute, DisputeStatus, DisputeResolution, DisputeReason,
     DeliveryUpdate, PlatformSettings, Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
+    CourierAssignmentStatus,
 )
 from .push_notifications import send_push
 from .banking_models import SimulatedOutcome, SimulatedBankTransaction, GatewayEventLog
@@ -1548,7 +1549,17 @@ def order_detail(request, order_id):
         context['food_ship_form'] = ShipOrderForm(order=order)
     if is_seller and order.status == OrderStatus.SHIPPED:
         context['delivery_update_form'] = DeliveryUpdateForm()
-    if (is_seller or is_courier) and order.status == OrderStatus.SHIPPED:
+    if is_seller and order.status == OrderStatus.SHIPPED:
+        context['delivery_proof_form'] = DeliveryProofForm()
+    elif is_courier and order.status == OrderStatus.SHIPPED and (
+        order.product.is_restaurant_category
+        or order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
+    ):
+        # Mirrors _courier_can_mark_delivered's gate — a non-food order's
+        # courier only gets the mark-delivered form once the seller has
+        # confirmed physical pickup (see confirm_courier_pickup). Before
+        # that, the Accept/Reject block or the "waiting for pickup" status
+        # tells them what to do instead.
         context['delivery_proof_form'] = DeliveryProofForm()
     if is_admin and order.status == OrderStatus.SHIPPED:
         context['couriers'] = Courier.objects.select_related('user').order_by('user__first_name')
@@ -1753,6 +1764,18 @@ def seller_update_order_status(request, order_id):
         order.courier_name = form.cleaned_data['courier_name']
         order.tracking_number = form.cleaned_data['tracking_number']
         order.assigned_courier = form.cleaned_data['assigned_courier']
+        if order.assigned_courier_id:
+            # Starts the accept/reject handshake — see CourierAssignmentStatus.
+            # This view only ever handles non-food orders (food orders assign
+            # a courier through update_food_status instead), so no
+            # is_restaurant_category carve-out is needed here.
+            order.courier_assignment_status = CourierAssignmentStatus.AWAITING_RESPONSE
+            order.courier_assigned_at = timezone.now()
+            order.courier_responded_at = None
+        else:
+            order.courier_assignment_status = ''
+            order.courier_assigned_at = None
+            order.courier_responded_at = None
         order.save()
         _notify(
             order.buyer,
@@ -1765,7 +1788,8 @@ def seller_update_order_status(request, order_id):
             # a real gap regardless of order type, not just food orders.
             _notify(
                 order.assigned_courier.user,
-                _('You have been assigned to deliver order %(order)s.') % {'order': order.order_number},
+                _('You have been assigned to deliver order %(order)s. Please accept or reject it.')
+                % {'order': order.order_number},
                 order=order,
             )
         messages.success(request, _('Order marked as shipped.'))
@@ -1780,7 +1804,12 @@ def _courier_can_mark_delivered(user, order):
     owning seller may only self-confirm a self-delivery order (no courier
     assigned) — once a courier is assigned, only that courier can confirm,
     so the seller can't accidentally mark it delivered themselves before
-    the courier actually hands it over. Returns (is_owning_seller, is_assigned_courier)."""
+    the courier actually hands it over. For a non-food order with an
+    assigned courier, that courier can only confirm delivery once the
+    seller has confirmed physical pickup (CourierAssignmentStatus.PICKED_UP
+    — see confirm_courier_pickup); restaurant orders keep using their own
+    FoodOrderStatus pickup flow instead and are unaffected by this gate.
+    Returns (is_owning_seller, is_assigned_courier)."""
     is_owning_seller = (
         hasattr(user, 'seller')
         and order.seller_id == user.seller.id
@@ -1790,6 +1819,10 @@ def _courier_can_mark_delivered(user, order):
         order.assigned_courier_id
         and hasattr(user, 'courier')
         and order.assigned_courier_id == user.courier.id
+        and (
+            order.product.is_restaurant_category
+            or order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
+        )
     )
     return is_owning_seller, is_assigned_courier
 
@@ -1915,6 +1948,100 @@ def mark_delivered(request, order_id):
     else:
         messages.error(request, _('A delivery photo is required to confirm delivery.'))
 
+    return redirect('olretail:order_detail', order_id=order.id)
+
+
+def _apply_courier_response(order, accept):
+    """Shared by the web view (courier_respond_to_assignment) and the
+    courier API (courier_api.RespondToAssignmentView) — the courier's
+    accept/reject decision on a fresh assignment. Only notifies the
+    seller: the courier already knows what they just chose."""
+    order.courier_assignment_status = (
+        CourierAssignmentStatus.ACCEPTED if accept else CourierAssignmentStatus.REJECTED
+    )
+    order.courier_responded_at = timezone.now()
+    order.save(update_fields=['courier_assignment_status', 'courier_responded_at'])
+    if accept:
+        message = _('%(courier)s accepted delivery of order %(order)s.') % {
+            'courier': order.assigned_courier.get_name, 'order': order.order_number,
+        }
+    else:
+        message = _('%(courier)s declined to deliver order %(order)s — please reassign it.') % {
+            'courier': order.assigned_courier.get_name, 'order': order.order_number,
+        }
+    _notify(order.seller.user, message, order=order)
+
+
+@login_required
+@require_POST
+def courier_respond_to_assignment(request, order_id):
+    """The assigned courier accepts or rejects a fresh (non-food) delivery
+    assignment — see CourierAssignmentStatus. Rejecting doesn't touch
+    assigned_courier itself; the seller reassigns separately via the
+    existing dashboard:order_reassign_courier flow, same as any other
+    unavailable-courier case."""
+    order = get_object_or_404(Order, id=order_id)
+
+    if not (
+        order.assigned_courier_id
+        and hasattr(request.user, 'courier')
+        and order.assigned_courier_id == request.user.courier.id
+    ):
+        messages.error(request, _('This order is not assigned to you.'))
+        return redirect('olretail:index')
+
+    if order.courier_assignment_status != CourierAssignmentStatus.AWAITING_RESPONSE:
+        messages.error(request, _('This assignment has already been responded to.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    action = request.POST.get('action')
+    if action not in ('accept', 'reject'):
+        messages.error(request, _('Unknown action.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    _apply_courier_response(order, accept=(action == 'accept'))
+    if action == 'accept':
+        messages.success(request, _('Delivery accepted.'))
+    else:
+        messages.success(request, _('Delivery rejected — the seller has been notified.'))
+
+    return redirect('olretail:order_detail', order_id=order.id)
+
+
+@login_required
+@require_POST
+def confirm_courier_pickup(request, order_id):
+    """The seller confirms the assigned courier has physically picked up
+    the package — the source of truth for "on the way" is the seller (who
+    has custody control), not the courier's own say-so. Posts a
+    DeliveryUpdate (same mechanism the "Post update" button uses) and
+    tells the buyer, without touching order.status (stays Shipped)."""
+    order = get_object_or_404(Order, id=order_id)
+
+    try:
+        if order.seller != request.user.seller:
+            messages.error(request, _('Permission denied.'))
+            return redirect('olretail:order_detail', order_id=order.id)
+    except Seller.DoesNotExist:
+        messages.error(request, _('You must be a seller to update orders.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    if order.courier_assignment_status != CourierAssignmentStatus.ACCEPTED:
+        messages.error(request, _('This delivery has not been accepted by a courier yet.'))
+        return redirect('olretail:order_detail', order_id=order.id)
+
+    order.courier_assignment_status = CourierAssignmentStatus.PICKED_UP
+    order.save(update_fields=['courier_assignment_status'])
+    DeliveryUpdate.objects.create(
+        order=order,
+        note=_('Picked up by %(courier)s — on the way.') % {'courier': order.assigned_courier.get_name},
+    )
+    _notify(
+        order.buyer,
+        _('Your order %(order)s has been picked up and is on the way!') % {'order': order.order_number},
+        order=order,
+    )
+    messages.success(request, _('Pickup confirmed — the buyer has been notified.'))
     return redirect('olretail:order_detail', order_id=order.id)
 
 

@@ -210,6 +210,74 @@
             </div>
             {% endif %}
 
+            {% if order.assigned_courier_id and order.courier_assignment_status %}
+            <div class="dt-section">
+              {% if order.courier_assignment_status == 'awaiting_response' %}
+                {% if order.courier_response_overdue %}
+                <div class="alert alert-warning small mb-0 py-2 px-3">
+                  <i class="fas fa-clock mr-1" aria-hidden="true"></i>
+                  {% blocktrans with courier=order.assigned_courier.get_name %}{{ courier }} hasn't responded to this assignment in over 20 minutes — consider reassigning below.{% endblocktrans %}
+                </div>
+                {% else %}
+                <div class="alert alert-light border small mb-0 py-2 px-3">
+                  <i class="fas fa-hourglass-half mr-1" aria-hidden="true"></i>
+                  {% blocktrans with courier=order.assigned_courier.get_name %}Waiting for {{ courier }} to accept this delivery.{% endblocktrans %}
+                </div>
+                {% endif %}
+              {% elif order.courier_assignment_status == 'rejected' %}
+                <div class="alert alert-danger small mb-0 py-2 px-3">
+                  <i class="fas fa-times-circle mr-1" aria-hidden="true"></i>
+                  {% blocktrans with courier=order.assigned_courier.get_name %}{{ courier }} declined this delivery — reassign it below.{% endblocktrans %}
+                </div>
+              {% elif order.courier_assignment_status == 'accepted' %}
+                {% if order.courier_pickup_overdue %}
+                <div class="alert alert-warning small mb-0 py-2 px-3">
+                  <i class="fas fa-clock mr-1" aria-hidden="true"></i>
+                  {% blocktrans with courier=order.assigned_courier.get_name %}{{ courier }} accepted over 20 minutes ago but hasn't picked this up yet — reassign below if they haven't arrived.{% endblocktrans %}
+                </div>
+                {% else %}
+                <div class="alert alert-info small mb-0 py-2 px-3">
+                  <i class="fas fa-check-circle mr-1" aria-hidden="true"></i>
+                  {% blocktrans with courier=order.assigned_courier.get_name %}{{ courier }} accepted — waiting for them to pick up the package.{% endblocktrans %}
+                </div>
+                {% endif %}
+                {% if is_seller %}
+                <form method="post" action="{% url 'olretail:confirm_courier_pickup' order.id %}" class="mt-2 mb-0">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-box mr-1" aria-hidden="true"></i>{% trans "Confirm Pickup" %}
+                  </button>
+                </form>
+                {% endif %}
+              {% elif order.courier_assignment_status == 'picked_up' %}
+                <div class="alert alert-success small mb-0 py-2 px-3">
+                  <i class="fas fa-shipping-fast mr-1" aria-hidden="true"></i>
+                  {% trans "Picked up — on the way to the buyer." %}
+                </div>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            {% if is_courier and order.courier_assignment_status == 'awaiting_response' %}
+            <div class="dt-section">
+              <p class="mb-2">{% trans "You've been assigned this delivery. Can you pick it up?" %}</p>
+              <form method="post" action="{% url 'olretail:courier_respond_to_assignment' order.id %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="accept">
+                <button type="submit" class="btn btn-success btn-sm mr-2">
+                  <i class="fas fa-check mr-1" aria-hidden="true"></i>{% trans "Accept" %}
+                </button>
+              </form>
+              <form method="post" action="{% url 'olretail:courier_respond_to_assignment' order.id %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reject">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="fas fa-times mr-1" aria-hidden="true"></i>{% trans "Reject" %}
+                </button>
+              </form>
+            </div>
+            {% endif %}
+
             {% if delivery_updates %}
             <div class="dt-section">
               <h6 class="text-uppercase text-muted small font-weight-bold mb-3">{% trans "Updates" %}</h6>

@@ -57,6 +57,11 @@ urlpatterns = [
     # Delivery tracking
     path("order/<int:order_id>/delivery-update/", payment_views.add_delivery_update, name="add_delivery_update"),
     path("order/<int:order_id>/mark-delivered/", payment_views.mark_delivered, name="mark_delivered"),
+    path(
+        "order/<int:order_id>/courier-respond/",
+        payment_views.courier_respond_to_assignment, name="courier_respond_to_assignment",
+    ),
+    path("order/<int:order_id>/confirm-pickup/", payment_views.confirm_courier_pickup, name="confirm_courier_pickup"),
 
     # Restaurant order workflow
     path("order/<int:order_id>/food-status/", payment_views.update_food_status, name="update_food_status"),
@@ -129,6 +134,10 @@ urlpatterns = [
     path(
         "api/courier/v1/deliveries/<int:order_id>/mark-delivered/",
         courier_api.MarkDeliveredView.as_view(), name="courier_api_mark_delivered",
+    ),
+    path(
+        "api/courier/v1/deliveries/<int:order_id>/respond/",
+        courier_api.RespondToAssignmentView.as_view(), name="courier_api_respond_to_assignment",
     ),
     path("api/courier/v1/register-device/", courier_api.RegisterDeviceView.as_view(), name="courier_api_register_device"),
     path(

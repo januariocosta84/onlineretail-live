@@ -19,6 +19,10 @@ class DeliveryOrder {
   // of sharing a location.
   final double? deliveryLatitude;
   final double? deliveryLongitude;
+  // Accept/reject handshake state (see olretail.payment_models.
+  // CourierAssignmentStatus) — null/blank for a restaurant order or a
+  // self-delivery order, neither of which use this gate.
+  final String? courierAssignmentStatus;
 
   DeliveryOrder({
     required this.id,
@@ -34,6 +38,7 @@ class DeliveryOrder {
     this.deliveredAt,
     this.deliveryLatitude,
     this.deliveryLongitude,
+    this.courierAssignmentStatus,
   });
 
   bool get hasPin => deliveryLatitude != null && deliveryLongitude != null;
@@ -42,6 +47,9 @@ class DeliveryOrder {
   // already settled with the platform, so the amount is none of the
   // courier's business to see.
   bool get isCashOnDelivery => paymentMethod == 'cash_on_delivery';
+  // True while this delivery is waiting on this courier to Accept/Reject
+  // it — see RespondToAssignmentView / _apply_courier_response.
+  bool get awaitingMyResponse => courierAssignmentStatus == 'awaiting_response';
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
         id: json['id'] as int,
@@ -62,6 +70,7 @@ class DeliveryOrder {
         deliveryLongitude: json['delivery_longitude'] != null
             ? double.tryParse(json['delivery_longitude'] as String)
             : null,
+        courierAssignmentStatus: json['courier_assignment_status'] as String?,
       );
 }
 

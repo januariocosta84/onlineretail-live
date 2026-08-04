@@ -37,8 +37,10 @@ from accounts.views import _generate_username
 
 from .models import Courier, CourierAvailability, CourierVerificationStatus
 from .payment_forms import DeliveryProofForm
-from .payment_models import CourierBalance, DevicePlatform, DeviceToken, Order, OrderStatus, PaymentMethod
-from .payment_views import _apply_order_delivered, _courier_can_mark_delivered
+from .payment_models import (
+    CourierAssignmentStatus, CourierBalance, DevicePlatform, DeviceToken, Order, OrderStatus, PaymentMethod,
+)
+from .payment_views import _apply_courier_response, _apply_order_delivered, _courier_can_mark_delivered
 from .validators import validate_image_size
 
 
@@ -315,6 +317,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'id', 'order_number', 'product_name', 'buyer_name', 'delivery_address', 'delivery_phone',
             'delivery_latitude', 'delivery_longitude',
             'subtotal', 'payment_method', 'status', 'shipped_at', 'delivered_at', 'food_status',
+            'courier_assignment_status',
         ]
 
     def get_buyer_name(self, obj):
@@ -331,7 +334,12 @@ class DeliveriesListView(APIView):
     def get(self, request):
         courier = request.user.courier
         orders = Order.objects.filter(assigned_courier=courier).select_related('product', 'buyer', 'seller')
-        pending = orders.filter(status=OrderStatus.SHIPPED).order_by('-shipped_at')
+        # A courier who rejected an assignment shouldn't keep seeing it in
+        # their own Pending list while it awaits reassignment — see
+        # CourierAssignmentStatus.
+        pending = orders.filter(status=OrderStatus.SHIPPED).exclude(
+            courier_assignment_status=CourierAssignmentStatus.REJECTED
+        ).order_by('-shipped_at')
         delivered = orders.filter(status=OrderStatus.DELIVERED).order_by('-delivered_at')[:20]
         return Response({
             'pending': OrderSerializer(pending, many=True).data,
@@ -362,6 +370,29 @@ class MarkDeliveredView(APIView):
             return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
         _apply_order_delivered(order, form.cleaned_data['photo'])
         return Response({'status': 'delivered'})
+
+
+class RespondToAssignmentView(APIView):
+    """POST {action: 'accept'|'reject'} -> the courier accepts or declines
+    a fresh (non-food) delivery assignment. Shares _apply_courier_response
+    with the web view (payment_views.courier_respond_to_assignment) —
+    same reasoning as MarkDeliveredView sharing _apply_order_delivered."""
+
+    permission_classes = [IsCourier]
+
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        if order.assigned_courier_id != request.user.courier.id:
+            return Response({'detail': 'This order is not assigned to you.'}, status=status.HTTP_403_FORBIDDEN)
+        if order.courier_assignment_status != CourierAssignmentStatus.AWAITING_RESPONSE:
+            return Response(
+                {'detail': 'This assignment has already been responded to.'}, status=status.HTTP_400_BAD_REQUEST,
+            )
+        action = request.data.get('action')
+        if action not in ('accept', 'reject'):
+            return Response({'detail': "action must be 'accept' or 'reject'."}, status=status.HTTP_400_BAD_REQUEST)
+        _apply_courier_response(order, accept=(action == 'accept'))
+        return Response({'status': order.courier_assignment_status})
 
 
 class RegisterDeviceView(APIView):

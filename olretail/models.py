@@ -675,8 +675,8 @@ class Comment(models.Model):
 # Re-exported so Django's app registry (and makemigrations) discovers them —
 # they live in payment_models.py to keep the marketplace and payment domains separate.
 from .payment_models import (  # noqa: E402, F401
-    Cart, Order, OrderStatus, FoodOrderStatus, PaymentMethod, Payment, PaymentStatus, Transaction,
-    TransactionType, SellerBalance, Payout, PayoutStatus, CourierBalance, CourierPayout, Dispute,
+    Cart, Order, OrderStatus, FoodOrderStatus, CourierAssignmentStatus, PaymentMethod, Payment, PaymentStatus,
+    Transaction, TransactionType, SellerBalance, Payout, PayoutStatus, CourierBalance, CourierPayout, Dispute,
     DisputeStatus, DisputeResolution, DisputeReason, DeliveryUpdate, PlatformSettings, PlatformBankAccount,
     Notification, Rating, CourierRating, Wishlist, DeviceToken, DevicePlatform,
 )

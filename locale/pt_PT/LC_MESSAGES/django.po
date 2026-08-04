@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 17:58+0900\n"
+"POT-Creation-Date: 2026-08-04 19:09+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr "Número de telefone"
 msgid "7012345 or +670 7012345"
 msgstr "7012345 ou +670 7012345"
 
-#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:517
+#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:585
 msgid "Address"
 msgstr "Morada"
 
@@ -289,13 +289,13 @@ msgstr ""
 "Bem-vindo, %(name)s! A sua conta de vendedor está pronta. O seu nome de "
 "utilizador é %(username)s — vai precisar dele para iniciar sessão."
 
-#: .\accounts\views.py:130 .\olretail\payment_views.py:1272
-#: .\olretail\payment_views.py:1313 .\olretail\payment_views.py:1327
-#: .\olretail\payment_views.py:1342 .\olretail\payment_views.py:1356
-#: .\olretail\payment_views.py:1372 .\olretail\payment_views.py:1395
-#: .\olretail\payment_views.py:1434 .\olretail\payment_views.py:1773
-#: .\olretail\payment_views.py:1968 .\olretail\payment_views.py:2053
-#: .\olretail\payment_views.py:2089 .\olretail\payment_views.py:2103
+#: .\accounts\views.py:130 .\olretail\payment_views.py:1273
+#: .\olretail\payment_views.py:1314 .\olretail\payment_views.py:1328
+#: .\olretail\payment_views.py:1343 .\olretail\payment_views.py:1357
+#: .\olretail\payment_views.py:1373 .\olretail\payment_views.py:1396
+#: .\olretail\payment_views.py:1435 .\olretail\payment_views.py:1797
+#: .\olretail\payment_views.py:2095 .\olretail\payment_views.py:2180
+#: .\olretail\payment_views.py:2216 .\olretail\payment_views.py:2230
 #: .\olretail\views.py:415 .\olretail\views.py:470 .\olretail\views.py:550
 msgid "Please correct the errors below."
 msgstr "Por favor corrija os erros abaixo."
@@ -337,7 +337,7 @@ msgstr ""
 msgid "Active"
 msgstr "Ativo"
 
-#: .\olretail\banking_models.py:14 .\olretail\payment_models.py:743
+#: .\olretail\banking_models.py:14 .\olretail\payment_models.py:799
 msgid "Closed"
 msgstr "Fechado"
 
@@ -369,7 +369,7 @@ msgstr "Sempre Saldo Insuficiente"
 msgid "Always Flag as Duplicate"
 msgstr "Sempre Marcar como Duplicado"
 
-#: .\olretail\banking_models.py:62 .\olretail\payment_models.py:376
+#: .\olretail\banking_models.py:62 .\olretail\payment_models.py:432
 #: .\templates\olretail\courier_deliveries.html:51
 msgid "Pending"
 msgstr "Pendente"
@@ -378,13 +378,13 @@ msgstr "Pendente"
 msgid "Success"
 msgstr "Sucesso"
 
-#: .\olretail\banking_models.py:64 .\olretail\payment_models.py:379
-#: .\olretail\payment_models.py:626
+#: .\olretail\banking_models.py:64 .\olretail\payment_models.py:435
+#: .\olretail\payment_models.py:682
 msgid "Failed"
 msgstr "Falhou"
 
-#: .\olretail\banking_models.py:65 .\olretail\payment_models.py:66
-#: .\olretail\payment_models.py:380
+#: .\olretail\banking_models.py:65 .\olretail\payment_models.py:68
+#: .\olretail\payment_models.py:436
 msgid "Cancelled"
 msgstr "Cancelado"
 
@@ -470,13 +470,13 @@ msgstr "Categoria"
 #: .\olretail\forms.py:70 .\templates\olretail\details.html:239
 #: .\templates\olretail\mark_payment_sent.html:89
 #: .\templates\olretail\open_dispute.html:78
-#: .\templates\olretail\order_detail.html:439
+#: .\templates\olretail\order_detail.html:507
 #: .\templates\olretail\payment_confirmation.html:101
 msgid "Quantity"
 msgstr "Quantidade"
 
 #: .\olretail\forms.py:71 .\templates\olretail\lista.html:83
-#: .\templates\olretail\order_detail.html:425
+#: .\templates\olretail\order_detail.html:493
 msgid "Condition"
 msgstr "Condição"
 
@@ -591,11 +591,11 @@ msgstr ""
 "Ainda tem artigos no seu carrinho: %(items)s. Complete a sua compra antes "
 "que se esgotem!"
 
-#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:427
+#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:495
 msgid "New"
 msgstr "Novo"
 
-#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:429
+#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:497
 msgid "Second Hand"
 msgstr "Em Segunda Mão"
 
@@ -610,7 +610,7 @@ msgid "Verified"
 msgstr "Verificado"
 
 #: .\olretail\models.py:20 .\olretail\models.py:152 .\olretail\models.py:474
-#: .\olretail\subscription_models.py:121
+#: .\olretail\payment_models.py:96 .\olretail\subscription_models.py:121
 msgid "Rejected"
 msgstr "Rejeitado"
 
@@ -804,7 +804,7 @@ msgstr "O vendedor irá contactá-lo através deste número"
 msgid "Any special instructions? (Optional)"
 msgstr "Alguma instrução especial? (Opcional)"
 
-#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:533
+#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:601
 msgid "Special Instructions"
 msgstr "Instruções Especiais"
 
@@ -941,7 +941,7 @@ msgstr "%(label)s — Disponível agora"
 msgid "Delivery Photo"
 msgstr "Fotografia de Entrega"
 
-#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1916
+#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1949
 msgid "A delivery photo is required to confirm delivery."
 msgstr "É necessária uma fotografia de entrega para confirmar a entrega."
 
@@ -1184,82 +1184,93 @@ msgstr "Nenhuma transação encontrada."
 msgid "No transaction to retry."
 msgstr "Nenhuma transação para repetir."
 
-#: .\olretail\payment_models.py:60 .\templates\olretail\order_detail.html:31
+#: .\olretail\payment_models.py:62 .\templates\olretail\order_detail.html:31
 msgid "Pending Payment"
 msgstr "Pagamento Pendente"
 
-#: .\olretail\payment_models.py:61 .\olretail\subscription_models.py:119
+#: .\olretail\payment_models.py:63 .\olretail\subscription_models.py:119
 msgid "Payment Reported — Awaiting Confirmation"
 msgstr "Pagamento Reportado — A Aguardar Confirmação"
 
-#: .\olretail\payment_models.py:62
+#: .\olretail\payment_models.py:64
 msgid "Payment Received"
 msgstr "Pagamento Recebido"
 
-#: .\olretail\payment_models.py:63 .\olretail\payment_models.py:377
-#: .\olretail\payment_models.py:624
+#: .\olretail\payment_models.py:65 .\olretail\payment_models.py:433
+#: .\olretail\payment_models.py:680
 msgid "Processing"
 msgstr "Em Processamento"
 
-#: .\olretail\payment_models.py:64 .\templates\olretail\order_detail.html:47
+#: .\olretail\payment_models.py:66 .\templates\olretail\order_detail.html:47
 msgid "Shipped"
 msgstr "Enviado"
 
-#: .\olretail\payment_models.py:65
+#: .\olretail\payment_models.py:67
 #: .\templates\olretail\courier_deliveries.html:116
 #: .\templates\olretail\order_detail.html:55
 msgid "Delivered"
 msgstr "Entregue"
 
-#: .\olretail\payment_models.py:67 .\olretail\payment_models.py:381
+#: .\olretail\payment_models.py:69 .\olretail\payment_models.py:437
 msgid "Refunded"
 msgstr "Reembolsado"
 
-#: .\olretail\payment_models.py:76 .\templates\olretail\order_detail.html:82
+#: .\olretail\payment_models.py:78 .\templates\olretail\order_detail.html:82
 msgid "Order Received"
 msgstr "Encomenda Recebida"
 
-#: .\olretail\payment_models.py:77
+#: .\olretail\payment_models.py:79
 msgid "Preparing Food"
 msgstr "A Preparar Comida"
 
-#: .\olretail\payment_models.py:78 .\templates\olretail\order_detail.html:94
+#: .\olretail\payment_models.py:80 .\templates\olretail\order_detail.html:94
 msgid "Ready for Pickup"
 msgstr "Pronto para Recolha"
 
-#: .\olretail\payment_models.py:79 .\templates\olretail\order_detail.html:100
+#: .\olretail\payment_models.py:81 .\olretail\payment_models.py:95
+#: .\templates\olretail\order_detail.html:100
 msgid "Picked Up"
 msgstr "Recolhido"
 
-#: .\olretail\payment_models.py:80 .\templates\olretail\order_detail.html:106
+#: .\olretail\payment_models.py:82 .\templates\olretail\order_detail.html:106
 msgid "On the Way"
 msgstr "A Caminho"
 
-#: .\olretail\payment_models.py:85
+#: .\olretail\payment_models.py:93
+#, fuzzy
+#| msgid "Open - Awaiting Seller Response"
+msgid "Awaiting Courier Response"
+msgstr "Aberto - A Aguardar Resposta do Vendedor"
+
+#: .\olretail\payment_models.py:94
+msgid "Accepted — Awaiting Pickup"
+msgstr ""
+
+#: .\olretail\payment_models.py:109
 msgid "Card (Stripe)"
 msgstr "Cartão (Stripe)"
 
-#: .\olretail\payment_models.py:86
+#: .\olretail\payment_models.py:110
 msgid "Bank / Mobile Transfer"
 msgstr "Transferência Bancária / Móvel"
 
-#: .\olretail\payment_models.py:87 .\templates\olretail\buyer_orders.html:70
+#: .\olretail\payment_models.py:111 .\templates\olretail\buyer_orders.html:70
 #: .\templates\olretail\details.html:313
-#: .\templates\olretail\order_detail.html:391
+#: .\templates\olretail\order_detail.html:459
 #: .\templates\olretail\seller_orders.html:74
 #: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
 msgstr "Pagamento na Entrega"
 
-#: .\olretail\payment_models.py:88
+#: .\olretail\payment_models.py:112
 msgid "Automated Bank Transfer (Test)"
 msgstr "Transferência Bancária Automática (Teste)"
 
-#: .\olretail\payment_models.py:147
+#: .\olretail\payment_models.py:171
 msgid "Bank/mobile transfer reference or transaction number."
 msgstr "Número de referência ou transação da transferência bancária/móvel."
 
-#: .\olretail\payment_models.py:152
+#: .\olretail\payment_models.py:176
 msgid ""
 "SHA-256 of the uploaded proof image — catches the same receipt being reused "
 "across orders."
@@ -1267,122 +1278,122 @@ msgstr ""
 "SHA-256 da imagem de comprovativo carregada — deteta o mesmo recibo "
 "reutilizado noutra encomenda."
 
-#: .\olretail\payment_models.py:155
+#: .\olretail\payment_models.py:179
 msgid ""
 "Auto-flagged (amount mismatch or reused receipt) for priority admin review."
 msgstr ""
 "Sinalizado automaticamente (valor não corresponde ou recibo reutilizado) "
 "para revisão prioritária do administrador."
 
-#: .\olretail\payment_models.py:299
+#: .\olretail\payment_models.py:355
 msgid "Android"
 msgstr "Android"
 
-#: .\olretail\payment_models.py:300
+#: .\olretail\payment_models.py:356
 msgid "iOS"
 msgstr "iOS"
 
-#: .\olretail\payment_models.py:378
+#: .\olretail\payment_models.py:434
 msgid "Succeeded"
 msgstr "Bem-sucedido"
 
-#: .\olretail\payment_models.py:455
+#: .\olretail\payment_models.py:511
 msgid "Order earnings"
 msgstr "Rendimento da encomenda"
 
-#: .\olretail\payment_models.py:456
+#: .\olretail\payment_models.py:512
 msgid "Refund"
 msgstr "Reembolso"
 
-#: .\olretail\payment_models.py:457
+#: .\olretail\payment_models.py:513
 msgid "Adjustment"
 msgstr "Ajuste"
 
-#: .\olretail\payment_models.py:458
+#: .\olretail\payment_models.py:514
 msgid "Payout"
 msgstr "Levantamento"
 
-#: .\olretail\payment_models.py:623
+#: .\olretail\payment_models.py:679
 msgid "Scheduled"
 msgstr "Agendado"
 
-#: .\olretail\payment_models.py:625 .\templates\olretail\order_detail.html:39
+#: .\olretail\payment_models.py:681 .\templates\olretail\order_detail.html:39
 msgid "Paid"
 msgstr "Pago"
 
-#: .\olretail\payment_models.py:739
+#: .\olretail\payment_models.py:795
 msgid "Open - Awaiting Seller Response"
 msgstr "Aberto - A Aguardar Resposta do Vendedor"
 
-#: .\olretail\payment_models.py:740
+#: .\olretail\payment_models.py:796
 msgid "Seller Responded"
 msgstr "Vendedor Respondeu"
 
-#: .\olretail\payment_models.py:741
+#: .\olretail\payment_models.py:797
 msgid "Under Admin Review"
 msgstr "Em Revisão pelo Administrador"
 
-#: .\olretail\payment_models.py:742
+#: .\olretail\payment_models.py:798
 msgid "Resolved"
 msgstr "Resolvido"
 
-#: .\olretail\payment_models.py:748
+#: .\olretail\payment_models.py:804
 msgid "Full Refund to Buyer"
 msgstr "Reembolso Total ao Comprador"
 
-#: .\olretail\payment_models.py:749
+#: .\olretail\payment_models.py:805
 msgid "Partial Refund"
 msgstr "Reembolso Parcial"
 
-#: .\olretail\payment_models.py:750
+#: .\olretail\payment_models.py:806
 msgid "Reshipment"
 msgstr "Reenvio"
 
-#: .\olretail\payment_models.py:751
+#: .\olretail\payment_models.py:807
 msgid "Closed - No Action"
 msgstr "Fechado - Sem Ação"
 
-#: .\olretail\payment_models.py:755
+#: .\olretail\payment_models.py:811
 msgid "Payment Confirmed — Order Marked Paid"
 msgstr "Pagamento Confirmado — Encomenda Marcada como Paga"
 
-#: .\olretail\payment_models.py:756
+#: .\olretail\payment_models.py:812
 msgid "Payment Claim Rejected — Order Cancelled"
 msgstr "Reclamação de Pagamento Rejeitada — Encomenda Cancelada"
 
-#: .\olretail\payment_models.py:761
+#: .\olretail\payment_models.py:817
 msgid "Item Not Received"
 msgstr "Artigo Não Recebido"
 
-#: .\olretail\payment_models.py:762
+#: .\olretail\payment_models.py:818
 msgid "Item Damaged"
 msgstr "Artigo Danificado"
 
-#: .\olretail\payment_models.py:763
+#: .\olretail\payment_models.py:819
 msgid "Item Not as Described"
 msgstr "Artigo Não Corresponde à Descrição"
 
-#: .\olretail\payment_models.py:764
+#: .\olretail\payment_models.py:820
 msgid "Wrong Item Received"
 msgstr "Artigo Errado Recebido"
 
-#: .\olretail\payment_models.py:765
+#: .\olretail\payment_models.py:821
 msgid "Other"
 msgstr "Outro"
 
-#: .\olretail\payment_models.py:773
+#: .\olretail\payment_models.py:829
 msgid "Bank Transfer Payment Claim"
 msgstr "Reclamação de Pagamento por Transferência Bancária"
 
-#: .\olretail\payment_models.py:774
+#: .\olretail\payment_models.py:830
 msgid "Seller Reports Payment Not Received"
 msgstr "Vendedor Reporta Pagamento Não Recebido"
 
-#: .\olretail\payment_models.py:775
+#: .\olretail\payment_models.py:831
 msgid "Seller Did Not Respond to Payment Claim"
 msgstr "Vendedor Não Respondeu à Reclamação de Pagamento"
 
-#: .\olretail\payment_models.py:876
+#: .\olretail\payment_models.py:932
 msgid ""
 "Bank or mobile money details shown to sellers when they pay the platform for"
 " a subscription upgrade."
@@ -1390,7 +1401,7 @@ msgstr ""
 "Dados bancários ou de dinheiro móvel mostrados aos vendedores quando pagam a"
 " plataforma por uma atualização de subscrição."
 
-#: .\olretail\payment_models.py:887
+#: .\olretail\payment_models.py:943
 msgid ""
 "Flat fee (in cents) a courier earns for each delivery they confirm. $1.00 = "
 "100."
@@ -1398,64 +1409,64 @@ msgstr ""
 "Taxa fixa (em cêntimos) que o estafeta recebe por cada entrega que confirma."
 " $1.00 = 100."
 
-#: .\olretail\payment_views.py:65
+#: .\olretail\payment_views.py:66
 #, python-format
 msgid "TimorMart — order %(order)s"
 msgstr "TimorMart — encomenda %(order)s"
 
-#: .\olretail\payment_views.py:66
+#: .\olretail\payment_views.py:67
 msgid "TimorMart notification"
 msgstr "Notificação TimorMart"
 
-#: .\olretail\payment_views.py:138 .\olretail\payment_views.py:304
+#: .\olretail\payment_views.py:139 .\olretail\payment_views.py:305
 msgid "This item can only be purchased by contacting the seller directly."
 msgstr "Este artigo só pode ser comprado contactando diretamente o vendedor."
 
-#: .\olretail\payment_views.py:145 .\olretail\payment_views.py:307
+#: .\olretail\payment_views.py:146 .\olretail\payment_views.py:308
 msgid "This item is currently unavailable."
 msgstr "Este artigo está atualmente indisponível."
 
-#: .\olretail\payment_views.py:148
+#: .\olretail\payment_views.py:149
 msgid "This product is out of stock."
 msgstr "Este produto está esgotado."
 
-#: .\olretail\payment_views.py:175
+#: .\olretail\payment_views.py:176
 msgid "Product added to cart."
 msgstr "Produto adicionado ao carrinho."
 
-#: .\olretail\payment_views.py:196
+#: .\olretail\payment_views.py:197
 msgid "Cart updated."
 msgstr "Carrinho atualizado."
 
-#: .\olretail\payment_views.py:202 .\olretail\payment_views.py:205
+#: .\olretail\payment_views.py:203 .\olretail\payment_views.py:206
 msgid "Not enough stock available."
 msgstr "Stock insuficiente."
 
-#: .\olretail\payment_views.py:209 .\olretail\payment_views.py:231
+#: .\olretail\payment_views.py:210 .\olretail\payment_views.py:232
 msgid "Item removed from cart."
 msgstr "Artigo removido do carrinho."
 
-#: .\olretail\payment_views.py:240
+#: .\olretail\payment_views.py:241
 msgid "Cart cleared."
 msgstr "Carrinho esvaziado."
 
-#: .\olretail\payment_views.py:279
+#: .\olretail\payment_views.py:280
 msgid "Saved to your wishlist."
 msgstr "Guardado na sua lista de desejos."
 
-#: .\olretail\payment_views.py:281 .\olretail\payment_views.py:291
+#: .\olretail\payment_views.py:282 .\olretail\payment_views.py:292
 msgid "Removed from your wishlist."
 msgstr "Removido da sua lista de desejos."
 
-#: .\olretail\payment_views.py:318
+#: .\olretail\payment_views.py:319
 msgid "Moved to your cart."
 msgstr "Movido para o seu carrinho."
 
-#: .\olretail\payment_views.py:332 .\templates\olretail\cart.html:157
+#: .\olretail\payment_views.py:333 .\templates\olretail\cart.html:157
 msgid "Your cart is empty."
 msgstr "O seu carrinho está vazio."
 
-#: .\olretail\payment_views.py:340
+#: .\olretail\payment_views.py:341
 #, python-format
 msgid ""
 "%(product)s can only be purchased by contacting the seller directly — remove"
@@ -1464,23 +1475,23 @@ msgstr ""
 "%(product)s só pode ser comprado contactando diretamente o vendedor — "
 "remova-o do seu carrinho."
 
-#: .\olretail\payment_views.py:350
+#: .\olretail\payment_views.py:351
 #, python-format
 msgid "%(product)s is currently unavailable."
 msgstr "%(product)s está atualmente indisponível."
 
-#: .\olretail\payment_views.py:356
+#: .\olretail\payment_views.py:357
 #, python-format
 msgid "%(product)s has only %(qty)d available."
 msgstr "%(product)s tem apenas %(qty)d disponíveis."
 
-#: .\olretail\payment_views.py:437
+#: .\olretail\payment_views.py:438
 msgid "Bank Transfer isn't available right now — please choose Card instead."
 msgstr ""
 "A Transferência Bancária não está disponível de momento — por favor escolha "
 "Cartão."
 
-#: .\olretail\payment_views.py:521
+#: .\olretail\payment_views.py:522
 #, python-format
 msgid ""
 "New order %(order)s from %(buyer)s for “%(product)s” — awaiting the buyer’s "
@@ -1489,7 +1500,7 @@ msgstr ""
 "Nova encomenda %(order)s de %(buyer)s para “%(product)s” — a aguardar a "
 "transferência bancária do comprador para a TimorMart."
 
-#: .\olretail\payment_views.py:589
+#: .\olretail\payment_views.py:590
 #, python-format
 msgid ""
 "New cash-on-delivery order %(order)s from %(buyer)s for “%(product)s” — "
@@ -1498,44 +1509,44 @@ msgstr ""
 "Nova encomenda de pagamento na entrega %(order)s de %(buyer)s para "
 "“%(product)s” — receba $%(total)s na entrega."
 
-#: .\olretail\payment_views.py:714
+#: .\olretail\payment_views.py:715
 msgid "Payment processing error. Please try again."
 msgstr "Erro no processamento do pagamento. Por favor tente novamente."
 
-#: .\olretail\payment_views.py:807
+#: .\olretail\payment_views.py:808
 msgid "Your automated bank transfer is being processed."
 msgstr "A sua transferência bancária automática está a ser processada."
 
-#: .\olretail\payment_views.py:827
+#: .\olretail\payment_views.py:828
 msgid "Order received by the restaurant."
 msgstr "Encomenda recebida pelo restaurante."
 
-#: .\olretail\payment_views.py:873
+#: .\olretail\payment_views.py:874
 #, python-format
 msgid "Payment received for order %(order)s from %(buyer)s — “%(product)s”."
 msgstr ""
 "Pagamento recebido para a encomenda %(order)s de %(buyer)s — “%(product)s”."
 
-#: .\olretail\payment_views.py:880
+#: .\olretail\payment_views.py:881
 #, python-format
 msgid "Your payment for order %(order)s was successful."
 msgstr "O seu pagamento para a encomenda %(order)s foi bem-sucedido."
 
-#: .\olretail\payment_views.py:984
+#: .\olretail\payment_views.py:985
 #, python-format
 msgid "Your payment for order %(order)s was refunded."
 msgstr "O seu pagamento para a encomenda %(order)s foi reembolsado."
 
-#: .\olretail\payment_views.py:989
+#: .\olretail\payment_views.py:990
 #, python-format
 msgid "Order %(order)s was refunded to the buyer."
 msgstr "A encomenda %(order)s foi reembolsada ao comprador."
 
-#: .\olretail\payment_views.py:1142
+#: .\olretail\payment_views.py:1143
 msgid "This order is not awaiting a transfer."
 msgstr "Esta encomenda não está a aguardar transferência."
 
-#: .\olretail\payment_views.py:1158
+#: .\olretail\payment_views.py:1159
 #, python-format
 msgid ""
 "Claimed amount ($%(claimed)s) does not match the order total ($%(total)s)."
@@ -1543,15 +1554,15 @@ msgstr ""
 "O valor reclamado ($%(claimed)s) não corresponde ao total da encomenda "
 "($%(total)s)."
 
-#: .\olretail\payment_views.py:1162
+#: .\olretail\payment_views.py:1163
 msgid "This exact receipt image was already submitted on a different order."
 msgstr "Esta imagem de recibo já foi submetida noutra encomenda."
 
-#: .\olretail\payment_views.py:1168
+#: .\olretail\payment_views.py:1169
 msgid "This reference number was already submitted on a different order."
 msgstr "Este número de referência já foi submetido noutra encomenda."
 
-#: .\olretail\payment_views.py:1189
+#: .\olretail\payment_views.py:1190
 #, python-format
 msgid ""
 "Buyer claims payment sent for order %(order)s — awaiting admin verification "
@@ -1560,7 +1571,7 @@ msgstr ""
 "O comprador afirma ter enviado o pagamento da encomenda %(order)s — a "
 "aguardar verificação do administrador com o extrato bancário da plataforma."
 
-#: .\olretail\payment_views.py:1196
+#: .\olretail\payment_views.py:1197
 #, python-format
 msgid ""
 "%(buyer)s reported sending payment for order %(order)s — an admin will "
@@ -1569,72 +1580,72 @@ msgstr ""
 "%(buyer)s reportou o envio do pagamento da encomenda %(order)s — um "
 "administrador irá verificar e confirmar."
 
-#: .\olretail\payment_views.py:1203
+#: .\olretail\payment_views.py:1204
 #, python-format
 msgid "New bank transfer claim for order %(order)s — awaiting review."
 msgstr ""
 "Nova reclamação de transferência bancária para a encomenda %(order)s — a "
 "aguardar revisão."
 
-#: .\olretail\payment_views.py:1207
+#: .\olretail\payment_views.py:1208
 msgid "Thanks — an admin will verify your payment and confirm it shortly."
 msgstr ""
 "Obrigado — um administrador irá verificar o seu pagamento e confirmá-lo "
 "brevemente."
 
-#: .\olretail\payment_views.py:1234
+#: .\olretail\payment_views.py:1235
 msgid "Payment details saved."
 msgstr "Dados de pagamento guardados."
 
-#: .\olretail\payment_views.py:1270
+#: .\olretail\payment_views.py:1271
 msgid "Bank account added."
 msgstr "Conta bancária adicionada."
 
-#: .\olretail\payment_views.py:1282
+#: .\olretail\payment_views.py:1283
 msgid "Bank account removed."
 msgstr "Conta bancária removida."
 
-#: .\olretail\payment_views.py:1295
+#: .\olretail\payment_views.py:1296
 msgid "Business info only applies to non-individual seller accounts."
 msgstr ""
 "As informações comerciais aplicam-se apenas a contas de vendedor não "
 "individuais."
 
-#: .\olretail\payment_views.py:1311
+#: .\olretail\payment_views.py:1312
 msgid "Business information saved."
 msgstr "Informações comerciais guardadas."
 
-#: .\olretail\payment_views.py:1325
+#: .\olretail\payment_views.py:1326
 msgid "Contact information saved."
 msgstr "Informações de contacto guardadas."
 
-#: .\olretail\payment_views.py:1340
+#: .\olretail\payment_views.py:1341
 msgid "Location saved."
 msgstr "Localização guardada."
 
-#: .\olretail\payment_views.py:1354
+#: .\olretail\payment_views.py:1355
 msgid "Branding saved."
 msgstr "Identidade visual guardada."
 
-#: .\olretail\payment_views.py:1370
+#: .\olretail\payment_views.py:1371
 msgid "Operations saved."
 msgstr "Operações guardadas."
 
-#: .\olretail\payment_views.py:1384
+#: .\olretail\payment_views.py:1385
 msgid "Business verification only applies to non-individual seller accounts."
 msgstr ""
 "A verificação comercial aplica-se apenas a contas de vendedor não "
 "individuais."
 
-#: .\olretail\payment_views.py:1393
+#: .\olretail\payment_views.py:1394
 msgid "Document submitted — an administrator will review it shortly."
 msgstr "Documento submetido — um administrador irá revê-lo em breve."
 
-#: .\olretail\payment_views.py:1413
+#: .\olretail\payment_views.py:1414
 msgid "You already have a pending subscription request awaiting confirmation."
 msgstr "Já tem um pedido de subscrição pendente a aguardar confirmação."
 
-#: .\olretail\payment_views.py:1427
+#: .\olretail\payment_views.py:1428
 #, python-format
 msgid ""
 "%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting"
@@ -1643,7 +1654,7 @@ msgstr ""
 "%(seller)s reportou um pagamento de subscrição %(plan)s ($%(amount)s) — a "
 "aguardar confirmação."
 
-#: .\olretail\payment_views.py:1431
+#: .\olretail\payment_views.py:1432
 msgid ""
 "Thanks — your payment report was submitted. An admin will confirm it "
 "shortly."
@@ -1651,7 +1662,7 @@ msgstr ""
 "Obrigado — o seu relatório de pagamento foi submetido. Um administrador irá "
 "confirmá-lo em breve."
 
-#: .\olretail\payment_views.py:1489
+#: .\olretail\payment_views.py:1490
 msgid ""
 "This order can no longer be cancelled — it has already been paid or is past "
 "that stage."
@@ -1659,211 +1670,270 @@ msgstr ""
 "Esta encomenda já não pode ser cancelada — já foi paga ou já passou essa "
 "fase."
 
-#: .\olretail\payment_views.py:1506
+#: .\olretail\payment_views.py:1507
 #, python-format
 msgid "%(buyer)s cancelled order %(order)s before paying."
 msgstr "%(buyer)s cancelou a encomenda %(order)s antes de pagar."
 
-#: .\olretail\payment_views.py:1510
+#: .\olretail\payment_views.py:1511
 #, python-format
 msgid "Order %(order)s was cancelled."
 msgstr "A encomenda %(order)s foi cancelada."
 
-#: .\olretail\payment_views.py:1530
+#: .\olretail\payment_views.py:1531
 msgid "You do not have permission to view this order."
 msgstr "Não tem permissão para ver esta encomenda."
 
-#: .\olretail\payment_views.py:1623
+#: .\olretail\payment_views.py:1634
 msgid "You can only rate a product after it has been delivered."
 msgstr "Só pode avaliar um produto depois de ser entregue."
 
-#: .\olretail\payment_views.py:1627
+#: .\olretail\payment_views.py:1638
 msgid "You already rated this order."
 msgstr "Já avaliou esta encomenda."
 
-#: .\olretail\payment_views.py:1632 .\olretail\payment_views.py:1664
+#: .\olretail\payment_views.py:1643 .\olretail\payment_views.py:1675
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Por favor escolha uma avaliação de 1 a 5 estrelas."
 
-#: .\olretail\payment_views.py:1639
+#: .\olretail\payment_views.py:1650
 msgid "Thanks for your rating!"
 msgstr "Obrigado pela sua avaliação!"
 
-#: .\olretail\payment_views.py:1651
+#: .\olretail\payment_views.py:1662
 msgid "You can only rate a courier after the order has been delivered."
 msgstr "Só pode avaliar um estafeta depois de a encomenda ser entregue."
 
-#: .\olretail\payment_views.py:1655
+#: .\olretail\payment_views.py:1666
 msgid "This order has no assigned courier to rate."
 msgstr "Esta encomenda não tem estafeta atribuído para avaliar."
 
-#: .\olretail\payment_views.py:1659
+#: .\olretail\payment_views.py:1670
 msgid "You already rated this courier."
 msgstr "Já avaliou este estafeta."
 
-#: .\olretail\payment_views.py:1668
+#: .\olretail\payment_views.py:1679
 msgid "Thanks for rating the courier!"
 msgstr "Obrigado por avaliar o estafeta!"
 
-#: .\olretail\payment_views.py:1682 .\olretail\payment_views.py:1708
+#: .\olretail\payment_views.py:1693 .\olretail\payment_views.py:1719
 msgid "You must be a seller to view this page."
 msgstr "Tem de ser vendedor para ver esta página."
 
-#: .\olretail\payment_views.py:1735 .\olretail\payment_views.py:1902
-#: .\olretail\payment_views.py:1944 .\olretail\payment_views.py:2008
-#: .\olretail\payment_views.py:2125 .\olretail\payment_views.py:2336
+#: .\olretail\payment_views.py:1746 .\olretail\payment_views.py:1935
+#: .\olretail\payment_views.py:2023 .\olretail\payment_views.py:2071
+#: .\olretail\payment_views.py:2135 .\olretail\payment_views.py:2252
+#: .\olretail\payment_views.py:2463
 msgid "Permission denied."
 msgstr "Permissão negada."
 
-#: .\olretail\payment_views.py:1738 .\olretail\payment_views.py:1947
+#: .\olretail\payment_views.py:1749 .\olretail\payment_views.py:2026
+#: .\olretail\payment_views.py:2074
 msgid "You must be a seller to update orders."
 msgstr "Tem de ser vendedor para atualizar encomendas."
 
-#: .\olretail\payment_views.py:1742
+#: .\olretail\payment_views.py:1753 .\olretail\payment_views.py:1999
 msgid "Unknown action."
 msgstr "Ação desconhecida."
 
-#: .\olretail\payment_views.py:1746 .\olretail\payment_views.py:1964
+#: .\olretail\payment_views.py:1757 .\olretail\payment_views.py:2091
 msgid "Only paid orders can be marked as shipped."
 msgstr "Só encomendas pagas podem ser marcadas como enviadas."
 
-#: .\olretail\payment_views.py:1759
+#: .\olretail\payment_views.py:1782
 #, python-format
 msgid "Your order %(order)s has shipped."
 msgstr "A sua encomenda %(order)s foi enviada."
 
-#: .\olretail\payment_views.py:1768
+#: .\olretail\payment_views.py:1791
 #, python-format
-msgid "You have been assigned to deliver order %(order)s."
-msgstr "Foi-lhe atribuída a entrega da encomenda %(order)s."
+#| msgid "You have been assigned to deliver order %(order)s."
+msgid ""
+"You have been assigned to deliver order %(order)s. Please accept or reject "
+"it."
+msgstr ""
+"Foi-lhe atribuída a entrega da encomenda %(order)s. Por favor, aceite ou "
+"rejeite."
 
-#: .\olretail\payment_views.py:1771
+#: .\olretail\payment_views.py:1795
 msgid "Order marked as shipped."
 msgstr "Encomenda marcada como enviada."
 
-#: .\olretail\payment_views.py:1872
+#: .\olretail\payment_views.py:1905
 #, python-format
 msgid "Your order %(order)s has been delivered."
 msgstr "A sua encomenda %(order)s foi entregue."
 
-#: .\olretail\payment_views.py:1879
+#: .\olretail\payment_views.py:1912
 #, python-format
 msgid "%(seller)s just became eligible for payout — $%(amount)s available."
 msgstr ""
 "%(seller)s tornou-se elegível para pagamento — $%(amount)s disponível."
 
-#: .\olretail\payment_views.py:1887
+#: .\olretail\payment_views.py:1920
 #, python-format
 msgid "%(courier)s just became eligible for payout — $%(amount)s available."
 msgstr ""
 "%(courier)s tornou-se elegível para pagamento — $%(amount)s disponível."
 
-#: .\olretail\payment_views.py:1906
+#: .\olretail\payment_views.py:1939
 msgid "Only shipped orders can be marked as delivered."
 msgstr "Só encomendas enviadas podem ser marcadas como entregues."
 
-#: .\olretail\payment_views.py:1912
+#: .\olretail\payment_views.py:1945
 msgid "Order marked as delivered."
 msgstr "Encomenda marcada como entregue."
 
-#: .\olretail\payment_views.py:1922
+#: .\olretail\payment_views.py:1965
+#, python-format
+#| msgid "You have been assigned to deliver order %(order)s."
+msgid "%(courier)s accepted delivery of order %(order)s."
+msgstr "%(courier)s aceitou a entrega da encomenda %(order)s."
+
+#: .\olretail\payment_views.py:1969
+#, python-format
+#| msgid "You have been assigned to deliver order %(order)s."
+msgid "%(courier)s declined to deliver order %(order)s — please reassign it."
+msgstr ""
+"%(courier)s recusou entregar a encomenda %(order)s — por favor, reatribua-a."
+
+#: .\olretail\payment_views.py:1990
+#| msgid "This order has no assigned courier to rate."
+msgid "This order is not assigned to you."
+msgstr "Esta encomenda não lhe está atribuída."
+
+#: .\olretail\payment_views.py:1994
+msgid "This assignment has already been responded to."
+msgstr "Já foi dada uma resposta a esta atribuição."
+
+#: .\olretail\payment_views.py:2004
+#| msgid "Delivery fee"
+msgid "Delivery accepted."
+msgstr "Entrega aceite."
+
+#: .\olretail\payment_views.py:2006
+msgid "Delivery rejected — the seller has been notified."
+msgstr "Entrega recusada — o vendedor foi notificado."
+
+#: .\olretail\payment_views.py:2030
+#| msgid "This order has no assigned courier to rate."
+msgid "This delivery has not been accepted by a courier yet."
+msgstr "Esta entrega ainda não foi aceite por nenhum estafeta."
+
+#: .\olretail\payment_views.py:2037
+#, python-format
+#| msgid "Courier is on the way."
+msgid "Picked up by %(courier)s — on the way."
+msgstr "Recolhida por %(courier)s — a caminho."
+
+#: .\olretail\payment_views.py:2041
+#, python-format
+#| msgid "Your order %(order)s has been delivered."
+msgid "Your order %(order)s has been picked up and is on the way!"
+msgstr "A sua encomenda %(order)s foi recolhida e está a caminho!"
+
+#: .\olretail\payment_views.py:2044
+msgid "Pickup confirmed — the buyer has been notified."
+msgstr "Recolha confirmada — o comprador foi notificado."
+
+#: .\olretail\payment_views.py:2049
 msgid "Preparing the food."
 msgstr "A preparar a comida."
 
-#: .\olretail\payment_views.py:1923
+#: .\olretail\payment_views.py:2050
 msgid "Order is ready for pickup."
 msgstr "A encomenda está pronta para recolha."
 
-#: .\olretail\payment_views.py:1951
+#: .\olretail\payment_views.py:2078
 msgid "This action only applies to restaurant orders."
 msgstr "Esta ação só se aplica a encomendas de restaurante."
 
-#: .\olretail\payment_views.py:1956 .\olretail\payment_views.py:2013
+#: .\olretail\payment_views.py:2083 .\olretail\payment_views.py:2140
 msgid "This order cannot be advanced from its current status."
 msgstr "Esta encomenda não pode avançar do seu estado atual."
 
-#: .\olretail\payment_views.py:1986
+#: .\olretail\payment_views.py:2113
 #, python-format
 msgid "Order %(order)s is ready for collection."
 msgstr "A encomenda %(order)s está pronta para recolha."
 
-#: .\olretail\payment_views.py:1989 .\olretail\payment_views.py:2021
+#: .\olretail\payment_views.py:2116 .\olretail\payment_views.py:2148
 msgid "Order updated."
 msgstr "Encomenda atualizada."
 
-#: .\olretail\payment_views.py:1994
+#: .\olretail\payment_views.py:2121
 msgid "Courier picked up the order."
 msgstr "O estafeta recolheu a encomenda."
 
-#: .\olretail\payment_views.py:1995
+#: .\olretail\payment_views.py:2122
 msgid "Courier is on the way."
 msgstr "O estafeta está a caminho."
 
-#: .\olretail\payment_views.py:2051
+#: .\olretail\payment_views.py:2178
 msgid "ID submitted — an administrator will review it shortly."
 msgstr ""
 "Documento de identificação submetido — um administrador irá revê-lo em "
 "breve."
 
-#: .\olretail\payment_views.py:2087
+#: .\olretail\payment_views.py:2214
 msgid "Availability window added."
 msgstr "Período de disponibilidade adicionado."
 
-#: .\olretail\payment_views.py:2101
+#: .\olretail\payment_views.py:2228
 msgid "Availability window updated."
 msgstr "Período de disponibilidade atualizado."
 
-#: .\olretail\payment_views.py:2113
+#: .\olretail\payment_views.py:2240
 msgid "Availability window removed."
 msgstr "Período de disponibilidade removido."
 
-#: .\olretail\payment_views.py:2128
+#: .\olretail\payment_views.py:2255
 msgid "You must be a seller to post delivery updates."
 msgstr "Tem de ser vendedor para publicar atualizações de entrega."
 
-#: .\olretail\payment_views.py:2138
+#: .\olretail\payment_views.py:2265
 #, python-format
 msgid "Delivery update for order %(order)s: %(note)s"
 msgstr "Atualização de entrega da encomenda %(order)s: %(note)s"
 
-#: .\olretail\payment_views.py:2141
+#: .\olretail\payment_views.py:2268
 msgid "Update posted."
 msgstr "Atualização publicada."
 
-#: .\olretail\payment_views.py:2143
+#: .\olretail\payment_views.py:2270
 msgid "Please enter a status update."
 msgstr "Por favor introduza uma atualização de estado."
 
-#: .\olretail\payment_views.py:2266
+#: .\olretail\payment_views.py:2393
 msgid "You can only open disputes for delivered or shipped orders."
 msgstr "Só pode abrir litígios para encomendas entregues ou enviadas."
 
-#: .\olretail\payment_views.py:2276
+#: .\olretail\payment_views.py:2403
 msgid "A dispute is already open for this order."
 msgstr "Já existe um litígio aberto para esta encomenda."
 
-#: .\olretail\payment_views.py:2288
+#: .\olretail\payment_views.py:2415
 msgid "Dispute opened. Seller has 3 days to respond."
 msgstr "Litígio aberto. O vendedor tem 3 dias para responder."
 
-#: .\olretail\payment_views.py:2311
+#: .\olretail\payment_views.py:2438
 msgid "You do not have permission to view this dispute."
 msgstr "Não tem permissão para ver este litígio."
 
-#: .\olretail\payment_views.py:2339
+#: .\olretail\payment_views.py:2466
 msgid "You must be a seller to respond to disputes."
 msgstr "Tem de ser vendedor para responder a litígios."
 
-#: .\olretail\payment_views.py:2344
+#: .\olretail\payment_views.py:2471
 #: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "O prazo de resposta expirou."
 
-#: .\olretail\payment_views.py:2353
+#: .\olretail\payment_views.py:2480
 msgid "Your response has been submitted."
 msgstr "A sua resposta foi submetida."
 
-#: .\olretail\payment_views.py:2407
+#: .\olretail\payment_views.py:2534
 #, python-format
 msgid "%(time)s ago"
 msgstr "há %(time)s"
@@ -2339,7 +2409,7 @@ msgstr ""
 
 #: .\templates\olretail\bank_transfer_instructions.html:23
 #: .\templates\olretail\mark_payment_sent.html:27
-#: .\templates\olretail\order_detail.html:333
+#: .\templates\olretail\order_detail.html:401
 msgid "TimorMart bank details"
 msgstr "Dados bancários da TimorMart"
 
@@ -2368,7 +2438,7 @@ msgstr "Referência (incluir na nota de transferência)"
 
 #: .\templates\olretail\bank_transfer_instructions.html:44
 #: .\templates\olretail\mark_payment_sent.html:75
-#: .\templates\olretail\order_detail.html:371
+#: .\templates\olretail\order_detail.html:439
 msgid "I've sent payment"
 msgstr "Já enviei o pagamento"
 
@@ -2444,12 +2514,12 @@ msgstr "Data"
 
 #: .\templates\olretail\buyer_orders.html:93
 #: .\templates\olretail\courier_deliveries.html:127
-#: .\templates\olretail\seller_orders.html:102
+#: .\templates\olretail\seller_orders.html:107
 msgid "View"
 msgstr "Ver"
 
 #: .\templates\olretail\buyer_orders.html:106
-#: .\templates\olretail\seller_orders.html:115
+#: .\templates\olretail\seller_orders.html:120
 msgid "No orders yet."
 msgstr "Ainda não há encomendas."
 
@@ -2490,13 +2560,13 @@ msgstr "cada"
 #: .\templates\olretail\cart.html:125 .\templates\olretail\checkout.html:191
 #: .\templates\olretail\mark_payment_sent.html:85
 #: .\templates\olretail\open_dispute.html:74
-#: .\templates\olretail\order_detail.html:482
+#: .\templates\olretail\order_detail.html:550
 #: .\templates\olretail\payment.html:95
 msgid "Order Summary"
 msgstr "Resumo da Encomenda"
 
 #: .\templates\olretail\cart.html:128 .\templates\olretail\checkout.html:194
-#: .\templates\olretail\order_detail.html:486
+#: .\templates\olretail\order_detail.html:554
 #: .\templates\olretail\payment.html:116
 #: .\templates\olretail\payment_confirmation.html:109
 msgid "Subtotal"
@@ -2544,7 +2614,7 @@ msgid "Order Review"
 msgstr "Revisão da Encomenda"
 
 #: .\templates\olretail\checkout.html:37
-#: .\templates\olretail\order_detail.html:435
+#: .\templates\olretail\order_detail.html:503
 #: .\templates\olretail\payment_confirmation.html:105
 msgid "Unit Price"
 msgstr "Preço Unitário"
@@ -2561,7 +2631,7 @@ msgid "Test accounts:"
 msgstr "Contas de teste:"
 
 #: .\templates\olretail\checkout.html:104
-#: .\templates\olretail\order_detail.html:513
+#: .\templates\olretail\order_detail.html:581
 msgid "Delivery Information"
 msgstr "Informação de Entrega"
 
@@ -2696,7 +2766,7 @@ msgstr "O seu horário"
 
 #: .\templates\olretail\courier_availability.html:88
 #: .\templates\olretail\details.html:253
-#: .\templates\olretail\order_detail.html:312
+#: .\templates\olretail\order_detail.html:380
 #: .\templates\olretail\seller_payment_settings.html:126
 #: .\templates\olretail\seller_payment_settings.html:148
 #: .\templates\olretail\seller_payment_settings.html:173
@@ -2786,6 +2856,7 @@ msgstr "A aguardar cozinha"
 
 #: .\templates\olretail\courier_deliveries.html:87
 #: .\templates\olretail\order_detail.html:155
+#: .\templates\olretail\order_detail.html:248
 msgid "Confirm Pickup"
 msgstr "Confirmar Recolha"
 
@@ -2950,7 +3021,7 @@ msgid "Pickup available"
 msgstr "Levantamento disponível"
 
 #: .\templates\olretail\details.html:332
-#: .\templates\olretail\order_detail.html:469
+#: .\templates\olretail\order_detail.html:537
 msgid "Chat on WhatsApp"
 msgstr "Conversar no WhatsApp"
 
@@ -3256,8 +3327,8 @@ msgid "Confirm Your Payment"
 msgstr "Confirme o Seu Pagamento"
 
 #: .\templates\olretail\mark_payment_sent.html:29
-#: .\templates\olretail\order_detail.html:335
-#: .\templates\olretail\order_detail.html:346
+#: .\templates\olretail\order_detail.html:403
+#: .\templates\olretail\order_detail.html:414
 #: .\templates\olretail\payment_confirmation.html:21
 #: .\templates\olretail\payment_confirmation.html:35
 msgid "Reference"
@@ -3336,7 +3407,7 @@ msgstr "Ainda sem notificações."
 
 #: .\templates\olretail\open_dispute.html:4
 #: .\templates\olretail\open_dispute.html:12
-#: .\templates\olretail\order_detail.html:559
+#: .\templates\olretail\order_detail.html:627
 msgid "Report Issue"
 msgstr "Reportar Problema"
 
@@ -3352,7 +3423,7 @@ msgid "Submit Dispute"
 msgstr "Submeter Litígio"
 
 #: .\templates\olretail\open_dispute.html:79
-#: .\templates\olretail\order_detail.html:504
+#: .\templates\olretail\order_detail.html:572
 #: .\templates\olretail\payment_confirmation.html:121
 msgid "Total Paid"
 msgstr "Total Pago"
@@ -3419,55 +3490,107 @@ msgstr ""
 "Este estafeta ainda não ativou as notificações no telemóvel — pode não ver "
 "isto até abrir a aplicação por conta própria."
 
-#: .\templates\olretail\order_detail.html:215
+#: .\templates\olretail\order_detail.html:219
+#, python-format
+msgid ""
+"%(courier)s hasn't responded to this assignment in over 20 minutes — "
+"consider reassigning below."
+msgstr ""
+"%(courier)s não respondeu a esta atribuição há mais de 20 minutos — "
+"considere reatribuir abaixo."
+
+#: .\templates\olretail\order_detail.html:224
+#, python-format
+msgid "Waiting for %(courier)s to accept this delivery."
+msgstr "A aguardar que %(courier)s aceite esta entrega."
+
+#: .\templates\olretail\order_detail.html:230
+#, python-format
+msgid "%(courier)s declined this delivery — reassign it below."
+msgstr "%(courier)s recusou esta entrega — reatribua-a abaixo."
+
+#: .\templates\olretail\order_detail.html:236
+#, python-format
+msgid ""
+"%(courier)s accepted over 20 minutes ago but hasn't picked this up yet — "
+"reassign below if they haven't arrived."
+msgstr ""
+"%(courier)s aceitou há mais de 20 minutos mas ainda não recolheu — reatribua"
+" abaixo se ainda não tiver chegado."
+
+#: .\templates\olretail\order_detail.html:241
+#, python-format
+msgid "%(courier)s accepted — waiting for them to pick up the package."
+msgstr "%(courier)s aceitou — a aguardar que recolha a encomenda."
+
+#: .\templates\olretail\order_detail.html:255
+msgid "Picked up — on the way to the buyer."
+msgstr "Recolhida — a caminho do comprador."
+
+#: .\templates\olretail\order_detail.html:263
+#| msgid "You have been assigned to deliver order %(order)s."
+msgid "You've been assigned this delivery. Can you pick it up?"
+msgstr "Foi-lhe atribuída esta entrega. Pode recolhê-la?"
+
+#: .\templates\olretail\order_detail.html:268
+#| msgid "We accept"
+msgid "Accept"
+msgstr "Aceitar"
+
+#: .\templates\olretail\order_detail.html:275
+#| msgid "Rejected"
+msgid "Reject"
+msgstr "Rejeitar"
+
+#: .\templates\olretail\order_detail.html:283
 msgid "Updates"
 msgstr "Atualizações"
 
-#: .\templates\olretail\order_detail.html:227
+#: .\templates\olretail\order_detail.html:295
 msgid "No status updates yet."
 msgstr "Ainda sem atualizações de estado."
 
-#: .\templates\olretail\order_detail.html:233
+#: .\templates\olretail\order_detail.html:301
 msgid "Proof of Delivery"
 msgstr "Prova de Entrega"
 
-#: .\templates\olretail\order_detail.html:235
+#: .\templates\olretail\order_detail.html:303
 msgid "Proof of delivery"
 msgstr "Prova de entrega"
 
-#: .\templates\olretail\order_detail.html:258
+#: .\templates\olretail\order_detail.html:326
 msgid "Mark as Shipped"
 msgstr "Marcar como Enviado"
 
-#: .\templates\olretail\order_detail.html:270
+#: .\templates\olretail\order_detail.html:338
 msgid "Post update"
 msgstr "Publicar atualização"
 
-#: .\templates\olretail\order_detail.html:283
+#: .\templates\olretail\order_detail.html:351
 msgid "Take a photo of the delivered item to confirm."
 msgstr "Tire uma fotografia do artigo entregue para confirmar."
 
-#: .\templates\olretail\order_detail.html:286
-#: .\templates\olretail\order_detail.html:290
+#: .\templates\olretail\order_detail.html:354
+#: .\templates\olretail\order_detail.html:358
 msgid "This order is assigned to a courier — only they can confirm delivery."
 msgstr ""
 "Esta encomenda está atribuída a um estafeta — só ele pode confirmar a "
 "entrega."
 
-#: .\templates\olretail\order_detail.html:287
-#: .\templates\olretail\order_detail.html:294
+#: .\templates\olretail\order_detail.html:355
+#: .\templates\olretail\order_detail.html:362
 msgid "Mark as Delivered"
 msgstr "Marcar como Entregue"
 
-#: .\templates\olretail\order_detail.html:305
+#: .\templates\olretail\order_detail.html:373
 msgid "Reassign courier"
 msgstr "Reatribuir estafeta"
 
-#: .\templates\olretail\order_detail.html:307
+#: .\templates\olretail\order_detail.html:375
 msgid "Unassigned (self-delivery)"
 msgstr "Não atribuído (entrega própria)"
 
-#: .\templates\olretail\order_detail.html:315
+#: .\templates\olretail\order_detail.html:383
 msgid ""
 "If the assigned courier can't take this delivery, reassign it to someone "
 "else or unassign it to deliver it yourself."
@@ -3475,43 +3598,43 @@ msgstr ""
 "Se o estafeta atribuído não conseguir fazer esta entrega, reatribua-a a "
 "outra pessoa ou remova a atribuição para a entregar você mesmo."
 
-#: .\templates\olretail\order_detail.html:328
+#: .\templates\olretail\order_detail.html:396
 #: .\templates\olretail\terms_of_service.html:115
 #: .\templates\shared\footer.html:41
 msgid "Bank Transfer"
 msgstr "Transferência Bancária"
 
-#: .\templates\olretail\order_detail.html:341
+#: .\templates\olretail\order_detail.html:409
 msgid "Submitted receipt"
 msgstr "Recibo submetido"
 
-#: .\templates\olretail\order_detail.html:343
+#: .\templates\olretail\order_detail.html:411
 msgid "Payment receipt — opens full size"
 msgstr "Recibo de pagamento — abre em tamanho completo"
 
-#: .\templates\olretail\order_detail.html:347
+#: .\templates\olretail\order_detail.html:415
 msgid "Claimed amount"
 msgstr "Valor reclamado"
 
-#: .\templates\olretail\order_detail.html:359
+#: .\templates\olretail\order_detail.html:427
 msgid "Payment dispute"
 msgstr "Disputa de pagamento"
 
-#: .\templates\olretail\order_detail.html:364
+#: .\templates\olretail\order_detail.html:432
 msgid "An administrator is reviewing this."
 msgstr "Um administrador está a analisar isto."
 
-#: .\templates\olretail\order_detail.html:376
+#: .\templates\olretail\order_detail.html:444
 msgid "Waiting for the buyer to send payment."
 msgstr "A aguardar que o comprador envie o pagamento."
 
-#: .\templates\olretail\order_detail.html:381
+#: .\templates\olretail\order_detail.html:449
 msgid "Payment claim submitted — waiting for an administrator to confirm it."
 msgstr ""
 "Reclamação de pagamento submetida — a aguardar confirmação de um "
 "administrador."
 
-#: .\templates\olretail\order_detail.html:397
+#: .\templates\olretail\order_detail.html:465
 #, python-format
 msgid ""
 "Have $%(amount)s in cash ready for the seller/courier when your order "
@@ -3520,82 +3643,82 @@ msgstr ""
 "Tenha $%(amount)s em dinheiro pronto para o vendedor/estafeta quando a sua "
 "encomenda chegar."
 
-#: .\templates\olretail\order_detail.html:399
+#: .\templates\olretail\order_detail.html:467
 #, python-format
 msgid ""
 "Collect $%(amount)s in cash from the buyer when you deliver this order."
 msgstr ""
 "Receba $%(amount)s em dinheiro do comprador quando entregar esta encomenda."
 
-#: .\templates\olretail\order_detail.html:409
+#: .\templates\olretail\order_detail.html:477
 msgid "Product Details"
 msgstr "Detalhes do Produto"
 
-#: .\templates\olretail\order_detail.html:443
+#: .\templates\olretail\order_detail.html:511
 msgid "Line Total"
 msgstr "Total da Linha"
 
-#: .\templates\olretail\order_detail.html:455
+#: .\templates\olretail\order_detail.html:523
 msgid "Seller Information"
 msgstr "Informação do Vendedor"
 
-#: .\templates\olretail\order_detail.html:491
+#: .\templates\olretail\order_detail.html:559
 #: .\templates\olretail\payment.html:120
 #, python-format
 msgid "Commission (%(commission_rate_percent)s%%)"
 msgstr "Comissão (%(commission_rate_percent)s%%)"
 
-#: .\templates\olretail\order_detail.html:495
+#: .\templates\olretail\order_detail.html:563
 #: .\templates\olretail\payment_confirmation.html:117
 msgid "Payment Fee"
 msgstr "Taxa de Pagamento"
 
-#: .\templates\olretail\order_detail.html:500
+#: .\templates\olretail\order_detail.html:568
 msgid "Paid directly to the seller — no platform fee."
 msgstr "Pago diretamente ao vendedor — sem taxa de plataforma."
 
-#: .\templates\olretail\order_detail.html:523
+#: .\templates\olretail\order_detail.html:591
 msgid "View exact location on map"
 msgstr "Ver localização exata no mapa"
 
-#: .\templates\olretail\order_detail.html:528
+#: .\templates\olretail\order_detail.html:596
 msgid "Phone"
 msgstr "Telefone"
 
-#: .\templates\olretail\order_detail.html:545
+#: .\templates\olretail\order_detail.html:613
 msgid "Cancel this order?"
 msgstr "Cancelar esta encomenda?"
 
-#: .\templates\olretail\order_detail.html:548
+#: .\templates\olretail\order_detail.html:616
 msgid "Cancel Order"
 msgstr "Cancelar Encomenda"
 
-#: .\templates\olretail\order_detail.html:568
+#: .\templates\olretail\order_detail.html:636
 msgid "Rate this product"
 msgstr "Avaliar este produto"
 
-#: .\templates\olretail\order_detail.html:576
+#: .\templates\olretail\order_detail.html:644
 msgid "Thanks for rating this purchase."
 msgstr "Obrigado por avaliar esta compra."
 
-#: .\templates\olretail\order_detail.html:591
+#: .\templates\olretail\order_detail.html:659
 msgid "Write a review (optional)"
 msgstr "Escreva uma avaliação (opcional)"
 
-#: .\templates\olretail\order_detail.html:593
+#: .\templates\olretail\order_detail.html:661
 msgid "What did you think of this product?"
 msgstr "O que achou deste produto?"
 
-#: .\templates\olretail\order_detail.html:595
-#: .\templates\olretail\order_detail.html:624
+#: .\templates\olretail\order_detail.html:663
+#: .\templates\olretail\order_detail.html:692
 msgid "Submit rating"
 msgstr "Submeter avaliação"
 
-#: .\templates\olretail\order_detail.html:605
+#: .\templates\olretail\order_detail.html:673
 msgid "Rate the courier"
 msgstr "Avaliar o estafeta"
 
-#: .\templates\olretail\order_detail.html:613
+#: .\templates\olretail\order_detail.html:681
 msgid "Thanks for rating this courier."
 msgstr "Obrigado por avaliar este estafeta."
 
@@ -4065,15 +4188,19 @@ msgstr "Montante mínimo de pagamento: $500"
 msgid "Seller Orders"
 msgstr "Encomendas do Vendedor"
 
-#: .\templates\olretail\seller_orders.html:97
+#: .\templates\olretail\seller_orders.html:93
+msgid "Needs attention"
+msgstr "Requer atenção"
+
+#: .\templates\olretail\seller_orders.html:102
 msgid "Awaiting admin confirmation"
 msgstr "A aguardar confirmação do administrador"
 
-#: .\templates\olretail\seller_orders.html:99
+#: .\templates\olretail\seller_orders.html:104
 msgid "Awaiting buyer's transfer"
 msgstr "A aguardar a transferência do comprador"
 
-#: .\templates\olretail\seller_orders.html:116
+#: .\templates\olretail\seller_orders.html:121
 msgid "View your products"
 msgstr "Ver os seus produtos"
 

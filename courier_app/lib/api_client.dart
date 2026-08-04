@@ -187,6 +187,15 @@ class ApiClient {
     );
   }
 
+  Future<void> respondToAssignment(int orderId, {required bool accept}) async {
+    final response = await http.post(
+      _url('/deliveries/$orderId/respond/'),
+      headers: await _authHeaders(),
+      body: {'action': accept ? 'accept' : 'reject'},
+    );
+    if (response.statusCode != 200) throw ApiException(response.statusCode, _errorMessage(response));
+  }
+
   Future<void> markDelivered(int orderId, File photo) async {
     final headers = await _authHeaders();
     final request = http.MultipartRequest('POST', _url('/deliveries/$orderId/mark-delivered/'))

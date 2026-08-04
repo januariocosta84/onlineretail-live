@@ -152,8 +152,8 @@ class _DeliveriesScreenState extends State<DeliveriesScreen>
     return TabBarView(
       controller: _tabController,
       children: [
-        _DeliveryList(orders: _pending, onRefresh: _refresh, showMarkDelivered: true),
-        _DeliveryList(orders: _delivered, onRefresh: _refresh, showMarkDelivered: false),
+        _DeliveryList(orders: _pending, onRefresh: _refresh, showMarkDelivered: true, api: _api),
+        _DeliveryList(orders: _delivered, onRefresh: _refresh, showMarkDelivered: false, api: _api),
       ],
     );
   }
@@ -237,8 +237,14 @@ class _DeliveryList extends StatelessWidget {
   final List<DeliveryOrder> orders;
   final Future<void> Function() onRefresh;
   final bool showMarkDelivered;
+  final ApiClient api;
 
-  const _DeliveryList({required this.orders, required this.onRefresh, required this.showMarkDelivered});
+  const _DeliveryList({
+    required this.orders,
+    required this.onRefresh,
+    required this.showMarkDelivered,
+    required this.api,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -261,6 +267,13 @@ class _DeliveryList extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           final order = orders[index];
+          // Nothing to do on the mark-delivered screen until this is
+          // accepted and picked up anyway (see _courier_can_mark_delivered's
+          // PICKED_UP gate) — show Accept/Reject in place of the usual
+          // tap-through row instead.
+          if (showMarkDelivered && order.awaitingMyResponse) {
+            return _AwaitingResponseCard(order: order, api: api, onRefresh: onRefresh);
+          }
           return Card(
             child: ListTile(
               title: Text('${order.orderNumber} — ${order.productName}'),
@@ -291,6 +304,95 @@ class _DeliveryList extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _AwaitingResponseCard extends StatefulWidget {
+  final DeliveryOrder order;
+  final ApiClient api;
+  final Future<void> Function() onRefresh;
+
+  const _AwaitingResponseCard({required this.order, required this.api, required this.onRefresh});
+
+  @override
+  State<_AwaitingResponseCard> createState() => _AwaitingResponseCardState();
+}
+
+class _AwaitingResponseCardState extends State<_AwaitingResponseCard> {
+  bool _submitting = false;
+
+  Future<void> _respond(bool accept) async {
+    setState(() => _submitting = true);
+    try {
+      await widget.api.respondToAssignment(widget.order.id, accept: accept);
+      // The row disappears from Pending once this order's status changes
+      // (rejected orders are excluded server-side, accepted ones just lose
+      // their Accept/Reject buttons) — onRefresh() picks that up.
+      await widget.onRefresh();
+    } on ApiException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not reach the server — check your connection.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final order = widget.order;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${order.orderNumber} — ${order.productName}', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 4),
+            Text('${order.buyerName}\n${order.deliveryAddress}'),
+            const SizedBox(height: 10),
+            Text(
+              'New delivery assigned to you — accept or reject it.',
+              style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+            ),
+            const SizedBox(height: 10),
+            _submitting
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                    ),
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _respond(false),
+                          icon: const Icon(Icons.close),
+                          label: const Text('Reject'),
+                          style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: () => _respond(true),
+                          icon: const Icon(Icons.check),
+                          label: const Text('Accept'),
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
       ),
     );
   }
