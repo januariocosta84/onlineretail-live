@@ -176,104 +176,141 @@
           </div>
           <div class="card-body">
             {% if order.courier_name or order.tracking_number or order.assigned_courier %}
-            <p class="mb-3">
-              {% if order.assigned_courier %}<strong>{% trans "Courier" %}:</strong> {{ order.assigned_courier.get_name }} ({{ order.assigned_courier.mobile }})<br>{% endif %}
-              {% if order.courier_name %}<strong>{% trans "Courier / Delivery Service" %}:</strong> {{ order.courier_name }}<br>{% endif %}
-              {% if order.tracking_number %}<strong>{% trans "Tracking Number" %}:</strong> {{ order.tracking_number }}{% endif %}
-            </p>
+            <div class="dt-section">
+              <div class="d-flex flex-wrap align-items-start">
+                {% if order.assigned_courier %}
+                <div class="d-flex align-items-center mr-4 mb-2">
+                  <div class="delivery-avatar mr-2"><i class="fas fa-motorcycle"></i></div>
+                  <div>
+                    <div class="small text-muted mb-0">{% trans "Courier" %}</div>
+                    <div class="font-weight-bold">{{ order.assigned_courier.get_name }}</div>
+                    <a href="tel:{{ order.assigned_courier.mobile }}" class="small"><i class="fas fa-phone-alt mr-1" aria-hidden="true"></i>{{ order.assigned_courier.mobile }}</a>
+                  </div>
+                </div>
+                {% endif %}
+                {% if order.courier_name %}
+                <div class="mb-2 mr-4">
+                  <div class="small text-muted mb-0">{% trans "Courier / Delivery Service" %}</div>
+                  <div class="font-weight-bold">{{ order.courier_name }}</div>
+                </div>
+                {% endif %}
+                {% if order.tracking_number %}
+                <div class="mb-2">
+                  <div class="small text-muted mb-0">{% trans "Tracking Number" %}</div>
+                  <code>{{ order.tracking_number }}</code>
+                </div>
+                {% endif %}
+              </div>
+            </div>
             {% endif %}
 
             {% if delivery_updates %}
-            <ul class="list-unstyled mb-3">
-              {% for update in delivery_updates %}
-              <li class="mb-2 pb-2 border-bottom">
-                <small class="text-muted d-block">{{ update.created_at|date:"M d, Y H:i" }}</small>
-                {{ update.note }}
-              </li>
-              {% endfor %}
-            </ul>
+            <div class="dt-section">
+              <h6 class="text-uppercase text-muted small font-weight-bold mb-3">{% trans "Updates" %}</h6>
+              <ul class="delivery-timeline list-unstyled mb-0">
+                {% for update in delivery_updates %}
+                <li>
+                  <div class="small text-muted">{{ update.created_at|date:"M d, Y H:i" }}</div>
+                  <div>{{ update.note }}</div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
             {% elif not is_seller and not is_courier %}
-            <p class="text-muted mb-3">{% trans "No status updates yet." %}</p>
+            <div class="dt-section">
+              <p class="text-muted mb-0"><i class="fas fa-info-circle mr-1" aria-hidden="true"></i>{% trans "No status updates yet." %}</p>
+            </div>
             {% endif %}
 
             {% if order.status == 'delivered' and order.delivery_photo %}
-            <div class="mb-3">
-              <strong class="d-block mb-2">{% trans "Proof of Delivery" %}:</strong>
+            <div class="dt-section">
+              <h6 class="text-uppercase text-muted small font-weight-bold mb-2">{% trans "Proof of Delivery" %}</h6>
               <a href="{{ order.delivery_photo.url }}" target="_blank" rel="noopener">
-                <img src="{{ order.delivery_photo.url }}" alt="{% trans 'Proof of delivery' %}" class="img-fluid rounded" style="max-height: 300px;">
+                <img src="{{ order.delivery_photo.url }}" alt="{% trans 'Proof of delivery' %}" class="img-fluid rounded border" style="max-height: 300px;">
               </a>
             </div>
             {% endif %}
 
             {% if is_seller and ship_form %}
-            <form method="post" action="{% url 'olretail:seller_update_order_status' order.id %}">
-              {% csrf_token %}
-              <input type="hidden" name="status" value="shipped">
-              <div class="form-group">
-                <label for="{{ ship_form.courier_name.id_for_label }}">{{ ship_form.courier_name.label }}</label>
-                {{ ship_form.courier_name }}
-              </div>
-              <div class="form-group">
-                <label for="{{ ship_form.tracking_number.id_for_label }}">{{ ship_form.tracking_number.label }}</label>
-                {{ ship_form.tracking_number }}
-              </div>
-              <div class="form-group">
-                <label for="{{ ship_form.assigned_courier.id_for_label }}">{{ ship_form.assigned_courier.label }}</label>
-                {{ ship_form.assigned_courier }}
-              </div>
-              <button type="submit" class="btn btn-primary btn-sm">
-                <i class="fas fa-truck mr-1"></i>{% trans "Mark as Shipped" %}
-              </button>
-            </form>
+            <div class="dt-section">
+              <form method="post" action="{% url 'olretail:seller_update_order_status' order.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="shipped">
+                <div class="form-group">
+                  <label for="{{ ship_form.courier_name.id_for_label }}">{{ ship_form.courier_name.label }}</label>
+                  {{ ship_form.courier_name }}
+                </div>
+                <div class="form-group">
+                  <label for="{{ ship_form.tracking_number.id_for_label }}">{{ ship_form.tracking_number.label }}</label>
+                  {{ ship_form.tracking_number }}
+                </div>
+                <div class="form-group">
+                  <label for="{{ ship_form.assigned_courier.id_for_label }}">{{ ship_form.assigned_courier.label }}</label>
+                  {{ ship_form.assigned_courier }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">
+                  <i class="fas fa-truck mr-1"></i>{% trans "Mark as Shipped" %}
+                </button>
+              </form>
+            </div>
             {% endif %}
 
             {% if is_seller and order.status == 'shipped' %}
-            <form method="post" action="{% url 'olretail:add_delivery_update' order.id %}" class="form-inline mb-3">
-              {% csrf_token %}
-              {{ delivery_update_form.note }}
-              <button type="submit" class="btn btn-outline-primary btn-sm ml-2">
-                <i class="fas fa-plus mr-1"></i>{% trans "Post update" %}
-              </button>
-            </form>
+            <div class="dt-section">
+              <form method="post" action="{% url 'olretail:add_delivery_update' order.id %}" class="form-inline">
+                {% csrf_token %}
+                {{ delivery_update_form.note }}
+                <button type="submit" class="btn btn-outline-primary btn-sm ml-2">
+                  <i class="fas fa-plus mr-1"></i>{% trans "Post update" %}
+                </button>
+              </form>
+            </div>
             {% endif %}
 
             {% if delivery_proof_form %}
-            <form method="post" action="{% url 'olretail:mark_delivered' order.id %}" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="{{ delivery_proof_form.photo.id_for_label }}">{{ delivery_proof_form.photo.label }}</label>
-                {{ delivery_proof_form.photo }}
-                <small class="form-text text-muted">{% trans "Take a photo of the delivered item to confirm." %}</small>
-              </div>
-              {% if is_seller and order.assigned_courier_id %}
-              <button type="submit" class="btn btn-success btn-sm" disabled title="{% trans 'This order is assigned to a courier — only they can confirm delivery.' %}">
-                <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
-              </button>
-              <small class="form-text text-muted">{% trans "This order is assigned to a courier — only they can confirm delivery." %}</small>
-              {% else %}
-              <button type="submit" class="btn btn-success btn-sm">
-                <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
-              </button>
-              {% endif %}
-            </form>
+            <div class="dt-section">
+              <form method="post" action="{% url 'olretail:mark_delivered' order.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="{{ delivery_proof_form.photo.id_for_label }}">{{ delivery_proof_form.photo.label }}</label>
+                  {{ delivery_proof_form.photo }}
+                  <small class="form-text text-muted">{% trans "Take a photo of the delivered item to confirm." %}</small>
+                </div>
+                {% if is_seller and order.assigned_courier_id %}
+                <button type="submit" class="btn btn-success btn-sm" disabled title="{% trans 'This order is assigned to a courier — only they can confirm delivery.' %}">
+                  <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
+                </button>
+                <div class="alert alert-light border small mt-2 mb-0 py-2 px-3">
+                  <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>{% trans "This order is assigned to a courier — only they can confirm delivery." %}
+                </div>
+                {% else %}
+                <button type="submit" class="btn btn-success btn-sm">
+                  <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
+                </button>
+                {% endif %}
+              </form>
+            </div>
             {% endif %}
 
             {% if couriers is not None %}
-            <hr>
-            <form method="post" action="{% url 'dashboard:order_reassign_courier' order.id %}" class="form-inline">
-              {% csrf_token %}
-              <label class="mr-2 mb-0" for="courier_id">{% trans "Reassign courier" %}</label>
-              <select name="courier_id" id="courier_id" class="browser-default custom-select custom-select-sm mr-2">
-                <option value="">{% trans "Unassigned (self-delivery)" %}</option>
-                {% for c in couriers %}
-                <option value="{{ c.pk }}" {% if order.assigned_courier_id == c.pk %}selected{% endif %}>{{ c.get_name }}</option>
-                {% endfor %}
-              </select>
-              <button type="submit" class="btn btn-outline-secondary btn-sm">{% trans "Save" %}</button>
-              {% if is_seller %}
-              <small class="form-text text-muted w-100">{% trans "If the assigned courier can't take this delivery, reassign it to someone else or unassign it to deliver it yourself." %}</small>
-              {% endif %}
-            </form>
+            <div class="dt-section">
+              <form method="post" action="{% url 'dashboard:order_reassign_courier' order.id %}" class="form-inline">
+                {% csrf_token %}
+                <label class="mr-2 mb-0" for="courier_id">{% trans "Reassign courier" %}</label>
+                <select name="courier_id" id="courier_id" class="browser-default custom-select custom-select-sm mr-2">
+                  <option value="">{% trans "Unassigned (self-delivery)" %}</option>
+                  {% for c in couriers %}
+                  <option value="{{ c.pk }}" {% if order.assigned_courier_id == c.pk %}selected{% endif %}>{{ c.get_name }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-outline-secondary btn-sm">{% trans "Save" %}</button>
+                {% if is_seller %}
+                <div class="alert alert-light border small w-100 mt-2 mb-0 py-2 px-3">
+                  <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>{% trans "If the assigned courier can't take this delivery, reassign it to someone else or unassign it to deliver it yourself." %}
+                </div>
+                {% endif %}
+              </form>
+            </div>
             {% endif %}
           </div>
         </div>
@@ -611,6 +648,63 @@
   
   .status-step.completed .status-icon {
     color: #28a745;
+  }
+
+  /* Delivery Tracking card is built from independently-conditional blocks
+     (courier info, updates, photo, various forms) — a sibling combinator
+     spaces/divides only the ones actually rendered, instead of a fixed
+     border-top per block leaving an orphaned rule when earlier blocks are
+     absent. */
+  .dt-section + .dt-section {
+    border-top: 1px solid #eee;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .delivery-avatar {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #1266f1;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* Vertical rail: the line is centered under each dot (dot sits at
+     left:-1.375rem, half its own width in from the ul's padding edge). */
+  .delivery-timeline {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .delivery-timeline:before {
+    content: '';
+    position: absolute;
+    top: .3rem;
+    bottom: .3rem;
+    left: .3125rem;
+    width: 2px;
+    background: #e9ecef;
+  }
+  .delivery-timeline li {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+  .delivery-timeline li:last-child {
+    padding-bottom: 0;
+  }
+  .delivery-timeline li:before {
+    content: '';
+    position: absolute;
+    left: -1.375rem;
+    top: .3rem;
+    width: .625rem;
+    height: .625rem;
+    border-radius: 50%;
+    background: #1266f1;
   }
 
   /* Star-rating input: DOM order 5..1 + row-reverse makes the CSS ~

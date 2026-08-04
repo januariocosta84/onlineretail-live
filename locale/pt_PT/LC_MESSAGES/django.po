@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 16:10+0900\n"
+"POT-Creation-Date: 2026-08-04 16:34+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr "Número de telefone"
 msgid "7012345 or +670 7012345"
 msgstr "7012345 ou +670 7012345"
 
-#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:474
+#: .\accounts\forms.py:77 .\templates\olretail\order_detail.html:507
 msgid "Address"
 msgstr "Morada"
 
@@ -470,13 +470,13 @@ msgstr "Categoria"
 #: .\olretail\forms.py:70 .\templates\olretail\details.html:239
 #: .\templates\olretail\mark_payment_sent.html:89
 #: .\templates\olretail\open_dispute.html:78
-#: .\templates\olretail\order_detail.html:396
+#: .\templates\olretail\order_detail.html:429
 #: .\templates\olretail\payment_confirmation.html:101
 msgid "Quantity"
 msgstr "Quantidade"
 
 #: .\olretail\forms.py:71 .\templates\olretail\lista.html:83
-#: .\templates\olretail\order_detail.html:382
+#: .\templates\olretail\order_detail.html:415
 msgid "Condition"
 msgstr "Condição"
 
@@ -591,11 +591,11 @@ msgstr ""
 "Ainda tem artigos no seu carrinho: %(items)s. Complete a sua compra antes "
 "que se esgotem!"
 
-#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:384
+#: .\olretail\models.py:12 .\templates\olretail\order_detail.html:417
 msgid "New"
 msgstr "Novo"
 
-#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:386
+#: .\olretail\models.py:13 .\templates\olretail\order_detail.html:419
 msgid "Second Hand"
 msgstr "Em Segunda Mão"
 
@@ -804,7 +804,7 @@ msgstr "O vendedor irá contactá-lo através deste número"
 msgid "Any special instructions? (Optional)"
 msgstr "Alguma instrução especial? (Opcional)"
 
-#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:490
+#: .\olretail\payment_forms.py:132 .\templates\olretail\order_detail.html:523
 msgid "Special Instructions"
 msgstr "Instruções Especiais"
 
@@ -902,7 +902,7 @@ msgstr "Valor que enviou"
 msgid "e.g. Timor Post, local courier name"
 msgstr "ex.: Timor Post, nome do estafeta local"
 
-#: .\olretail\payment_forms.py:253 .\templates\olretail\order_detail.html:181
+#: .\olretail\payment_forms.py:253 .\templates\olretail\order_detail.html:192
 msgid "Courier / Delivery Service"
 msgstr "Estafeta / Serviço de Entrega"
 
@@ -910,7 +910,7 @@ msgstr "Estafeta / Serviço de Entrega"
 msgid "Tracking number, if any"
 msgstr "Número de rastreio, se aplicável"
 
-#: .\olretail\payment_forms.py:262 .\templates\olretail\order_detail.html:182
+#: .\olretail\payment_forms.py:262 .\templates\olretail\order_detail.html:198
 msgid "Tracking Number"
 msgstr "Número de Rastreio"
 
@@ -1245,7 +1245,7 @@ msgstr "Transferência Bancária / Móvel"
 
 #: .\olretail\payment_models.py:87 .\templates\olretail\buyer_orders.html:70
 #: .\templates\olretail\details.html:313
-#: .\templates\olretail\order_detail.html:348
+#: .\templates\olretail\order_detail.html:381
 #: .\templates\olretail\seller_orders.html:74
 #: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
@@ -2339,7 +2339,7 @@ msgstr ""
 
 #: .\templates\olretail\bank_transfer_instructions.html:23
 #: .\templates\olretail\mark_payment_sent.html:27
-#: .\templates\olretail\order_detail.html:290
+#: .\templates\olretail\order_detail.html:323
 msgid "TimorMart bank details"
 msgstr "Dados bancários da TimorMart"
 
@@ -2368,7 +2368,7 @@ msgstr "Referência (incluir na nota de transferência)"
 
 #: .\templates\olretail\bank_transfer_instructions.html:44
 #: .\templates\olretail\mark_payment_sent.html:75
-#: .\templates\olretail\order_detail.html:328
+#: .\templates\olretail\order_detail.html:361
 msgid "I've sent payment"
 msgstr "Já enviei o pagamento"
 
@@ -2490,13 +2490,13 @@ msgstr "cada"
 #: .\templates\olretail\cart.html:125 .\templates\olretail\checkout.html:191
 #: .\templates\olretail\mark_payment_sent.html:85
 #: .\templates\olretail\open_dispute.html:74
-#: .\templates\olretail\order_detail.html:439
+#: .\templates\olretail\order_detail.html:472
 #: .\templates\olretail\payment.html:95
 msgid "Order Summary"
 msgstr "Resumo da Encomenda"
 
 #: .\templates\olretail\cart.html:128 .\templates\olretail\checkout.html:194
-#: .\templates\olretail\order_detail.html:443
+#: .\templates\olretail\order_detail.html:476
 #: .\templates\olretail\payment.html:116
 #: .\templates\olretail\payment_confirmation.html:109
 msgid "Subtotal"
@@ -2544,7 +2544,7 @@ msgid "Order Review"
 msgstr "Revisão da Encomenda"
 
 #: .\templates\olretail\checkout.html:37
-#: .\templates\olretail\order_detail.html:392
+#: .\templates\olretail\order_detail.html:425
 #: .\templates\olretail\payment_confirmation.html:105
 msgid "Unit Price"
 msgstr "Preço Unitário"
@@ -2561,7 +2561,7 @@ msgid "Test accounts:"
 msgstr "Contas de teste:"
 
 #: .\templates\olretail\checkout.html:104
-#: .\templates\olretail\order_detail.html:470
+#: .\templates\olretail\order_detail.html:503
 msgid "Delivery Information"
 msgstr "Informação de Entrega"
 
@@ -2696,7 +2696,7 @@ msgstr "O seu horário"
 
 #: .\templates\olretail\courier_availability.html:88
 #: .\templates\olretail\details.html:253
-#: .\templates\olretail\order_detail.html:272
+#: .\templates\olretail\order_detail.html:302
 #: .\templates\olretail\seller_payment_settings.html:126
 #: .\templates\olretail\seller_payment_settings.html:148
 #: .\templates\olretail\seller_payment_settings.html:173
@@ -2950,7 +2950,7 @@ msgid "Pickup available"
 msgstr "Levantamento disponível"
 
 #: .\templates\olretail\details.html:332
-#: .\templates\olretail\order_detail.html:426
+#: .\templates\olretail\order_detail.html:459
 msgid "Chat on WhatsApp"
 msgstr "Conversar no WhatsApp"
 
@@ -3256,8 +3256,8 @@ msgid "Confirm Your Payment"
 msgstr "Confirme o Seu Pagamento"
 
 #: .\templates\olretail\mark_payment_sent.html:29
-#: .\templates\olretail\order_detail.html:292
-#: .\templates\olretail\order_detail.html:303
+#: .\templates\olretail\order_detail.html:325
+#: .\templates\olretail\order_detail.html:336
 #: .\templates\olretail\payment_confirmation.html:21
 #: .\templates\olretail\payment_confirmation.html:35
 msgid "Reference"
@@ -3336,7 +3336,7 @@ msgstr "Ainda sem notificações."
 
 #: .\templates\olretail\open_dispute.html:4
 #: .\templates\olretail\open_dispute.html:12
-#: .\templates\olretail\order_detail.html:516
+#: .\templates\olretail\order_detail.html:549
 msgid "Report Issue"
 msgstr "Reportar Problema"
 
@@ -3352,7 +3352,7 @@ msgid "Submit Dispute"
 msgstr "Submeter Litígio"
 
 #: .\templates\olretail\open_dispute.html:79
-#: .\templates\olretail\order_detail.html:461
+#: .\templates\olretail\order_detail.html:494
 #: .\templates\olretail\payment_confirmation.html:121
 msgid "Total Paid"
 msgstr "Total Pago"
@@ -3405,57 +3405,62 @@ msgstr "Local de recolha"
 msgid "Delivery Tracking"
 msgstr "Rastreio de Entrega"
 
-#: .\templates\olretail\order_detail.html:180
+#: .\templates\olretail\order_detail.html:184
 #: .\templates\olretail\terms_of_service.html:48
 #: .\templates\shared\header.html:286
 msgid "Courier"
 msgstr "Estafeta"
 
-#: .\templates\olretail\order_detail.html:196
+#: .\templates\olretail\order_detail.html:207
+#| msgid "Update posted."
+msgid "Updates"
+msgstr "Atualizações"
+
+#: .\templates\olretail\order_detail.html:218
 msgid "No status updates yet."
 msgstr "Ainda sem atualizações de estado."
 
-#: .\templates\olretail\order_detail.html:201
+#: .\templates\olretail\order_detail.html:223
 msgid "Proof of Delivery"
 msgstr "Prova de Entrega"
 
-#: .\templates\olretail\order_detail.html:203
+#: .\templates\olretail\order_detail.html:225
 msgid "Proof of delivery"
 msgstr "Prova de entrega"
 
-#: .\templates\olretail\order_detail.html:225
+#: .\templates\olretail\order_detail.html:248
 msgid "Mark as Shipped"
 msgstr "Marcar como Enviado"
 
-#: .\templates\olretail\order_detail.html:235
+#: .\templates\olretail\order_detail.html:260
 msgid "Post update"
 msgstr "Publicar atualização"
 
-#: .\templates\olretail\order_detail.html:246
+#: .\templates\olretail\order_detail.html:273
 msgid "Take a photo of the delivered item to confirm."
 msgstr "Tire uma fotografia do artigo entregue para confirmar."
 
-#: .\templates\olretail\order_detail.html:249
-#: .\templates\olretail\order_detail.html:252
+#: .\templates\olretail\order_detail.html:276
+#: .\templates\olretail\order_detail.html:280
 msgid "This order is assigned to a courier — only they can confirm delivery."
 msgstr ""
 "Esta encomenda está atribuída a um estafeta — só ele pode confirmar a "
 "entrega."
 
-#: .\templates\olretail\order_detail.html:250
-#: .\templates\olretail\order_detail.html:255
+#: .\templates\olretail\order_detail.html:277
+#: .\templates\olretail\order_detail.html:284
 msgid "Mark as Delivered"
 msgstr "Marcar como Entregue"
 
-#: .\templates\olretail\order_detail.html:265
+#: .\templates\olretail\order_detail.html:295
 msgid "Reassign courier"
 msgstr "Reatribuir estafeta"
 
-#: .\templates\olretail\order_detail.html:267
+#: .\templates\olretail\order_detail.html:297
 msgid "Unassigned (self-delivery)"
 msgstr "Não atribuído (entrega própria)"
 
-#: .\templates\olretail\order_detail.html:274
+#: .\templates\olretail\order_detail.html:305
 msgid ""
 "If the assigned courier can't take this delivery, reassign it to someone "
 "else or unassign it to deliver it yourself."
@@ -3463,43 +3468,43 @@ msgstr ""
 "Se o estafeta atribuído não conseguir fazer esta entrega, reatribua-a a "
 "outra pessoa ou remova a atribuição para a entregar você mesmo."
 
-#: .\templates\olretail\order_detail.html:285
+#: .\templates\olretail\order_detail.html:318
 #: .\templates\olretail\terms_of_service.html:115
 #: .\templates\shared\footer.html:41
 msgid "Bank Transfer"
 msgstr "Transferência Bancária"
 
-#: .\templates\olretail\order_detail.html:298
+#: .\templates\olretail\order_detail.html:331
 msgid "Submitted receipt"
 msgstr "Recibo submetido"
 
-#: .\templates\olretail\order_detail.html:300
+#: .\templates\olretail\order_detail.html:333
 msgid "Payment receipt — opens full size"
 msgstr "Recibo de pagamento — abre em tamanho completo"
 
-#: .\templates\olretail\order_detail.html:304
+#: .\templates\olretail\order_detail.html:337
 msgid "Claimed amount"
 msgstr "Valor reclamado"
 
-#: .\templates\olretail\order_detail.html:316
+#: .\templates\olretail\order_detail.html:349
 msgid "Payment dispute"
 msgstr "Disputa de pagamento"
 
-#: .\templates\olretail\order_detail.html:321
+#: .\templates\olretail\order_detail.html:354
 msgid "An administrator is reviewing this."
 msgstr "Um administrador está a analisar isto."
 
-#: .\templates\olretail\order_detail.html:333
+#: .\templates\olretail\order_detail.html:366
 msgid "Waiting for the buyer to send payment."
 msgstr "A aguardar que o comprador envie o pagamento."
 
-#: .\templates\olretail\order_detail.html:338
+#: .\templates\olretail\order_detail.html:371
 msgid "Payment claim submitted — waiting for an administrator to confirm it."
 msgstr ""
 "Reclamação de pagamento submetida — a aguardar confirmação de um "
 "administrador."
 
-#: .\templates\olretail\order_detail.html:354
+#: .\templates\olretail\order_detail.html:387
 #, python-format
 msgid ""
 "Have $%(amount)s in cash ready for the seller/courier when your order "
@@ -3508,82 +3513,82 @@ msgstr ""
 "Tenha $%(amount)s em dinheiro pronto para o vendedor/estafeta quando a sua "
 "encomenda chegar."
 
-#: .\templates\olretail\order_detail.html:356
+#: .\templates\olretail\order_detail.html:389
 #, python-format
 msgid ""
 "Collect $%(amount)s in cash from the buyer when you deliver this order."
 msgstr ""
 "Receba $%(amount)s em dinheiro do comprador quando entregar esta encomenda."
 
-#: .\templates\olretail\order_detail.html:366
+#: .\templates\olretail\order_detail.html:399
 msgid "Product Details"
 msgstr "Detalhes do Produto"
 
-#: .\templates\olretail\order_detail.html:400
+#: .\templates\olretail\order_detail.html:433
 msgid "Line Total"
 msgstr "Total da Linha"
 
-#: .\templates\olretail\order_detail.html:412
+#: .\templates\olretail\order_detail.html:445
 msgid "Seller Information"
 msgstr "Informação do Vendedor"
 
-#: .\templates\olretail\order_detail.html:448
+#: .\templates\olretail\order_detail.html:481
 #: .\templates\olretail\payment.html:120
 #, python-format
 msgid "Commission (%(commission_rate_percent)s%%)"
 msgstr "Comissão (%(commission_rate_percent)s%%)"
 
-#: .\templates\olretail\order_detail.html:452
+#: .\templates\olretail\order_detail.html:485
 #: .\templates\olretail\payment_confirmation.html:117
 msgid "Payment Fee"
 msgstr "Taxa de Pagamento"
 
-#: .\templates\olretail\order_detail.html:457
+#: .\templates\olretail\order_detail.html:490
 msgid "Paid directly to the seller — no platform fee."
 msgstr "Pago diretamente ao vendedor — sem taxa de plataforma."
 
-#: .\templates\olretail\order_detail.html:480
+#: .\templates\olretail\order_detail.html:513
 msgid "View exact location on map"
 msgstr "Ver localização exata no mapa"
 
-#: .\templates\olretail\order_detail.html:485
+#: .\templates\olretail\order_detail.html:518
 msgid "Phone"
 msgstr "Telefone"
 
-#: .\templates\olretail\order_detail.html:502
+#: .\templates\olretail\order_detail.html:535
 msgid "Cancel this order?"
 msgstr "Cancelar esta encomenda?"
 
-#: .\templates\olretail\order_detail.html:505
+#: .\templates\olretail\order_detail.html:538
 msgid "Cancel Order"
 msgstr "Cancelar Encomenda"
 
-#: .\templates\olretail\order_detail.html:525
+#: .\templates\olretail\order_detail.html:558
 msgid "Rate this product"
 msgstr "Avaliar este produto"
 
-#: .\templates\olretail\order_detail.html:533
+#: .\templates\olretail\order_detail.html:566
 msgid "Thanks for rating this purchase."
 msgstr "Obrigado por avaliar esta compra."
 
-#: .\templates\olretail\order_detail.html:548
+#: .\templates\olretail\order_detail.html:581
 msgid "Write a review (optional)"
 msgstr "Escreva uma avaliação (opcional)"
 
-#: .\templates\olretail\order_detail.html:550
+#: .\templates\olretail\order_detail.html:583
 msgid "What did you think of this product?"
 msgstr "O que achou deste produto?"
 
-#: .\templates\olretail\order_detail.html:552
-#: .\templates\olretail\order_detail.html:581
+#: .\templates\olretail\order_detail.html:585
+#: .\templates\olretail\order_detail.html:614
 msgid "Submit rating"
 msgstr "Submeter avaliação"
 
-#: .\templates\olretail\order_detail.html:562
+#: .\templates\olretail\order_detail.html:595
 msgid "Rate the courier"
 msgstr "Avaliar o estafeta"
 
-#: .\templates\olretail\order_detail.html:570
+#: .\templates\olretail\order_detail.html:603
 msgid "Thanks for rating this courier."
 msgstr "Obrigado por avaliar este estafeta."
 
