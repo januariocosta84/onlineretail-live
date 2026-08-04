@@ -201,6 +201,12 @@
                 </div>
                 {% endif %}
               </div>
+              {% if courier_push_unavailable %}
+              <div class="alert alert-warning small mt-2 mb-0 py-2 px-3">
+                <i class="fas fa-bell-slash mr-1" aria-hidden="true"></i>
+                {% trans "This courier hasn't enabled notifications on their phone — they may not see this until they open the app themselves." %}
+              </div>
+              {% endif %}
             </div>
             {% endif %}
 

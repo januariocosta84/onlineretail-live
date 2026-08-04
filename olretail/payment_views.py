@@ -1558,6 +1558,17 @@ def order_detail(request, order_id):
         # queryset ShipOrderForm uses at the initial Paid→Shipped step, not
         # the admin's unfiltered list of every courier on the platform.
         context['couriers'] = ShipOrderForm(order=order).fields['assigned_courier'].queryset.order_by('user__first_name')
+    if order.assigned_courier_id and order.status == OrderStatus.SHIPPED and (is_seller or is_admin):
+        # Doesn't touch send_push/_notify at all — a courier with zero
+        # registered devices means push has nothing to even attempt
+        # sending to (see push_notifications.send_push's early return),
+        # so this is knowable up front rather than waiting on a delivery
+        # failure FCM doesn't reliably report anyway. Only worth surfacing
+        # to whoever could act on it (reassign) — not the buyer or the
+        # courier themselves.
+        context['courier_push_unavailable'] = not DeviceToken.objects.filter(
+            user_id=order.assigned_courier.user_id
+        ).exists()
     if is_buyer and order.status == OrderStatus.DELIVERED:
         context['rating'] = getattr(order, 'rating', None)
         context['courier_rating'] = getattr(order, 'courier_rating', None)
