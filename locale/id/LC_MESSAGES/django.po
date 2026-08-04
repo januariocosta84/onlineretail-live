@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 19:09+0900\n"
+"POT-Creation-Date: 2026-08-04 22:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -606,7 +606,7 @@ msgstr "Menunggu Verifikasi"
 
 #: .\olretail\models.py:19 .\olretail\models.py:151
 #: .\templates\olretail\courier_deliveries.html:23
-#: .\templates\olretail\seller_payment_settings.html:256
+#: .\templates\olretail\seller_payment_settings.html:284
 msgid "Verified"
 msgstr "Terverifikasi"
 
@@ -1013,35 +1013,35 @@ msgstr "Opsional"
 #: .\olretail\payment_forms.py:476
 #: .\templates\olretail\_platform_bank_details.html:7
 #: .\templates\olretail\_seller_bank_details.html:7
-#: .\templates\olretail\seller_payment_settings.html:74
+#: .\templates\olretail\seller_payment_settings.html:80
 msgid "Account Holder Name"
 msgstr "Nama Pemilik Rekening"
 
 #: .\olretail\payment_forms.py:477
 #: .\templates\olretail\_platform_bank_details.html:6
 #: .\templates\olretail\_seller_bank_details.html:6
-#: .\templates\olretail\seller_payment_settings.html:75
+#: .\templates\olretail\seller_payment_settings.html:81
 msgid "Bank Name"
 msgstr "Nama Bank"
 
 #: .\olretail\payment_forms.py:478
 #: .\templates\olretail\_platform_bank_details.html:8
 #: .\templates\olretail\_seller_bank_details.html:8
-#: .\templates\olretail\seller_payment_settings.html:76
+#: .\templates\olretail\seller_payment_settings.html:82
 msgid "Account Number"
 msgstr "Nomor Rekening"
 
 #: .\olretail\payment_forms.py:479
 #: .\templates\olretail\_platform_bank_details.html:9
 #: .\templates\olretail\_seller_bank_details.html:9
-#: .\templates\olretail\seller_payment_settings.html:77
+#: .\templates\olretail\seller_payment_settings.html:83
 msgid "SWIFT Code"
 msgstr "Kode SWIFT"
 
 #: .\olretail\payment_forms.py:480
 #: .\templates\olretail\_platform_bank_details.html:10
 #: .\templates\olretail\_seller_bank_details.html:10
-#: .\templates\olretail\seller_payment_settings.html:78
+#: .\templates\olretail\seller_payment_settings.html:84
 msgid "IBAN"
 msgstr "IBAN"
 
@@ -1099,71 +1099,71 @@ msgstr "Email direktur"
 msgid "WhatsApp Number"
 msgstr "Nomor WhatsApp"
 
-#: .\olretail\payment_forms.py:595
+#: .\olretail\payment_forms.py:599
 msgid "Municipality"
 msgstr "Kotamadya"
 
-#: .\olretail\payment_forms.py:596
+#: .\olretail\payment_forms.py:600
 msgid "Administrative Post"
 msgstr "Pos Administratif"
 
-#: .\olretail\payment_forms.py:597
+#: .\olretail\payment_forms.py:601
 msgid "Suco"
 msgstr "Suco (Desa)"
 
-#: .\olretail\payment_forms.py:598
+#: .\olretail\payment_forms.py:602
 msgid "Aldeia"
 msgstr "Aldeia (Dusun)"
 
-#: .\olretail\payment_forms.py:599
+#: .\olretail\payment_forms.py:603
 msgid "Full Address"
 msgstr "Alamat Lengkap"
 
-#: .\olretail\payment_forms.py:600
+#: .\olretail\payment_forms.py:604
 msgid "GPS Latitude"
 msgstr "Lintang GPS"
 
-#: .\olretail\payment_forms.py:601
+#: .\olretail\payment_forms.py:605
 msgid "GPS Longitude"
 msgstr "Bujur GPS"
 
-#: .\olretail\payment_forms.py:607
+#: .\olretail\payment_forms.py:611
 msgid "Select municipality"
 msgstr "Pilih kotamadya"
 
-#: .\olretail\payment_forms.py:621
+#: .\olretail\payment_forms.py:625
 msgid "Business Logo"
 msgstr "Logo Usaha"
 
-#: .\olretail\payment_forms.py:622
+#: .\olretail\payment_forms.py:626
 msgid "Business Cover Image"
 msgstr "Gambar Sampul Usaha"
 
-#: .\olretail\payment_forms.py:656
+#: .\olretail\payment_forms.py:660
 msgid "Opening Hours"
 msgstr "Jam Buka"
 
-#: .\olretail\payment_forms.py:657
+#: .\olretail\payment_forms.py:661
 msgid "Closing Hours"
 msgstr "Jam Tutup"
 
-#: .\olretail\payment_forms.py:658
+#: .\olretail\payment_forms.py:662
 msgid "Delivery Available"
 msgstr "Pengiriman Tersedia"
 
-#: .\olretail\payment_forms.py:659
+#: .\olretail\payment_forms.py:663
 msgid "Pickup Available"
 msgstr "Ambil Sendiri Tersedia"
 
-#: .\olretail\payment_forms.py:660
+#: .\olretail\payment_forms.py:664
 msgid "Cash on Delivery Available"
 msgstr "Bayar di Tempat Tersedia"
 
-#: .\olretail\payment_forms.py:670
+#: .\olretail\payment_forms.py:674
 msgid "Business Registration Document"
 msgstr "Dokumen Registrasi Usaha"
 
-#: .\olretail\payment_forms.py:671
+#: .\olretail\payment_forms.py:675
 msgid "Please upload a photo of your business registration document."
 msgstr "Silakan unggah foto dokumen registrasi usaha Anda."
 
@@ -1740,7 +1740,6 @@ msgstr "Pesanan Anda %(order)s telah dikirim."
 
 #: .\olretail\payment_views.py:1791
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid ""
 "You have been assigned to deliver order %(order)s. Please accept or reject "
 "it."
@@ -1780,20 +1779,17 @@ msgstr "Pesanan ditandai sebagai terkirim."
 
 #: .\olretail\payment_views.py:1965
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "%(courier)s accepted delivery of order %(order)s."
 msgstr "%(courier)s menerima pengiriman untuk pesanan %(order)s."
 
 #: .\olretail\payment_views.py:1969
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "%(courier)s declined to deliver order %(order)s — please reassign it."
 msgstr ""
 "%(courier)s menolak mengantar pesanan %(order)s — silakan tugaskan ke kurir "
 "lain."
 
 #: .\olretail\payment_views.py:1990
-#| msgid "This order has no assigned courier to rate."
 msgid "This order is not assigned to you."
 msgstr "Pesanan ini tidak ditugaskan kepada Anda."
 
@@ -1802,7 +1798,6 @@ msgid "This assignment has already been responded to."
 msgstr "Penugasan ini sudah direspons."
 
 #: .\olretail\payment_views.py:2004
-#| msgid "Delivery fee"
 msgid "Delivery accepted."
 msgstr "Pengiriman diterima."
 
@@ -1811,19 +1806,16 @@ msgid "Delivery rejected — the seller has been notified."
 msgstr "Pengiriman ditolak — penjual telah diberi tahu."
 
 #: .\olretail\payment_views.py:2030
-#| msgid "This order has no assigned courier to rate."
 msgid "This delivery has not been accepted by a courier yet."
 msgstr "Pengiriman ini belum diterima oleh kurir mana pun."
 
 #: .\olretail\payment_views.py:2037
 #, python-format
-#| msgid "Courier is on the way."
 msgid "Picked up by %(courier)s — on the way."
 msgstr "Diambil oleh %(courier)s — dalam perjalanan."
 
 #: .\olretail\payment_views.py:2041
 #, python-format
-#| msgid "Your order %(order)s has been delivered."
 msgid "Your order %(order)s has been picked up and is on the way!"
 msgstr "Pesanan %(order)s Anda telah diambil dan sedang dalam perjalanan!"
 
@@ -2140,7 +2132,7 @@ msgid "Join thousands of buyers and sellers on TimorMart."
 msgstr "Bergabunglah dengan ribuan pembeli dan penjual di TimorMart."
 
 #: .\templates\accounts\register.html:91
-#: .\templates\olretail\seller_payment_settings.html:135
+#: .\templates\olretail\seller_payment_settings.html:141
 msgid "Business Information"
 msgstr "Informasi Bisnis"
 
@@ -2534,7 +2526,7 @@ msgstr "Tambah jumlah"
 
 #: .\templates\olretail\cart.html:67 .\templates\olretail\cart.html:92
 #: .\templates\olretail\courier_availability.html:98
-#: .\templates\olretail\seller_payment_settings.html:95
+#: .\templates\olretail\seller_payment_settings.html:101
 #: .\templates\olretail\wishlist.html:53
 msgid "Remove"
 msgstr "Hapus"
@@ -2625,10 +2617,12 @@ msgid "Your Location"
 msgstr "Lokasi Anda"
 
 #: .\templates\olretail\checkout.html:126
+#: .\templates\olretail\seller_payment_settings.html:206
 msgid "Share my location"
 msgstr "Bagikan lokasi saya"
 
 #: .\templates\olretail\checkout.html:129
+#: .\templates\olretail\seller_payment_settings.html:209
 msgid "Point it on a map"
 msgstr "Tandai di peta"
 
@@ -2701,18 +2695,22 @@ msgid "Submit Bank Transfer"
 msgstr "Kirim Transfer Bank"
 
 #: .\templates\olretail\checkout.html:356
+#: .\templates\olretail\seller_payment_settings.html:353
 msgid "Location set"
 msgstr "Lokasi disimpan"
 
 #: .\templates\olretail\checkout.html:366
+#: .\templates\olretail\seller_payment_settings.html:362
 msgid "Your browser does not support location sharing."
 msgstr "Browser Anda tidak mendukung berbagi lokasi."
 
 #: .\templates\olretail\checkout.html:369
+#: .\templates\olretail\seller_payment_settings.html:365
 msgid "Locating..."
 msgstr "Mencari lokasi..."
 
 #: .\templates\olretail\checkout.html:375
+#: .\templates\olretail\seller_payment_settings.html:371
 msgid "Could not get your location - try pointing it on the map instead."
 msgstr "Tidak dapat memperoleh lokasi Anda — coba tandai di peta."
 
@@ -2752,12 +2750,12 @@ msgstr "Jadwal Anda"
 #: .\templates\olretail\courier_availability.html:88
 #: .\templates\olretail\details.html:253
 #: .\templates\olretail\order_detail.html:380
-#: .\templates\olretail\seller_payment_settings.html:126
-#: .\templates\olretail\seller_payment_settings.html:148
-#: .\templates\olretail\seller_payment_settings.html:173
-#: .\templates\olretail\seller_payment_settings.html:194
-#: .\templates\olretail\seller_payment_settings.html:215
-#: .\templates\olretail\seller_payment_settings.html:241
+#: .\templates\olretail\seller_payment_settings.html:132
+#: .\templates\olretail\seller_payment_settings.html:154
+#: .\templates\olretail\seller_payment_settings.html:179
+#: .\templates\olretail\seller_payment_settings.html:222
+#: .\templates\olretail\seller_payment_settings.html:243
+#: .\templates\olretail\seller_payment_settings.html:269
 msgid "Save"
 msgstr "Simpan"
 
@@ -2783,7 +2781,7 @@ msgid "You're verified and can be assigned deliveries."
 msgstr "Anda telah terverifikasi dan dapat ditugaskan pengiriman."
 
 #: .\templates\olretail\courier_deliveries.html:26
-#: .\templates\olretail\seller_payment_settings.html:258
+#: .\templates\olretail\seller_payment_settings.html:286
 msgid "Awaiting review"
 msgstr "Menunggu tinjauan"
 
@@ -2804,7 +2802,7 @@ msgstr ""
 "ditugaskan pengiriman sampai saat itu."
 
 #: .\templates\olretail\courier_deliveries.html:42
-#: .\templates\olretail\seller_payment_settings.html:269
+#: .\templates\olretail\seller_payment_settings.html:297
 msgid "Submit"
 msgstr "Kirim"
 
@@ -3158,7 +3156,7 @@ msgstr[0] "%(counter)s barang"
 msgstr[1] "%(counter)s barang"
 
 #: .\templates\olretail\index.html:92
-#: .\templates\olretail\seller_payment_settings.html:181
+#: .\templates\olretail\seller_payment_settings.html:187
 msgid "Location"
 msgstr "Lokasi"
 
@@ -3509,18 +3507,15 @@ msgid "Picked up — on the way to the buyer."
 msgstr "Sudah diambil — dalam perjalanan ke pembeli."
 
 #: .\templates\olretail\order_detail.html:263
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "You've been assigned this delivery. Can you pick it up?"
 msgstr ""
 "Anda telah ditugaskan untuk pengiriman ini. Bisakah Anda mengambilnya?"
 
 #: .\templates\olretail\order_detail.html:268
-#| msgid "We accept"
 msgid "Accept"
 msgstr "Terima"
 
 #: .\templates\olretail\order_detail.html:275
-#| msgid "Rejected"
 msgid "Reject"
 msgstr "Tolak"
 
@@ -4189,15 +4184,15 @@ msgid "View your products"
 msgstr "Lihat produk Anda"
 
 #: .\templates\olretail\seller_payment_settings.html:4
-#: .\templates\olretail\seller_payment_settings.html:14
+#: .\templates\olretail\seller_payment_settings.html:20
 msgid "Payment Settings"
 msgstr "Pengaturan Pembayaran"
 
-#: .\templates\olretail\seller_payment_settings.html:21
+#: .\templates\olretail\seller_payment_settings.html:27
 msgid "Bank Accounts"
 msgstr "Rekening Bank"
 
-#: .\templates\olretail\seller_payment_settings.html:25
+#: .\templates\olretail\seller_payment_settings.html:31
 msgid ""
 "Buyers paying by bank transfer see these details to send you the money "
 "directly. Add one account per bank if you have more than one — leave all of "
@@ -4209,39 +4204,53 @@ msgstr ""
 "punya lebih dari satu — kosongkan semuanya dan catatan pembayaran di bawah "
 "untuk menonaktifkan opsi pembayaran ini untuk produk Anda."
 
-#: .\templates\olretail\seller_payment_settings.html:65
+#: .\templates\olretail\seller_payment_settings.html:71
 msgid "Add bank account"
 msgstr "Tambah rekening bank"
 
-#: .\templates\olretail\seller_payment_settings.html:92
+#: .\templates\olretail\seller_payment_settings.html:98
 msgid "Remove this bank account?"
 msgstr "Hapus rekening bank ini?"
 
-#: .\templates\olretail\seller_payment_settings.html:95
+#: .\templates\olretail\seller_payment_settings.html:101
 msgid "Remove bank account"
 msgstr "Hapus rekening bank"
 
-#: .\templates\olretail\seller_payment_settings.html:106
+#: .\templates\olretail\seller_payment_settings.html:112
 msgid "No bank accounts added yet."
 msgstr "Belum ada rekening bank ditambahkan."
 
-#: .\templates\olretail\seller_payment_settings.html:157
+#: .\templates\olretail\seller_payment_settings.html:163
 msgid "Contact Information"
 msgstr "Informasi Kontak"
 
-#: .\templates\olretail\seller_payment_settings.html:202
+#: .\templates\olretail\seller_payment_settings.html:203
+#| msgid "Pickup location"
+msgid "Pickup GPS Location"
+msgstr "Lokasi GPS Pengambilan"
+
+#: .\templates\olretail\seller_payment_settings.html:217
+#| msgid ""
+#| "Helps the courier find you precisely. Optional, but recommended."
+msgid ""
+"Lets a courier route straight to you for pickup. Optional, but recommended."
+msgstr ""
+"Memudahkan kurir menuju langsung ke lokasi Anda untuk pengambilan. Opsional,"
+" tetapi disarankan."
+
+#: .\templates\olretail\seller_payment_settings.html:230
 msgid "Branding"
 msgstr "Branding"
 
-#: .\templates\olretail\seller_payment_settings.html:223
+#: .\templates\olretail\seller_payment_settings.html:251
 msgid "Business Operation"
 msgstr "Operasional Bisnis"
 
-#: .\templates\olretail\seller_payment_settings.html:250
+#: .\templates\olretail\seller_payment_settings.html:278
 msgid "Business Verification"
 msgstr "Verifikasi Usaha"
 
-#: .\templates\olretail\seller_payment_settings.html:252
+#: .\templates\olretail\seller_payment_settings.html:280
 msgid ""
 "Optional — a verified business shows a trust badge to buyers on your "
 "products. Selling and getting paid work the same either way."
@@ -4249,9 +4258,14 @@ msgstr ""
 "Opsional — bisnis terverifikasi menampilkan lencana kepercayaan kepada "
 "pembeli pada produk Anda. Menjual dan menerima pembayaran tetap sama."
 
-#: .\templates\olretail\seller_payment_settings.html:263
+#: .\templates\olretail\seller_payment_settings.html:291
 msgid "Your document was rejected"
 msgstr "Dokumen Anda ditolak"
+
+#: .\templates\olretail\seller_payment_settings.html:393
+#| msgid "Current Status:"
+msgid "Current location:"
+msgstr "Lokasi saat ini:"
 
 #: .\templates\olretail\seller_subscription.html:4
 #: .\templates\olretail\seller_subscription.html:14

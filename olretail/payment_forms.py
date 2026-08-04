@@ -588,8 +588,12 @@ class SellerLocationForm(forms.ModelForm):
             'suco': forms.TextInput(attrs={'class': 'form-control'}),
             'aldeia': forms.TextInput(attrs={'class': 'form-control'}),
             'full_address': forms.TextInput(attrs={'class': 'form-control'}),
-            'gps_latitude': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
-            'gps_longitude': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any'}),
+            # Set via the "Share my location" / "Point it on a map" UI in
+            # seller_payment_settings.html (same Leaflet pattern as
+            # checkout.html's delivery pin), not typed in directly — almost
+            # no one knows their own lat/long off the top of their head.
+            'gps_latitude': forms.HiddenInput(),
+            'gps_longitude': forms.HiddenInput(),
         }
         labels = {
             'municipality': _('Municipality'),

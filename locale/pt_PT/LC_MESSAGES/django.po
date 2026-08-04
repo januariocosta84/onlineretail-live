@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 19:09+0900\n"
+"POT-Creation-Date: 2026-08-04 22:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -605,7 +605,7 @@ msgstr "Verificação Pendente"
 
 #: .\olretail\models.py:19 .\olretail\models.py:151
 #: .\templates\olretail\courier_deliveries.html:23
-#: .\templates\olretail\seller_payment_settings.html:256
+#: .\templates\olretail\seller_payment_settings.html:284
 msgid "Verified"
 msgstr "Verificado"
 
@@ -1013,35 +1013,35 @@ msgstr "Opcional"
 #: .\olretail\payment_forms.py:476
 #: .\templates\olretail\_platform_bank_details.html:7
 #: .\templates\olretail\_seller_bank_details.html:7
-#: .\templates\olretail\seller_payment_settings.html:74
+#: .\templates\olretail\seller_payment_settings.html:80
 msgid "Account Holder Name"
 msgstr "Nome do Titular da Conta"
 
 #: .\olretail\payment_forms.py:477
 #: .\templates\olretail\_platform_bank_details.html:6
 #: .\templates\olretail\_seller_bank_details.html:6
-#: .\templates\olretail\seller_payment_settings.html:75
+#: .\templates\olretail\seller_payment_settings.html:81
 msgid "Bank Name"
 msgstr "Nome do Banco"
 
 #: .\olretail\payment_forms.py:478
 #: .\templates\olretail\_platform_bank_details.html:8
 #: .\templates\olretail\_seller_bank_details.html:8
-#: .\templates\olretail\seller_payment_settings.html:76
+#: .\templates\olretail\seller_payment_settings.html:82
 msgid "Account Number"
 msgstr "Número de Conta"
 
 #: .\olretail\payment_forms.py:479
 #: .\templates\olretail\_platform_bank_details.html:9
 #: .\templates\olretail\_seller_bank_details.html:9
-#: .\templates\olretail\seller_payment_settings.html:77
+#: .\templates\olretail\seller_payment_settings.html:83
 msgid "SWIFT Code"
 msgstr "Código SWIFT"
 
 #: .\olretail\payment_forms.py:480
 #: .\templates\olretail\_platform_bank_details.html:10
 #: .\templates\olretail\_seller_bank_details.html:10
-#: .\templates\olretail\seller_payment_settings.html:78
+#: .\templates\olretail\seller_payment_settings.html:84
 msgid "IBAN"
 msgstr "IBAN"
 
@@ -1099,71 +1099,71 @@ msgstr "Email do diretor"
 msgid "WhatsApp Number"
 msgstr "Número de WhatsApp"
 
-#: .\olretail\payment_forms.py:595
+#: .\olretail\payment_forms.py:599
 msgid "Municipality"
 msgstr "Município"
 
-#: .\olretail\payment_forms.py:596
+#: .\olretail\payment_forms.py:600
 msgid "Administrative Post"
 msgstr "Posto Administrativo"
 
-#: .\olretail\payment_forms.py:597
+#: .\olretail\payment_forms.py:601
 msgid "Suco"
 msgstr "Suco"
 
-#: .\olretail\payment_forms.py:598
+#: .\olretail\payment_forms.py:602
 msgid "Aldeia"
 msgstr "Aldeia"
 
-#: .\olretail\payment_forms.py:599
+#: .\olretail\payment_forms.py:603
 msgid "Full Address"
 msgstr "Morada Completa"
 
-#: .\olretail\payment_forms.py:600
+#: .\olretail\payment_forms.py:604
 msgid "GPS Latitude"
 msgstr "Latitude GPS"
 
-#: .\olretail\payment_forms.py:601
+#: .\olretail\payment_forms.py:605
 msgid "GPS Longitude"
 msgstr "Longitude GPS"
 
-#: .\olretail\payment_forms.py:607
+#: .\olretail\payment_forms.py:611
 msgid "Select municipality"
 msgstr "Selecione o município"
 
-#: .\olretail\payment_forms.py:621
+#: .\olretail\payment_forms.py:625
 msgid "Business Logo"
 msgstr "Logótipo do Negócio"
 
-#: .\olretail\payment_forms.py:622
+#: .\olretail\payment_forms.py:626
 msgid "Business Cover Image"
 msgstr "Imagem de Capa do Negócio"
 
-#: .\olretail\payment_forms.py:656
+#: .\olretail\payment_forms.py:660
 msgid "Opening Hours"
 msgstr "Horário de Abertura"
 
-#: .\olretail\payment_forms.py:657
+#: .\olretail\payment_forms.py:661
 msgid "Closing Hours"
 msgstr "Horário de Encerramento"
 
-#: .\olretail\payment_forms.py:658
+#: .\olretail\payment_forms.py:662
 msgid "Delivery Available"
 msgstr "Entrega Disponível"
 
-#: .\olretail\payment_forms.py:659
+#: .\olretail\payment_forms.py:663
 msgid "Pickup Available"
 msgstr "Levantamento Disponível"
 
-#: .\olretail\payment_forms.py:660
+#: .\olretail\payment_forms.py:664
 msgid "Cash on Delivery Available"
 msgstr "Pagamento na Entrega Disponível"
 
-#: .\olretail\payment_forms.py:670
+#: .\olretail\payment_forms.py:674
 msgid "Business Registration Document"
 msgstr "Documento de Registo Comercial"
 
-#: .\olretail\payment_forms.py:671
+#: .\olretail\payment_forms.py:675
 msgid "Please upload a photo of your business registration document."
 msgstr ""
 "Por favor carregue uma fotografia do seu documento de registo comercial."
@@ -1747,7 +1747,6 @@ msgstr "A sua encomenda %(order)s foi enviada."
 
 #: .\olretail\payment_views.py:1791
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid ""
 "You have been assigned to deliver order %(order)s. Please accept or reject "
 "it."
@@ -1786,19 +1785,16 @@ msgstr "Encomenda marcada como entregue."
 
 #: .\olretail\payment_views.py:1965
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "%(courier)s accepted delivery of order %(order)s."
 msgstr "%(courier)s aceitou a entrega da encomenda %(order)s."
 
 #: .\olretail\payment_views.py:1969
 #, python-format
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "%(courier)s declined to deliver order %(order)s — please reassign it."
 msgstr ""
 "%(courier)s recusou entregar a encomenda %(order)s — por favor, reatribua-a."
 
 #: .\olretail\payment_views.py:1990
-#| msgid "This order has no assigned courier to rate."
 msgid "This order is not assigned to you."
 msgstr "Esta encomenda não lhe está atribuída."
 
@@ -1807,7 +1803,6 @@ msgid "This assignment has already been responded to."
 msgstr "Já foi dada uma resposta a esta atribuição."
 
 #: .\olretail\payment_views.py:2004
-#| msgid "Delivery fee"
 msgid "Delivery accepted."
 msgstr "Entrega aceite."
 
@@ -1816,19 +1811,16 @@ msgid "Delivery rejected — the seller has been notified."
 msgstr "Entrega recusada — o vendedor foi notificado."
 
 #: .\olretail\payment_views.py:2030
-#| msgid "This order has no assigned courier to rate."
 msgid "This delivery has not been accepted by a courier yet."
 msgstr "Esta entrega ainda não foi aceite por nenhum estafeta."
 
 #: .\olretail\payment_views.py:2037
 #, python-format
-#| msgid "Courier is on the way."
 msgid "Picked up by %(courier)s — on the way."
 msgstr "Recolhida por %(courier)s — a caminho."
 
 #: .\olretail\payment_views.py:2041
 #, python-format
-#| msgid "Your order %(order)s has been delivered."
 msgid "Your order %(order)s has been picked up and is on the way!"
 msgstr "A sua encomenda %(order)s foi recolhida e está a caminho!"
 
@@ -2149,7 +2141,7 @@ msgid "Join thousands of buyers and sellers on TimorMart."
 msgstr "Junte-se a milhares de compradores e vendedores no TimorMart."
 
 #: .\templates\accounts\register.html:91
-#: .\templates\olretail\seller_payment_settings.html:135
+#: .\templates\olretail\seller_payment_settings.html:141
 msgid "Business Information"
 msgstr "Informação Comercial"
 
@@ -2548,7 +2540,7 @@ msgstr "Aumentar quantidade"
 
 #: .\templates\olretail\cart.html:67 .\templates\olretail\cart.html:92
 #: .\templates\olretail\courier_availability.html:98
-#: .\templates\olretail\seller_payment_settings.html:95
+#: .\templates\olretail\seller_payment_settings.html:101
 #: .\templates\olretail\wishlist.html:53
 msgid "Remove"
 msgstr "Remover"
@@ -2640,10 +2632,12 @@ msgid "Your Location"
 msgstr "A Sua Localização"
 
 #: .\templates\olretail\checkout.html:126
+#: .\templates\olretail\seller_payment_settings.html:206
 msgid "Share my location"
 msgstr "Partilhar a minha localização"
 
 #: .\templates\olretail\checkout.html:129
+#: .\templates\olretail\seller_payment_settings.html:209
 msgid "Point it on a map"
 msgstr "Marcar no mapa"
 
@@ -2716,18 +2710,22 @@ msgid "Submit Bank Transfer"
 msgstr "Submeter Transferência Bancária"
 
 #: .\templates\olretail\checkout.html:356
+#: .\templates\olretail\seller_payment_settings.html:353
 msgid "Location set"
 msgstr "Localização definida"
 
 #: .\templates\olretail\checkout.html:366
+#: .\templates\olretail\seller_payment_settings.html:362
 msgid "Your browser does not support location sharing."
 msgstr "O seu navegador não suporta partilha de localização."
 
 #: .\templates\olretail\checkout.html:369
+#: .\templates\olretail\seller_payment_settings.html:365
 msgid "Locating..."
 msgstr "A localizar..."
 
 #: .\templates\olretail\checkout.html:375
+#: .\templates\olretail\seller_payment_settings.html:371
 msgid "Could not get your location - try pointing it on the map instead."
 msgstr "Não foi possível obter a sua localização — tente marcá-la no mapa."
 
@@ -2767,12 +2765,12 @@ msgstr "O seu horário"
 #: .\templates\olretail\courier_availability.html:88
 #: .\templates\olretail\details.html:253
 #: .\templates\olretail\order_detail.html:380
-#: .\templates\olretail\seller_payment_settings.html:126
-#: .\templates\olretail\seller_payment_settings.html:148
-#: .\templates\olretail\seller_payment_settings.html:173
-#: .\templates\olretail\seller_payment_settings.html:194
-#: .\templates\olretail\seller_payment_settings.html:215
-#: .\templates\olretail\seller_payment_settings.html:241
+#: .\templates\olretail\seller_payment_settings.html:132
+#: .\templates\olretail\seller_payment_settings.html:154
+#: .\templates\olretail\seller_payment_settings.html:179
+#: .\templates\olretail\seller_payment_settings.html:222
+#: .\templates\olretail\seller_payment_settings.html:243
+#: .\templates\olretail\seller_payment_settings.html:269
 msgid "Save"
 msgstr "Guardar"
 
@@ -2798,7 +2796,7 @@ msgid "You're verified and can be assigned deliveries."
 msgstr "Está verificado e pode ser designado para entregas."
 
 #: .\templates\olretail\courier_deliveries.html:26
-#: .\templates\olretail\seller_payment_settings.html:258
+#: .\templates\olretail\seller_payment_settings.html:286
 msgid "Awaiting review"
 msgstr "A aguardar revisão"
 
@@ -2819,7 +2817,7 @@ msgstr ""
 " — não pode ser designado para entregas até lá."
 
 #: .\templates\olretail\courier_deliveries.html:42
-#: .\templates\olretail\seller_payment_settings.html:269
+#: .\templates\olretail\seller_payment_settings.html:297
 msgid "Submit"
 msgstr "Submeter"
 
@@ -3175,7 +3173,7 @@ msgstr[0] "%(counter)s artigo"
 msgstr[1] "%(counter)s artigos"
 
 #: .\templates\olretail\index.html:92
-#: .\templates\olretail\seller_payment_settings.html:181
+#: .\templates\olretail\seller_payment_settings.html:187
 msgid "Location"
 msgstr "Localização"
 
@@ -3528,17 +3526,14 @@ msgid "Picked up — on the way to the buyer."
 msgstr "Recolhida — a caminho do comprador."
 
 #: .\templates\olretail\order_detail.html:263
-#| msgid "You have been assigned to deliver order %(order)s."
 msgid "You've been assigned this delivery. Can you pick it up?"
 msgstr "Foi-lhe atribuída esta entrega. Pode recolhê-la?"
 
 #: .\templates\olretail\order_detail.html:268
-#| msgid "We accept"
 msgid "Accept"
 msgstr "Aceitar"
 
 #: .\templates\olretail\order_detail.html:275
-#| msgid "Rejected"
 msgid "Reject"
 msgstr "Rejeitar"
 
@@ -4205,15 +4200,15 @@ msgid "View your products"
 msgstr "Ver os seus produtos"
 
 #: .\templates\olretail\seller_payment_settings.html:4
-#: .\templates\olretail\seller_payment_settings.html:14
+#: .\templates\olretail\seller_payment_settings.html:20
 msgid "Payment Settings"
 msgstr "Definições de Pagamento"
 
-#: .\templates\olretail\seller_payment_settings.html:21
+#: .\templates\olretail\seller_payment_settings.html:27
 msgid "Bank Accounts"
 msgstr "Contas Bancárias"
 
-#: .\templates\olretail\seller_payment_settings.html:25
+#: .\templates\olretail\seller_payment_settings.html:31
 msgid ""
 "Buyers paying by bank transfer see these details to send you the money "
 "directly. Add one account per bank if you have more than one — leave all of "
@@ -4225,39 +4220,53 @@ msgstr ""
 "mais do que uma — deixe tudo e as notas de pagamento abaixo em branco para "
 "desativar esta opção de pagamento para os seus produtos."
 
-#: .\templates\olretail\seller_payment_settings.html:65
+#: .\templates\olretail\seller_payment_settings.html:71
 msgid "Add bank account"
 msgstr "Adicionar conta bancária"
 
-#: .\templates\olretail\seller_payment_settings.html:92
+#: .\templates\olretail\seller_payment_settings.html:98
 msgid "Remove this bank account?"
 msgstr "Remover esta conta bancária?"
 
-#: .\templates\olretail\seller_payment_settings.html:95
+#: .\templates\olretail\seller_payment_settings.html:101
 msgid "Remove bank account"
 msgstr "Remover conta bancária"
 
-#: .\templates\olretail\seller_payment_settings.html:106
+#: .\templates\olretail\seller_payment_settings.html:112
 msgid "No bank accounts added yet."
 msgstr "Ainda sem contas bancárias adicionadas."
 
-#: .\templates\olretail\seller_payment_settings.html:157
+#: .\templates\olretail\seller_payment_settings.html:163
 msgid "Contact Information"
 msgstr "Informação de Contacto"
 
-#: .\templates\olretail\seller_payment_settings.html:202
+#: .\templates\olretail\seller_payment_settings.html:203
+#| msgid "Pickup location"
+msgid "Pickup GPS Location"
+msgstr "Localização GPS de Recolha"
+
+#: .\templates\olretail\seller_payment_settings.html:217
+#| msgid ""
+#| "Helps the courier find you precisely. Optional, but recommended."
+msgid ""
+"Lets a courier route straight to you for pickup. Optional, but recommended."
+msgstr ""
+"Permite que um estafeta trace a rota diretamente até si para a recolha. "
+"Opcional, mas recomendado."
+
+#: .\templates\olretail\seller_payment_settings.html:230
 msgid "Branding"
 msgstr "Identidade Visual"
 
-#: .\templates\olretail\seller_payment_settings.html:223
+#: .\templates\olretail\seller_payment_settings.html:251
 msgid "Business Operation"
 msgstr "Operação do Negócio"
 
-#: .\templates\olretail\seller_payment_settings.html:250
+#: .\templates\olretail\seller_payment_settings.html:278
 msgid "Business Verification"
 msgstr "Verificação Comercial"
 
-#: .\templates\olretail\seller_payment_settings.html:252
+#: .\templates\olretail\seller_payment_settings.html:280
 msgid ""
 "Optional — a verified business shows a trust badge to buyers on your "
 "products. Selling and getting paid work the same either way."
@@ -4266,9 +4275,14 @@ msgstr ""
 "compradores nos seus produtos. Vender e receber pagamentos funciona da mesma"
 " forma."
 
-#: .\templates\olretail\seller_payment_settings.html:263
+#: .\templates\olretail\seller_payment_settings.html:291
 msgid "Your document was rejected"
 msgstr "O seu documento foi rejeitado"
+
+#: .\templates\olretail\seller_payment_settings.html:393
+#| msgid "Current Status:"
+msgid "Current location:"
+msgstr "Localização atual:"
 
 #: .\templates\olretail\seller_subscription.html:4
 #: .\templates\olretail\seller_subscription.html:14

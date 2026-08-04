@@ -3,6 +3,12 @@
 
 {% block title %}{% trans "Payment Settings" %} | TimorMart{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<style>#seller-location-map { height: 260px; border-radius: 4px; }</style>
+{% endblock %}
+
 {% block content %}
 <main class="py-5">
   <div class="container-fluid">
@@ -182,6 +188,7 @@
             <form method="post" action="{% url 'olretail:seller_location' %}" novalidate>
               {% csrf_token %}
               {% for field in location_form %}
+              {% if field.name != 'gps_latitude' and field.name != 'gps_longitude' %}
               <div class="form-group">
                 <label for="{{ field.id_for_label }}" class="font-weight-bold">{{ field.label }}</label>
                 {{ field }}
@@ -189,7 +196,28 @@
                   <small class="form-text text-danger d-block mt-1">{{ field.errors }}</small>
                 {% endif %}
               </div>
+              {% endif %}
               {% endfor %}
+
+              <div class="form-group">
+                <label class="font-weight-bold">{% trans "Pickup GPS Location" %}</label>
+                <div>
+                  <button type="button" id="seller-share-location-btn" class="btn btn-outline-primary btn-sm mr-2">
+                    <i class="fas fa-location-arrow mr-1" aria-hidden="true"></i>{% trans "Share my location" %}
+                  </button>
+                  <button type="button" id="seller-pick-on-map-btn" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-map-marked-alt mr-1" aria-hidden="true"></i>{% trans "Point it on a map" %}
+                  </button>
+                </div>
+                <div id="seller-location-status" class="small text-muted mt-2"></div>
+                <div id="seller-location-map" class="d-none mt-2"></div>
+                {{ location_form.gps_latitude }}
+                {{ location_form.gps_longitude }}
+                <small class="form-text text-muted">
+                  {% trans "Lets a courier route straight to you for pickup. Optional, but recommended." %}
+                </small>
+              </div>
+
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save mr-1"></i>{% trans "Save" %}
               </button>
@@ -279,4 +307,91 @@
     </div>
   </div>
 </main>
+
+<script>
+(function () {
+  'use strict';
+  var shareBtn = document.getElementById('seller-share-location-btn');
+  var pickBtn = document.getElementById('seller-pick-on-map-btn');
+  var statusEl = document.getElementById('seller-location-status');
+  var mapContainer = document.getElementById('seller-location-map');
+  var latInput = document.getElementById('{{ location_form.gps_latitude.id_for_label }}');
+  var lngInput = document.getElementById('{{ location_form.gps_longitude.id_for_label }}');
+
+  var DEFAULT_CENTER = [-8.5569, 125.5603]; // Dili, Timor-Leste
+  var map = null;
+  var marker = null;
+
+  function ensureMap(center) {
+    mapContainer.classList.remove('d-none');
+    if (!map) {
+      map = L.map(mapContainer).setView(center, 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+      marker = L.marker(center, { draggable: true }).addTo(map);
+      marker.on('dragend', function () {
+        var pos = marker.getLatLng();
+        setLocation(pos.lat, pos.lng, false);
+      });
+      map.on('click', function (e) {
+        marker.setLatLng(e.latlng);
+        setLocation(e.latlng.lat, e.latlng.lng, false);
+      });
+    } else {
+      map.setView(center, 15);
+      marker.setLatLng(center);
+    }
+    setTimeout(function () { map.invalidateSize(); }, 100);
+  }
+
+  function setLocation(lat, lng, recenterMap) {
+    latInput.value = lat.toFixed(6);
+    lngInput.value = lng.toFixed(6);
+    statusEl.innerHTML = '<i class="fas fa-check-circle text-success mr-1" aria-hidden="true"></i>' +
+      '{% trans "Location set" %} (' + lat.toFixed(5) + ', ' + lng.toFixed(5) + ')';
+    if (recenterMap) {
+      ensureMap([lat, lng]);
+    }
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function () {
+      if (!navigator.geolocation) {
+        statusEl.textContent = '{% trans "Your browser does not support location sharing." %}';
+        return;
+      }
+      statusEl.textContent = '{% trans "Locating..." %}';
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          setLocation(pos.coords.latitude, pos.coords.longitude, true);
+        },
+        function () {
+          statusEl.textContent = '{% trans "Could not get your location - try pointing it on the map instead." %}';
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+  }
+
+  if (pickBtn) {
+    pickBtn.addEventListener('click', function () {
+      var current = (latInput.value && lngInput.value)
+        ? [parseFloat(latInput.value), parseFloat(lngInput.value)]
+        : DEFAULT_CENTER;
+      ensureMap(current);
+    });
+  }
+
+  // Already-saved location — show it without forcing the map open, same
+  // as a fresh "Location set" confirmation, so editing an existing pin
+  // isn't a blank slate.
+  if (latInput.value && lngInput.value) {
+    var lat = parseFloat(latInput.value), lng = parseFloat(lngInput.value);
+    statusEl.innerHTML = '<i class="fas fa-map-marker-alt mr-1" aria-hidden="true"></i>' +
+      '{% trans "Current location:" %} (' + lat.toFixed(5) + ', ' + lng.toFixed(5) + ')';
+  }
+})();
+</script>
 {% endblock %}
