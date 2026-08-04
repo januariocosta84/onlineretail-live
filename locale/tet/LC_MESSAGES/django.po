@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TimorMart\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 15:09+0900\n"
+"POT-Creation-Date: 2026-08-04 15:16+0900\n"
 "PO-Revision-Date: 2026-07-12 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: Tetum\n"
@@ -3776,6 +3776,168 @@ msgstr "La kompletu"
 msgid "Completed"
 msgstr "Kompletu"
 
+#: .\templates\olretail\refund_policy.html:4
+#: .\templates\olretail\refund_policy.html:12
+#: .\templates\shared\footer.html:23
+msgid "Refund Policy"
+msgstr "Política Reembolsa"
+
+#: .\templates\olretail\refund_policy.html:5
+msgid "How refunds work on TimorMart, and how to request one."
+msgstr "Oinsá reembolsu funsiona iha TimorMart, no oinsá atu husu ida."
+
+#: .\templates\olretail\refund_policy.html:13
+#: .\templates\olretail\terms_of_service.html:13
+msgid "Last updated:"
+msgstr "Aktualiza ikus:"
+
+#: .\templates\olretail\refund_policy.html:17
+#| msgid ""
+#| "This document must be reviewed by a qualified lawyer before being relied on "
+#| "as a binding legal document."
+msgid ""
+"This is a working draft describing how TimorMart actually operates today. It"
+" has not been reviewed by a lawyer qualified in Timor-Leste, and should be "
+"before it's relied on as a binding legal document."
+msgstr ""
+"Ida ne'e mak esbosu servisu ne'ebé deskreve oinsá TimorMart opera realmente "
+"ohin loron. Seidauk halo reviza husi advogadu kualifikadu iha Timor-Leste, "
+"no tenke halo ida ne'e antes ita fiar nu'udar dokumentu legal ne'ebé iha "
+"forsa."
+
+#: .\templates\olretail\refund_policy.html:27
+msgid "This Policy Only Covers Bank Transfer Orders"
+msgstr "Política Ida Ne'e Kobre Deit Pedidu Transferénsia Banku"
+
+#: .\templates\olretail\refund_policy.html:29
+msgid ""
+"TimorMart only holds your money when you pay by <strong>Bank "
+"Transfer</strong> — that's the only case a refund from TimorMart is "
+"possible. If you paid by <strong>Cash on Delivery</strong>, you paid the "
+"seller or courier directly in person, and TimorMart never held that money — "
+"a refund in that case has to be arranged directly with the seller or "
+"courier, not through TimorMart."
+msgstr ""
+"TimorMart kaer deit ita-nia osan bainhira ita selu liuhusi "
+"<strong>Transferénsia Banku</strong> — ne'e mak deit kazu ida ne'ebé "
+"reembolsu husi TimorMart posivel. Se ita selu liuhusi <strong>Cash on "
+"Delivery</strong>, ita selu diretamente ba seller ka entregadór iha pesoa, "
+"no TimorMart nunka kaer osan ne'e — reembolsu iha kazu ne'e tenke halo "
+"diretamente ho seller ka entregadór, la'ós liuhusi TimorMart."
+
+#: .\templates\olretail\refund_policy.html:36
+msgid "When You Can Ask for a Refund"
+msgstr "Bainhira Ita Bele Husu Reembolsu"
+
+#: .\templates\olretail\refund_policy.html:38
+msgid "Your order never arrived, past its estimated delivery date"
+msgstr "Ita-nia pedidu la to'o, liu ona data entrega estimadu"
+
+#: .\templates\olretail\refund_policy.html:39
+msgid ""
+"What arrived was damaged, or significantly different from the listing (wrong"
+" item, wrong condition)"
+msgstr ""
+"Buat ne'ebé to'o estraga, ka diferente signifikativamente husi lista (item "
+"sala, kondisaun sala)"
+
+#: .\templates\olretail\refund_policy.html:40
+msgid ""
+"You cancelled before your payment was confirmed (see the Terms of Service — "
+"this is a straightforward cancellation, not a dispute)"
+msgstr ""
+"Ita kansela antes ita-nia pagamentu konfirma (haree Termu no Kondisaun — ida"
+" ne'e kansela simples, la'ós disputa)"
+
+#: .\templates\olretail\refund_policy.html:47
+msgid "How to Request One"
+msgstr "Oinsá Atu Husu Ida"
+
+#: .\templates\olretail\refund_policy.html:49
+msgid ""
+"Open a dispute on the order from your order history, describing the problem "
+"— photos help."
+msgstr ""
+"Loke disputa ba pedidu husi ita-nia históriku pedidu, deskreve problema — "
+"foto ajuda."
+
+#: .\templates\olretail\refund_policy.html:50
+#| msgid "The seller has 3 days to respond."
+msgid "The seller has 3 days to respond with their side."
+msgstr "Seller iha loron 3 atu responde ho nia lado."
+
+#: .\templates\olretail\refund_policy.html:51
+msgid ""
+"A TimorMart administrator reviews everything submitted and makes the final "
+"decision — approving a refund, arranging a reshipment, or closing the "
+"dispute with no action."
+msgstr ""
+"Administrador TimorMart sei analiza buat hotu ne'ebé submete no halo "
+"desizaun final — aprova reembolsu, organiza haruka fila fali, ka taka "
+"disputa hodi la halo asaun."
+
+#: .\templates\olretail\refund_policy.html:58
+msgid "How a Refund Is Paid"
+msgstr "Oinsá Reembolsu Selu"
+
+#: .\templates\olretail\refund_policy.html:60
+msgid ""
+"An approved refund returns the full amount you paid for that order to your "
+"bank account. TimorMart currently processes refunds as a full amount per "
+"order, not a partial one. If the order had already been marked delivered and"
+" the seller (or courier) had already been credited for it, that credit is "
+"reversed at the same time so the platform's own books stay correct — this "
+"doesn't affect how much you get back."
+msgstr ""
+"Reembolsu ne'ebé aprova sei fila montante tomak ne'ebé ita selu ba pedidu "
+"ne'e ba ita-nia konta banku. TimorMart agora daudaun prosesa reembolsu "
+"hanesan montante tomak ba pedidu ida-idak, la'ós parte deit. Se pedidu ne'e "
+"marka ona entrega no seller (ka entregadór) simu ona kréditu ba ne'e, "
+"kréditu ne'e sei reverte iha tempu hanesan atu buku plataforma nian sai "
+"loloos — ida ne'e la afeta kuantu ita simu fila."
+
+#: .\templates\olretail\refund_policy.html:67
+msgid "What's Not Covered"
+msgstr "Saida Mak La Kobre"
+
+#: .\templates\olretail\refund_policy.html:69
+msgid ""
+"Simply changing your mind after a correctly-described item has already been "
+"delivered"
+msgstr "Simplesmente muda hanoin depois item ne'ebé deskreve loos ona entrega"
+
+#: .\templates\olretail\refund_policy.html:70
+msgid ""
+"Cash on Delivery orders — see above, arrange this with the seller/courier "
+"directly"
+msgstr ""
+"Pedidu Cash on Delivery — haree leten, organiza ida ne'e diretamente ho "
+"seller/entregadór"
+
+#: .\templates\olretail\refund_policy.html:71
+msgid ""
+"A dispute opened after unreasonable delay, where the delay itself makes the "
+"claim impossible to verify"
+msgstr ""
+"Disputa ne'ebé loke depois atrasu la razoável, ne'ebé atrasu rasik halo "
+"alegasaun la bele verifika"
+
+#: .\templates\olretail\refund_policy.html:78
+#| msgid "Menu Sections"
+msgid "Questions?"
+msgstr "Iha Pergunta?"
+
+#: .\templates\olretail\refund_policy.html:80
+#, fuzzy
+#| msgid "Chat on WhatsApp"
+msgid "Reach us on WhatsApp at"
+msgstr "Konversa iha WhatsApp"
+
+#: .\templates\olretail\refund_policy.html:82
+#| msgid "You can open a dispute on that order."
+msgid "or open a dispute directly on the order in question."
+msgstr "ka loke disputa diretamente ba pedidu ne'ebé koalia kona-ba."
+
 #: .\templates\olretail\seller_balance.html:4
 #: .\templates\olretail\seller_balance.html:12
 #: .\templates\olretail\seller_orders.html:17
@@ -4059,10 +4221,6 @@ msgid "The terms that govern using TimorMart as a buyer, seller, or courier."
 msgstr ""
 "Termu sira ne'ebé governa uza TimorMart hanesan sosa-na'in, fa'an-na'in, ka "
 "entregadór."
-
-#: .\templates\olretail\terms_of_service.html:13
-msgid "Last updated:"
-msgstr "Aktualiza ikus:"
 
 #: .\templates\olretail\terms_of_service.html:17
 msgid "Important note:"
@@ -4630,11 +4788,6 @@ msgstr "Hahú haree"
 #: .\templates\shared\base.html:89
 msgid "Skip to main content"
 msgstr "Salta ba konteúdu prinsipál"
-
-#: .\templates\shared\footer.html:23
-#| msgid "Refund"
-msgid "Refund Policy"
-msgstr "Política Reembolsa"
 
 #: .\templates\shared\footer.html:40
 msgid "We accept"

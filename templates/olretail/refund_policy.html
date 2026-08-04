@@ -1,22 +1,20 @@
 {% extends 'shared/base.html' %}
 {% load i18n %}
 
-{% block title %}Refund Policy — TimorMart{% endblock %}
-{% block meta_description %}How refunds work on TimorMart, and how to request one.{% endblock %}
+{% block title %}{% trans "Refund Policy" %} — TimorMart{% endblock %}
+{% block meta_description %}{% trans "How refunds work on TimorMart, and how to request one." %}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 
   <div class="row justify-content-center">
     <div class="col-lg-9 py-4">
-      <h1 class="h3 font-weight-bold mb-2">Refund Policy</h1>
-      <p class="text-muted">Last updated: {% now "F j, Y" %}</p>
+      <h1 class="h3 font-weight-bold mb-2">{% trans "Refund Policy" %}</h1>
+      <p class="text-muted">{% trans "Last updated:" %} {% now "F j, Y" %}</p>
 
       <div class="alert alert-warning">
         <i class="fas fa-exclamation-triangle mr-2" aria-hidden="true"></i>
-        This is a working draft describing how TimorMart actually operates today. It has not been
-        reviewed by a lawyer qualified in Timor-Leste, and should be before it's relied on as a binding
-        legal document.
+        {% blocktrans %}This is a working draft describing how TimorMart actually operates today. It has not been reviewed by a lawyer qualified in Timor-Leste, and should be before it's relied on as a binding legal document.{% endblocktrans %}
       </div>
     </div>
   </div>
@@ -26,70 +24,62 @@
 
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">This Policy Only Covers Bank Transfer Orders</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "This Policy Only Covers Bank Transfer Orders" %}</h2>
           <p class="text-justify mb-0">
-            TimorMart only holds your money when you pay by <strong>Bank Transfer</strong> — that's the
-            only case a refund from TimorMart is possible. If you paid by <strong>Cash on Delivery</strong>,
-            you paid the seller or courier directly in person, and TimorMart never held that money — a
-            refund in that case has to be arranged directly with the seller or courier, not through
-            TimorMart.
+            {% blocktrans %}TimorMart only holds your money when you pay by <strong>Bank Transfer</strong> — that's the only case a refund from TimorMart is possible. If you paid by <strong>Cash on Delivery</strong>, you paid the seller or courier directly in person, and TimorMart never held that money — a refund in that case has to be arranged directly with the seller or courier, not through TimorMart.{% endblocktrans %}
           </p>
         </div>
       </div>
 
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">When You Can Ask for a Refund</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "When You Can Ask for a Refund" %}</h2>
           <ul class="mb-0">
-            <li class="mb-2">Your order never arrived, past its estimated delivery date</li>
-            <li class="mb-2">What arrived was damaged, or significantly different from the listing (wrong item, wrong condition)</li>
-            <li class="mb-0">You cancelled before your payment was confirmed (see the Terms of Service — this is a straightforward cancellation, not a dispute)</li>
+            <li class="mb-2">{% trans "Your order never arrived, past its estimated delivery date" %}</li>
+            <li class="mb-2">{% trans "What arrived was damaged, or significantly different from the listing (wrong item, wrong condition)" %}</li>
+            <li class="mb-0">{% trans "You cancelled before your payment was confirmed (see the Terms of Service — this is a straightforward cancellation, not a dispute)" %}</li>
           </ul>
         </div>
       </div>
 
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">How to Request One</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "How to Request One" %}</h2>
           <ol class="mb-0">
-            <li class="mb-2">Open a dispute on the order from your order history, describing the problem — photos help.</li>
-            <li class="mb-2">The seller has 3 days to respond with their side.</li>
-            <li class="mb-0">A TimorMart administrator reviews everything submitted and makes the final decision — approving a refund, arranging a reshipment, or closing the dispute with no action.</li>
+            <li class="mb-2">{% trans "Open a dispute on the order from your order history, describing the problem — photos help." %}</li>
+            <li class="mb-2">{% trans "The seller has 3 days to respond with their side." %}</li>
+            <li class="mb-0">{% trans "A TimorMart administrator reviews everything submitted and makes the final decision — approving a refund, arranging a reshipment, or closing the dispute with no action." %}</li>
           </ol>
         </div>
       </div>
 
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">How a Refund Is Paid</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "How a Refund Is Paid" %}</h2>
           <p class="text-justify mb-0">
-            An approved refund returns the full amount you paid for that order to your bank account.
-            TimorMart currently processes refunds as a full amount per order, not a partial one. If the
-            order had already been marked delivered and the seller (or courier) had already been credited
-            for it, that credit is reversed at the same time so the platform's own books stay correct —
-            this doesn't affect how much you get back.
+            {% blocktrans %}An approved refund returns the full amount you paid for that order to your bank account. TimorMart currently processes refunds as a full amount per order, not a partial one. If the order had already been marked delivered and the seller (or courier) had already been credited for it, that credit is reversed at the same time so the platform's own books stay correct — this doesn't affect how much you get back.{% endblocktrans %}
           </p>
         </div>
       </div>
 
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">What's Not Covered</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "What's Not Covered" %}</h2>
           <ul class="mb-0">
-            <li class="mb-2">Simply changing your mind after a correctly-described item has already been delivered</li>
-            <li class="mb-2">Cash on Delivery orders — see above, arrange this with the seller/courier directly</li>
-            <li class="mb-0">A dispute opened after unreasonable delay, where the delay itself makes the claim impossible to verify</li>
+            <li class="mb-2">{% trans "Simply changing your mind after a correctly-described item has already been delivered" %}</li>
+            <li class="mb-2">{% trans "Cash on Delivery orders — see above, arrange this with the seller/courier directly" %}</li>
+            <li class="mb-0">{% trans "A dispute opened after unreasonable delay, where the delay itself makes the claim impossible to verify" %}</li>
           </ul>
         </div>
       </div>
 
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-          <h2 class="h5 page-header-bar mb-3">Questions?</h2>
+          <h2 class="h5 page-header-bar mb-3">{% trans "Questions?" %}</h2>
           <p class="text-justify mb-0">
-            Reach us on WhatsApp at
+            {% trans "Reach us on WhatsApp at" %}
             <a href="https://wa.me/67077121173" target="_blank" rel="noopener">+670 7712 1173</a>,
-            or open a dispute directly on the order in question.
+            {% trans "or open a dispute directly on the order in question." %}
           </p>
         </div>
       </div>

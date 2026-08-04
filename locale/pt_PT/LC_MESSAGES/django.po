@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 15:09+0900\n"
+"POT-Creation-Date: 2026-08-04 15:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3786,6 +3786,169 @@ msgstr "Incompleto"
 msgid "Completed"
 msgstr "Concluído"
 
+#: .\templates\olretail\refund_policy.html:4
+#: .\templates\olretail\refund_policy.html:12
+#: .\templates\shared\footer.html:23
+msgid "Refund Policy"
+msgstr "Política de Reembolso"
+
+#: .\templates\olretail\refund_policy.html:5
+msgid "How refunds work on TimorMart, and how to request one."
+msgstr "Como funcionam os reembolsos na TimorMart, e como solicitar um."
+
+#: .\templates\olretail\refund_policy.html:13
+#: .\templates\olretail\terms_of_service.html:13
+msgid "Last updated:"
+msgstr "Última atualização:"
+
+#: .\templates\olretail\refund_policy.html:17
+#| msgid ""
+#| "This document must be reviewed by a qualified lawyer before being relied on "
+#| "as a binding legal document."
+msgid ""
+"This is a working draft describing how TimorMart actually operates today. It"
+" has not been reviewed by a lawyer qualified in Timor-Leste, and should be "
+"before it's relied on as a binding legal document."
+msgstr ""
+"Este é um rascunho de trabalho que descreve como a TimorMart funciona "
+"atualmente. Não foi revisto por um advogado qualificado em Timor-Leste, e "
+"deve sê-lo antes de ser considerado um documento legal vinculativo."
+
+#: .\templates\olretail\refund_policy.html:27
+msgid "This Policy Only Covers Bank Transfer Orders"
+msgstr "Esta Política Abrange Apenas Encomendas por Transferência Bancária"
+
+#: .\templates\olretail\refund_policy.html:29
+msgid ""
+"TimorMart only holds your money when you pay by <strong>Bank "
+"Transfer</strong> — that's the only case a refund from TimorMart is "
+"possible. If you paid by <strong>Cash on Delivery</strong>, you paid the "
+"seller or courier directly in person, and TimorMart never held that money — "
+"a refund in that case has to be arranged directly with the seller or "
+"courier, not through TimorMart."
+msgstr ""
+"A TimorMart só retém o seu dinheiro quando paga por <strong>Transferência "
+"Bancária</strong> — esse é o único caso em que um reembolso da TimorMart é "
+"possível. Se pagou por <strong>Pagamento na Entrega</strong>, pagou "
+"diretamente ao vendedor ou estafeta em pessoa, e a TimorMart nunca reteve "
+"esse dinheiro — nesse caso, o reembolso tem de ser combinado diretamente com"
+" o vendedor ou estafeta, e não através da TimorMart."
+
+#: .\templates\olretail\refund_policy.html:36
+msgid "When You Can Ask for a Refund"
+msgstr "Quando Pode Pedir um Reembolso"
+
+#: .\templates\olretail\refund_policy.html:38
+msgid "Your order never arrived, past its estimated delivery date"
+msgstr "A sua encomenda nunca chegou, depois da data estimada de entrega"
+
+#: .\templates\olretail\refund_policy.html:39
+msgid ""
+"What arrived was damaged, or significantly different from the listing (wrong"
+" item, wrong condition)"
+msgstr ""
+"O que chegou estava danificado, ou significativamente diferente do anúncio "
+"(artigo errado, estado errado)"
+
+#: .\templates\olretail\refund_policy.html:40
+msgid ""
+"You cancelled before your payment was confirmed (see the Terms of Service — "
+"this is a straightforward cancellation, not a dispute)"
+msgstr ""
+"Cancelou antes de o seu pagamento ser confirmado (consulte os Termos de "
+"Serviço — este é um cancelamento simples, não uma reclamação)"
+
+#: .\templates\olretail\refund_policy.html:47
+msgid "How to Request One"
+msgstr "Como Solicitar um Reembolso"
+
+#: .\templates\olretail\refund_policy.html:49
+msgid ""
+"Open a dispute on the order from your order history, describing the problem "
+"— photos help."
+msgstr ""
+"Abra uma reclamação sobre a encomenda a partir do seu histórico de "
+"encomendas, descrevendo o problema — fotografias ajudam."
+
+#: .\templates\olretail\refund_policy.html:50
+#| msgid "The seller has 3 days to respond."
+msgid "The seller has 3 days to respond with their side."
+msgstr "O vendedor tem 3 dias para responder com a sua versão."
+
+#: .\templates\olretail\refund_policy.html:51
+msgid ""
+"A TimorMart administrator reviews everything submitted and makes the final "
+"decision — approving a refund, arranging a reshipment, or closing the "
+"dispute with no action."
+msgstr ""
+"Um administrador da TimorMart analisa tudo o que foi submetido e toma a "
+"decisão final — aprovando um reembolso, organizando um reenvio, ou "
+"encerrando a reclamação sem qualquer ação."
+
+#: .\templates\olretail\refund_policy.html:58
+msgid "How a Refund Is Paid"
+msgstr "Como um Reembolso É Pago"
+
+#: .\templates\olretail\refund_policy.html:60
+msgid ""
+"An approved refund returns the full amount you paid for that order to your "
+"bank account. TimorMart currently processes refunds as a full amount per "
+"order, not a partial one. If the order had already been marked delivered and"
+" the seller (or courier) had already been credited for it, that credit is "
+"reversed at the same time so the platform's own books stay correct — this "
+"doesn't affect how much you get back."
+msgstr ""
+"Um reembolso aprovado devolve o valor total que pagou por essa encomenda à "
+"sua conta bancária. Atualmente, a TimorMart processa reembolsos como um "
+"valor total por encomenda, não parcial. Se a encomenda já tinha sido marcada"
+" como entregue e o vendedor (ou estafeta) já tinha sido creditado por isso, "
+"esse crédito é revertido ao mesmo tempo para que a contabilidade da própria "
+"plataforma se mantenha correta — isto não afeta o valor que recebe de volta."
+
+#: .\templates\olretail\refund_policy.html:67
+msgid "What's Not Covered"
+msgstr "O Que Não Está Coberto"
+
+#: .\templates\olretail\refund_policy.html:69
+msgid ""
+"Simply changing your mind after a correctly-described item has already been "
+"delivered"
+msgstr ""
+"Simplesmente mudar de ideias depois de um artigo corretamente descrito já "
+"ter sido entregue"
+
+#: .\templates\olretail\refund_policy.html:70
+msgid ""
+"Cash on Delivery orders — see above, arrange this with the seller/courier "
+"directly"
+msgstr ""
+"Encomendas em Pagamento na Entrega — ver acima, combine isto diretamente com"
+" o vendedor/estafeta"
+
+#: .\templates\olretail\refund_policy.html:71
+msgid ""
+"A dispute opened after unreasonable delay, where the delay itself makes the "
+"claim impossible to verify"
+msgstr ""
+"Uma reclamação aberta após um atraso não razoável, em que o próprio atraso "
+"torna a alegação impossível de verificar"
+
+#: .\templates\olretail\refund_policy.html:78
+#| msgid "Menu Sections"
+msgid "Questions?"
+msgstr "Tem Dúvidas?"
+
+#: .\templates\olretail\refund_policy.html:80
+#, fuzzy
+#| msgid "Chat on WhatsApp"
+msgid "Reach us on WhatsApp at"
+msgstr "Conversar no WhatsApp"
+
+#: .\templates\olretail\refund_policy.html:82
+#| msgid "You can open a dispute on that order."
+msgid "or open a dispute directly on the order in question."
+msgstr "ou abra uma reclamação diretamente na encomenda em questão."
+
 #: .\templates\olretail\seller_balance.html:4
 #: .\templates\olretail\seller_balance.html:12
 #: .\templates\olretail\seller_orders.html:17
@@ -4065,10 +4228,6 @@ msgid "The terms that govern using TimorMart as a buyer, seller, or courier."
 msgstr ""
 "Os termos que regem a utilização da TimorMart como comprador, vendedor ou "
 "estafeta."
-
-#: .\templates\olretail\terms_of_service.html:13
-msgid "Last updated:"
-msgstr "Última atualização:"
 
 #: .\templates\olretail\terms_of_service.html:17
 msgid "Important note:"
@@ -4642,11 +4801,6 @@ msgstr "Comece a explorar"
 #: .\templates\shared\base.html:89
 msgid "Skip to main content"
 msgstr "Saltar para o conteúdo principal"
-
-#: .\templates\shared\footer.html:23
-#| msgid "Refund"
-msgid "Refund Policy"
-msgstr "Política de Reembolso"
 
 #: .\templates\shared\footer.html:40
 msgid "We accept"

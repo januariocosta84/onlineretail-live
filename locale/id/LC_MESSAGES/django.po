@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 15:09+0900\n"
+"POT-Creation-Date: 2026-08-04 15:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3763,6 +3763,173 @@ msgstr "Belum lengkap"
 msgid "Completed"
 msgstr "Selesai"
 
+#: .\templates\olretail\refund_policy.html:4
+#: .\templates\olretail\refund_policy.html:12
+#: .\templates\shared\footer.html:23
+msgid "Refund Policy"
+msgstr "Kebijakan Pengembalian Dana"
+
+#: .\templates\olretail\refund_policy.html:5
+msgid "How refunds work on TimorMart, and how to request one."
+msgstr ""
+"Bagaimana pengembalian dana bekerja di TimorMart, dan cara mengajukannya."
+
+#: .\templates\olretail\refund_policy.html:13
+#: .\templates\olretail\terms_of_service.html:13
+msgid "Last updated:"
+msgstr "Terakhir diperbarui:"
+
+#: .\templates\olretail\refund_policy.html:17
+#| msgid ""
+#| "This document must be reviewed by a qualified lawyer before being relied on "
+#| "as a binding legal document."
+msgid ""
+"This is a working draft describing how TimorMart actually operates today. It"
+" has not been reviewed by a lawyer qualified in Timor-Leste, and should be "
+"before it's relied on as a binding legal document."
+msgstr ""
+"Ini adalah rancangan kerja yang menjelaskan bagaimana TimorMart sebenarnya "
+"beroperasi saat ini. Dokumen ini belum ditinjau oleh pengacara yang "
+"berkualifikasi di Timor-Leste, dan harus ditinjau sebelum diandalkan sebagai"
+" dokumen hukum yang mengikat."
+
+#: .\templates\olretail\refund_policy.html:27
+msgid "This Policy Only Covers Bank Transfer Orders"
+msgstr "Kebijakan Ini Hanya Mencakup Pesanan Transfer Bank"
+
+#: .\templates\olretail\refund_policy.html:29
+msgid ""
+"TimorMart only holds your money when you pay by <strong>Bank "
+"Transfer</strong> — that's the only case a refund from TimorMart is "
+"possible. If you paid by <strong>Cash on Delivery</strong>, you paid the "
+"seller or courier directly in person, and TimorMart never held that money — "
+"a refund in that case has to be arranged directly with the seller or "
+"courier, not through TimorMart."
+msgstr ""
+"TimorMart hanya menyimpan uang Anda saat Anda membayar melalui "
+"<strong>Transfer Bank</strong> — hanya dalam kasus itulah pengembalian dana "
+"dari TimorMart dimungkinkan. Jika Anda membayar dengan <strong>Bayar di "
+"Tempat (COD)</strong>, Anda membayar langsung kepada penjual atau kurir "
+"secara langsung, dan TimorMart tidak pernah menyimpan uang tersebut — "
+"pengembalian dana dalam kasus itu harus diatur langsung dengan penjual atau "
+"kurir, bukan melalui TimorMart."
+
+#: .\templates\olretail\refund_policy.html:36
+msgid "When You Can Ask for a Refund"
+msgstr "Kapan Anda Dapat Meminta Pengembalian Dana"
+
+#: .\templates\olretail\refund_policy.html:38
+msgid "Your order never arrived, past its estimated delivery date"
+msgstr "Pesanan Anda tidak pernah tiba, melewati perkiraan tanggal pengiriman"
+
+#: .\templates\olretail\refund_policy.html:39
+msgid ""
+"What arrived was damaged, or significantly different from the listing (wrong"
+" item, wrong condition)"
+msgstr ""
+"Barang yang tiba rusak, atau sangat berbeda dari yang tercantum (barang "
+"salah, kondisi salah)"
+
+#: .\templates\olretail\refund_policy.html:40
+msgid ""
+"You cancelled before your payment was confirmed (see the Terms of Service — "
+"this is a straightforward cancellation, not a dispute)"
+msgstr ""
+"Anda membatalkan sebelum pembayaran Anda dikonfirmasi (lihat Syarat Layanan "
+"— ini adalah pembatalan biasa, bukan sengketa)"
+
+#: .\templates\olretail\refund_policy.html:47
+msgid "How to Request One"
+msgstr "Cara Mengajukan Permintaan"
+
+#: .\templates\olretail\refund_policy.html:49
+msgid ""
+"Open a dispute on the order from your order history, describing the problem "
+"— photos help."
+msgstr ""
+"Buka sengketa pada pesanan dari riwayat pesanan Anda, jelaskan masalahnya — "
+"foto sangat membantu."
+
+#: .\templates\olretail\refund_policy.html:50
+#| msgid "The seller has 3 days to respond."
+msgid "The seller has 3 days to respond with their side."
+msgstr "Penjual memiliki waktu 3 hari untuk menanggapi dari sisinya."
+
+#: .\templates\olretail\refund_policy.html:51
+msgid ""
+"A TimorMart administrator reviews everything submitted and makes the final "
+"decision — approving a refund, arranging a reshipment, or closing the "
+"dispute with no action."
+msgstr ""
+"Administrator TimorMart meninjau semua yang diajukan dan membuat keputusan "
+"akhir — menyetujui pengembalian dana, mengatur pengiriman ulang, atau "
+"menutup sengketa tanpa tindakan."
+
+#: .\templates\olretail\refund_policy.html:58
+msgid "How a Refund Is Paid"
+msgstr "Bagaimana Pengembalian Dana Dibayarkan"
+
+#: .\templates\olretail\refund_policy.html:60
+msgid ""
+"An approved refund returns the full amount you paid for that order to your "
+"bank account. TimorMart currently processes refunds as a full amount per "
+"order, not a partial one. If the order had already been marked delivered and"
+" the seller (or courier) had already been credited for it, that credit is "
+"reversed at the same time so the platform's own books stay correct — this "
+"doesn't affect how much you get back."
+msgstr ""
+"Pengembalian dana yang disetujui mengembalikan jumlah penuh yang Anda "
+"bayarkan untuk pesanan tersebut ke rekening bank Anda. TimorMart saat ini "
+"memproses pengembalian dana sebagai jumlah penuh per pesanan, bukan "
+"sebagian. Jika pesanan sudah ditandai terkirim dan penjual (atau kurir) "
+"sudah dikreditkan untuk itu, kredit tersebut dibalikkan pada saat yang sama "
+"agar catatan pembukuan platform tetap benar — ini tidak memengaruhi jumlah "
+"yang Anda terima kembali."
+
+#: .\templates\olretail\refund_policy.html:67
+msgid "What's Not Covered"
+msgstr "Apa yang Tidak Ditanggung"
+
+#: .\templates\olretail\refund_policy.html:69
+msgid ""
+"Simply changing your mind after a correctly-described item has already been "
+"delivered"
+msgstr ""
+"Sekadar berubah pikiran setelah barang yang dijelaskan dengan benar telah "
+"dikirimkan"
+
+#: .\templates\olretail\refund_policy.html:70
+msgid ""
+"Cash on Delivery orders — see above, arrange this with the seller/courier "
+"directly"
+msgstr ""
+"Pesanan Bayar di Tempat (COD) — lihat di atas, atur ini langsung dengan "
+"penjual/kurir"
+
+#: .\templates\olretail\refund_policy.html:71
+msgid ""
+"A dispute opened after unreasonable delay, where the delay itself makes the "
+"claim impossible to verify"
+msgstr ""
+"Sengketa yang dibuka setelah penundaan yang tidak wajar, di mana penundaan "
+"itu sendiri membuat klaim tidak mungkin diverifikasi"
+
+#: .\templates\olretail\refund_policy.html:78
+#| msgid "Menu Sections"
+msgid "Questions?"
+msgstr "Ada Pertanyaan?"
+
+#: .\templates\olretail\refund_policy.html:80
+#, fuzzy
+#| msgid "Chat on WhatsApp"
+msgid "Reach us on WhatsApp at"
+msgstr "Chat di WhatsApp"
+
+#: .\templates\olretail\refund_policy.html:82
+#| msgid "You can open a dispute on that order."
+msgid "or open a dispute directly on the order in question."
+msgstr "atau buka sengketa langsung pada pesanan yang bersangkutan."
+
 #: .\templates\olretail\seller_balance.html:4
 #: .\templates\olretail\seller_balance.html:12
 #: .\templates\olretail\seller_orders.html:17
@@ -4042,10 +4209,6 @@ msgid "The terms that govern using TimorMart as a buyer, seller, or courier."
 msgstr ""
 "Syarat yang mengatur penggunaan TimorMart sebagai pembeli, penjual, atau "
 "kurir."
-
-#: .\templates\olretail\terms_of_service.html:13
-msgid "Last updated:"
-msgstr "Terakhir diperbarui:"
 
 #: .\templates\olretail\terms_of_service.html:17
 msgid "Important note:"
@@ -4615,11 +4778,6 @@ msgstr "Mulai jelajahi"
 #: .\templates\shared\base.html:89
 msgid "Skip to main content"
 msgstr "Lompat ke konten utama"
-
-#: .\templates\shared\footer.html:23
-#| msgid "Refund"
-msgid "Refund Policy"
-msgstr "Kebijakan Pengembalian Dana"
 
 #: .\templates\shared\footer.html:40
 msgid "We accept"
