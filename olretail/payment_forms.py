@@ -53,18 +53,22 @@ def _reverse_geocode_city(lat, lng):
     return None
 
 
+# Stripe doesn't work for real cards issued in Timor-Leste yet, and the
+# Simulated Bank rail is test/dev-only — both excluded from checkout
+# below (not deleted) so re-enabling either later is a one-line change:
+# the gateway code (_process_stripe_checkout, stripe_webhook,
+# SimulatedBankGateway, etc. in payment_views.py/payment_gateways.py) is
+# untouched, this only stops a buyer from selecting/submitting them. A
+# crafted POST with payment_method=stripe or simulated_bank still fails
+# validation, same as any other invalid choice.
+_DISABLED_CHECKOUT_METHODS = {PaymentMethod.STRIPE, PaymentMethod.SIMULATED_BANK}
+
+
 class CheckoutForm(forms.Form):
     """Delivery information for checkout."""
 
-    # Stripe doesn't work for real cards issued in Timor-Leste yet —
-    # excluded from checkout here (not deleted) so re-enabling it later is
-    # a one-line change: the gateway code (_process_stripe_checkout,
-    # stripe_webhook, etc. in payment_views.py) is untouched, this only
-    # stops a buyer from selecting/submitting it. A crafted POST with
-    # payment_method=stripe still fails validation, same as any other
-    # invalid choice.
     payment_method = forms.ChoiceField(
-        choices=[c for c in PaymentMethod.choices if c[0] != PaymentMethod.STRIPE],
+        choices=[c for c in PaymentMethod.choices if c[0] not in _DISABLED_CHECKOUT_METHODS],
         initial=PaymentMethod.CASH_ON_DELIVERY,
         widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
         label=_("Payment Method"),
