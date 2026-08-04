@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 14:50+0900\n"
+"POT-Creation-Date: 2026-08-04 15:09+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4033,6 +4033,7 @@ msgstr "Paket"
 
 #: .\templates\olretail\terms_of_service.html:4
 #: .\templates\olretail\terms_of_service.html:12
+#: .\templates\shared\footer.html:22
 msgid "Terms of Service"
 msgstr "Syarat Layanan"
 
@@ -4043,12 +4044,10 @@ msgstr ""
 "kurir."
 
 #: .\templates\olretail\terms_of_service.html:13
-#| msgid "Cart updated."
 msgid "Last updated:"
 msgstr "Terakhir diperbarui:"
 
 #: .\templates\olretail\terms_of_service.html:17
-#| msgid "Moderator note:"
 msgid "Important note:"
 msgstr "Catatan penting:"
 
@@ -4061,7 +4060,6 @@ msgstr ""
 "diandalkan sebagai dokumen hukum yang mengikat."
 
 #: .\templates\olretail\terms_of_service.html:28
-#| msgid "About TimorMart"
 msgid "1. What TimorMart Is"
 msgstr "1. Apa itu TimorMart"
 
@@ -4089,7 +4087,6 @@ msgid "By using TimorMart, you agree to these Terms of Service."
 msgstr "Dengan menggunakan TimorMart, Anda menyetujui Syarat Layanan ini."
 
 #: .\templates\olretail\terms_of_service.html:43
-#| msgid "Bank Accounts"
 msgid "2. Accounts"
 msgstr "2. Akun"
 
@@ -4098,7 +4095,6 @@ msgid "You can register as:"
 msgstr "Anda dapat mendaftar sebagai:"
 
 #: .\templates\olretail\terms_of_service.html:49
-#| msgid "Buyer & Seller — everything in one account"
 msgid "Buyer and Seller on one account"
 msgstr "Pembeli dan Penjual dalam satu akun"
 
@@ -4123,7 +4119,6 @@ msgid "Courier accounts must submit:"
 msgstr "Akun kurir harus mengirimkan:"
 
 #: .\templates\olretail\terms_of_service.html:59
-#| msgid "A photo of your identity card is required."
 msgid "A photo of a valid identity document."
 msgstr "Foto dokumen identitas yang sah."
 
@@ -4140,7 +4135,6 @@ msgstr ""
 "menyetujui dokumen-dokumen ini."
 
 #: .\templates\olretail\terms_of_service.html:70
-#| msgid "Listings"
 msgid "3. Listings"
 msgstr "3. Daftar Produk"
 
@@ -4153,7 +4147,6 @@ msgstr ""
 "terlihat oleh pembeli."
 
 #: .\templates\olretail\terms_of_service.html:74
-#| msgid "Administrator"
 msgid "An administrator may:"
 msgstr "Admin dapat:"
 
@@ -4166,7 +4159,6 @@ msgid "Send it back for changes."
 msgstr "Mengembalikannya untuk diperbaiki."
 
 #: .\templates\olretail\terms_of_service.html:78
-#| msgid "Rejected"
 msgid "Reject it."
 msgstr "Menolaknya."
 
@@ -4175,12 +4167,10 @@ msgid "Suspend it later if it breaks these terms."
 msgstr "Menangguhkannya nanti jika melanggar syarat ini."
 
 #: .\templates\olretail\terms_of_service.html:81
-#| msgid "For Sellers"
 msgid "For example:"
 msgstr "Contohnya:"
 
 #: .\templates\olretail\terms_of_service.html:83
-#| msgid "Browse products"
 msgid "Prohibited products."
 msgstr "Produk yang dilarang."
 
@@ -4189,7 +4179,6 @@ msgid "Misleading pricing or condition."
 msgstr "Harga atau kondisi yang menyesatkan."
 
 #: .\templates\olretail\terms_of_service.html:85
-#| msgid "Create product"
 msgid "Counterfeit products."
 msgstr "Produk palsu."
 
@@ -4198,12 +4187,10 @@ msgid "The seller is responsible for:"
 msgstr "Penjual bertanggung jawab atas:"
 
 #: .\templates\olretail\terms_of_service.html:89
-#| msgid "Price"
 msgid "Price."
 msgstr "Harga."
 
 #: .\templates\olretail\terms_of_service.html:90
-#| msgid "Description"
 msgid "Description."
 msgstr "Deskripsi."
 
@@ -4212,12 +4199,10 @@ msgid "Condition (New or Second-hand)."
 msgstr "Kondisi (Baru atau Bekas)."
 
 #: .\templates\olretail\terms_of_service.html:92
-#| msgid "Product pages"
 msgid "Product photos."
 msgstr "Foto produk."
 
 #: .\templates\olretail\terms_of_service.html:99
-#| msgid "Payment Method"
 msgid "4. Payment Methods & Fees"
 msgstr "4. Metode Pembayaran & Biaya"
 
@@ -4226,7 +4211,6 @@ msgid "TimorMart currently supports two ways to pay."
 msgstr "TimorMart saat ini mendukung dua cara pembayaran."
 
 #: .\templates\olretail\terms_of_service.html:102
-#| msgid "Cash on Delivery"
 msgid "Cash on Delivery (COD)"
 msgstr "Bayar di Tempat (COD)"
 
@@ -4270,7 +4254,6 @@ msgid "A 2%% platform service fee."
 msgstr "Biaya layanan platform sebesar 2%%."
 
 #: .\templates\olretail\terms_of_service.html:123
-#| msgid "Delivery fee"
 msgid "The $1.00 delivery fee."
 msgstr "Biaya pengiriman $1.00."
 
@@ -4282,7 +4265,6 @@ msgstr ""
 "dikonfirmasi."
 
 #: .\templates\olretail\terms_of_service.html:129
-#| msgid "%(product)s is currently unavailable."
 msgid "Card payment is not currently available."
 msgstr "Pembayaran kartu belum tersedia saat ini."
 
@@ -4304,7 +4286,6 @@ msgstr ""
 "dipotong dari penjual."
 
 #: .\templates\olretail\terms_of_service.html:142
-#| msgid "Delivered"
 msgid "5. Delivery"
 msgstr "5. Pengiriman"
 
@@ -4317,7 +4298,6 @@ msgstr ""
 "langsung oleh penjual."
 
 #: .\templates\olretail\terms_of_service.html:146
-#| msgid "Proof of delivery"
 msgid "After delivery:"
 msgstr "Setelah pengiriman:"
 
@@ -4342,7 +4322,6 @@ msgid "6. Cancellations"
 msgstr "6. Pembatalan"
 
 #: .\templates\olretail\terms_of_service.html:161
-#| msgid "Thank you for your order. Your payment has been received."
 msgid ""
 "You can cancel an order yourself only before payment has been confirmed."
 msgstr ""
@@ -4354,7 +4333,6 @@ msgid "This means the order is in status:"
 msgstr "Ini berarti pesanan berstatus:"
 
 #: .\templates\olretail\terms_of_service.html:165
-#| msgid "Awaiting kitchen"
 msgid "Awaiting payment."
 msgstr "Menunggu pembayaran."
 
@@ -4372,7 +4350,6 @@ msgstr ""
 "setelah titik itu."
 
 #: .\templates\olretail\terms_of_service.html:176
-#| msgid "Dispute"
 msgid "7. Disputes"
 msgstr "7. Sengketa"
 
@@ -4393,12 +4370,10 @@ msgid "The product never arrives."
 msgstr "Produk tidak pernah tiba."
 
 #: .\templates\olretail\terms_of_service.html:183
-#| msgid "You can only open disputes for delivered or shipped orders."
 msgid "You can open a dispute on that order."
 msgstr "Anda dapat membuka sengketa untuk pesanan tersebut."
 
 #: .\templates\olretail\terms_of_service.html:184
-#| msgid "Dispute opened. Seller has 3 days to respond."
 msgid "The seller has 3 days to respond."
 msgstr "Penjual memiliki waktu 3 hari untuk merespons."
 
@@ -4435,22 +4410,18 @@ msgid "You may not use TimorMart to:"
 msgstr "Anda tidak boleh menggunakan TimorMart untuk:"
 
 #: .\templates\olretail\terms_of_service.html:202
-#| msgid "Browse all products"
 msgid "List illegal products."
 msgstr "Mendaftarkan produk ilegal."
 
 #: .\templates\olretail\terms_of_service.html:203
-#| msgid "View your products"
 msgid "List counterfeit products."
 msgstr "Mendaftarkan produk palsu."
 
 #: .\templates\olretail\terms_of_service.html:204
-#| msgid "Back to products"
 msgid "List stolen products."
 msgstr "Mendaftarkan produk curian."
 
 #: .\templates\olretail\terms_of_service.html:205
-#| msgid "View your products"
 msgid "List unsafe products."
 msgstr "Mendaftarkan produk yang tidak aman."
 
@@ -4487,27 +4458,22 @@ msgid "9. Suspension & Account Closure"
 msgstr "9. Penangguhan & Penutupan Akun"
 
 #: .\templates\olretail\terms_of_service.html:220
-#| msgid "About TimorMart"
 msgid "TimorMart may:"
 msgstr "TimorMart dapat:"
 
 #: .\templates\olretail\terms_of_service.html:222
-#| msgid "Edit listing"
 msgid "Suspend a listing."
 msgstr "Menangguhkan daftar produk."
 
 #: .\templates\olretail\terms_of_service.html:223
-#| msgid "Remove this window?"
 msgid "Remove a listing."
 msgstr "Menghapus daftar produk."
 
 #: .\templates\olretail\terms_of_service.html:224
-#| msgid "Create an account"
 msgid "Restrict an account."
 msgstr "Membatasi akun."
 
 #: .\templates\olretail\terms_of_service.html:225
-#| msgid "Create an account"
 msgid "Close an account."
 msgstr "Menutup akun."
 
@@ -4524,7 +4490,6 @@ msgid "Repeatedly unverifiable payment claims."
 msgstr "Klaim pembayaran yang berulang kali tidak dapat diverifikasi."
 
 #: .\templates\olretail\terms_of_service.html:231
-#| msgid "Edit listing"
 msgid "Prohibited listings."
 msgstr "Daftar produk yang dilarang."
 
@@ -4561,17 +4526,14 @@ msgstr ""
 "Sejauh yang diizinkan oleh hukum, TimorMart tidak bertanggung jawab atas:"
 
 #: .\templates\olretail\terms_of_service.html:249
-#| msgid "Product Details"
 msgid "Product quality."
 msgstr "Kualitas produk."
 
 #: .\templates\olretail\terms_of_service.html:250
-#| msgid "Product name"
 msgid "Product safety."
 msgstr "Keamanan produk."
 
 #: .\templates\olretail\terms_of_service.html:251
-#| msgid "Product Details"
 msgid "Product legality."
 msgstr "Legalitas produk."
 
@@ -4653,6 +4615,11 @@ msgstr "Mulai jelajahi"
 #: .\templates\shared\base.html:89
 msgid "Skip to main content"
 msgstr "Lompat ke konten utama"
+
+#: .\templates\shared\footer.html:23
+#| msgid "Refund"
+msgid "Refund Policy"
+msgstr "Kebijakan Pengembalian Dana"
 
 #: .\templates\shared\footer.html:40
 msgid "We accept"
