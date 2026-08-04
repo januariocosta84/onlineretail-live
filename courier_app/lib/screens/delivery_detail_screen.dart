@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,13 +17,60 @@ class DeliveryDetailScreen extends StatefulWidget {
   State<DeliveryDetailScreen> createState() => _DeliveryDetailScreenState();
 }
 
-class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
+class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> with WidgetsBindingObserver {
   final _api = ApiClient();
   final _picker = ImagePicker();
+
+  late DeliveryOrder _order;
+  Timer? _pollTimer;
 
   File? _photo;
   bool _submitting = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _order = widget.order;
+    WidgetsBinding.instance.addObserver(this);
+    _startPolling();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _pollTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The seller confirming pickup (or a courier rejecting elsewhere,
+    // etc.) happens outside this screen entirely — nothing here pushes an
+    // update, so it has to notice on its own. Same reasoning as the
+    // Pending list's own poll.
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_refreshOrder());
+      _startPolling();
+    } else if (state == AppLifecycleState.paused) {
+      _pollTimer?.cancel();
+    }
+  }
+
+  void _startPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = Timer.periodic(const Duration(seconds: 10), (_) => _refreshOrder());
+  }
+
+  Future<void> _refreshOrder() async {
+    try {
+      final data = await _api.deliveries();
+      final matches = [...data.pending, ...data.delivered].where((o) => o.id == _order.id);
+      if (matches.isNotEmpty && mounted) setState(() => _order = matches.first);
+    } catch (_) {
+      // Best-effort — the next tick just tries again, same as the list's poll.
+    }
+  }
 
   Future<void> _pickPhoto(ImageSource source) async {
     final picked = await _picker.pickImage(source: source, maxWidth: 1600, imageQuality: 85);
@@ -60,7 +108,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
       _error = null;
     });
     try {
-      await _api.markDelivered(widget.order.id, _photo!);
+      await _api.markDelivered(_order.id, _photo!);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Order marked as delivered.')),
@@ -77,7 +125,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final order = widget.order;
+    final order = _order;
     return Scaffold(
       appBar: AppBar(title: Text(order.orderNumber)),
       body: ListView(
