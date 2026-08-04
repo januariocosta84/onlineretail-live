@@ -186,7 +186,7 @@
       <i class="fas fa-info-circle mr-2"></i>
       <strong>{% trans "How does it work?" %}</strong><br>
       <ul class="mb-0 pl-3 mt-2">
-        <li>{% trans "You earn 85% of each sale (platform takes 15% commission)" %}</li>
+        <li>{% blocktrans %}You earn {{ seller_earn_percent }}% of each sale (platform takes {{ commission_rate_percent }}% commission){% endblocktrans %}</li>
         <li>{% trans "Earnings are credited when payment is received" %}</li>
         <li>{% trans "Payouts are processed monthly on the 1st of each month" %}</li>
         <li>{% trans "Minimum payout amount: $500" %}</li>

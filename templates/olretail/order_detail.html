@@ -435,7 +435,7 @@
             </div>
             {% if order.payment_method == 'stripe' %}
             <div class="d-flex justify-content-between mb-2">
-              <span><small>{% trans "Commission (15%)" %}:</small></span>
+              <span><small>{% blocktrans %}Commission ({{ commission_rate_percent }}%){% endblocktrans %}:</small></span>
               <span><small>${{ order.commission_amount }}</small></span>
             </div>
             <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">

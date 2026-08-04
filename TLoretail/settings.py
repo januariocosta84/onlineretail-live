@@ -120,6 +120,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "olretail.context_processors.categories",
+                "olretail.context_processors.platform_fee",
                 "olretail.context_processors.roles",
                 "olretail.context_processors.notifications",
                 "olretail.context_processors.cart_count",

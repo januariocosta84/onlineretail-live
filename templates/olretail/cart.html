@@ -129,7 +129,7 @@
               </div>
 
               <small class="text-muted d-block mb-3">
-                {% trans "Commission (15%) and payment fees will be calculated at checkout." %}
+                {% blocktrans %}Commission ({{ commission_rate_percent }}%) and payment fees will be calculated at checkout.{% endblocktrans %}
               </small>
 
               {% comment %}

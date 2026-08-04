@@ -197,7 +197,7 @@
 
             <div id="stripe-fee-rows">
               <div class="d-flex justify-content-between mb-2">
-                <span><small>{% trans "Platform fee (15%)" %}:</small></span>
+                <span><small>{% blocktrans %}Platform fee ({{ commission_rate_percent }}%){% endblocktrans %}:</small></span>
                 <span><small>${{ platform_fee|floatformat:2 }}</small></span>
               </div>
 

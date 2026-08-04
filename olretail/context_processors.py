@@ -1,4 +1,22 @@
+from django.conf import settings
+
 from .models import Cart, Category, Notification, Wishlist
+
+
+def platform_fee(request):
+    """Commission rate as display-ready percent strings, so templates
+    never hardcode a number that drifts from settings.COMMISSION_RATE
+    (e.g. checkout.html, cart.html, order_detail.html, payment.html,
+    seller_balance.html all quote the rate in prose)."""
+    rate_percent = settings.COMMISSION_RATE * 100
+    # "{:g}" strips a trailing .0 (2.0 -> "2") but keeps real decimals
+    # (2.5 -> "2.5") if the rate is ever set to something non-whole.
+    commission_rate_percent = f"{rate_percent:g}"
+    seller_earn_percent = f"{100 - rate_percent:g}"
+    return {
+        "commission_rate_percent": commission_rate_percent,
+        "seller_earn_percent": seller_earn_percent,
+    }
 
 
 def categories(request):
