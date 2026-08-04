@@ -158,8 +158,15 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> with Widget
           // collects money from the buyer — for every electronic method
           // (card, bank transfer) the platform already has it, so showing
           // an amount here would just invite confusion about what's owed.
-          if (order.isCashOnDelivery)
+          // Broken into product price + delivery fee (see
+          // settings.DELIVERY_FEE) so it reads like a receipt instead of
+          // leaving the courier to work out why the total doesn't match
+          // the product price alone.
+          if (order.isCashOnDelivery) ...[
             _DetailRow(label: 'Collect (cash)', value: '\$${order.subtotal}'),
+            _DetailRow(label: 'Delivery fee', value: '\$${order.deliveryFee}'),
+            _DetailRow(label: 'Total collect (cash)', value: '\$${order.total}'),
+          ],
           if (order.hasPin) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(

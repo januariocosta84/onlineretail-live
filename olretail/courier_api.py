@@ -330,8 +330,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'id', 'order_number', 'product_name', 'buyer_name', 'delivery_address', 'delivery_phone',
             'delivery_latitude', 'delivery_longitude',
             'seller_name', 'seller_address', 'seller_latitude', 'seller_longitude',
-            'subtotal', 'payment_method', 'status', 'shipped_at', 'delivered_at', 'food_status',
-            'courier_assignment_status',
+            'subtotal', 'delivery_fee', 'total', 'payment_method', 'status', 'shipped_at', 'delivered_at',
+            'food_status', 'courier_assignment_status',
         ]
 
     def get_buyer_name(self, obj):

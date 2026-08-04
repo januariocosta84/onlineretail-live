@@ -10,6 +10,12 @@ class DeliveryOrder {
   final String deliveryAddress;
   final String deliveryPhone;
   final String subtotal;
+  // Flat $1 (see settings.DELIVERY_FEE) charged once per seller in the
+  // buyer's cart, on top of subtotal — zero for every order except the
+  // one line item per seller that actually carries it. For COD, both are
+  // cash the courier physically collects, not just subtotal.
+  final String deliveryFee;
+  final String total;
   final String paymentMethod;
   final String status;
   final String? shippedAt;
@@ -50,6 +56,8 @@ class DeliveryOrder {
     this.sellerAddress = '',
     this.sellerLatitude,
     this.sellerLongitude,
+    this.deliveryFee = '0',
+    this.total = '0',
   });
 
   bool get hasPin => deliveryLatitude != null && deliveryLongitude != null;
@@ -90,6 +98,8 @@ class DeliveryOrder {
         sellerAddress: sellerAddress,
         sellerLatitude: sellerLatitude,
         sellerLongitude: sellerLongitude,
+        deliveryFee: deliveryFee,
+        total: total,
       );
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
@@ -100,6 +110,8 @@ class DeliveryOrder {
         deliveryAddress: json['delivery_address'] as String? ?? '',
         deliveryPhone: json['delivery_phone'] as String? ?? '',
         subtotal: json['subtotal'] as String? ?? '0',
+        deliveryFee: json['delivery_fee'] as String? ?? '0',
+        total: json['total'] as String? ?? '0',
         paymentMethod: json['payment_method'] as String? ?? '',
         status: json['status'] as String,
         shippedAt: json['shipped_at'] as String?,
