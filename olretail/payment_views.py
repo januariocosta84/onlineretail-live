@@ -1619,7 +1619,16 @@ def order_status_poll(request, order_id):
     is_admin = request.user.is_staff
     if not (is_buyer or is_seller or is_courier or is_admin):
         return JsonResponse({'detail': 'Not found.'}, status=404)
-    return JsonResponse({'status': order.status, 'food_status': order.food_status})
+    return JsonResponse({
+        'status': order.status,
+        'food_status': order.food_status,
+        # A courier accepting/rejecting/being reassigned never changes
+        # order.status itself (stays 'shipped' throughout — see
+        # CourierAssignmentStatus), so the poll needs this separately or a
+        # seller watching the page never sees the status banner update
+        # without a manual reload.
+        'courier_assignment_status': order.courier_assignment_status,
+    })
 
 
 @login_required

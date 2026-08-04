@@ -825,13 +825,15 @@
   var pollUrl = "{% url 'olretail:order_status_poll' order.id %}";
   var currentStatus = "{{ order.status }}";
   var currentFoodStatus = "{{ order.food_status }}";
+  var currentCourierAssignmentStatus = "{{ order.courier_assignment_status }}";
 
   function poll() {
     fetch(pollUrl, { headers: { "X-Requested-With": "XMLHttpRequest" } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         if (!data) return;
-        if (data.status !== currentStatus || data.food_status !== currentFoodStatus) {
+        if (data.status !== currentStatus || data.food_status !== currentFoodStatus
+            || data.courier_assignment_status !== currentCourierAssignmentStatus) {
           window.location.reload();
         }
       })
