@@ -73,7 +73,7 @@
               {% if not platform_accepts_bank_transfer %}
               <small class="form-text text-muted mt-2 d-block">
                 <i class="fas fa-info-circle mr-1"></i>
-                {% trans "Bank Transfer isn't available right now — please choose Card." %}
+                {% trans "Bank Transfer isn't available right now — please choose Cash on Delivery." %}
               </small>
               {% endif %}
 
@@ -268,7 +268,7 @@
 
   function update() {
     var selected = document.querySelector('input[name="payment_method"]:checked');
-    var method = selected ? selected.value : 'stripe';
+    var method = selected ? selected.value : 'cash_on_delivery';
     var isBankTransfer = method === 'bank_transfer';
     var isCashOnDelivery = method === 'cash_on_delivery';
     var isSimulatedBank = method === 'simulated_bank';

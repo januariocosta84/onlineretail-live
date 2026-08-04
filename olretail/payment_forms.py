@@ -56,9 +56,16 @@ def _reverse_geocode_city(lat, lng):
 class CheckoutForm(forms.Form):
     """Delivery information for checkout."""
 
+    # Stripe doesn't work for real cards issued in Timor-Leste yet —
+    # excluded from checkout here (not deleted) so re-enabling it later is
+    # a one-line change: the gateway code (_process_stripe_checkout,
+    # stripe_webhook, etc. in payment_views.py) is untouched, this only
+    # stops a buyer from selecting/submitting it. A crafted POST with
+    # payment_method=stripe still fails validation, same as any other
+    # invalid choice.
     payment_method = forms.ChoiceField(
-        choices=PaymentMethod.choices,
-        initial=PaymentMethod.STRIPE,
+        choices=[c for c in PaymentMethod.choices if c[0] != PaymentMethod.STRIPE],
+        initial=PaymentMethod.CASH_ON_DELIVERY,
         widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
         label=_("Payment Method"),
     )
