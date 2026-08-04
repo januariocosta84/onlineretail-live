@@ -84,8 +84,22 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           _DetailRow(label: 'Product', value: order.productName),
+          const SizedBox(height: 16),
+          Text('Pickup', style: Theme.of(context).textTheme.titleMedium),
+          _DetailRow(label: 'From', value: order.sellerName),
+          _DetailRow(label: 'Address', value: order.sellerAddress),
+          if (order.sellerHasPin) ...[
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => _openRoute(context, order.sellerLatitude!, order.sellerLongitude!),
+              icon: const Icon(Icons.directions),
+              label: const Text('Route to pickup'),
+            ),
+          ],
+          const SizedBox(height: 16),
+          Text('Deliver to', style: Theme.of(context).textTheme.titleMedium),
           _DetailRow(label: 'Buyer', value: order.buyerName),
-          _DetailRow(label: 'Deliver to', value: order.deliveryAddress),
+          _DetailRow(label: 'Address', value: order.deliveryAddress),
           _DetailRow(
             label: 'Phone',
             value: order.deliveryPhone,
@@ -101,7 +115,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
           if (order.hasPin) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: () => _openRoute(context, order),
+              onPressed: () => _openRoute(context, order.deliveryLatitude!, order.deliveryLongitude!),
               icon: const Icon(Icons.directions),
               label: const Text('Route to buyer'),
             ),
@@ -162,9 +176,9 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
   }
 }
 
-Future<void> _openRoute(BuildContext context, DeliveryOrder order) async {
+Future<void> _openRoute(BuildContext context, double lat, double lng) async {
   try {
-    await launchRouteTo(order.deliveryLatitude!, order.deliveryLongitude!);
+    await launchRouteTo(lat, lng);
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

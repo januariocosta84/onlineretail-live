@@ -310,18 +310,35 @@ class EarningsView(APIView):
 class OrderSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
     buyer_name = serializers.SerializerMethodField()
+    # Where the courier actually picks the item up — a courier who's never
+    # been to this seller before has no way to find them otherwise. Mirrors
+    # delivery_latitude/longitude's null-when-no-pin handling: a seller
+    # who hasn't set a GPS pin on their Business Profile just gives the app
+    # an address with no route button, same as an address-only buyer.
+    seller_name = serializers.CharField(source='seller.get_name', read_only=True)
+    seller_address = serializers.SerializerMethodField()
+    seller_latitude = serializers.DecimalField(
+        source='seller.gps_latitude', max_digits=9, decimal_places=6, read_only=True, allow_null=True,
+    )
+    seller_longitude = serializers.DecimalField(
+        source='seller.gps_longitude', max_digits=9, decimal_places=6, read_only=True, allow_null=True,
+    )
 
     class Meta:
         model = Order
         fields = [
             'id', 'order_number', 'product_name', 'buyer_name', 'delivery_address', 'delivery_phone',
             'delivery_latitude', 'delivery_longitude',
+            'seller_name', 'seller_address', 'seller_latitude', 'seller_longitude',
             'subtotal', 'payment_method', 'status', 'shipped_at', 'delivered_at', 'food_status',
             'courier_assignment_status',
         ]
 
     def get_buyer_name(self, obj):
         return obj.buyer.get_full_name() or obj.buyer.username
+
+    def get_seller_address(self, obj):
+        return obj.seller.full_address or obj.seller.address
 
 
 class DeliveriesListView(APIView):

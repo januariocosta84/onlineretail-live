@@ -23,6 +23,13 @@ class DeliveryOrder {
   // CourierAssignmentStatus) — null/blank for a restaurant order or a
   // self-delivery order, neither of which use this gate.
   final String? courierAssignmentStatus;
+  // Where the courier actually picks the item up — see olretail/
+  // courier_api.py OrderSerializer. sellerLatitude/Longitude are null
+  // when the seller hasn't set a GPS pin on their Business Profile.
+  final String sellerName;
+  final String sellerAddress;
+  final double? sellerLatitude;
+  final double? sellerLongitude;
 
   DeliveryOrder({
     required this.id,
@@ -39,9 +46,14 @@ class DeliveryOrder {
     this.deliveryLatitude,
     this.deliveryLongitude,
     this.courierAssignmentStatus,
+    this.sellerName = '',
+    this.sellerAddress = '',
+    this.sellerLatitude,
+    this.sellerLongitude,
   });
 
   bool get hasPin => deliveryLatitude != null && deliveryLongitude != null;
+  bool get sellerHasPin => sellerLatitude != null && sellerLongitude != null;
   // Cash on delivery is the only method where the courier actually
   // collects money — every electronic method (card, bank transfer) is
   // already settled with the platform, so the amount is none of the
@@ -74,6 +86,10 @@ class DeliveryOrder {
         deliveryLatitude: deliveryLatitude,
         deliveryLongitude: deliveryLongitude,
         courierAssignmentStatus: courierAssignmentStatus ?? this.courierAssignmentStatus,
+        sellerName: sellerName,
+        sellerAddress: sellerAddress,
+        sellerLatitude: sellerLatitude,
+        sellerLongitude: sellerLongitude,
       );
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
@@ -96,6 +112,14 @@ class DeliveryOrder {
             ? double.tryParse(json['delivery_longitude'] as String)
             : null,
         courierAssignmentStatus: json['courier_assignment_status'] as String?,
+        sellerName: json['seller_name'] as String? ?? '',
+        sellerAddress: json['seller_address'] as String? ?? '',
+        sellerLatitude: json['seller_latitude'] != null
+            ? double.tryParse(json['seller_latitude'] as String)
+            : null,
+        sellerLongitude: json['seller_longitude'] != null
+            ? double.tryParse(json['seller_longitude'] as String)
+            : null,
       );
 }
 
