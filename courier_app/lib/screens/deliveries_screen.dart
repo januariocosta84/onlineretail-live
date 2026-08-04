@@ -20,16 +20,25 @@ class DeliveriesScreen extends StatefulWidget {
   State<DeliveriesScreen> createState() => _DeliveriesScreenState();
 }
 
-class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerProviderStateMixin {
+class _DeliveriesScreenState extends State<DeliveriesScreen>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _api = ApiClient();
   late final TabController _tabController;
-  late Future<({List<DeliveryOrder> pending, List<DeliveryOrder> delivered})> _future;
+  Timer? _pollTimer;
+
+  bool _loading = true;
+  bool _hasData = false;
+  Object? _error;
+  List<DeliveryOrder> _pending = [];
+  List<DeliveryOrder> _delivered = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _future = _api.deliveries();
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(_load(showSpinner: true));
+    _startPolling();
     // Covers app-restart-while-already-logged-in — login_screen.dart
     // handles the fresh-login case. init() is idempotent (no-ops if
     // already run this app session).
@@ -38,15 +47,66 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _pollTimer?.cancel();
     _tabController.dispose();
     super.dispose();
   }
 
-  Future<void> _refresh() async {
-    final next = _api.deliveries();
-    setState(() => _future = next);
-    await next;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // A courier can be unassigned (seller reassigns, admin steps in, etc.)
+    // while this screen is just sitting open or backgrounded — there's no
+    // push/websocket telling this screen to update, so it has to notice on
+    // its own. Same reasoning the web order_detail page uses for its own
+    // status poll: cheap, reliable, no server push infra required. Paused
+    // while backgrounded (nothing to show anyone, no point spending
+    // battery/data) and always re-synced the instant the app is foreground
+    // again, not just on the next tick.
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_load());
+      _startPolling();
+    } else if (state == AppLifecycleState.paused) {
+      _pollTimer?.cancel();
+    }
   }
+
+  void _startPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = Timer.periodic(const Duration(seconds: 10), (_) => _load());
+  }
+
+  /// [showSpinner] is only used for the very first load — a background
+  /// poll swapping the list contents under a full-screen spinner would be
+  /// far more jarring than the (rare) case of a stale row lingering for up
+  /// to one poll interval.
+  Future<void> _load({bool showSpinner = false}) async {
+    if (showSpinner) setState(() => _loading = true);
+    try {
+      final data = await _api.deliveries();
+      if (!mounted) return;
+      setState(() {
+        _pending = data.pending;
+        _delivered = data.delivered;
+        _error = null;
+        _loading = false;
+        _hasData = true;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      // A background poll (or a resume-triggered refresh) hitting a
+      // transient network blip shouldn't blank an already-loaded list —
+      // it just quietly retries on the next tick. Only surface the
+      // full-page error view when there's nothing on screen yet to fall
+      // back to (first load, or every attempt since has also failed).
+      setState(() {
+        _loading = false;
+        if (!_hasData) _error = e;
+      });
+    }
+  }
+
+  Future<void> _refresh() => _load();
 
   Future<void> _logout() async {
     // Must happen before _api.logout() clears the stored auth token —
@@ -78,25 +138,23 @@ class _DeliveriesScreenState extends State<DeliveriesScreen> with SingleTickerPr
         ]),
       ),
       drawer: _AppDrawer(onLogout: _logout),
-      body: FutureBuilder<({List<DeliveryOrder> pending, List<DeliveryOrder> delivered})>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return _ErrorView(error: snapshot.error, onRetry: _refresh);
-          }
-          final data = snapshot.data!;
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              _DeliveryList(orders: data.pending, onRefresh: _refresh, showMarkDelivered: true),
-              _DeliveryList(orders: data.delivered, onRefresh: _refresh, showMarkDelivered: false),
-            ],
-          );
-        },
-      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_error != null) {
+      return _ErrorView(error: _error, onRetry: _refresh);
+    }
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        _DeliveryList(orders: _pending, onRefresh: _refresh, showMarkDelivered: true),
+        _DeliveryList(orders: _delivered, onRefresh: _refresh, showMarkDelivered: false),
+      ],
     );
   }
 }
