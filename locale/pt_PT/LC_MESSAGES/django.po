@@ -149,7 +149,8 @@ msgid "Password changed"
 msgstr "Palavra-passe alterada"
 
 #: .\accounts\templates\accounts\password_reset_complete.html:14
-msgid "Your password has been set. You can now sign in with your new password."
+msgid ""
+"Your password has been set. You can now sign in with your new password."
 msgstr ""
 "A sua palavra-passe foi definida. Já pode iniciar sessão com a nova palavra-"
 "passe."
@@ -172,7 +173,8 @@ msgstr "Definir nova palavra-passe"
 
 #: .\accounts\templates\accounts\password_reset_confirm.html:31
 msgid ""
-"This password reset link is invalid or has expired. Please request a new one."
+"This password reset link is invalid or has expired. Please request a new "
+"one."
 msgstr ""
 "Este link de redefinição de palavra-passe é inválido ou expirou. Por favor "
 "solicite um novo."
@@ -203,11 +205,11 @@ msgstr "Voltar ao início de sessão"
 
 #: .\accounts\templates\accounts\password_reset_email.html:2
 msgid ""
-"You are receiving this email because you requested a password reset for your "
-"TimorMart account."
+"You are receiving this email because you requested a password reset for your"
+" TimorMart account."
 msgstr ""
-"Está a receber este email porque solicitou a redefinição da palavra-passe da "
-"sua conta TimorMart."
+"Está a receber este email porque solicitou a redefinição da palavra-passe da"
+" sua conta TimorMart."
 
 #: .\accounts\templates\accounts\password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
@@ -274,8 +276,8 @@ msgid ""
 "is %(username)s — you'll need it to sign in."
 msgstr ""
 "Bem-vindo, %(name)s! A sua conta de estafeta está pronta — um administrador "
-"irá rever os seus documentos antes de lhe poderem ser atribuídas entregas. O "
-"seu nome de utilizador é %(username)s — vai precisar dele para iniciar "
+"irá rever os seus documentos antes de lhe poderem ser atribuídas entregas. O"
+" seu nome de utilizador é %(username)s — vai precisar dele para iniciar "
 "sessão."
 
 #: .\accounts\views.py:125
@@ -675,8 +677,8 @@ msgstr "ONG / Sem Fins Lucrativos"
 
 #: .\olretail\models.py:162
 msgid ""
-"Bank or mobile money details buyers use to pay you directly (e.g. bank name, "
-"account number, account holder name)."
+"Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
+" account number, account holder name)."
 msgstr ""
 "Dados bancários ou de dinheiro móvel que os compradores usam para lhe pagar "
 "diretamente (ex.: nome do banco, número de conta, titular)."
@@ -728,7 +730,8 @@ msgstr ""
 
 #: .\olretail\models.py:506
 msgid "Optional — shown in search engine results instead of the description."
-msgstr "Opcional — apresentado nos resultados de pesquisa em vez da descrição."
+msgstr ""
+"Opcional — apresentado nos resultados de pesquisa em vez da descrição."
 
 #: .\olretail\models.py:509
 msgid "Optional — comma-separated, e.g. \"scarf, wool, winter\"."
@@ -826,7 +829,8 @@ msgid "Enter the account number you're paying from."
 msgstr "Introduza o número da conta a partir da qual está a pagar."
 
 #: .\olretail\payment_forms.py:162
-msgid "We couldn't tell your city from the shared location — please select it."
+msgid ""
+"We couldn't tell your city from the shared location — please select it."
 msgstr ""
 "Não conseguimos identificar a sua cidade a partir da localização partilhada "
 "— por favor selecione-a."
@@ -1242,7 +1246,8 @@ msgstr "Transferência Bancária / Móvel"
 #: .\olretail\payment_models.py:87 .\templates\olretail\buyer_orders.html:70
 #: .\templates\olretail\details.html:313
 #: .\templates\olretail\order_detail.html:338
-#: .\templates\olretail\seller_orders.html:74 .\templates\shared\footer.html:42
+#: .\templates\olretail\seller_orders.html:74
+#: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
 msgstr "Pagamento na Entrega"
 
@@ -1379,19 +1384,19 @@ msgstr "Vendedor Não Respondeu à Reclamação de Pagamento"
 
 #: .\olretail\payment_models.py:876
 msgid ""
-"Bank or mobile money details shown to sellers when they pay the platform for "
-"a subscription upgrade."
+"Bank or mobile money details shown to sellers when they pay the platform for"
+" a subscription upgrade."
 msgstr ""
-"Dados bancários ou de dinheiro móvel mostrados aos vendedores quando pagam a "
-"plataforma por uma atualização de subscrição."
+"Dados bancários ou de dinheiro móvel mostrados aos vendedores quando pagam a"
+" plataforma por uma atualização de subscrição."
 
 #: .\olretail\payment_models.py:887
 msgid ""
 "Flat fee (in cents) a courier earns for each delivery they confirm. $1.00 = "
 "100."
 msgstr ""
-"Taxa fixa (em cêntimos) que o estafeta recebe por cada entrega que confirma. "
-"$1.00 = 100."
+"Taxa fixa (em cêntimos) que o estafeta recebe por cada entrega que confirma."
+" $1.00 = 100."
 
 #: .\olretail\payment_views.py:65
 #, python-format
@@ -1453,11 +1458,11 @@ msgstr "O seu carrinho está vazio."
 #: .\olretail\payment_views.py:340
 #, python-format
 msgid ""
-"%(product)s can only be purchased by contacting the seller directly — remove "
-"it from your cart."
+"%(product)s can only be purchased by contacting the seller directly — remove"
+" it from your cart."
 msgstr ""
-"%(product)s só pode ser comprado contactando diretamente o vendedor — remova-"
-"o do seu carrinho."
+"%(product)s só pode ser comprado contactando diretamente o vendedor — "
+"remova-o do seu carrinho."
 
 #: .\olretail\payment_views.py:350
 #, python-format
@@ -1535,8 +1540,8 @@ msgstr "Esta encomenda não está a aguardar transferência."
 msgid ""
 "Claimed amount ($%(claimed)s) does not match the order total ($%(total)s)."
 msgstr ""
-"O valor reclamado ($%(claimed)s) não corresponde ao total da encomenda ($"
-"%(total)s)."
+"O valor reclamado ($%(claimed)s) não corresponde ao total da encomenda "
+"($%(total)s)."
 
 #: .\olretail\payment_views.py:1162
 msgid "This exact receipt image was already submitted on a different order."
@@ -1632,15 +1637,16 @@ msgstr "Já tem um pedido de subscrição pendente a aguardar confirmação."
 #: .\olretail\payment_views.py:1427
 #, python-format
 msgid ""
-"%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting "
-"confirmation."
+"%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting"
+" confirmation."
 msgstr ""
 "%(seller)s reportou um pagamento de subscrição %(plan)s ($%(amount)s) — a "
 "aguardar confirmação."
 
 #: .\olretail\payment_views.py:1431
 msgid ""
-"Thanks — your payment report was submitted. An admin will confirm it shortly."
+"Thanks — your payment report was submitted. An admin will confirm it "
+"shortly."
 msgstr ""
 "Obrigado — o seu relatório de pagamento foi submetido. Um administrador irá "
 "confirmá-lo em breve."
@@ -1743,7 +1749,8 @@ msgstr "A sua encomenda %(order)s foi entregue."
 #: .\olretail\payment_views.py:1856
 #, python-format
 msgid "%(seller)s just became eligible for payout — $%(amount)s available."
-msgstr "%(seller)s tornou-se elegível para pagamento — $%(amount)s disponível."
+msgstr ""
+"%(seller)s tornou-se elegível para pagamento — $%(amount)s disponível."
 
 #: .\olretail\payment_views.py:1864
 #, python-format
@@ -1795,7 +1802,8 @@ msgstr "O estafeta está a caminho."
 #: .\olretail\payment_views.py:2028
 msgid "ID submitted — an administrator will review it shortly."
 msgstr ""
-"Documento de identificação submetido — um administrador irá revê-lo em breve."
+"Documento de identificação submetido — um administrador irá revê-lo em "
+"breve."
 
 #: .\olretail\payment_views.py:2064
 msgid "Availability window added."
@@ -1846,7 +1854,8 @@ msgstr "Não tem permissão para ver este litígio."
 msgid "You must be a seller to respond to disputes."
 msgstr "Tem de ser vendedor para responder a litígios."
 
-#: .\olretail\payment_views.py:2321 .\templates\olretail\dispute_detail.html:76
+#: .\olretail\payment_views.py:2321
+#: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "O prazo de resposta expirou."
 
@@ -1895,8 +1904,8 @@ msgstr "Introduza um código SWIFT/BIC válido (ex.: BNUTTLDL ou BNUTTLDLXXX)."
 msgid ""
 "Enter a valid IBAN (country code + digits + account identifier, no spaces)."
 msgstr ""
-"Introduza um IBAN válido (código do país + dígitos + identificador de conta, "
-"sem espaços)."
+"Introduza um IBAN válido (código do país + dígitos + identificador de conta,"
+" sem espaços)."
 
 #: .\olretail\views.py:95
 msgid "That category does not exist."
@@ -1940,7 +1949,8 @@ msgstr "“%(name)s” foi publicado."
 #: .\olretail\views.py:411
 #, python-format
 msgid "“%(name)s” was created and is awaiting approval by the administrators."
-msgstr "“%(name)s” foi criado e está a aguardar aprovação dos administradores."
+msgstr ""
+"“%(name)s” foi criado e está a aguardar aprovação dos administradores."
 
 #: .\olretail\views.py:423
 msgid "Add a new product"
@@ -2024,8 +2034,8 @@ msgstr "Algo correu mal"
 msgid ""
 "We are sorry — an unexpected error occurred. Please try again in a moment."
 msgstr ""
-"Lamentamos — ocorreu um erro inesperado. Por favor tente novamente dentro de "
-"momentos."
+"Lamentamos — ocorreu um erro inesperado. Por favor tente novamente dentro de"
+" momentos."
 
 #: .\templates\accounts\login.html:3 .\templates\accounts\login.html:13
 #: .\templates\accounts\login.html:57
@@ -2110,8 +2120,8 @@ msgstr "Credenciais da Conta"
 #: .\templates\accounts\register.html:269
 msgid ""
 "Your username is generated automatically from your name and phone number — "
-"you'll see it in the welcome message after signing up, and you'll need it to "
-"sign in."
+"you'll see it in the welcome message after signing up, and you'll need it to"
+" sign in."
 msgstr ""
 "O seu nome de utilizador é gerado automaticamente a partir do seu nome e "
 "número de telefone — vai vê-lo na mensagem de boas-vindas após o registo, e "
@@ -2167,15 +2177,11 @@ msgstr "Sobre o TimorMart"
 
 #: .\templates\olretail\about.html:14
 msgid ""
-"TimorMart is Timor-Leste's own online marketplace — a place for people "
-"across the country\n"
-"        to buy and sell directly with each other, without needing a physical "
-"shop or a big budget to get started."
+"TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
+"        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
 msgstr ""
-"O TimorMart é o mercado online próprio de Timor-Leste — um lugar onde "
-"pessoas em todo o país\n"
-"        podem comprar e vender diretamente entre si, sem precisar de uma "
-"loja física ou de um grande orçamento para começar."
+"O TimorMart é o mercado online próprio de Timor-Leste — um lugar onde pessoas em todo o país\n"
+"        podem comprar e vender diretamente entre si, sem precisar de uma loja física ou de um grande orçamento para começar."
 
 #: .\templates\olretail\about.html:24
 msgid "Why we built this"
@@ -2183,24 +2189,16 @@ msgstr "Porque construímos isto"
 
 #: .\templates\olretail\about.html:26
 msgid ""
-"Retail in Timor-Leste is spread across markets, small shops and word-of-"
-"mouth —\n"
-"            great for community, but hard for a buyer to compare options or "
-"for a small seller to reach\n"
-"            customers outside their own neighbourhood. TimorMart brings that "
-"same everyday buying and selling\n"
-"            online: a single, trusted place where anyone can list a product "
-"and anyone can find it, whether\n"
+"Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
+"            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
+"            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling\n"
+"            online: a single, trusted place where anyone can list a product and anyone can find it, whether\n"
 "            it's brand new or a good second-hand find."
 msgstr ""
-"O comércio em Timor-Leste está espalhado por mercados, pequenas lojas e boca-"
-"a-boca —\n"
-"            ótimo para a comunidade, mas difícil para um comprador comparar "
-"opções ou para um pequeno vendedor alcançar\n"
-"            clientes fora da sua própria vizinhança. O TimorMart traz essa "
-"mesma compra e venda do dia a dia\n"
-"            para online: um único lugar de confiança onde qualquer pessoa "
-"pode anunciar um produto e qualquer pessoa pode encontrá-lo, seja\n"
+"O comércio em Timor-Leste está espalhado por mercados, pequenas lojas e boca-a-boca —\n"
+"            ótimo para a comunidade, mas difícil para um comprador comparar opções ou para um pequeno vendedor alcançar\n"
+"            clientes fora da sua própria vizinhança. O TimorMart traz essa mesma compra e venda do dia a dia\n"
+"            para online: um único lugar de confiança onde qualquer pessoa pode anunciar um produto e qualquer pessoa pode encontrá-lo, seja\n"
 "            novo em folha ou um bom achado em segunda mão."
 
 #: .\templates\olretail\about.html:41
@@ -2241,7 +2239,8 @@ msgstr "Liste, edite e acompanhe produtos a partir de um painel simples"
 
 #: .\templates\olretail\about.html:59
 msgid "Get paid by card, bank transfer or mobile money"
-msgstr "Receba pagamentos por cartão, transferência bancária ou dinheiro móvel"
+msgstr ""
+"Receba pagamentos por cartão, transferência bancária ou dinheiro móvel"
 
 #: .\templates\olretail\about.html:60
 msgid "Build a reputation through buyer ratings and reviews"
@@ -2286,8 +2285,8 @@ msgstr "O que torna o TimorMart diferente"
 msgid ""
 "Built for Timor-Leste — local cities, local languages, local payment options"
 msgstr ""
-"Feito para Timor-Leste — cidades locais, línguas locais, opções de pagamento "
-"locais"
+"Feito para Timor-Leste — cidades locais, línguas locais, opções de pagamento"
+" locais"
 
 #: .\templates\olretail\about.html:90
 msgid "New and second-hand items side by side, so buying affordably is easy"
@@ -2380,11 +2379,13 @@ msgstr "Ver as minhas encomendas"
 
 #: .\templates\olretail\buyer_orders.html:4
 #: .\templates\olretail\buyer_orders.html:12
-#: .\templates\olretail\seller_orders.html:4 .\templates\shared\header.html:349
+#: .\templates\olretail\seller_orders.html:4
+#: .\templates\shared\header.html:349
 msgid "My Orders"
 msgstr "As minhas Encomendas"
 
-#: .\templates\olretail\buyer_orders.html:17 .\templates\olretail\cart.html:147
+#: .\templates\olretail\buyer_orders.html:17
+#: .\templates\olretail\cart.html:147
 #: .\templates\olretail\payment_confirmation.html:167
 msgid "Continue Shopping"
 msgstr "Continuar a Comprar"
@@ -2419,7 +2420,8 @@ msgid "Seller"
 msgstr "Vendedor"
 
 #: .\templates\olretail\buyer_orders.html:45 .\templates\olretail\cart.html:34
-#: .\templates\olretail\checkout.html:38 .\templates\olretail\checkout.html:216
+#: .\templates\olretail\checkout.html:38
+#: .\templates\olretail\checkout.html:216
 #: .\templates\olretail\payment.html:130
 msgid "Total"
 msgstr "Total"
@@ -2523,8 +2525,8 @@ msgstr "Encomenda Efetuada — Pague na Entrega"
 
 #: .\templates\olretail\cash_on_delivery_confirmation.html:17
 msgid ""
-"No payment needed now. Have the exact amount in cash ready for the seller or "
-"courier when your order arrives."
+"No payment needed now. Have the exact amount in cash ready for the seller or"
+" courier when your order arrives."
 msgstr ""
 "Não é necessário pagar agora. Tenha o valor exato em dinheiro pronto para o "
 "vendedor ou estafeta quando a sua encomenda chegar."
@@ -2594,7 +2596,8 @@ msgstr "Prosseguir para o Pagamento"
 msgid "Platform fee (%(commission_rate_percent)s%%)"
 msgstr "Taxa da plataforma (%(commission_rate_percent)s%%)"
 
-#: .\templates\olretail\checkout.html:205 .\templates\olretail\payment.html:124
+#: .\templates\olretail\checkout.html:205
+#: .\templates\olretail\payment.html:124
 msgid "Payment fee"
 msgstr "Taxa de pagamento"
 
@@ -2611,13 +2614,13 @@ msgid ""
 "You'll pay TimorMart's bank account directly (standard platform fee "
 "applies). The next page shows the transfer details."
 msgstr ""
-"Vai pagar diretamente à conta bancária da TimorMart (aplica-se a taxa padrão "
-"da plataforma). A página seguinte mostra os detalhes da transferência."
+"Vai pagar diretamente à conta bancária da TimorMart (aplica-se a taxa padrão"
+" da plataforma). A página seguinte mostra os detalhes da transferência."
 
 #: .\templates\olretail\checkout.html:230
 msgid ""
-"Pay in cash when your order arrives — no platform fee. Have the exact amount "
-"ready for the seller/courier."
+"Pay in cash when your order arrives — no platform fee. Have the exact amount"
+" ready for the seller/courier."
 msgstr ""
 "Pague em dinheiro quando a sua encomenda chegar — sem taxa da plataforma. "
 "Tenha o valor exato pronto para o vendedor/estafeta."
@@ -2667,8 +2670,8 @@ msgstr "A Minha Disponibilidade"
 #: .\templates\olretail\courier_availability.html:15
 msgid ""
 "Set the days and hours you're working. Sellers see couriers marked "
-"“Available now” first when assigning a delivery — leave this empty if you're "
-"always available."
+"“Available now” first when assigning a delivery — leave this empty if you're"
+" always available."
 msgstr ""
 "Defina os dias e horas em que trabalha. Os vendedores veem primeiro os "
 "estafetas marcados como “Disponível agora” ao atribuir uma entrega — deixe "
@@ -2742,8 +2745,8 @@ msgid ""
 "Submit a photo of your ID document to get verified — you can't be assigned "
 "deliveries until then."
 msgstr ""
-"Submeta uma fotografia do seu documento de identificação para ser verificado "
-"— não pode ser designado para entregas até lá."
+"Submeta uma fotografia do seu documento de identificação para ser verificado"
+" — não pode ser designado para entregas até lá."
 
 #: .\templates\olretail\courier_deliveries.html:42
 #: .\templates\olretail\seller_payment_settings.html:269
@@ -2969,11 +2972,11 @@ msgstr "Interessado neste produto?"
 
 #: .\templates\olretail\details.html:349
 msgid ""
-"To view the seller's phone number and WhatsApp contact, upgrade your account "
-"to Buyer & Seller."
+"To view the seller's phone number and WhatsApp contact, upgrade your account"
+" to Buyer & Seller."
 msgstr ""
-"Para ver o número de telefone e o contacto de WhatsApp do vendedor, atualize "
-"a sua conta para Comprador & Vendedor."
+"Para ver o número de telefone e o contacto de WhatsApp do vendedor, atualize"
+" a sua conta para Comprador & Vendedor."
 
 #: .\templates\olretail\details.html:356
 msgid "Upgrade to Buyer & Seller"
@@ -3037,7 +3040,8 @@ msgstr "Inicie sessão com uma conta de comprador para comentar."
 
 #: .\templates\olretail\details.html:521
 msgid "No comments yet. Be the first to ask about this product!"
-msgstr "Ainda sem comentários. Seja o primeiro a perguntar sobre este produto!"
+msgstr ""
+"Ainda sem comentários. Seja o primeiro a perguntar sobre este produto!"
 
 #: .\templates\olretail\dispute_detail.html:4
 #: .\templates\olretail\dispute_detail.html:12
@@ -3262,8 +3266,8 @@ msgstr "Referência"
 #: .\templates\olretail\mark_payment_sent.html:41
 msgid "A screenshot or photo of your bank/mobile transfer confirmation."
 msgstr ""
-"Uma captura de ecrã ou foto da confirmação da sua transferência bancária/"
-"móvel."
+"Uma captura de ecrã ou foto da confirmação da sua transferência "
+"bancária/móvel."
 
 #: .\templates\olretail\mark_payment_sent.html:71
 msgid ""
@@ -3307,8 +3311,8 @@ msgstr "Ainda sem secções de menu"
 #: .\templates\olretail\menu_categories.html:85
 msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
 msgstr ""
-"Adicione secções como Pequeno-almoço, Almoço ou Bebidas para organizar o seu "
-"menu."
+"Adicione secções como Pequeno-almoço, Almoço ou Bebidas para organizar o seu"
+" menu."
 
 #: .\templates\olretail\notifications.html:4
 #: .\templates\olretail\notifications.html:12
@@ -3490,7 +3494,8 @@ msgstr ""
 
 #: .\templates\olretail\order_detail.html:346
 #, python-format
-msgid "Collect $%(amount)s in cash from the buyer when you deliver this order."
+msgid ""
+"Collect $%(amount)s in cash from the buyer when you deliver this order."
 msgstr ""
 "Receba $%(amount)s em dinheiro do comprador quando entregar esta encomenda."
 
@@ -3618,8 +3623,8 @@ msgstr "A processar a sua transferência bancária…"
 
 #: .\templates\olretail\payment_confirmation.html:22
 msgid ""
-"this page will show the result once your simulated bank responds. Refresh to "
-"check again."
+"this page will show the result once your simulated bank responds. Refresh to"
+" check again."
 msgstr ""
 "esta página mostrará o resultado assim que o seu banco simulado responder. "
 "Atualize para verificar novamente."
@@ -3683,7 +3688,8 @@ msgstr ""
 "Está subscrito — este anúncio será publicado imediatamente, sem espera de "
 "aprovação."
 
-#: .\templates\olretail\product_form.html:55 .\templates\shared\header.html:225
+#: .\templates\olretail\product_form.html:55
+#: .\templates\shared\header.html:225
 msgid "Language"
 msgstr "Idioma"
 
@@ -3715,8 +3721,8 @@ msgstr ""
 
 #: .\templates\olretail\product_form.html:146
 msgid ""
-"Menu items don't need a quantity or condition — use Menu section, Available, "
-"and Prep time instead."
+"Menu items don't need a quantity or condition — use Menu section, Available,"
+" and Prep time instead."
 msgstr ""
 "Os itens de menu não precisam de quantidade ou condição — use antes Secção "
 "do menu, Disponível e Tempo de preparação."
@@ -3729,10 +3735,10 @@ msgid ""
 "free delivery, child seat) and Description for the rental terms — minimum "
 "days, security deposit, driver requirements, fuel policy."
 msgstr ""
-"Vai alugar um carro? Coloque o seu preço diário em Tarifa diária de aluguer, "
-"os lugares em Lugares / capacidade, e detalhes como transmissão, tipo de "
-"combustível, ano e quilometragem em Especificações. Use Características para "
-"o que está incluído (seguro, entrega gratuita, cadeira de criança) e "
+"Vai alugar um carro? Coloque o seu preço diário em Tarifa diária de aluguer,"
+" os lugares em Lugares / capacidade, e detalhes como transmissão, tipo de "
+"combustível, ano e quilometragem em Especificações. Use Características para"
+" o que está incluído (seguro, entrega gratuita, cadeira de criança) e "
 "Descrição para os termos do aluguer — dias mínimos, depósito de segurança, "
 "requisitos do condutor, política de combustível."
 
@@ -3750,7 +3756,8 @@ msgstr "Criar uma agora"
 
 #: .\templates\olretail\product_form.html:205
 msgid ""
-"Transmission: Automatic\\nFuel type: Diesel\\nYear: 2022\\nMileage: 45,000 km"
+"Transmission: Automatic\\nFuel type: Diesel\\nYear: 2022\\nMileage: 45,000 "
+"km"
 msgstr ""
 "Transmissão: Automática\\nTipo de combustível: Diesel\\nAno: "
 "2022\\nQuilometragem: 45.000 km"
@@ -3944,8 +3951,8 @@ msgid ""
 "products. Selling and getting paid work the same either way."
 msgstr ""
 "Opcional — uma empresa verificada mostra um selo de confiança aos "
-"compradores nos seus produtos. Vender e receber pagamentos funciona da mesma "
-"forma."
+"compradores nos seus produtos. Vender e receber pagamentos funciona da mesma"
+" forma."
 
 #: .\templates\olretail\seller_payment_settings.html:263
 msgid "Your document was rejected"
@@ -3961,8 +3968,8 @@ msgstr "Subscrição"
 #, python-format
 msgid ""
 "Free accounts can list up to %(free_limit)s products, and each one is "
-"reviewed by an admin before it goes live. Subscribers can list without limit "
-"and publish instantly — no approval wait."
+"reviewed by an admin before it goes live. Subscribers can list without limit"
+" and publish instantly — no approval wait."
 msgstr ""
 "As contas grátis podem listar até %(free_limit)s produtos, e cada um é "
 "revisto por um administrador antes de ser publicado. Os subscritores podem "
@@ -3976,8 +3983,8 @@ msgstr "Anúncios ilimitados — ativo até %(date)s."
 #: .\templates\olretail\seller_subscription.html:36
 #, python-format
 msgid ""
-"Expires in %(days)s day(s) — renew below to avoid losing the ability to post "
-"new products."
+"Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
+" new products."
 msgstr ""
 "Expira em %(days)s dia(s) — renove abaixo para não perder a capacidade de "
 "publicar novos produtos."
@@ -3993,11 +4000,11 @@ msgstr "anúncios"
 #: .\templates\olretail\seller_subscription.html:46
 #, python-format
 msgid ""
-"Over the free limit of %(limit)s — your existing listings stay live, but you "
-"can't add new ones until you renew."
+"Over the free limit of %(limit)s — your existing listings stay live, but you"
+" can't add new ones until you renew."
 msgstr ""
-"Acima do limite grátis de %(limit)s — os seus anúncios existentes permanecem "
-"ativos, mas não pode adicionar novos até renovar."
+"Acima do limite grátis de %(limit)s — os seus anúncios existentes permanecem"
+" ativos, mas não pode adicionar novos até renovar."
 
 #: .\templates\olretail\seller_subscription.html:50
 msgid "free listings used"
@@ -4050,41 +4057,44 @@ msgstr "Plano"
 #: .\templates\olretail\terms_of_service.html:4
 #: .\templates\olretail\terms_of_service.html:12
 msgid "Terms of Service"
-msgstr ""
+msgstr "Termos de Serviço"
 
 #: .\templates\olretail\terms_of_service.html:5
 msgid "The terms that govern using TimorMart as a buyer, seller, or courier."
 msgstr ""
+"Os termos que regem a utilização da TimorMart como comprador, vendedor ou "
+"estafeta."
 
 #: .\templates\olretail\terms_of_service.html:13
-#, fuzzy
 #| msgid "Cart updated."
 msgid "Last updated:"
-msgstr "Carrinho atualizado."
+msgstr "Última atualização:"
 
 #: .\templates\olretail\terms_of_service.html:17
-#, fuzzy
 #| msgid "Moderator note:"
 msgid "Important note:"
-msgstr "Nota do moderador:"
+msgstr "Nota importante:"
 
 #: .\templates\olretail\terms_of_service.html:18
 msgid ""
 "This document must be reviewed by a qualified lawyer before being relied on "
 "as a binding legal document."
 msgstr ""
+"Este documento deve ser revisto por um advogado qualificado antes de ser "
+"considerado um documento legal vinculativo."
 
 #: .\templates\olretail\terms_of_service.html:28
-#, fuzzy
 #| msgid "About TimorMart"
 msgid "1. What TimorMart Is"
-msgstr "Sobre o TimorMart"
+msgstr "1. O que é a TimorMart"
 
 #: .\templates\olretail\terms_of_service.html:30
 msgid ""
 "TimorMart is an online <strong>marketplace</strong> platform that connects "
 "independent buyers, sellers, and delivery couriers across Timor-Leste."
 msgstr ""
+"A TimorMart é uma plataforma de <strong>marketplace</strong> online que liga"
+" compradores, vendedores e estafetas independentes em todo o Timor-Leste."
 
 #: .\templates\olretail\terms_of_service.html:33
 msgid ""
@@ -4092,218 +4102,222 @@ msgid ""
 "listed on the platform. Each product is listed and sold by an independent "
 "seller, and each delivery is carried out by an independent courier."
 msgstr ""
+"A TimorMart <strong>não fabrica, não é proprietária nem vende</strong> os "
+"produtos listados na plataforma. Cada produto é anunciado e vendido por um "
+"vendedor independente, e cada entrega é realizada por um estafeta "
+"independente."
 
 #: .\templates\olretail\terms_of_service.html:36
 msgid "By using TimorMart, you agree to these Terms of Service."
-msgstr ""
+msgstr "Ao utilizar a TimorMart, aceita estes Termos de Serviço."
 
 #: .\templates\olretail\terms_of_service.html:43
-#, fuzzy
 #| msgid "Bank Accounts"
 msgid "2. Accounts"
-msgstr "Contas Bancárias"
+msgstr "2. Contas"
 
 #: .\templates\olretail\terms_of_service.html:44
 msgid "You can register as:"
-msgstr ""
+msgstr "Pode registar-se como:"
 
 #: .\templates\olretail\terms_of_service.html:49
-#, fuzzy
 #| msgid "Buyer & Seller — everything in one account"
 msgid "Buyer and Seller on one account"
-msgstr "Comprador & Vendedor — tudo numa só conta"
+msgstr "Comprador e Vendedor numa só conta"
 
 #: .\templates\olretail\terms_of_service.html:52
 msgid ""
-"You're responsible for the accuracy of the information you provide, and must "
-"keep your username and password secure."
+"You're responsible for the accuracy of the information you provide, and must"
+" keep your username and password secure."
 msgstr ""
+"É responsável pela exatidão da informação que fornece, e deve manter o seu "
+"nome de utilizador e palavra-passe seguros."
 
 #: .\templates\olretail\terms_of_service.html:55
 msgid ""
 "One account per person. Don't create multiple accounts to get around a "
 "suspension or a platform rule."
 msgstr ""
+"Uma conta por pessoa. Não crie várias contas para contornar uma suspensão ou"
+" uma regra da plataforma."
 
 #: .\templates\olretail\terms_of_service.html:57
 msgid "Courier accounts must submit:"
-msgstr ""
+msgstr "As contas de estafeta devem submeter:"
 
 #: .\templates\olretail\terms_of_service.html:59
-#, fuzzy
 #| msgid "A photo of your identity card is required."
 msgid "A photo of a valid identity document."
-msgstr "É necessária uma foto do seu cartão de identidade."
+msgstr "Uma fotografia de um documento de identidade válido."
 
 #: .\templates\olretail\terms_of_service.html:60
 msgid "A valid driving license."
-msgstr ""
+msgstr "Uma carta de condução válida."
 
 #: .\templates\olretail\terms_of_service.html:63
 msgid ""
 "Couriers will only be given delivery assignments once an administrator has "
 "verified and approved these documents."
 msgstr ""
+"Os estafetas só receberão entregas depois de um administrador verificar e "
+"aprovar estes documentos."
 
 #: .\templates\olretail\terms_of_service.html:70
-#, fuzzy
 #| msgid "Listings"
 msgid "3. Listings"
-msgstr "Anúncios"
+msgstr "3. Anúncios"
 
 #: .\templates\olretail\terms_of_service.html:72
 msgid ""
 "Every product a seller submits is reviewed by an administrator before it "
 "becomes visible to buyers."
 msgstr ""
+"Todos os produtos submetidos por um vendedor são revistos por um "
+"administrador antes de ficarem visíveis para os compradores."
 
 #: .\templates\olretail\terms_of_service.html:74
-#, fuzzy
 #| msgid "Administrator"
 msgid "An administrator may:"
-msgstr "Administrador"
+msgstr "Um administrador pode:"
 
 #: .\templates\olretail\terms_of_service.html:76
 msgid "Approve the listing."
-msgstr ""
+msgstr "Aprovar o anúncio."
 
 #: .\templates\olretail\terms_of_service.html:77
 msgid "Send it back for changes."
-msgstr ""
+msgstr "Devolvê-lo para alterações."
 
 #: .\templates\olretail\terms_of_service.html:78
-#, fuzzy
 #| msgid "Rejected"
 msgid "Reject it."
-msgstr "Rejeitado"
+msgstr "Rejeitá-lo."
 
 #: .\templates\olretail\terms_of_service.html:79
 msgid "Suspend it later if it breaks these terms."
-msgstr ""
+msgstr "Suspendê-lo mais tarde se violar estes termos."
 
 #: .\templates\olretail\terms_of_service.html:81
-#, fuzzy
 #| msgid "For Sellers"
 msgid "For example:"
-msgstr "Para Vendedores"
+msgstr "Por exemplo:"
 
 #: .\templates\olretail\terms_of_service.html:83
-#, fuzzy
 #| msgid "Browse products"
 msgid "Prohibited products."
-msgstr "Ver produtos"
+msgstr "Produtos proibidos."
 
 #: .\templates\olretail\terms_of_service.html:84
 msgid "Misleading pricing or condition."
-msgstr ""
+msgstr "Preço ou estado enganador."
 
 #: .\templates\olretail\terms_of_service.html:85
-#, fuzzy
 #| msgid "Create product"
 msgid "Counterfeit products."
-msgstr "Criar produto"
+msgstr "Produtos contrafeitos."
 
 #: .\templates\olretail\terms_of_service.html:87
 msgid "The seller is responsible for:"
-msgstr ""
+msgstr "O vendedor é responsável por:"
 
 #: .\templates\olretail\terms_of_service.html:89
-#, fuzzy
 #| msgid "Price"
 msgid "Price."
-msgstr "Preço"
+msgstr "Preço."
 
 #: .\templates\olretail\terms_of_service.html:90
-#, fuzzy
 #| msgid "Description"
 msgid "Description."
-msgstr "Descrição"
+msgstr "Descrição."
 
 #: .\templates\olretail\terms_of_service.html:91
 msgid "Condition (New or Second-hand)."
-msgstr ""
+msgstr "Estado (Novo ou Usado)."
 
 #: .\templates\olretail\terms_of_service.html:92
-#, fuzzy
 #| msgid "Product pages"
 msgid "Product photos."
-msgstr "Páginas de produto"
+msgstr "Fotografias do produto."
 
 #: .\templates\olretail\terms_of_service.html:99
-#, fuzzy
 #| msgid "Payment Method"
 msgid "4. Payment Methods & Fees"
-msgstr "Método de Pagamento"
+msgstr "4. Métodos de Pagamento e Taxas"
 
 #: .\templates\olretail\terms_of_service.html:100
 msgid "TimorMart currently supports two ways to pay."
-msgstr ""
+msgstr "A TimorMart suporta atualmente duas formas de pagamento."
 
 #: .\templates\olretail\terms_of_service.html:102
-#, fuzzy
 #| msgid "Cash on Delivery"
 msgid "Cash on Delivery (COD)"
-msgstr "Pagamento na Entrega"
+msgstr "Pagamento na Entrega (COD)"
 
 #: .\templates\olretail\terms_of_service.html:104
 msgid ""
 "The buyer pays the courier or seller directly when the product is received."
 msgstr ""
+"O comprador paga diretamente ao estafeta ou vendedor quando o produto é "
+"recebido."
 
 #: .\templates\olretail\terms_of_service.html:106
 msgid "The buyer pays:"
-msgstr ""
+msgstr "O comprador paga:"
 
 #: .\templates\olretail\terms_of_service.html:108
 #: .\templates\olretail\terms_of_service.html:121
 msgid "The product price."
-msgstr ""
+msgstr "O preço do produto."
 
 #: .\templates\olretail\terms_of_service.html:109
 msgid "A flat $1.00 delivery fee."
-msgstr ""
+msgstr "Uma taxa de entrega fixa de $1.00."
 
 #: .\templates\olretail\terms_of_service.html:112
 msgid "TimorMart does not receive or hold this money."
-msgstr ""
+msgstr "A TimorMart não recebe nem retém este dinheiro."
 
 #: .\templates\olretail\terms_of_service.html:117
 msgid ""
 "The buyer transfers the full amount to TimorMart's bank account before the "
 "product ships."
 msgstr ""
+"O comprador transfere o valor total para a conta bancária da TimorMart antes"
+" de o produto ser enviado."
 
 #: .\templates\olretail\terms_of_service.html:119
 msgid "This amount includes:"
-msgstr ""
+msgstr "Este valor inclui:"
 
 #: .\templates\olretail\terms_of_service.html:122
 #, python-format
 msgid "A 2%% platform service fee."
-msgstr ""
+msgstr "Uma taxa de serviço da plataforma de 2%%."
 
 #: .\templates\olretail\terms_of_service.html:123
-#, fuzzy
 #| msgid "Delivery fee"
 msgid "The $1.00 delivery fee."
-msgstr "Taxa de entrega"
+msgstr "A taxa de entrega de $1.00."
 
 #: .\templates\olretail\terms_of_service.html:126
 msgid ""
 "TimorMart holds this money and pays the seller once delivery is confirmed."
 msgstr ""
+"A TimorMart retém este dinheiro e paga ao vendedor assim que a entrega for "
+"confirmada."
 
 #: .\templates\olretail\terms_of_service.html:129
-#, fuzzy
 #| msgid "%(product)s is currently unavailable."
 msgid "Card payment is not currently available."
-msgstr "%(product)s está atualmente indisponível."
+msgstr "O pagamento por cartão não está atualmente disponível."
 
 #: .\templates\olretail\terms_of_service.html:132
 msgid ""
 "The seller receives the full listed price of the product once delivery is "
 "complete."
 msgstr ""
+"O vendedor recebe o preço total anunciado do produto assim que a entrega "
+"estiver concluída."
 
 #: .\templates\olretail\terms_of_service.html:135
 #, python-format
@@ -4311,113 +4325,120 @@ msgid ""
 "The 2%% platform fee on Bank Transfer orders is paid by the buyer — it is "
 "not deducted from the seller."
 msgstr ""
+"A taxa de 2%% da plataforma nas encomendas por Transferência Bancária é paga"
+" pelo comprador — não é deduzida ao vendedor."
 
 #: .\templates\olretail\terms_of_service.html:142
-#, fuzzy
 #| msgid "Delivered"
 msgid "5. Delivery"
-msgstr "Entregue"
+msgstr "5. Entrega"
 
 #: .\templates\olretail\terms_of_service.html:144
 msgid ""
 "Orders are delivered by a courier matched to the buyer's city, or arranged "
 "directly by the seller."
 msgstr ""
+"As encomendas são entregues por um estafeta correspondente à cidade do "
+"comprador, ou organizadas diretamente pelo vendedor."
 
 #: .\templates\olretail\terms_of_service.html:146
-#, fuzzy
 #| msgid "Proof of delivery"
 msgid "After delivery:"
-msgstr "Prova de entrega"
+msgstr "Após a entrega:"
 
 #: .\templates\olretail\terms_of_service.html:148
 msgid "The courier takes a photo as proof of delivery."
-msgstr ""
+msgstr "O estafeta tira uma fotografia como prova de entrega."
 
 #: .\templates\olretail\terms_of_service.html:149
 msgid "The buyer can rate the product and the courier."
-msgstr ""
+msgstr "O comprador pode avaliar o produto e o estafeta."
 
 #: .\templates\olretail\terms_of_service.html:152
 msgid ""
 "Estimated delivery time is set by the seller, and TimorMart doesn't "
 "guarantee it will be met."
 msgstr ""
+"O prazo estimado de entrega é definido pelo vendedor, e a TimorMart não "
+"garante que será cumprido."
 
 #: .\templates\olretail\terms_of_service.html:159
 msgid "6. Cancellations"
-msgstr ""
+msgstr "6. Cancelamentos"
 
 #: .\templates\olretail\terms_of_service.html:161
-#, fuzzy
 #| msgid "Thank you for your order. Your payment has been received."
 msgid ""
 "You can cancel an order yourself only before payment has been confirmed."
-msgstr "Obrigado pela sua encomenda. O seu pagamento foi recebido."
+msgstr ""
+"Só pode cancelar uma encomenda por conta própria antes de o pagamento ser "
+"confirmado."
 
 #: .\templates\olretail\terms_of_service.html:163
 msgid "This means the order is in status:"
-msgstr ""
+msgstr "Isto significa que a encomenda está no estado:"
 
 #: .\templates\olretail\terms_of_service.html:165
-#, fuzzy
 #| msgid "Awaiting kitchen"
 msgid "Awaiting payment."
-msgstr "A aguardar cozinha"
+msgstr "Aguarda pagamento."
 
 #: .\templates\olretail\terms_of_service.html:166
 msgid "Awaiting confirmation of a reported bank transfer."
-msgstr ""
+msgstr "Aguarda confirmação de uma transferência bancária reportada."
 
 #: .\templates\olretail\terms_of_service.html:169
 msgid ""
 "Once payment is confirmed, you can no longer self-cancel — see the Refund "
 "Policy for what happens if something goes wrong after that point."
 msgstr ""
+"Assim que o pagamento é confirmado, deixa de poder cancelar por conta "
+"própria — consulte a Política de Reembolso para saber o que acontece se algo"
+" correr mal a partir desse momento."
 
 #: .\templates\olretail\terms_of_service.html:176
-#, fuzzy
 #| msgid "Dispute"
 msgid "7. Disputes"
-msgstr "Litígio"
+msgstr "7. Reclamações"
 
 #: .\templates\olretail\terms_of_service.html:177
 msgid "If:"
-msgstr ""
+msgstr "Se:"
 
 #: .\templates\olretail\terms_of_service.html:179
 msgid "The product arrives damaged."
-msgstr ""
+msgstr "O produto chegar danificado."
 
 #: .\templates\olretail\terms_of_service.html:180
 msgid "The wrong product arrives."
-msgstr ""
+msgstr "Chegar o produto errado."
 
 #: .\templates\olretail\terms_of_service.html:181
 msgid "The product never arrives."
-msgstr ""
+msgstr "O produto nunca chegar."
 
 #: .\templates\olretail\terms_of_service.html:183
-#, fuzzy
 #| msgid "You can only open disputes for delivered or shipped orders."
 msgid "You can open a dispute on that order."
-msgstr "Só pode abrir litígios para encomendas entregues ou enviadas."
+msgstr "Pode abrir uma reclamação sobre essa encomenda."
 
 #: .\templates\olretail\terms_of_service.html:184
-#, fuzzy
 #| msgid "Dispute opened. Seller has 3 days to respond."
 msgid "The seller has 3 days to respond."
-msgstr "Litígio aberto. O vendedor tem 3 dias para responder."
+msgstr "O vendedor tem 3 dias para responder."
 
 #: .\templates\olretail\terms_of_service.html:186
 msgid ""
 "An administrator reviews the dispute and all evidence submitted, then makes "
 "the final decision."
 msgstr ""
+"Um administrador analisa a reclamação e todas as provas submetidas, e depois"
+" toma a decisão final."
 
 #: .\templates\olretail\terms_of_service.html:189
 msgid "The decision may include a refund, under the Refund Policy."
 msgstr ""
+"A decisão pode incluir um reembolso, nos termos da Política de Reembolso."
 
 #: .\templates\olretail\terms_of_service.html:192
 msgid ""
@@ -4425,211 +4446,216 @@ msgid ""
 "verified directly by an administrator against TimorMart's actual bank "
 "statement, not by the seller."
 msgstr ""
+"Para encomendas por Transferência Bancária, a afirmação de um comprador de "
+"que enviou o pagamento é verificada diretamente por um administrador junto "
+"do extrato bancário real da TimorMart, e não pelo vendedor."
 
 #: .\templates\olretail\terms_of_service.html:199
 msgid "8. Prohibited Conduct"
-msgstr ""
+msgstr "8. Conduta Proibida"
 
 #: .\templates\olretail\terms_of_service.html:200
 msgid "You may not use TimorMart to:"
-msgstr ""
+msgstr "Não pode utilizar a TimorMart para:"
 
 #: .\templates\olretail\terms_of_service.html:202
-#, fuzzy
 #| msgid "Browse all products"
 msgid "List illegal products."
-msgstr "Ver todos os produtos"
+msgstr "Anunciar produtos ilegais."
 
 #: .\templates\olretail\terms_of_service.html:203
-#, fuzzy
 #| msgid "View your products"
 msgid "List counterfeit products."
-msgstr "Ver os seus produtos"
+msgstr "Anunciar produtos contrafeitos."
 
 #: .\templates\olretail\terms_of_service.html:204
-#, fuzzy
 #| msgid "Back to products"
 msgid "List stolen products."
-msgstr "Voltar aos produtos"
+msgstr "Anunciar produtos roubados."
 
 #: .\templates\olretail\terms_of_service.html:205
-#, fuzzy
 #| msgid "View your products"
 msgid "List unsafe products."
-msgstr "Ver os seus produtos"
+msgstr "Anunciar produtos inseguros."
 
 #: .\templates\olretail\terms_of_service.html:206
 msgid "Post fake reviews or ratings."
-msgstr ""
+msgstr "Publicar avaliações ou classificações falsas."
 
 #: .\templates\olretail\terms_of_service.html:207
 msgid "Manipulate another user's rating."
-msgstr ""
+msgstr "Manipular a classificação de outro utilizador."
 
 #: .\templates\olretail\terms_of_service.html:208
 msgid "Submit a fraudulent payment claim."
-msgstr ""
+msgstr "Submeter uma reclamação de pagamento fraudulenta."
 
 #: .\templates\olretail\terms_of_service.html:209
 msgid "Reuse a receipt across different orders."
-msgstr ""
+msgstr "Reutilizar um recibo em encomendas diferentes."
 
 #: .\templates\olretail\terms_of_service.html:210
 msgid "Submit a fake identity document or delivery proof."
-msgstr ""
+msgstr "Submeter um documento de identidade ou prova de entrega falsos."
 
 #: .\templates\olretail\terms_of_service.html:211
 msgid "Harass, threaten, or discriminate against another user."
-msgstr ""
+msgstr "Assediar, ameaçar ou discriminar outro utilizador."
 
 #: .\templates\olretail\terms_of_service.html:212
 msgid "Create a new account to get around a suspension."
-msgstr ""
+msgstr "Criar uma nova conta para contornar uma suspensão."
 
 #: .\templates\olretail\terms_of_service.html:219
 msgid "9. Suspension & Account Closure"
-msgstr ""
+msgstr "9. Suspensão e Encerramento de Conta"
 
 #: .\templates\olretail\terms_of_service.html:220
-#, fuzzy
 #| msgid "About TimorMart"
 msgid "TimorMart may:"
-msgstr "Sobre o TimorMart"
+msgstr "A TimorMart pode:"
 
 #: .\templates\olretail\terms_of_service.html:222
-#, fuzzy
 #| msgid "Edit listing"
 msgid "Suspend a listing."
-msgstr "Editar anúncio"
+msgstr "Suspender um anúncio."
 
 #: .\templates\olretail\terms_of_service.html:223
-#, fuzzy
 #| msgid "Remove this window?"
 msgid "Remove a listing."
-msgstr "Remover este período?"
+msgstr "Remover um anúncio."
 
 #: .\templates\olretail\terms_of_service.html:224
-#, fuzzy
 #| msgid "Create an account"
 msgid "Restrict an account."
-msgstr "Criar uma conta"
+msgstr "Restringir uma conta."
 
 #: .\templates\olretail\terms_of_service.html:225
-#, fuzzy
 #| msgid "Create an account"
 msgid "Close an account."
-msgstr "Criar uma conta"
+msgstr "Encerrar uma conta."
 
 #: .\templates\olretail\terms_of_service.html:227
 msgid "If a user breaks these terms, including:"
-msgstr ""
+msgstr "Se um utilizador violar estes termos, incluindo:"
 
 #: .\templates\olretail\terms_of_service.html:229
 msgid "Fraud."
-msgstr ""
+msgstr "Fraude."
 
 #: .\templates\olretail\terms_of_service.html:230
 msgid "Repeatedly unverifiable payment claims."
-msgstr ""
+msgstr "Reclamações de pagamento repetidamente impossíveis de verificar."
 
 #: .\templates\olretail\terms_of_service.html:231
-#, fuzzy
 #| msgid "Edit listing"
 msgid "Prohibited listings."
-msgstr "Editar anúncio"
+msgstr "Anúncios proibidos."
 
 #: .\templates\olretail\terms_of_service.html:234
 msgid ""
 "Where reasonably possible, TimorMart will explain why this action was taken."
 msgstr ""
+"Sempre que razoavelmente possível, a TimorMart explicará o motivo desta "
+"ação."
 
 #: .\templates\olretail\terms_of_service.html:241
 msgid "10. TimorMart's Role & Limitation of Liability"
-msgstr ""
+msgstr "10. O Papel da TimorMart e Limitação de Responsabilidade"
 
 #: .\templates\olretail\terms_of_service.html:242
 msgid "TimorMart is an intermediary between buyers, sellers, and couriers."
 msgstr ""
+"A TimorMart é um intermediário entre compradores, vendedores e estafetas."
 
 #: .\templates\olretail\terms_of_service.html:243
 msgid "TimorMart is not the seller of any product listed on the platform."
 msgstr ""
+"A TimorMart não é a vendedora de nenhum produto anunciado na plataforma."
 
 #: .\templates\olretail\terms_of_service.html:245
 msgid ""
 "TimorMart does not manufacture, inspect, or guarantee the products sold by "
 "independent sellers."
 msgstr ""
+"A TimorMart não fabrica, inspeciona nem garante os produtos vendidos por "
+"vendedores independentes."
 
 #: .\templates\olretail\terms_of_service.html:247
 msgid "To the fullest extent permitted by law, TimorMart is not liable for:"
 msgstr ""
+"Na máxima medida permitida por lei, a TimorMart não é responsável por:"
 
 #: .\templates\olretail\terms_of_service.html:249
-#, fuzzy
 #| msgid "Product Details"
 msgid "Product quality."
-msgstr "Detalhes do Produto"
+msgstr "Qualidade do produto."
 
 #: .\templates\olretail\terms_of_service.html:250
-#, fuzzy
 #| msgid "Product name"
 msgid "Product safety."
-msgstr "Nome do produto"
+msgstr "Segurança do produto."
 
 #: .\templates\olretail\terms_of_service.html:251
-#, fuzzy
 #| msgid "Product Details"
 msgid "Product legality."
-msgstr "Detalhes do Produto"
+msgstr "Legalidade do produto."
 
 #: .\templates\olretail\terms_of_service.html:252
 msgid "The accuracy of a seller's listing."
-msgstr ""
+msgstr "A exatidão do anúncio de um vendedor."
 
 #: .\templates\olretail\terms_of_service.html:253
 msgid "A courier's conduct during delivery."
-msgstr ""
+msgstr "A conduta de um estafeta durante a entrega."
 
 #: .\templates\olretail\terms_of_service.html:256
 msgid ""
-"TimorMart's liability is limited to the dispute-resolution process described "
-"in this document."
+"TimorMart's liability is limited to the dispute-resolution process described"
+" in this document."
 msgstr ""
+"A responsabilidade da TimorMart limita-se ao processo de resolução de "
+"reclamações descrito neste documento."
 
 #: .\templates\olretail\terms_of_service.html:263
 msgid "11. Changes to These Terms"
-msgstr ""
+msgstr "11. Alterações a Estes Termos"
 
 #: .\templates\olretail\terms_of_service.html:265
 msgid ""
 "TimorMart may update these terms from time to time. Continuing to use the "
 "platform after a change takes effect means you accept the updated terms."
 msgstr ""
+"A TimorMart pode atualizar estes termos periodicamente. Continuar a utilizar"
+" a plataforma após uma alteração entrar em vigor significa que aceita os "
+"termos atualizados."
 
 #: .\templates\olretail\terms_of_service.html:272
 msgid "12. Governing Law"
-msgstr ""
+msgstr "12. Lei Aplicável"
 
 #: .\templates\olretail\terms_of_service.html:274
 msgid ""
 "These terms are governed by the laws of the Democratic Republic of Timor-"
 "Leste."
 msgstr ""
+"Estes termos regem-se pelas leis da República Democrática de Timor-Leste."
 
 #: .\templates\olretail\terms_of_service.html:275
 msgid ""
 "[Specific business registration/entity details to be added here once "
 "confirmed.]"
 msgstr ""
+"[Detalhes específicos do registo comercial/entidade legal a adicionar aqui "
+"assim que confirmados.]"
 
 #: .\templates\olretail\terms_of_service.html:282
 msgid "13. Contact"
-msgstr ""
+msgstr "13. Contacto"
 
 #: .\templates\olretail\terms_of_service.html:284
 msgid "Questions about these terms? Reach us on WhatsApp at"
-msgstr ""
+msgstr "Tem dúvidas sobre estes termos? Contacte-nos via WhatsApp em"
 
 #: .\templates\olretail\wishlist.html:5 .\templates\shared\header.html:346
 msgid "Wishlist"
@@ -4756,7 +4782,8 @@ msgstr "Comprar Eletrónicos"
 
 #: .\templates\shared\popular_category.html:35
 msgid "Cement, tools and building materials for every project."
-msgstr "Cimento, ferramentas e materiais de construção para todos os projetos."
+msgstr ""
+"Cimento, ferramentas e materiais de construção para todos os projetos."
 
 #: .\templates\shared\popular_category.html:37
 msgid "Browse Materials"
