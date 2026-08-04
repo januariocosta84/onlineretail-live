@@ -310,6 +310,13 @@
               <form method="post" action="{% url 'olretail:seller_update_order_status' order.id %}">
                 {% csrf_token %}
                 <input type="hidden" name="status" value="shipped">
+                {% comment %}
+                Hidden per request — free-text courier name/tracking number
+                predate the structured assigned_courier flow (accept/reject/
+                seller-confirmed pickup) and are redundant now that a real
+                Courier account can be assigned instead. Left in the form/
+                view/model untouched, not deleted, in case they're wanted
+                again later — just uncomment to bring them back.
                 <div class="form-group">
                   <label for="{{ ship_form.courier_name.id_for_label }}">{{ ship_form.courier_name.label }}</label>
                   {{ ship_form.courier_name }}
@@ -318,6 +325,7 @@
                   <label for="{{ ship_form.tracking_number.id_for_label }}">{{ ship_form.tracking_number.label }}</label>
                   {{ ship_form.tracking_number }}
                 </div>
+                {% endcomment %}
                 <div class="form-group">
                   <label for="{{ ship_form.assigned_courier.id_for_label }}">{{ ship_form.assigned_courier.label }}</label>
                   {{ ship_form.assigned_courier }}
