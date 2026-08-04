@@ -245,9 +245,16 @@
                 {{ delivery_proof_form.photo }}
                 <small class="form-text text-muted">{% trans "Take a photo of the delivered item to confirm." %}</small>
               </div>
+              {% if is_seller and order.assigned_courier_id %}
+              <button type="submit" class="btn btn-success btn-sm" disabled title="{% trans 'This order is assigned to a courier — only they can confirm delivery.' %}">
+                <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
+              </button>
+              <small class="form-text text-muted">{% trans "This order is assigned to a courier — only they can confirm delivery." %}</small>
+              {% else %}
               <button type="submit" class="btn btn-success btn-sm">
                 <i class="fas fa-check mr-1"></i>{% trans "Mark as Delivered" %}
               </button>
+              {% endif %}
             </form>
             {% endif %}
 

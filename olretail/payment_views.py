@@ -1760,9 +1760,15 @@ def seller_update_order_status(request, order_id):
 
 def _courier_can_mark_delivered(user, order):
     """Same authorization rule for both the HTML view and the API: the
-    owning seller (self-delivery) or the courier this order is assigned
-    to. Returns (is_owning_seller, is_assigned_courier)."""
-    is_owning_seller = hasattr(user, 'seller') and order.seller_id == user.seller.id
+    owning seller may only self-confirm a self-delivery order (no courier
+    assigned) — once a courier is assigned, only that courier can confirm,
+    so the seller can't accidentally mark it delivered themselves before
+    the courier actually hands it over. Returns (is_owning_seller, is_assigned_courier)."""
+    is_owning_seller = (
+        hasattr(user, 'seller')
+        and order.seller_id == user.seller.id
+        and not order.assigned_courier_id
+    )
     is_assigned_courier = (
         order.assigned_courier_id
         and hasattr(user, 'courier')
