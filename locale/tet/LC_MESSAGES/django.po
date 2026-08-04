@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TimorMart\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 11:50+0900\n"
+"POT-Creation-Date: 2026-08-04 14:50+0900\n"
 "PO-Revision-Date: 2026-07-12 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: Tetum\n"
@@ -287,14 +287,14 @@ msgstr ""
 "Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona. Ita-boot nia"
 " username mak %(username)s — ita presiza ida-ne'e atu tama iha sistema."
 
-#: .\accounts\views.py:130 .\olretail\payment_views.py:1236
-#: .\olretail\payment_views.py:1277 .\olretail\payment_views.py:1291
-#: .\olretail\payment_views.py:1306 .\olretail\payment_views.py:1320
-#: .\olretail\payment_views.py:1336 .\olretail\payment_views.py:1359
-#: .\olretail\payment_views.py:1398 .\olretail\payment_views.py:1720
-#: .\olretail\payment_views.py:1909 .\olretail\payment_views.py:1994
-#: .\olretail\payment_views.py:2030 .\olretail\payment_views.py:2044
-#: .\olretail\views.py:404 .\olretail\views.py:459 .\olretail\views.py:539
+#: .\accounts\views.py:130 .\olretail\payment_views.py:1272
+#: .\olretail\payment_views.py:1313 .\olretail\payment_views.py:1327
+#: .\olretail\payment_views.py:1342 .\olretail\payment_views.py:1356
+#: .\olretail\payment_views.py:1372 .\olretail\payment_views.py:1395
+#: .\olretail\payment_views.py:1434 .\olretail\payment_views.py:1756
+#: .\olretail\payment_views.py:1945 .\olretail\payment_views.py:2030
+#: .\olretail\payment_views.py:2066 .\olretail\payment_views.py:2080
+#: .\olretail\views.py:415 .\olretail\views.py:470 .\olretail\views.py:550
 msgid "Please correct the errors below."
 msgstr "Favór hadi'a erru sira iha okos."
 
@@ -936,7 +936,7 @@ msgstr "%(label)s — Disponivel agora"
 msgid "Delivery Photo"
 msgstr "Fotografia Entrega"
 
-#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1857
+#: .\olretail\payment_forms.py:327 .\olretail\payment_views.py:1893
 msgid "A delivery photo is required to confirm delivery."
 msgstr "Fotografia entrega presiza atu konfirma entrega."
 
@@ -1241,6 +1241,7 @@ msgstr "Transferénsia Banku / Movel"
 #: .\templates\olretail\details.html:313
 #: .\templates\olretail\order_detail.html:338
 #: .\templates\olretail\seller_orders.html:74
+#: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
 msgstr "Selu-iha-Entrega"
 
@@ -1513,21 +1514,21 @@ msgstr "Pagamentu simu ba enkomenda %(order)s husi %(buyer)s — “%(product)s�
 msgid "Your payment for order %(order)s was successful."
 msgstr "Ita-nia pagamentu ba enkomenda %(order)s susesu ona."
 
-#: .\olretail\payment_views.py:979
+#: .\olretail\payment_views.py:984
 #, python-format
 msgid "Your payment for order %(order)s was refunded."
 msgstr "Ita-nia pagamentu ba enkomenda %(order)s selu fila fali ona."
 
-#: .\olretail\payment_views.py:984
+#: .\olretail\payment_views.py:989
 #, python-format
 msgid "Order %(order)s was refunded to the buyer."
 msgstr "Enkomenda %(order)s selu fila fali ona ba kompradór."
 
-#: .\olretail\payment_views.py:1106
+#: .\olretail\payment_views.py:1142
 msgid "This order is not awaiting a transfer."
 msgstr "Enkomenda ne'e la hein transferénsia."
 
-#: .\olretail\payment_views.py:1122
+#: .\olretail\payment_views.py:1158
 #, python-format
 msgid ""
 "Claimed amount ($%(claimed)s) does not match the order total ($%(total)s)."
@@ -1535,15 +1536,15 @@ msgstr ""
 "Montante ne'ebé reklama ($%(claimed)s) la kombina ho totál enkomenda "
 "($%(total)s)."
 
-#: .\olretail\payment_views.py:1126
+#: .\olretail\payment_views.py:1162
 msgid "This exact receipt image was already submitted on a different order."
 msgstr "Imajen resibu ida-ne'e submete ona iha enkomenda seluk."
 
-#: .\olretail\payment_views.py:1132
+#: .\olretail\payment_views.py:1168
 msgid "This reference number was already submitted on a different order."
 msgstr "Numeru referénsia ida-ne'e submete ona iha enkomenda seluk."
 
-#: .\olretail\payment_views.py:1153
+#: .\olretail\payment_views.py:1189
 #, python-format
 msgid ""
 "Buyer claims payment sent for order %(order)s — awaiting admin verification "
@@ -1552,7 +1553,7 @@ msgstr ""
 "Kompradór hateten ona selu ba enkomenda %(order)s — hein administradór "
 "verifika ho ekstratu banku plataforma-nian."
 
-#: .\olretail\payment_views.py:1160
+#: .\olretail\payment_views.py:1196
 #, python-format
 msgid ""
 "%(buyer)s reported sending payment for order %(order)s — an admin will "
@@ -1561,68 +1562,68 @@ msgstr ""
 "%(buyer)s relata ona haruka pagamentu ba enkomenda %(order)s — administradór"
 " sei verifika no konfirma."
 
-#: .\olretail\payment_views.py:1167
+#: .\olretail\payment_views.py:1203
 #, python-format
 msgid "New bank transfer claim for order %(order)s — awaiting review."
 msgstr ""
 "Reklamasaun transferénsia banku foun ba enkomenda %(order)s — hein revizaun."
 
-#: .\olretail\payment_views.py:1171
+#: .\olretail\payment_views.py:1207
 msgid "Thanks — an admin will verify your payment and confirm it shortly."
 msgstr ""
 "Obrigadu — administradór sei verifika ita-nia pagamentu no konfirma lalais."
 
-#: .\olretail\payment_views.py:1198
+#: .\olretail\payment_views.py:1234
 msgid "Payment details saved."
 msgstr "Detallu pagamentu rai ona."
 
-#: .\olretail\payment_views.py:1234
+#: .\olretail\payment_views.py:1270
 msgid "Bank account added."
 msgstr "Konta banku aumenta ona."
 
-#: .\olretail\payment_views.py:1246
+#: .\olretail\payment_views.py:1282
 msgid "Bank account removed."
 msgstr "Konta banku hasai ona."
 
-#: .\olretail\payment_views.py:1259
+#: .\olretail\payment_views.py:1295
 msgid "Business info only applies to non-individual seller accounts."
 msgstr ""
 "Informasaun komersiál aplika deit ba konta vendedór ne'ebé la individuál."
 
-#: .\olretail\payment_views.py:1275
+#: .\olretail\payment_views.py:1311
 msgid "Business information saved."
 msgstr "Informasaun komersiál rai ona."
 
-#: .\olretail\payment_views.py:1289
+#: .\olretail\payment_views.py:1325
 msgid "Contact information saved."
 msgstr "Informasaun kontaktu rai ona."
 
-#: .\olretail\payment_views.py:1304
+#: .\olretail\payment_views.py:1340
 msgid "Location saved."
 msgstr "Lokalizasaun rai ona."
 
-#: .\olretail\payment_views.py:1318
+#: .\olretail\payment_views.py:1354
 msgid "Branding saved."
 msgstr "Branding rai ona."
 
-#: .\olretail\payment_views.py:1334
+#: .\olretail\payment_views.py:1370
 msgid "Operations saved."
 msgstr "Operasaun rai ona."
 
-#: .\olretail\payment_views.py:1348
+#: .\olretail\payment_views.py:1384
 msgid "Business verification only applies to non-individual seller accounts."
 msgstr ""
 "Verifikasaun komersiál aplika deit ba konta vendedór ne'ebé la individuál."
 
-#: .\olretail\payment_views.py:1357
+#: .\olretail\payment_views.py:1393
 msgid "Document submitted — an administrator will review it shortly."
 msgstr "Dokumentu submete ona — administradór sei revee lalais."
 
-#: .\olretail\payment_views.py:1377
+#: .\olretail\payment_views.py:1413
 msgid "You already have a pending subscription request awaiting confirmation."
 msgstr "Ita iha ona pedidu subskrisaun ne'ebé hein konfirmasaun."
 
-#: .\olretail\payment_views.py:1391
+#: .\olretail\payment_views.py:1427
 #, python-format
 msgid ""
 "%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting"
@@ -1631,7 +1632,7 @@ msgstr ""
 "%(seller)s relata ona pagamentu subskrisaun %(plan)s ($%(amount)s) — hein "
 "konfirmasaun."
 
-#: .\olretail\payment_views.py:1395
+#: .\olretail\payment_views.py:1431
 msgid ""
 "Thanks — your payment report was submitted. An admin will confirm it "
 "shortly."
@@ -1639,213 +1640,213 @@ msgstr ""
 "Obrigadu — ita-nia relatóriu pagamentu submete ona. Admin sei konfirma "
 "lalais."
 
-#: .\olretail\payment_views.py:1453
+#: .\olretail\payment_views.py:1489
 msgid ""
 "This order can no longer be cancelled — it has already been paid or is past "
 "that stage."
 msgstr "Enkomenda ne'e la bele kansela ona — selu ona ka pasa ona etapa ne'e."
 
-#: .\olretail\payment_views.py:1470
+#: .\olretail\payment_views.py:1506
 #, python-format
 msgid "%(buyer)s cancelled order %(order)s before paying."
 msgstr "%(buyer)s kansela ona enkomenda %(order)s antes selu."
 
-#: .\olretail\payment_views.py:1474
+#: .\olretail\payment_views.py:1510
 #, python-format
 msgid "Order %(order)s was cancelled."
 msgstr "Enkomenda %(order)s kansela ona."
 
-#: .\olretail\payment_views.py:1494
+#: .\olretail\payment_views.py:1530
 msgid "You do not have permission to view this order."
 msgstr "Ita la iha permisaun atu haree enkomenda ne'e."
 
-#: .\olretail\payment_views.py:1570
+#: .\olretail\payment_views.py:1606
 msgid "You can only rate a product after it has been delivered."
 msgstr "Ita bele deit avalia produtu depois entrega ona."
 
-#: .\olretail\payment_views.py:1574
+#: .\olretail\payment_views.py:1610
 msgid "You already rated this order."
 msgstr "Ita avalia ona enkomenda ne'e."
 
-#: .\olretail\payment_views.py:1579 .\olretail\payment_views.py:1611
+#: .\olretail\payment_views.py:1615 .\olretail\payment_views.py:1647
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Favor hili avaliasaun husi bituin 1 to'o 5."
 
-#: .\olretail\payment_views.py:1586
+#: .\olretail\payment_views.py:1622
 msgid "Thanks for your rating!"
 msgstr "Obrigadu tanba fó klasifikasaun!"
 
-#: .\olretail\payment_views.py:1598
+#: .\olretail\payment_views.py:1634
 msgid "You can only rate a courier after the order has been delivered."
 msgstr "Ita bele deit avalia entregadór depois enkomenda entrega ona."
 
-#: .\olretail\payment_views.py:1602
+#: .\olretail\payment_views.py:1638
 msgid "This order has no assigned courier to rate."
 msgstr "Enkomenda ne'e la iha entregadór atu avalia."
 
-#: .\olretail\payment_views.py:1606
+#: .\olretail\payment_views.py:1642
 msgid "You already rated this courier."
 msgstr "Ita avalia ona entregadór ne'e."
 
-#: .\olretail\payment_views.py:1615
+#: .\olretail\payment_views.py:1651
 msgid "Thanks for rating the courier!"
 msgstr "Obrigadu tanba fó klasifikasaun ba entregadór!"
 
-#: .\olretail\payment_views.py:1629 .\olretail\payment_views.py:1655
+#: .\olretail\payment_views.py:1665 .\olretail\payment_views.py:1691
 msgid "You must be a seller to view this page."
 msgstr "Ita-boot tenke sai fa'an-na'in atu haree pájina ne'e."
 
-#: .\olretail\payment_views.py:1682 .\olretail\payment_views.py:1843
-#: .\olretail\payment_views.py:1885 .\olretail\payment_views.py:1949
-#: .\olretail\payment_views.py:2066 .\olretail\payment_views.py:2277
+#: .\olretail\payment_views.py:1718 .\olretail\payment_views.py:1879
+#: .\olretail\payment_views.py:1921 .\olretail\payment_views.py:1985
+#: .\olretail\payment_views.py:2102 .\olretail\payment_views.py:2313
 msgid "Permission denied."
 msgstr "Permisaun rejeitadu."
 
-#: .\olretail\payment_views.py:1685 .\olretail\payment_views.py:1888
+#: .\olretail\payment_views.py:1721 .\olretail\payment_views.py:1924
 msgid "You must be a seller to update orders."
 msgstr "Ita tenke sai vendedór atu atualiza enkomenda."
 
-#: .\olretail\payment_views.py:1689
+#: .\olretail\payment_views.py:1725
 msgid "Unknown action."
 msgstr "Asaun la konhesidu."
 
-#: .\olretail\payment_views.py:1693 .\olretail\payment_views.py:1905
+#: .\olretail\payment_views.py:1729 .\olretail\payment_views.py:1941
 msgid "Only paid orders can be marked as shipped."
 msgstr "Enkomenda ne'ebé selu ona deit mak bele marka hanesan haruka."
 
-#: .\olretail\payment_views.py:1706
+#: .\olretail\payment_views.py:1742
 #, python-format
 msgid "Your order %(order)s has shipped."
 msgstr "Ita-nia enkomenda %(order)s haruka ona."
 
-#: .\olretail\payment_views.py:1715
+#: .\olretail\payment_views.py:1751
 #, python-format
 msgid "You have been assigned to deliver order %(order)s."
 msgstr "Ita nomeia ona atu entrega enkomenda %(order)s."
 
-#: .\olretail\payment_views.py:1718
+#: .\olretail\payment_views.py:1754
 msgid "Order marked as shipped."
 msgstr "Enkomenda marka ona hanesan haruka."
 
-#: .\olretail\payment_views.py:1813
+#: .\olretail\payment_views.py:1849
 #, python-format
 msgid "Your order %(order)s has been delivered."
 msgstr "Ita-nia enkomenda %(order)s entrega ona."
 
-#: .\olretail\payment_views.py:1820
+#: .\olretail\payment_views.py:1856
 #, python-format
 msgid "%(seller)s just became eligible for payout — $%(amount)s available."
 msgstr "%(seller)s sai ona elegível ba pagamentu — $%(amount)s disponivel."
 
-#: .\olretail\payment_views.py:1828
+#: .\olretail\payment_views.py:1864
 #, python-format
 msgid "%(courier)s just became eligible for payout — $%(amount)s available."
 msgstr "%(courier)s sai ona elegível ba pagamentu — $%(amount)s disponivel."
 
-#: .\olretail\payment_views.py:1847
+#: .\olretail\payment_views.py:1883
 msgid "Only shipped orders can be marked as delivered."
 msgstr "Enkomenda ne'ebé haruka ona deit mak bele marka hanesan entrega."
 
-#: .\olretail\payment_views.py:1853
+#: .\olretail\payment_views.py:1889
 msgid "Order marked as delivered."
 msgstr "Enkomenda marka ona hanesan entrega."
 
-#: .\olretail\payment_views.py:1863
+#: .\olretail\payment_views.py:1899
 msgid "Preparing the food."
 msgstr "Prepara hahán."
 
-#: .\olretail\payment_views.py:1864
+#: .\olretail\payment_views.py:1900
 msgid "Order is ready for pickup."
 msgstr "Enkomenda prontu ona ba foti."
 
-#: .\olretail\payment_views.py:1892
+#: .\olretail\payment_views.py:1928
 msgid "This action only applies to restaurant orders."
 msgstr "Asaun ne'e aplika deit ba enkomenda restaurante."
 
-#: .\olretail\payment_views.py:1897 .\olretail\payment_views.py:1954
+#: .\olretail\payment_views.py:1933 .\olretail\payment_views.py:1990
 msgid "This order cannot be advanced from its current status."
 msgstr "Enkomenda ne'e la bele avansa husi status atuál."
 
-#: .\olretail\payment_views.py:1927
+#: .\olretail\payment_views.py:1963
 #, python-format
 msgid "Order %(order)s is ready for collection."
 msgstr "Enkomenda %(order)s prontu ona ba kolete."
 
-#: .\olretail\payment_views.py:1930 .\olretail\payment_views.py:1962
+#: .\olretail\payment_views.py:1966 .\olretail\payment_views.py:1998
 msgid "Order updated."
 msgstr "Enkomenda atualiza ona."
 
-#: .\olretail\payment_views.py:1935
+#: .\olretail\payment_views.py:1971
 msgid "Courier picked up the order."
 msgstr "Entregadór foti ona enkomenda."
 
-#: .\olretail\payment_views.py:1936
+#: .\olretail\payment_views.py:1972
 msgid "Courier is on the way."
 msgstr "Entregadór iha dalan."
 
-#: .\olretail\payment_views.py:1992
+#: .\olretail\payment_views.py:2028
 msgid "ID submitted — an administrator will review it shortly."
 msgstr "Identidade submete ona — administradór sei revee lalais."
 
-#: .\olretail\payment_views.py:2028
+#: .\olretail\payment_views.py:2064
 msgid "Availability window added."
 msgstr "Períodu disponibilidade aumenta ona."
 
-#: .\olretail\payment_views.py:2042
+#: .\olretail\payment_views.py:2078
 msgid "Availability window updated."
 msgstr "Períodu disponibilidade atualiza ona."
 
-#: .\olretail\payment_views.py:2054
+#: .\olretail\payment_views.py:2090
 msgid "Availability window removed."
 msgstr "Períodu disponibilidade hasai ona."
 
-#: .\olretail\payment_views.py:2069
+#: .\olretail\payment_views.py:2105
 msgid "You must be a seller to post delivery updates."
 msgstr "Ita tenke sai vendedór atu hakerek atualizasaun entrega."
 
-#: .\olretail\payment_views.py:2079
+#: .\olretail\payment_views.py:2115
 #, python-format
 msgid "Delivery update for order %(order)s: %(note)s"
 msgstr "Atualizasaun entrega ba enkomenda %(order)s: %(note)s"
 
-#: .\olretail\payment_views.py:2082
+#: .\olretail\payment_views.py:2118
 msgid "Update posted."
 msgstr "Atualizasaun hakerek ona."
 
-#: .\olretail\payment_views.py:2084
+#: .\olretail\payment_views.py:2120
 msgid "Please enter a status update."
 msgstr "Favor tau atualizasaun status."
 
-#: .\olretail\payment_views.py:2207
+#: .\olretail\payment_views.py:2243
 msgid "You can only open disputes for delivered or shipped orders."
 msgstr "Ita bele deit loke disputa ba enkomenda ne'ebé entrega ka haruka ona."
 
-#: .\olretail\payment_views.py:2217
+#: .\olretail\payment_views.py:2253
 msgid "A dispute is already open for this order."
 msgstr "Disputa loke ona ba enkomenda ne'e."
 
-#: .\olretail\payment_views.py:2229
+#: .\olretail\payment_views.py:2265
 msgid "Dispute opened. Seller has 3 days to respond."
 msgstr "Disputa loke ona. Vendedór iha loron 3 atu hatan."
 
-#: .\olretail\payment_views.py:2252
+#: .\olretail\payment_views.py:2288
 msgid "You do not have permission to view this dispute."
 msgstr "Ita la iha permisaun atu haree disputa ne'e."
 
-#: .\olretail\payment_views.py:2280
+#: .\olretail\payment_views.py:2316
 msgid "You must be a seller to respond to disputes."
 msgstr "Ita tenke sai vendedór atu hatan disputa."
 
-#: .\olretail\payment_views.py:2285
+#: .\olretail\payment_views.py:2321
 #: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "Prazu ba hatan pasa ona."
 
-#: .\olretail\payment_views.py:2294
+#: .\olretail\payment_views.py:2330
 msgid "Your response has been submitted."
 msgstr "Ita-nia resposta submete ona."
 
-#: .\olretail\payment_views.py:2348
+#: .\olretail\payment_views.py:2384
 #, python-format
 msgid "%(time)s ago"
 msgstr "%(time)s liu ba"
@@ -1895,28 +1896,28 @@ msgstr ""
 msgid "That category does not exist."
 msgstr "Kategoria ne'e la eziste."
 
-#: .\olretail\views.py:225
+#: .\olretail\views.py:236
 msgid "That product is awaiting approval."
 msgstr "Produtu ne'e sei hein aprovasaun."
 
-#: .\olretail\views.py:235
+#: .\olretail\views.py:246
 msgid "Only buyer accounts can post comments."
 msgstr "De'it konta sosa-na'in mak bele haruka komentáriu."
 
-#: .\olretail\views.py:242
+#: .\olretail\views.py:253
 msgid "Your comment was posted."
 msgstr "Ita-boot nia komentáriu publika tiha ona."
 
-#: .\olretail\views.py:244
+#: .\olretail\views.py:255
 msgid "Please correct the errors in your comment."
 msgstr "Favór hadi'a erru sira iha ita-boot nia komentáriu."
 
-#: .\olretail\views.py:270
+#: .\olretail\views.py:281
 #, python-format
 msgid "Hello, I am interested in “%(name)s” (%(url)s) on TimorMart."
 msgstr "Botarde, ha'u iha interese ba “%(name)s” (%(url)s) iha TimorMart."
 
-#: .\olretail\views.py:376
+#: .\olretail\views.py:387
 #, python-format
 msgid ""
 "You've reached the free plan's %(limit)d listing limit. Subscribe to post "
@@ -1925,50 +1926,50 @@ msgstr ""
 "Ita to'o ona limite %(limit)d listajen planu grátis. Subskreve atu hakerek "
 "produtu barak liu."
 
-#: .\olretail\views.py:395
+#: .\olretail\views.py:406
 #, python-format
 msgid "“%(name)s” was published."
 msgstr "“%(name)s” publika tiha ona."
 
-#: .\olretail\views.py:400
+#: .\olretail\views.py:411
 #, python-format
 msgid "“%(name)s” was created and is awaiting approval by the administrators."
 msgstr ""
 "“%(name)s” kria tiha ona no sei hein aprovasaun husi administradór sira."
 
-#: .\olretail\views.py:412
+#: .\olretail\views.py:423
 msgid "Add a new product"
 msgstr "Aumenta produtu foun"
 
-#: .\olretail\views.py:413
+#: .\olretail\views.py:424
 msgid "Create product"
 msgstr "Kria produtu"
 
-#: .\olretail\views.py:449
+#: .\olretail\views.py:460
 #, python-format
 msgid "“%(name)s” was resubmitted for approval."
 msgstr "“%(name)s” haruka fila fali ba aprovasaun."
 
-#: .\olretail\views.py:452
+#: .\olretail\views.py:463
 #, python-format
 msgid "“%(name)s” was updated."
 msgstr "“%(name)s” atualiza tiha ona."
 
-#: .\olretail\views.py:467
+#: .\olretail\views.py:478
 #, python-format
 msgid "Edit “%(name)s”"
 msgstr "Edita “%(name)s”"
 
-#: .\olretail\views.py:468
+#: .\olretail\views.py:479
 msgid "Save changes"
 msgstr "Rai mudansa sira"
 
-#: .\olretail\views.py:492
+#: .\olretail\views.py:503
 #, python-format
 msgid "“%(name)s” is now marked as sold out."
 msgstr "“%(name)s” marka tiha ona nu'udar esgotadu."
 
-#: .\olretail\views.py:506
+#: .\olretail\views.py:517
 #, python-format
 msgid ""
 "“%(name)s” can't be deleted because it has order history — mark it sold out "
@@ -1977,21 +1978,21 @@ msgstr ""
 "“%(name)s” la bele hamoos tanba iha istória enkomenda — marka deit hanesan "
 "esgota."
 
-#: .\olretail\views.py:510
+#: .\olretail\views.py:521
 #, python-format
 msgid "“%(name)s” was deleted."
 msgstr "“%(name)s” apaga tiha ona."
 
-#: .\olretail\views.py:520
+#: .\olretail\views.py:531
 msgid "Menu sections are only available for restaurant seller accounts."
 msgstr "Seksaun menu disponivel deit ba konta vendedór restaurante."
 
-#: .\olretail\views.py:537
+#: .\olretail\views.py:548
 #, python-format
 msgid "“%(name)s” was added to your menu."
 msgstr "“%(name)s” aumenta ba ita-nia menu."
 
-#: .\olretail\views.py:563
+#: .\olretail\views.py:574
 #, python-format
 msgid "“%(name)s” was removed from your menu."
 msgstr "“%(name)s” hasai husi ita-nia menu."
@@ -2390,6 +2391,7 @@ msgstr "Produtu"
 
 #: .\templates\olretail\buyer_orders.html:44 .\templates\olretail\cart.html:46
 #: .\templates\olretail\cart.html:88 .\templates\olretail\details.html:301
+#: .\templates\olretail\terms_of_service.html:47
 #: .\templates\shared\header.html:284
 msgid "Seller"
 msgstr "Fa'an-na'in"
@@ -2730,6 +2732,7 @@ msgstr "Submete"
 
 #: .\templates\olretail\courier_deliveries.html:59
 #: .\templates\olretail\seller_orders.html:44
+#: .\templates\olretail\terms_of_service.html:46
 #: .\templates\shared\header.html:285
 msgid "Buyer"
 msgstr "Sosa-na'in"
@@ -3397,6 +3400,7 @@ msgid "Delivery Tracking"
 msgstr "Rastreamentu Entrega"
 
 #: .\templates\olretail\order_detail.html:180
+#: .\templates\olretail\terms_of_service.html:48
 #: .\templates\shared\header.html:286
 msgid "Courier"
 msgstr "Entregadór"
@@ -3438,7 +3442,8 @@ msgid "Unassigned (self-delivery)"
 msgstr "La marka (entrega rasik)"
 
 #: .\templates\olretail\order_detail.html:275
-#: .\templates\shared\footer.html:37
+#: .\templates\olretail\terms_of_service.html:115
+#: .\templates\shared\footer.html:41
 msgid "Bank Transfer"
 msgstr "Transferénsia Banku"
 
@@ -4043,6 +4048,603 @@ msgstr "Istória pedidu"
 msgid "Plan"
 msgstr "Planu"
 
+#: .\templates\olretail\terms_of_service.html:4
+#: .\templates\olretail\terms_of_service.html:12
+msgid "Terms of Service"
+msgstr "Termu no Kondisaun"
+
+#: .\templates\olretail\terms_of_service.html:5
+msgid "The terms that govern using TimorMart as a buyer, seller, or courier."
+msgstr ""
+"Termu sira ne'ebé governa uza TimorMart hanesan sosa-na'in, fa'an-na'in, ka "
+"entregadór."
+
+#: .\templates\olretail\terms_of_service.html:13
+#| msgid "Cart updated."
+msgid "Last updated:"
+msgstr "Aktualiza ikus:"
+
+#: .\templates\olretail\terms_of_service.html:17
+#| msgid "Moderator note:"
+msgid "Important note:"
+msgstr "Nota Importante:"
+
+#: .\templates\olretail\terms_of_service.html:18
+msgid ""
+"This document must be reviewed by a qualified lawyer before being relied on "
+"as a binding legal document."
+msgstr ""
+"Dokumentu ida ne'e tenke haree hikas no reviza husi advogadu kualifikadu ida"
+" antes uza hanesan dokumentu legal ne'ebé iha forsa."
+
+#: .\templates\olretail\terms_of_service.html:28
+#| msgid "About TimorMart"
+msgid "1. What TimorMart Is"
+msgstr "1. Saida mak TimorMart"
+
+#: .\templates\olretail\terms_of_service.html:30
+msgid ""
+"TimorMart is an online <strong>marketplace</strong> platform that connects "
+"independent buyers, sellers, and delivery couriers across Timor-Leste."
+msgstr ""
+"TimorMart mak plataforma <strong>marketplace online</strong> ida ne'ebé liga"
+" sosa-na'in (buyer), fa'an-na'in (seller), no entregadór (courier) "
+"independente sira iha Timor-Leste tomak."
+
+#: .\templates\olretail\terms_of_service.html:33
+msgid ""
+"TimorMart does <strong>not manufacture, own, or sell</strong> the products "
+"listed on the platform. Each product is listed and sold by an independent "
+"seller, and each delivery is carried out by an independent courier."
+msgstr ""
+"TimorMart <strong>la produz, la iha, no la fa'an</strong> produtu sira "
+"ne'ebé hatudu iha plataforma. Produtu ida-idak lista no fa'an husi fa'an-"
+"na'in independente, no entrega ida-idak halo husi entregadór independente."
+
+#: .\templates\olretail\terms_of_service.html:36
+msgid "By using TimorMart, you agree to these Terms of Service."
+msgstr ""
+"Hodi uza TimorMart, ita konkorda atu tuir Termu no Kondisaun sira ne'e."
+
+#: .\templates\olretail\terms_of_service.html:43
+#| msgid "Bank Accounts"
+msgid "2. Accounts"
+msgstr "2. Konta"
+
+#: .\templates\olretail\terms_of_service.html:44
+msgid "You can register as:"
+msgstr "Ita bele rejista hanesan:"
+
+#: .\templates\olretail\terms_of_service.html:49
+#| msgid "Buyer & Seller — everything in one account"
+msgid "Buyer and Seller on one account"
+msgstr "Buyer no Seller iha konta ida deit."
+
+#: .\templates\olretail\terms_of_service.html:52
+msgid ""
+"You're responsible for the accuracy of the information you provide, and must"
+" keep your username and password secure."
+msgstr ""
+"Ita responsavel ba informasaun hotu ne'ebé ita fornese no tenke rai metin "
+"ita-nia username no password."
+
+#: .\templates\olretail\terms_of_service.html:55
+msgid ""
+"One account per person. Don't create multiple accounts to get around a "
+"suspension or a platform rule."
+msgstr ""
+"Ema ida bele iha konta ida deit. Keta kria konta barak atu evita suspensaun "
+"ka regra plataforma nian."
+
+#: .\templates\olretail\terms_of_service.html:57
+msgid "Courier accounts must submit:"
+msgstr "Konta Courier tenke submete:"
+
+#: .\templates\olretail\terms_of_service.html:59
+#| msgid "A photo of your identity card is required."
+msgid "A photo of a valid identity document."
+msgstr "Foto dokumentu identidade ne'ebé validu."
+
+#: .\templates\olretail\terms_of_service.html:60
+msgid "A valid driving license."
+msgstr "Karta kondusaun (Driving License) ne'ebé validu."
+
+#: .\templates\olretail\terms_of_service.html:63
+msgid ""
+"Couriers will only be given delivery assignments once an administrator has "
+"verified and approved these documents."
+msgstr ""
+"Courier sei simu servisu entrega deit bainhira administrador verifica no "
+"aprova dokumentu sira ne'e."
+
+# ── Seller dashboard ───────────────────────────────────────────────────
+# 
+#: .\templates\olretail\terms_of_service.html:70
+#| msgid "Listings"
+msgid "3. Listings"
+msgstr "3. Lista Produtu"
+
+#: .\templates\olretail\terms_of_service.html:72
+msgid ""
+"Every product a seller submits is reviewed by an administrator before it "
+"becomes visible to buyers."
+msgstr ""
+"Produtu hotu ne'ebé seller submete sei halo reviza husi administrador antes "
+"mosu ba buyer sira."
+
+#: .\templates\olretail\terms_of_service.html:74
+#| msgid "Administrator"
+msgid "An administrator may:"
+msgstr "Administrador bele:"
+
+#: .\templates\olretail\terms_of_service.html:76
+msgid "Approve the listing."
+msgstr "Aprova lista."
+
+#: .\templates\olretail\terms_of_service.html:77
+msgid "Send it back for changes."
+msgstr "Haruka fila atu halo mudansa."
+
+#: .\templates\olretail\terms_of_service.html:78
+#| msgid "Rejected"
+msgid "Reject it."
+msgstr "Rejeita."
+
+#: .\templates\olretail\terms_of_service.html:79
+msgid "Suspend it later if it breaks these terms."
+msgstr "Suspende depois se viola termu sira ne'e."
+
+#: .\templates\olretail\terms_of_service.html:81
+#| msgid "For Sellers"
+msgid "For example:"
+msgstr "Ezemplu:"
+
+#: .\templates\olretail\terms_of_service.html:83
+#| msgid "Browse products"
+msgid "Prohibited products."
+msgstr "Produtu proibidu."
+
+#: .\templates\olretail\terms_of_service.html:84
+msgid "Misleading pricing or condition."
+msgstr "Presu ka kondisaun ne'ebé sala ka halo ema sala hanoin."
+
+#: .\templates\olretail\terms_of_service.html:85
+#| msgid "Create product"
+msgid "Counterfeit products."
+msgstr "Produtu falsu (counterfeit)."
+
+#: .\templates\olretail\terms_of_service.html:87
+msgid "The seller is responsible for:"
+msgstr "Seller mak responsavel ba:"
+
+#: .\templates\olretail\terms_of_service.html:89
+#| msgid "Price"
+msgid "Price."
+msgstr "Presu."
+
+#: .\templates\olretail\terms_of_service.html:90
+#| msgid "Description"
+msgid "Description."
+msgstr "Deskrisaun."
+
+#: .\templates\olretail\terms_of_service.html:91
+msgid "Condition (New or Second-hand)."
+msgstr "Kondisaun (Foun ka Segunda Mão)."
+
+#: .\templates\olretail\terms_of_service.html:92
+#| msgid "Product pages"
+msgid "Product photos."
+msgstr "Foto produtu."
+
+#: .\templates\olretail\terms_of_service.html:99
+#| msgid "Payment Method"
+msgid "4. Payment Methods & Fees"
+msgstr "4. Métodu Pagamentu no Taxa"
+
+#: .\templates\olretail\terms_of_service.html:100
+msgid "TimorMart currently supports two ways to pay."
+msgstr "Agora daudaun TimorMart suporta dalan rua atu halo pagamentu."
+
+#: .\templates\olretail\terms_of_service.html:102
+#| msgid "Cash on Delivery"
+msgid "Cash on Delivery (COD)"
+msgstr "Cash on Delivery (COD)"
+
+#: .\templates\olretail\terms_of_service.html:104
+msgid ""
+"The buyer pays the courier or seller directly when the product is received."
+msgstr ""
+"Buyer selu diretamente ba courier ka seller bainhira simu ona produtu."
+
+#: .\templates\olretail\terms_of_service.html:106
+msgid "The buyer pays:"
+msgstr "Buyer selu:"
+
+#: .\templates\olretail\terms_of_service.html:108
+#: .\templates\olretail\terms_of_service.html:121
+msgid "The product price."
+msgstr "Presu produtu."
+
+#: .\templates\olretail\terms_of_service.html:109
+msgid "A flat $1.00 delivery fee."
+msgstr "Taxa entrega fixa USD $1.00."
+
+#: .\templates\olretail\terms_of_service.html:112
+msgid "TimorMart does not receive or hold this money."
+msgstr "TimorMart la simu no la kaer osan ida ne'e."
+
+#: .\templates\olretail\terms_of_service.html:117
+msgid ""
+"The buyer transfers the full amount to TimorMart's bank account before the "
+"product ships."
+msgstr ""
+"Buyer transfere montante tomak ba konta banku TimorMart antes produtu "
+"haruka."
+
+#: .\templates\olretail\terms_of_service.html:119
+msgid "This amount includes:"
+msgstr "Montante ne'e inklui:"
+
+#: .\templates\olretail\terms_of_service.html:122
+#, python-format
+msgid "A 2%% platform service fee."
+msgstr "Taxa servisu plataforma 2%%."
+
+#: .\templates\olretail\terms_of_service.html:123
+#| msgid "Delivery fee"
+msgid "The $1.00 delivery fee."
+msgstr "Taxa entrega USD $1.00."
+
+#: .\templates\olretail\terms_of_service.html:126
+msgid ""
+"TimorMart holds this money and pays the seller once delivery is confirmed."
+msgstr ""
+"TimorMart kaer osan ne'e no sei selu ba seller depois entrega konfirma."
+
+#: .\templates\olretail\terms_of_service.html:129
+#| msgid "%(product)s is currently unavailable."
+msgid "Card payment is not currently available."
+msgstr "Pagamentu ho karta banku seidauk disponivel."
+
+#: .\templates\olretail\terms_of_service.html:132
+msgid ""
+"The seller receives the full listed price of the product once delivery is "
+"complete."
+msgstr ""
+"Seller sei simu presu tomak ne'ebé lista ba produtu depois entrega remata."
+
+#: .\templates\olretail\terms_of_service.html:135
+#, python-format
+msgid ""
+"The 2%% platform fee on Bank Transfer orders is paid by the buyer — it is "
+"not deducted from the seller."
+msgstr ""
+"Taxa plataforma 2%% ba Bank Transfer selu husi buyer, la deduz husi seller."
+
+#: .\templates\olretail\terms_of_service.html:142
+#| msgid "Delivered"
+msgid "5. Delivery"
+msgstr "5. Entrega"
+
+#: .\templates\olretail\terms_of_service.html:144
+msgid ""
+"Orders are delivered by a courier matched to the buyer's city, or arranged "
+"directly by the seller."
+msgstr ""
+"Pedidu sei entrega husi entregadór ne'ebé corresponde ho cidade buyer nian, "
+"ka bele organiza diretamente husi seller."
+
+#: .\templates\olretail\terms_of_service.html:146
+#| msgid "Proof of delivery"
+msgid "After delivery:"
+msgstr "Depois entrega:"
+
+#: .\templates\olretail\terms_of_service.html:148
+msgid "The courier takes a photo as proof of delivery."
+msgstr "Entregadór sei tau foto hanesan prova entrega."
+
+#: .\templates\olretail\terms_of_service.html:149
+msgid "The buyer can rate the product and the courier."
+msgstr "Buyer bele fó avaliasaun ba produtu no entregadór."
+
+#: .\templates\olretail\terms_of_service.html:152
+msgid ""
+"Estimated delivery time is set by the seller, and TimorMart doesn't "
+"guarantee it will be met."
+msgstr ""
+"Tempo entrega estimadu define husi seller no TimorMart la garante katak sei "
+"to'o tuir tempu ne'ebé hakerek."
+
+#: .\templates\olretail\terms_of_service.html:159
+msgid "6. Cancellations"
+msgstr "6. Kansela Pedidu"
+
+#: .\templates\olretail\terms_of_service.html:161
+#| msgid "Thank you for your order. Your payment has been received."
+msgid ""
+"You can cancel an order yourself only before payment has been confirmed."
+msgstr "Buyer bele kansela pedidu rasik deit antes pagamentu konfirma."
+
+#: .\templates\olretail\terms_of_service.html:163
+msgid "This means the order is in status:"
+msgstr "Ne'e signifika pedidu sei iha estatutu:"
+
+#: .\templates\olretail\terms_of_service.html:165
+#| msgid "Awaiting kitchen"
+msgid "Awaiting payment."
+msgstr "Hein pagamentu."
+
+#: .\templates\olretail\terms_of_service.html:166
+msgid "Awaiting confirmation of a reported bank transfer."
+msgstr "Hein konfirmasaun transferénsia banku."
+
+#: .\templates\olretail\terms_of_service.html:169
+msgid ""
+"Once payment is confirmed, you can no longer self-cancel — see the Refund "
+"Policy for what happens if something goes wrong after that point."
+msgstr ""
+"Depois pagamentu konfirma, buyer la bele kansela rasik tan. Karik problema "
+"mosu depois ne'e, haree Política Reembolsa (Refund Policy)."
+
+#: .\templates\olretail\terms_of_service.html:176
+#| msgid "Dispute"
+msgid "7. Disputes"
+msgstr "7. Disputa"
+
+#: .\templates\olretail\terms_of_service.html:177
+msgid "If:"
+msgstr "Karik:"
+
+#: .\templates\olretail\terms_of_service.html:179
+msgid "The product arrives damaged."
+msgstr "Produtu estraga."
+
+#: .\templates\olretail\terms_of_service.html:180
+msgid "The wrong product arrives."
+msgstr "Produtu sala."
+
+#: .\templates\olretail\terms_of_service.html:181
+msgid "The product never arrives."
+msgstr "Produtu la to'o."
+
+#: .\templates\olretail\terms_of_service.html:183
+#| msgid "You can only open disputes for delivered or shipped orders."
+msgid "You can open a dispute on that order."
+msgstr "Buyer bele loke disputa."
+
+#: .\templates\olretail\terms_of_service.html:184
+#| msgid "Dispute opened. Seller has 3 days to respond."
+msgid "The seller has 3 days to respond."
+msgstr "Seller iha loron 3 atu responde."
+
+#: .\templates\olretail\terms_of_service.html:186
+msgid ""
+"An administrator reviews the dispute and all evidence submitted, then makes "
+"the final decision."
+msgstr ""
+"Administrador sei analiza disputa no prova hotu, depois halo desizaun final."
+
+#: .\templates\olretail\terms_of_service.html:189
+msgid "The decision may include a refund, under the Refund Policy."
+msgstr "Desizaun bele inklui reembolsa tuir Política Reembolsa."
+
+#: .\templates\olretail\terms_of_service.html:192
+msgid ""
+"For Bank Transfer orders, a buyer's claim that they've sent payment is "
+"verified directly by an administrator against TimorMart's actual bank "
+"statement, not by the seller."
+msgstr ""
+"Ba pedidu Bank Transfer, alegasaun buyer katak nia transfere ona osan sei "
+"verifica diretamente husi administrador ho ekstratu banku ofisial TimorMart,"
+" la'ós husi seller."
+
+#: .\templates\olretail\terms_of_service.html:199
+msgid "8. Prohibited Conduct"
+msgstr "8. Atividade Proibida"
+
+#: .\templates\olretail\terms_of_service.html:200
+msgid "You may not use TimorMart to:"
+msgstr "Labele uza TimorMart atu:"
+
+#: .\templates\olretail\terms_of_service.html:202
+#| msgid "Browse all products"
+msgid "List illegal products."
+msgstr "Lista produtu ilegal."
+
+#: .\templates\olretail\terms_of_service.html:203
+#| msgid "View your products"
+msgid "List counterfeit products."
+msgstr "Lista produtu falsu."
+
+#: .\templates\olretail\terms_of_service.html:204
+#| msgid "Back to products"
+msgid "List stolen products."
+msgstr "Lista produtu na'ok."
+
+#: .\templates\olretail\terms_of_service.html:205
+#| msgid "View your products"
+msgid "List unsafe products."
+msgstr "Lista produtu ne'ebé perigozu."
+
+#: .\templates\olretail\terms_of_service.html:206
+msgid "Post fake reviews or ratings."
+msgstr "Halo review ka rating falsu."
+
+#: .\templates\olretail\terms_of_service.html:207
+msgid "Manipulate another user's rating."
+msgstr "Manipula rating utilizador seluk nian."
+
+#: .\templates\olretail\terms_of_service.html:208
+msgid "Submit a fraudulent payment claim."
+msgstr "Submete prova pagamentu falsu."
+
+#: .\templates\olretail\terms_of_service.html:209
+msgid "Reuse a receipt across different orders."
+msgstr "Uza resibu ne'ebé reutiliza."
+
+#: .\templates\olretail\terms_of_service.html:210
+msgid "Submit a fake identity document or delivery proof."
+msgstr "Submete dokumentu identidade ka prova entrega falsu."
+
+#: .\templates\olretail\terms_of_service.html:211
+msgid "Harass, threaten, or discriminate against another user."
+msgstr "Asedia, ameasa, ka diskrimina utilizador seluk."
+
+#: .\templates\olretail\terms_of_service.html:212
+msgid "Create a new account to get around a suspension."
+msgstr "Kria konta foun atu evita suspensaun."
+
+#: .\templates\olretail\terms_of_service.html:219
+msgid "9. Suspension & Account Closure"
+msgstr "9. Suspensaun no Taka Konta"
+
+#: .\templates\olretail\terms_of_service.html:220
+#| msgid "About TimorMart"
+msgid "TimorMart may:"
+msgstr "TimorMart bele:"
+
+#: .\templates\olretail\terms_of_service.html:222
+#| msgid "Edit listing"
+msgid "Suspend a listing."
+msgstr "Suspende lista produtu."
+
+#: .\templates\olretail\terms_of_service.html:223
+#| msgid "Remove this window?"
+msgid "Remove a listing."
+msgstr "Hasai lista produtu."
+
+#: .\templates\olretail\terms_of_service.html:224
+#| msgid "Create an account"
+msgid "Restrict an account."
+msgstr "Limita konta."
+
+#: .\templates\olretail\terms_of_service.html:225
+#| msgid "Create an account"
+msgid "Close an account."
+msgstr "Taka konta."
+
+#: .\templates\olretail\terms_of_service.html:227
+msgid "If a user breaks these terms, including:"
+msgstr "Karik utilizador viola termu sira ne'e, inklui:"
+
+#: .\templates\olretail\terms_of_service.html:229
+msgid "Fraud."
+msgstr "Fraude."
+
+#: .\templates\olretail\terms_of_service.html:230
+msgid "Repeatedly unverifiable payment claims."
+msgstr "Alegasaun pagamentu ne'ebé la bele verifica repetidamente."
+
+#: .\templates\olretail\terms_of_service.html:231
+#| msgid "Edit listing"
+msgid "Prohibited listings."
+msgstr "Lista produtu proibidu."
+
+#: .\templates\olretail\terms_of_service.html:234
+msgid ""
+"Where reasonably possible, TimorMart will explain why this action was taken."
+msgstr "Karik bele, TimorMart sei hatete tanba saida mak asaun ida ne'e foti."
+
+#: .\templates\olretail\terms_of_service.html:241
+msgid "10. TimorMart's Role & Limitation of Liability"
+msgstr "10. Papel TimorMart no Limitasaun Responsabilidade"
+
+#: .\templates\olretail\terms_of_service.html:242
+msgid "TimorMart is an intermediary between buyers, sellers, and couriers."
+msgstr "TimorMart mak intermediáriu entre buyer, seller no courier."
+
+#: .\templates\olretail\terms_of_service.html:243
+msgid "TimorMart is not the seller of any product listed on the platform."
+msgstr "TimorMart la'ós fa'an-na'in ba produtu ne'ebé lista iha plataforma."
+
+#: .\templates\olretail\terms_of_service.html:245
+msgid ""
+"TimorMart does not manufacture, inspect, or guarantee the products sold by "
+"independent sellers."
+msgstr ""
+"TimorMart la produz, la inspesiona no la garante produtu sira ne'ebé fa'an "
+"husi seller independente."
+
+#: .\templates\olretail\terms_of_service.html:247
+msgid "To the fullest extent permitted by law, TimorMart is not liable for:"
+msgstr "Tuir lei ne'ebé aplika, TimorMart la responsavel ba:"
+
+#: .\templates\olretail\terms_of_service.html:249
+#| msgid "Product Details"
+msgid "Product quality."
+msgstr "Kualidade produtu."
+
+# ── Product form ───────────────────────────────────────────────────────
+# 
+#: .\templates\olretail\terms_of_service.html:250
+#| msgid "Product name"
+msgid "Product safety."
+msgstr "Seguransa produtu."
+
+#: .\templates\olretail\terms_of_service.html:251
+#| msgid "Product Details"
+msgid "Product legality."
+msgstr "Legalidade produtu."
+
+#: .\templates\olretail\terms_of_service.html:252
+msgid "The accuracy of a seller's listing."
+msgstr "Lolos informasaun lista seller nian."
+
+#: .\templates\olretail\terms_of_service.html:253
+msgid "A courier's conduct during delivery."
+msgstr "Hahalok entregadór durante entrega."
+
+#: .\templates\olretail\terms_of_service.html:256
+msgid ""
+"TimorMart's liability is limited to the dispute-resolution process described"
+" in this document."
+msgstr ""
+"Responsabilidade TimorMart limita ba prosesu rezolusaun disputa ne'ebé "
+"deskreve iha dokumentu ida ne'e."
+
+#: .\templates\olretail\terms_of_service.html:263
+msgid "11. Changes to These Terms"
+msgstr "11. Mudansa ba Termu no Kondisaun"
+
+#: .\templates\olretail\terms_of_service.html:265
+msgid ""
+"TimorMart may update these terms from time to time. Continuing to use the "
+"platform after a change takes effect means you accept the updated terms."
+msgstr ""
+"TimorMart bele muda Termu no Kondisaun sira ne'e husi tempu ba tempu. Karik "
+"ita kontinua uza plataforma depois mudansa tama iha vigor, ne'e signifika "
+"ita simu no konkorda ho versaun foun."
+
+#: .\templates\olretail\terms_of_service.html:272
+msgid "12. Governing Law"
+msgstr "12. Lei ne'ebé Governa"
+
+#: .\templates\olretail\terms_of_service.html:274
+msgid ""
+"These terms are governed by the laws of the Democratic Republic of Timor-"
+"Leste."
+msgstr ""
+"Termu no Kondisaun sira ne'e governa husi lei sira Republika Demokrátika "
+"Timor-Leste nian."
+
+#: .\templates\olretail\terms_of_service.html:275
+msgid ""
+"[Specific business registration/entity details to be added here once "
+"confirmed.]"
+msgstr ""
+"[Detallu kona-ba rejistu empreza ka entidade legal sei hatama depois "
+"bainhira confirma.]"
+
+#: .\templates\olretail\terms_of_service.html:282
+msgid "13. Contact"
+msgstr "13. Kontaktu"
+
+#: .\templates\olretail\terms_of_service.html:284
+msgid "Questions about these terms? Reach us on WhatsApp at"
+msgstr ""
+"Karik iha pergunta kona-ba Termu no Kondisaun sira ne'e, bele kontaktu ami "
+"liuhusi WhatsApp ba"
+
 #: .\templates\olretail\wishlist.html:5 .\templates\shared\header.html:346
 msgid "Wishlist"
 msgstr "Lista Deseju"
@@ -4067,17 +4669,9 @@ msgstr "Hahú haree"
 msgid "Skip to main content"
 msgstr "Salta ba konteúdu prinsipál"
 
-#: .\templates\shared\footer.html:35
+#: .\templates\shared\footer.html:40
 msgid "We accept"
 msgstr "Ami simu"
-
-#: .\templates\shared\footer.html:36
-msgid "VISA Card"
-msgstr "Kartaun VISA"
-
-#: .\templates\shared\footer.html:38
-msgid "Mobile Money"
-msgstr "Osan Movel"
 
 # ── Header info bar, notifications, footer, orders (added 2026-07-15) ──
 # 
