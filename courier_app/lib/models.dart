@@ -50,6 +50,31 @@ class DeliveryOrder {
   // True while this delivery is waiting on this courier to Accept/Reject
   // it — see RespondToAssignmentView / _apply_courier_response.
   bool get awaitingMyResponse => courierAssignmentStatus == 'awaiting_response';
+  // True once accepted but before the seller has confirmed physical
+  // pickup (see confirm_courier_pickup) — mark-delivered isn't allowed
+  // yet for a non-food order in this state. Blank/null for a food or
+  // self-delivery order, which never use this gate, so this is always
+  // false for those.
+  bool get awaitingSellerPickupConfirm => courierAssignmentStatus == 'accepted';
+
+  /// Used right after accepting, to reflect the new status locally
+  /// without waiting on a re-fetch of the whole list.
+  DeliveryOrder copyWith({String? courierAssignmentStatus}) => DeliveryOrder(
+        id: id,
+        orderNumber: orderNumber,
+        productName: productName,
+        buyerName: buyerName,
+        deliveryAddress: deliveryAddress,
+        deliveryPhone: deliveryPhone,
+        subtotal: subtotal,
+        paymentMethod: paymentMethod,
+        status: status,
+        shippedAt: shippedAt,
+        deliveredAt: deliveredAt,
+        deliveryLatitude: deliveryLatitude,
+        deliveryLongitude: deliveryLongitude,
+        courierAssignmentStatus: courierAssignmentStatus ?? this.courierAssignmentStatus,
+      );
 
   factory DeliveryOrder.fromJson(Map<String, dynamic> json) => DeliveryOrder(
         id: json['id'] as int,

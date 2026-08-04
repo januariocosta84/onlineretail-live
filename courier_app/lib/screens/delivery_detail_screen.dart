@@ -106,6 +106,28 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
               label: const Text('Route to buyer'),
             ),
           ],
+          if (order.awaitingSellerPickupConfirm) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.hourglass_top, size: 20),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      "Waiting for the seller to confirm they've handed this over to you — "
+                      "you'll be able to mark it delivered once they do.",
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
           Text('Delivery photo', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -126,7 +148,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
           ],
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: _submitting ? null : _submit,
+            onPressed: (_submitting || order.awaitingSellerPickupConfirm) ? null : _submit,
             child: _submitting
                 ? const SizedBox(
                     height: 20, width: 20,

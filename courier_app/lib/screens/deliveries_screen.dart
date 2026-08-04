@@ -327,9 +327,27 @@ class _AwaitingResponseCardState extends State<_AwaitingResponseCard> {
     setState(() => _submitting = true);
     try {
       await widget.api.respondToAssignment(widget.order.id, accept: accept);
-      // The row disappears from Pending once this order's status changes
-      // (rejected orders are excluded server-side, accepted ones just lose
-      // their Accept/Reject buttons) — onRefresh() picks that up.
+      if (accept) {
+        // Go straight to the product/buyer/address detail — the courier
+        // just committed to this delivery, no reason to make them tap
+        // through the list again. Built locally (courierAssignmentStatus:
+        // 'accepted') instead of waiting on a re-fetch, so the detail
+        // screen's pickup-confirm gate reflects the right state
+        // immediately even before onRefresh() below completes.
+        if (mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => DeliveryDetailScreen(
+                order: widget.order.copyWith(courierAssignmentStatus: 'accepted'),
+              ),
+            ),
+          );
+        }
+      }
+      // Rejected orders are excluded from Pending server-side, and an
+      // accepted one loses its Accept/Reject buttons — onRefresh() picks
+      // either change up once we're back from the detail screen (or
+      // immediately, for a reject).
       await widget.onRefresh();
     } on ApiException catch (e) {
       if (mounted) {
