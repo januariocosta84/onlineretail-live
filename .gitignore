@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+deploy/setup_vps.local.sh
 
 # Python
 __pycache__/
