@@ -122,6 +122,13 @@
               <p class="text-muted small mb-2">
                 {% trans "Assign who will pick this up — this is also what makes it appear in the courier's own delivery list." %}
               </p>
+              {% comment %}
+              Hidden per request — free-text courier name/tracking number
+              predate the structured assigned_courier flow and are
+              redundant now that a real Courier account can be assigned
+              instead. Left in the form/view/model untouched, not deleted,
+              in case they're wanted again later — just uncomment to bring
+              them back. Same treatment as the regular (non-food) ship form.
               <div class="form-group">
                 <label for="{{ food_ship_form.courier_name.id_for_label }}">{{ food_ship_form.courier_name.label }}</label>
                 {{ food_ship_form.courier_name }}
@@ -130,6 +137,7 @@
                 <label for="{{ food_ship_form.tracking_number.id_for_label }}">{{ food_ship_form.tracking_number.label }}</label>
                 {{ food_ship_form.tracking_number }}
               </div>
+              {% endcomment %}
               <div class="form-group">
                 <label for="{{ food_ship_form.assigned_courier.id_for_label }}">{{ food_ship_form.assigned_courier.label }}</label>
                 {{ food_ship_form.assigned_courier }}
