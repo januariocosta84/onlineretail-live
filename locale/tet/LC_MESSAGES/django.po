@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TimorMart\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-05 11:55+0900\n"
+"POT-Creation-Date: 2026-08-05 14:54+0900\n"
 "PO-Revision-Date: 2026-07-12 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: Tetum\n"
@@ -92,7 +92,7 @@ msgid "Street, City, Region"
 msgstr "Rua, Sidade, Rejiaun"
 
 # ── Accounts: password reset ───────────────────────────────────────────
-#
+# 
 #: .\accounts\forms.py:94
 msgid "Enter a strong password"
 msgstr "Hatama senha forte"
@@ -147,7 +147,8 @@ msgid "Password changed"
 msgstr "Senha troka tiha ona"
 
 #: .\accounts\templates\accounts\password_reset_complete.html:14
-msgid "Your password has been set. You can now sign in with your new password."
+msgid ""
+"Your password has been set. You can now sign in with your new password."
 msgstr "Ita-boot nia senha defini tiha ona. Agora bele login ho senha foun."
 
 #: .\accounts\templates\accounts\password_reset_complete.html:15
@@ -168,8 +169,10 @@ msgstr "Defini senha foun"
 
 #: .\accounts\templates\accounts\password_reset_confirm.html:31
 msgid ""
-"This password reset link is invalid or has expired. Please request a new one."
-msgstr "Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu fali foun."
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr ""
+"Ligasaun ida-ne'e la vale ka tempu liu tiha ona. Favór husu fali foun."
 
 #: .\accounts\templates\accounts\password_reset_confirm.html:32
 msgid "Request a new link"
@@ -197,8 +200,8 @@ msgstr "Fila ba login"
 
 #: .\accounts\templates\accounts\password_reset_email.html:2
 msgid ""
-"You are receiving this email because you requested a password reset for your "
-"TimorMart account."
+"You are receiving this email because you requested a password reset for your"
+" TimorMart account."
 msgstr ""
 "Ita-boot simu email ida-ne'e tanba ita-boot husu atu troka password ba ita-"
 "boot nia konta TimorMart."
@@ -216,7 +219,7 @@ msgid "If you did not request this, you can safely ignore this email."
 msgstr "Se la'ós ita-boot mak husu ida-ne'e, bele ignora email ida-ne'e."
 
 # ── Accounts: password reset ───────────────────────────────────────────
-#
+# 
 #: .\accounts\templates\accounts\password_reset_form.html:4
 msgid "Reset password"
 msgstr "Troka senha"
@@ -281,8 +284,8 @@ msgid ""
 "Welcome, %(name)s! Your seller account is ready. Your username is "
 "%(username)s — you'll need it to sign in."
 msgstr ""
-"Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona. Ita-boot nia "
-"username mak %(username)s — ita presiza ida-ne'e atu tama iha sistema."
+"Bem-vindu, %(name)s! Ita-boot nia konta fa'an-na'in prontu ona. Ita-boot nia"
+" username mak %(username)s — ita presiza ida-ne'e atu tama iha sistema."
 
 #: .\accounts\views.py:130 .\olretail\payment_views.py:1273
 #: .\olretail\payment_views.py:1314 .\olretail\payment_views.py:1328
@@ -419,7 +422,7 @@ msgid "You need a courier account to access that page."
 msgstr "Ita-boot presiza konta entregadór atu asesu pájina ne'e."
 
 # ── Product form ───────────────────────────────────────────────────────
-#
+# 
 #: .\olretail\forms.py:34
 msgid "Product name"
 msgstr "Naran produtu"
@@ -670,8 +673,8 @@ msgstr "ONG / La-lukru"
 
 #: .\olretail\models.py:162
 msgid ""
-"Bank or mobile money details buyers use to pay you directly (e.g. bank name, "
-"account number, account holder name)."
+"Bank or mobile money details buyers use to pay you directly (e.g. bank name,"
+" account number, account holder name)."
 msgstr ""
 "Detallu banku ka osan movel ne'ebé kompradór uza atu selu ita direitamente "
 "(ex: naran banku, numeru konta, naran titulár)."
@@ -820,7 +823,8 @@ msgid "Enter the account number you're paying from."
 msgstr "Tau numeru konta ne'ebé ita selu husi."
 
 #: .\olretail\payment_forms.py:162
-msgid "We couldn't tell your city from the shared location — please select it."
+msgid ""
+"We couldn't tell your city from the shared location — please select it."
 msgstr ""
 "Ami la konsege hatene ita-nia sidade husi lokalizasaun ne'ebé partilha — "
 "favor hili."
@@ -882,7 +886,8 @@ msgstr "Numeru referénsia transferénsia"
 #: .\olretail\payment_forms.py:227
 msgid "Enter the reference/transaction number shown on your transfer."
 msgstr ""
-"Hakerek numeru referénsia/transasaun ne'ebé hatudu iha ita-nia transferénsia."
+"Hakerek numeru referénsia/transasaun ne'ebé hatudu iha ita-nia "
+"transferénsia."
 
 #: .\olretail\payment_forms.py:234
 msgid "Amount you sent"
@@ -1246,7 +1251,8 @@ msgstr "Transferénsia Banku / Movel"
 #: .\olretail\payment_models.py:115 .\templates\olretail\buyer_orders.html:70
 #: .\templates\olretail\details.html:313
 #: .\templates\olretail\order_detail.html:489
-#: .\templates\olretail\seller_orders.html:74 .\templates\shared\footer.html:42
+#: .\templates\olretail\seller_orders.html:74
+#: .\templates\shared\footer.html:42
 msgid "Cash on Delivery"
 msgstr "Selu-iha-Entrega"
 
@@ -1383,8 +1389,8 @@ msgstr "Vendedór La Responde ba Reklamasaun Pagamentu"
 
 #: .\olretail\payment_models.py:936
 msgid ""
-"Bank or mobile money details shown to sellers when they pay the platform for "
-"a subscription upgrade."
+"Bank or mobile money details shown to sellers when they pay the platform for"
+" a subscription upgrade."
 msgstr ""
 "Detallu banku ka osan movel ne'ebé hatudu ba vendedór wainhira sira selu "
 "plataforma ba atualiza subskrisaun."
@@ -1427,7 +1433,7 @@ msgid "Cart updated."
 msgstr "Kartu atualiza ona."
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\olretail\payment_views.py:203 .\olretail\payment_views.py:206
 msgid "Not enough stock available."
 msgstr "La iha stock sufisiente."
@@ -1459,8 +1465,8 @@ msgstr "Ita-boot nia karinhu mamuk."
 #: .\olretail\payment_views.py:341
 #, python-format
 msgid ""
-"%(product)s can only be purchased by contacting the seller directly — remove "
-"it from your cart."
+"%(product)s can only be purchased by contacting the seller directly — remove"
+" it from your cart."
 msgstr ""
 "%(product)s bele deit sosa liu husi kontaktu direitu ho vendedór — hasai "
 "husi ita-nia kareta."
@@ -1538,8 +1544,8 @@ msgstr "Enkomenda ne'e la hein transferénsia."
 msgid ""
 "Claimed amount ($%(claimed)s) does not match the order total ($%(total)s)."
 msgstr ""
-"Montante ne'ebé reklama ($%(claimed)s) la kombina ho totál enkomenda ($"
-"%(total)s)."
+"Montante ne'ebé reklama ($%(claimed)s) la kombina ho totál enkomenda "
+"($%(total)s)."
 
 #: .\olretail\payment_views.py:1163
 msgid "This exact receipt image was already submitted on a different order."
@@ -1564,8 +1570,8 @@ msgid ""
 "%(buyer)s reported sending payment for order %(order)s — an admin will "
 "verify and confirm it."
 msgstr ""
-"%(buyer)s relata ona haruka pagamentu ba enkomenda %(order)s — administradór "
-"sei verifika no konfirma."
+"%(buyer)s relata ona haruka pagamentu ba enkomenda %(order)s — administradór"
+" sei verifika no konfirma."
 
 #: .\olretail\payment_views.py:1204
 #, python-format
@@ -1631,15 +1637,16 @@ msgstr "Ita iha ona pedidu subskrisaun ne'ebé hein konfirmasaun."
 #: .\olretail\payment_views.py:1428
 #, python-format
 msgid ""
-"%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting "
-"confirmation."
+"%(seller)s reported a %(plan)s subscription payment ($%(amount)s) — awaiting"
+" confirmation."
 msgstr ""
 "%(seller)s relata ona pagamentu subskrisaun %(plan)s ($%(amount)s) — hein "
 "konfirmasaun."
 
 #: .\olretail\payment_views.py:1432
 msgid ""
-"Thanks — your payment report was submitted. An admin will confirm it shortly."
+"Thanks — your payment report was submitted. An admin will confirm it "
+"shortly."
 msgstr ""
 "Obrigadu — ita-nia relatóriu pagamentu submete ona. Admin sei konfirma "
 "lalais."
@@ -1881,7 +1888,8 @@ msgstr "Ita la iha permisaun atu haree disputa ne'e."
 msgid "You must be a seller to respond to disputes."
 msgstr "Ita tenke sai vendedór atu hatan disputa."
 
-#: .\olretail\payment_views.py:2509 .\templates\olretail\dispute_detail.html:76
+#: .\olretail\payment_views.py:2509
+#: .\templates\olretail\dispute_detail.html:76
 msgid "Response deadline has passed."
 msgstr "Prazu ba hatan pasa ona."
 
@@ -1934,7 +1942,7 @@ msgstr ""
 "espasu)."
 
 # ── View messages ──────────────────────────────────────────────────────
-#
+# 
 #: .\olretail\views.py:95
 msgid "That category does not exist."
 msgstr "Kategoria ne'e la eziste."
@@ -2041,7 +2049,7 @@ msgid "“%(name)s” was removed from your menu."
 msgstr "“%(name)s” hasai husi ita-nia menu."
 
 # ── Error pages ────────────────────────────────────────────────────────
-#
+# 
 #: .\templates\404.html:4 .\templates\404.html:9
 msgid "Page not found"
 msgstr "La hetan pájina"
@@ -2147,12 +2155,12 @@ msgstr "Kredensiál Konta"
 #: .\templates\accounts\register.html:269
 msgid ""
 "Your username is generated automatically from your name and phone number — "
-"you'll see it in the welcome message after signing up, and you'll need it to "
-"sign in."
+"you'll see it in the welcome message after signing up, and you'll need it to"
+" sign in."
 msgstr ""
 "Ita-nia username jera automátikamente husi ita-nia naran no numeru telefone "
-"— ita sei haree iha mensajen bem-vindu depois de rejista, no ita presiza ida-"
-"ne'e atu tama iha sistema."
+"— ita sei haree iha mensajen bem-vindu depois de rejista, no ita presiza "
+"ida-ne'e atu tama iha sistema."
 
 #: .\templates\accounts\register.html:283
 msgid ""
@@ -2202,15 +2210,11 @@ msgstr "Kona-ba TimorMart"
 
 #: .\templates\olretail\about.html:14
 msgid ""
-"TimorMart is Timor-Leste's own online marketplace — a place for people "
-"across the country\n"
-"        to buy and sell directly with each other, without needing a physical "
-"shop or a big budget to get started."
+"TimorMart is Timor-Leste's own online marketplace — a place for people across the country\n"
+"        to buy and sell directly with each other, without needing a physical shop or a big budget to get started."
 msgstr ""
-"TimorMart mak merkadu online rasik Timor-Leste — fatin ida ba ema hotu iha "
-"rai laran tomak\n"
-"        atu sosa no fa'an malu direitamente, la presiza loja fízika ka osan "
-"boot atu hahú."
+"TimorMart mak merkadu online rasik Timor-Leste — fatin ida ba ema hotu iha rai laran tomak\n"
+"        atu sosa no fa'an malu direitamente, la presiza loja fízika ka osan boot atu hahú."
 
 #: .\templates\olretail\about.html:24
 msgid "Why we built this"
@@ -2218,24 +2222,16 @@ msgstr "Tanbasá ami harii ida-ne'e"
 
 #: .\templates\olretail\about.html:26
 msgid ""
-"Retail in Timor-Leste is spread across markets, small shops and word-of-"
-"mouth —\n"
-"            great for community, but hard for a buyer to compare options or "
-"for a small seller to reach\n"
-"            customers outside their own neighbourhood. TimorMart brings that "
-"same everyday buying and selling\n"
-"            online: a single, trusted place where anyone can list a product "
-"and anyone can find it, whether\n"
+"Retail in Timor-Leste is spread across markets, small shops and word-of-mouth —\n"
+"            great for community, but hard for a buyer to compare options or for a small seller to reach\n"
+"            customers outside their own neighbourhood. TimorMart brings that same everyday buying and selling\n"
+"            online: a single, trusted place where anyone can list a product and anyone can find it, whether\n"
 "            it's brand new or a good second-hand find."
 msgstr ""
-"Komérsiu iha Timor-Leste fahe iha merkadu, loja ki'ik no lia-fuan husi ema "
-"ba ema —\n"
-"            di'ak ba komunidade, maibé susar ba kompradór atu kompara opsaun "
-"ka ba vendedór ki'ik atu to'o\n"
-"            kliente sira liur husi sira-nia vizinhansa. TimorMart lori hela-"
-"fatin komprasaun no fa'an loron-loron ne'e\n"
-"            ba online: fatin ida deit, konfiavel, ne'ebé ema hotu bele listu "
-"produtu no ema hotu bele hetan,\n"
+"Komérsiu iha Timor-Leste fahe iha merkadu, loja ki'ik no lia-fuan husi ema ba ema —\n"
+"            di'ak ba komunidade, maibé susar ba kompradór atu kompara opsaun ka ba vendedór ki'ik atu to'o\n"
+"            kliente sira liur husi sira-nia vizinhansa. TimorMart lori hela-fatin komprasaun no fa'an loron-loron ne'e\n"
+"            ba online: fatin ida deit, konfiavel, ne'ebé ema hotu bele listu produtu no ema hotu bele hetan,\n"
 "            keta produtu foun ka sasán uza-tiha ne'ebé di'ak."
 
 #: .\templates\olretail\about.html:41
@@ -2248,7 +2244,8 @@ msgstr "Haree produtu husi uma, iha munisípiu hotu-hotu"
 
 #: .\templates\olretail\about.html:44
 msgid "Clear pricing and condition (new vs. second-hand) on every listing"
-msgstr "Prezu no kondisaun kléru (foun kontra uza-tiha) iha listajen hotu-hotu"
+msgstr ""
+"Prezu no kondisaun kléru (foun kontra uza-tiha) iha listajen hotu-hotu"
 
 #: .\templates\olretail\about.html:45
 msgid "Ratings and comments from other buyers"
@@ -2296,7 +2293,8 @@ msgstr "Listajen hotu-hotu revee antes publika"
 
 #: .\templates\olretail\about.html:72
 msgid "Couriers submit ID and are verified before they can deliver an order"
-msgstr "Entregadór submete identidade no verifika antes bele entrega enkomenda"
+msgstr ""
+"Entregadór submete identidade no verifika antes bele entrega enkomenda"
 
 #: .\templates\olretail\about.html:73
 msgid "Photo proof of delivery on every shipped order"
@@ -2409,11 +2407,13 @@ msgstr "Haree ita-nia enkomenda"
 
 #: .\templates\olretail\buyer_orders.html:4
 #: .\templates\olretail\buyer_orders.html:12
-#: .\templates\olretail\seller_orders.html:4 .\templates\shared\header.html:349
+#: .\templates\olretail\seller_orders.html:4
+#: .\templates\shared\header.html:349
 msgid "My Orders"
 msgstr "Ha'u-nia Enkomenda sira"
 
-#: .\templates\olretail\buyer_orders.html:17 .\templates\olretail\cart.html:147
+#: .\templates\olretail\buyer_orders.html:17
+#: .\templates\olretail\cart.html:147
 #: .\templates\olretail\payment_confirmation.html:167
 msgid "Continue Shopping"
 msgstr "Kontinua Kompra"
@@ -2448,7 +2448,8 @@ msgid "Seller"
 msgstr "Fa'an-na'in"
 
 #: .\templates\olretail\buyer_orders.html:45 .\templates\olretail\cart.html:34
-#: .\templates\olretail\checkout.html:38 .\templates\olretail\checkout.html:216
+#: .\templates\olretail\checkout.html:38
+#: .\templates\olretail\checkout.html:216
 #: .\templates\olretail\payment.html:130
 msgid "Total"
 msgstr "Totál"
@@ -2552,8 +2553,8 @@ msgstr "Enkomenda Halo Ona — Selu iha Entrega"
 
 #: .\templates\olretail\cash_on_delivery_confirmation.html:17
 msgid ""
-"No payment needed now. Have the exact amount in cash ready for the seller or "
-"courier when your order arrives."
+"No payment needed now. Have the exact amount in cash ready for the seller or"
+" courier when your order arrives."
 msgstr ""
 "La presiza selu agora. Prepara osan (cash) barak-barak ba vendedór ka "
 "entregadór bainhira ita-nia enkomenda too."
@@ -2579,7 +2580,8 @@ msgstr "Folin Unidade"
 #: .\templates\olretail\checkout.html:76
 msgid ""
 "Bank Transfer isn't available right now — please choose Cash on Delivery."
-msgstr "Transferénsia Banku la disponivel agora — favor hili Selu iha Entrega."
+msgstr ""
+"Transferénsia Banku la disponivel agora — favor hili Selu iha Entrega."
 
 #: .\templates\olretail\checkout.html:91
 msgid "Test accounts:"
@@ -2622,7 +2624,8 @@ msgstr "Kontinua ba Pagamentu"
 msgid "Platform fee (%(commission_rate_percent)s%%)"
 msgstr "Taxa plataforma (%(commission_rate_percent)s%%)"
 
-#: .\templates\olretail\checkout.html:205 .\templates\olretail\payment.html:124
+#: .\templates\olretail\checkout.html:205
+#: .\templates\olretail\payment.html:124
 msgid "Payment fee"
 msgstr "Taxa pagamentu"
 
@@ -2644,8 +2647,8 @@ msgstr ""
 
 #: .\templates\olretail\checkout.html:230
 msgid ""
-"Pay in cash when your order arrives — no platform fee. Have the exact amount "
-"ready for the seller/courier."
+"Pay in cash when your order arrives — no platform fee. Have the exact amount"
+" ready for the seller/courier."
 msgstr ""
 "Selu ho osan-mao bainhira ita-nia enkomenda too — la iha taxa plataforma. "
 "Prepara osan barak-barak ba vendedór/entregadór."
@@ -2699,8 +2702,8 @@ msgstr "Ha'u-nia Disponibilidade"
 #: .\templates\olretail\courier_availability.html:15
 msgid ""
 "Set the days and hours you're working. Sellers see couriers marked "
-"“Available now” first when assigning a delivery — leave this empty if you're "
-"always available."
+"“Available now” first when assigning a delivery — leave this empty if you're"
+" always available."
 msgstr ""
 "Define loron no oras ita servisu. Fa'an-na'in sira haree entregadór ne'ebé "
 "marka “Disponivel agora” uluk wainhira atribui entrega — husik mamuk se ita "
@@ -2715,7 +2718,7 @@ msgid "Add a working-hours window"
 msgstr "Aumenta períodu oras servisu"
 
 # ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
-#
+# 
 #: .\templates\olretail\courier_availability.html:50
 #: .\templates\olretail\menu_categories.html:40
 msgid "Add"
@@ -2842,13 +2845,13 @@ msgid "No deliveries completed yet."
 msgstr "Seidauk iha entrega remata."
 
 # ── Header / navigation ────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:109 .\templates\shared\header.html:181
 msgid "Home"
 msgstr "Inísiu"
 
 # ── Product detail page ────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:119
 msgid ""
 "This listing is awaiting administrator approval and is not yet visible to "
@@ -2887,7 +2890,7 @@ msgid "Close"
 msgstr "Taka"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:187 .\templates\olretail\details.html:430
 #: .\templates\olretail\index.html:62 .\templates\olretail\wishlist.html:27
 #: .\templates\shared\product_grid.html:23
@@ -2903,7 +2906,7 @@ msgid "min"
 msgstr "Min"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:211 .\templates\olretail\lista.html:105
 #: .\templates\olretail\wishlist.html:39
 #: .\templates\shared\product_grid.html:69
@@ -2911,7 +2914,7 @@ msgid "Unavailable"
 msgstr "La disponivel"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:217
 #: .\templates\olretail\product_form.html:110
 msgid "Vehicles available"
@@ -2954,13 +2957,13 @@ msgstr ""
 "ida-ne'e."
 
 # ── Service-category contact wording (added 2026-07-15) ─────────────────
-#
+# 
 #: .\templates\olretail\details.html:265
 msgid ""
 "Not sold through the cart — contact the seller directly to arrange this."
 msgstr ""
-"La fa'an liu husi karrinu — kontaktu fa'an-na'in diretamente atu kombina ida-"
-"ne'e."
+"La fa'an liu husi karrinu — kontaktu fa'an-na'in diretamente atu kombina "
+"ida-ne'e."
 
 #: .\templates\olretail\details.html:276
 msgid "Listed"
@@ -2985,13 +2988,13 @@ msgid "Verified Business"
 msgstr "Empreza Verifikadu"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:311
 msgid "Delivery available"
 msgstr "Entrega disponivel"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\details.html:312
 msgid "Pickup available"
 msgstr "Foti disponivel"
@@ -3010,8 +3013,8 @@ msgid ""
 "To view the service provider's phone number and WhatsApp contact, upgrade "
 "your account to Buyer & Seller."
 msgstr ""
-"Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-"
-"boot nia konta ba Sosa-na'in & Fa'an-na'in."
+"Atu haree servisu-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e "
+"ita-boot nia konta ba Sosa-na'in & Fa'an-na'in."
 
 #: .\templates\olretail\details.html:347
 msgid "Interested in this product?"
@@ -3019,8 +3022,8 @@ msgstr "Iha interese ba produtu ida-ne'e?"
 
 #: .\templates\olretail\details.html:349
 msgid ""
-"To view the seller's phone number and WhatsApp contact, upgrade your account "
-"to Buyer & Seller."
+"To view the seller's phone number and WhatsApp contact, upgrade your account"
+" to Buyer & Seller."
 msgstr ""
 "Atu haree fa'an-na'in nia númeru telefone no kontaktu WhatsApp, hasa'e ita-"
 "boot nia konta ba Sosa-na'in & Fa'an-na'in."
@@ -3212,8 +3215,8 @@ msgid ""
 "of %(limit)s) — they stay live, but you can't add new ones until you renew."
 msgstr ""
 "Ita-nia subskrisaun remata ona. Ita iha listajen %(used)s (liu husi limite "
-"grátis %(limit)s) — sira kontinua ativu, maibé ita la bele aumenta foun to'o "
-"ita renova."
+"grátis %(limit)s) — sira kontinua ativu, maibé ita la bele aumenta foun to'o"
+" ita renova."
 
 #: .\templates\olretail\lista.html:25
 #, python-format
@@ -3239,7 +3242,7 @@ msgid "Manage subscription"
 msgstr "Jere subskrisaun"
 
 # ── Seller dashboard ───────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\lista.html:42
 msgid "Listings"
 msgstr "Anúnsiu sira"
@@ -3258,7 +3261,7 @@ msgid "Actions"
 msgstr "Asaun"
 
 # ── Catalog / product grid ─────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\lista.html:113
 msgid "None available"
 msgstr "Laiha ida disponivel"
@@ -3361,8 +3364,8 @@ msgstr "Seidauk iha sesaun menu"
 #: .\templates\olretail\menu_categories.html:85
 msgid "Add sections like Breakfast, Lunch, or Drinks to organize your menu."
 msgstr ""
-"Aumenta seksaun hanesan Hahán Dader, Hahán Meiudia, ka Hemu atu organiza ita-"
-"nia menu."
+"Aumenta seksaun hanesan Hahán Dader, Hahán Meiudia, ka Hemu atu organiza "
+"ita-nia menu."
 
 #: .\templates\olretail\notifications.html:4
 #: .\templates\olretail\notifications.html:12
@@ -3616,7 +3619,8 @@ msgstr ""
 
 #: .\templates\olretail\order_detail.html:497
 #, python-format
-msgid "Collect $%(amount)s in cash from the buyer when you deliver this order."
+msgid ""
+"Collect $%(amount)s in cash from the buyer when you deliver this order."
 msgstr ""
 "Foti $%(amount)s iha osan-mao husi kompradór bainhira ita entrega enkomenda "
 "ne'e."
@@ -3744,8 +3748,8 @@ msgstr "Prosesa ita-nia transferénsia banku…"
 
 #: .\templates\olretail\payment_confirmation.html:22
 msgid ""
-"this page will show the result once your simulated bank responds. Refresh to "
-"check again."
+"this page will show the result once your simulated bank responds. Refresh to"
+" check again."
 msgstr ""
 "pájina ne'e sei hatudu rezultadu wainhira ita-nia banku simuladu hatan. "
 "Refreska atu verifika fali."
@@ -3808,7 +3812,8 @@ msgid ""
 msgstr ""
 "Ita subskreve ona — listajen ne'e sei publika kedas, la iha hein aprovasaun."
 
-#: .\templates\olretail\product_form.html:55 .\templates\shared\header.html:225
+#: .\templates\olretail\product_form.html:55
+#: .\templates\shared\header.html:225
 msgid "Language"
 msgstr "Lian"
 
@@ -3839,11 +3844,11 @@ msgstr ""
 
 #: .\templates\olretail\product_form.html:146
 msgid ""
-"Menu items don't need a quantity or condition — use Menu section, Available, "
-"and Prep time instead."
+"Menu items don't need a quantity or condition — use Menu section, Available,"
+" and Prep time instead."
 msgstr ""
-"Item menu la presiza kuantidade ka kondisaun — uza Seksaun menu, Disponivel, "
-"no Tempu prepara."
+"Item menu la presiza kuantidade ka kondisaun — uza Seksaun menu, Disponivel,"
+" no Tempu prepara."
 
 #: .\templates\olretail\product_form.html:152
 msgid ""
@@ -3853,9 +3858,9 @@ msgid ""
 "free delivery, child seat) and Description for the rental terms — minimum "
 "days, security deposit, driver requirements, fuel policy."
 msgstr ""
-"Aluga karreta? Tau ita-nia presu loroloron iha Taxa aluga loroloron, kadeira "
-"iha Kadeira / kapasidade, no detallu hanesan transmisaun, tipu combustível, "
-"tinan no kilometrajen iha Espesifikasaun sira. Uza Karakterístika sira ba "
+"Aluga karreta? Tau ita-nia presu loroloron iha Taxa aluga loroloron, kadeira"
+" iha Kadeira / kapasidade, no detallu hanesan transmisaun, tipu combustível,"
+" tinan no kilometrajen iha Espesifikasaun sira. Uza Karakterístika sira ba "
 "saida mak inklui (seguru, entrega gratuita, kadeira labarik) no Deskrisaun "
 "ba kondisaun aluga — loron mínimu, depozitu seguransa, rekizitu kondutór, "
 "polítika combustível."
@@ -3874,7 +3879,8 @@ msgstr "Kria ida agora"
 
 #: .\templates\olretail\product_form.html:205
 msgid ""
-"Transmission: Automatic\\nFuel type: Diesel\\nYear: 2022\\nMileage: 45,000 km"
+"Transmission: Automatic\\nFuel type: Diesel\\nYear: 2022\\nMileage: 45,000 "
+"km"
 msgstr ""
 "Transmisaun: Automátiku\\nTipu combustível: Diesel\\nTinan: "
 "2022\\nKilometrajen: 45.000 km"
@@ -3904,7 +3910,8 @@ msgid "Completed"
 msgstr "Kompletu"
 
 #: .\templates\olretail\refund_policy.html:4
-#: .\templates\olretail\refund_policy.html:12 .\templates\shared\footer.html:23
+#: .\templates\olretail\refund_policy.html:12
+#: .\templates\shared\footer.html:23
 msgid "Refund Policy"
 msgstr "Política Reembolsa"
 
@@ -3919,8 +3926,8 @@ msgstr "Aktualiza ikus:"
 
 #: .\templates\olretail\refund_policy.html:17
 msgid ""
-"This is a working draft describing how TimorMart actually operates today. It "
-"has not been reviewed by a lawyer qualified in Timor-Leste, and should be "
+"This is a working draft describing how TimorMart actually operates today. It"
+" has not been reviewed by a lawyer qualified in Timor-Leste, and should be "
 "before it's relied on as a binding legal document."
 msgstr ""
 "Ida ne'e mak esbosu servisu ne'ebé deskreve oinsá TimorMart opera realmente "
@@ -3934,12 +3941,12 @@ msgstr "Política Ida Ne'e Kobre Deit Pedidu Transferénsia Banku"
 
 #: .\templates\olretail\refund_policy.html:29
 msgid ""
-"TimorMart only holds your money when you pay by <strong>Bank Transfer</"
-"strong> — that's the only case a refund from TimorMart is possible. If you "
-"paid by <strong>Cash on Delivery</strong>, you paid the seller or courier "
-"directly in person, and TimorMart never held that money — a refund in that "
-"case has to be arranged directly with the seller or courier, not through "
-"TimorMart."
+"TimorMart only holds your money when you pay by <strong>Bank "
+"Transfer</strong> — that's the only case a refund from TimorMart is "
+"possible. If you paid by <strong>Cash on Delivery</strong>, you paid the "
+"seller or courier directly in person, and TimorMart never held that money — "
+"a refund in that case has to be arranged directly with the seller or "
+"courier, not through TimorMart."
 msgstr ""
 "TimorMart kaer deit ita-nia osan bainhira ita selu liuhusi "
 "<strong>Transferénsia Banku</strong> — ne'e mak deit kazu ida ne'ebé "
@@ -3958,8 +3965,8 @@ msgstr "Ita-nia pedidu la to'o, liu ona data entrega estimadu"
 
 #: .\templates\olretail\refund_policy.html:39
 msgid ""
-"What arrived was damaged, or significantly different from the listing (wrong "
-"item, wrong condition)"
+"What arrived was damaged, or significantly different from the listing (wrong"
+" item, wrong condition)"
 msgstr ""
 "Buat ne'ebé to'o estraga, ka diferente signifikativamente husi lista (item "
 "sala, kondisaun sala)"
@@ -3969,8 +3976,8 @@ msgid ""
 "You cancelled before your payment was confirmed (see the Terms of Service — "
 "this is a straightforward cancellation, not a dispute)"
 msgstr ""
-"Ita kansela antes ita-nia pagamentu konfirma (haree Termu no Kondisaun — ida "
-"ne'e kansela simples, la'ós disputa)"
+"Ita kansela antes ita-nia pagamentu konfirma (haree Termu no Kondisaun — ida"
+" ne'e kansela simples, la'ós disputa)"
 
 #: .\templates\olretail\refund_policy.html:47
 msgid "How to Request One"
@@ -4006,8 +4013,8 @@ msgstr "Oinsá Reembolsu Selu"
 msgid ""
 "An approved refund returns the full amount you paid for that order to your "
 "bank account. TimorMart currently processes refunds as a full amount per "
-"order, not a partial one. If the order had already been marked delivered and "
-"the seller (or courier) had already been credited for it, that credit is "
+"order, not a partial one. If the order had already been marked delivered and"
+" the seller (or courier) had already been credited for it, that credit is "
 "reversed at the same time so the platform's own books stay correct — this "
 "doesn't affect how much you get back."
 msgstr ""
@@ -4129,12 +4136,17 @@ msgstr "Oinsá funsiona?"
 
 #: .\templates\olretail\seller_balance.html:189
 #, python-format
+#| msgid ""
+#| "The 2%% platform fee on Bank Transfer orders is paid by the buyer — it is "
+#| "not deducted from the seller."
 msgid ""
-"You earn %(seller_earn_percent)s%% of each sale (platform takes "
-"%(commission_rate_percent)s%% commission)"
+"You keep 100%% of the product price — TimorMart's "
+"%(commission_rate_percent)s%% platform fee on Bank Transfer orders is paid "
+"by the buyer, not deducted from you"
 msgstr ""
-"Ita simu %(seller_earn_percent)s%% husi fa'an ida-idak (plataforma hola "
-"komisaun %(commission_rate_percent)s%%)"
+"Ita simu 100%% husi presu produtu — taxa plataforma "
+"%(commission_rate_percent)s%% TimorMart nian ba pedidu Transferénsia Banku "
+"selu husi buyer, la deduz husi ita."
 
 #: .\templates\olretail\seller_balance.html:190
 msgid "Earnings are credited when payment is received"
@@ -4186,8 +4198,8 @@ msgid ""
 msgstr ""
 "Kompradór ne'ebé selu liu husi transferénsia banku sei haree detallu ne'e "
 "atu haruka osan direitamente ba ita. Aumenta konta ida ba banku ida-idak se "
-"ita iha liu ida — husik hotu no notas pagamentu iha kraik mamuk atu dizativa "
-"opsaun pagamentu ne'e ba ita-nia produtu."
+"ita iha liu ida — husik hotu no notas pagamentu iha kraik mamuk atu dizativa"
+" opsaun pagamentu ne'e ba ita-nia produtu."
 
 #: .\templates\olretail\seller_payment_settings.html:71
 msgid "Add bank account"
@@ -4237,8 +4249,8 @@ msgid ""
 "Optional — a verified business shows a trust badge to buyers on your "
 "products. Selling and getting paid work the same either way."
 msgstr ""
-"Fakultativu — empreza verifikadu hatudu marka konfiansa ba kompradór iha ita-"
-"nia produtu. Fa'an no simu selu funsiona hanesan deit."
+"Fakultativu — empreza verifikadu hatudu marka konfiansa ba kompradór iha "
+"ita-nia produtu. Fa'an no simu selu funsiona hanesan deit."
 
 #: .\templates\olretail\seller_payment_settings.html:291
 msgid "Your document was rejected"
@@ -4258,8 +4270,8 @@ msgstr "Subskrisaun"
 #, python-format
 msgid ""
 "Free accounts can list up to %(free_limit)s products, and each one is "
-"reviewed by an admin before it goes live. Subscribers can list without limit "
-"and publish instantly — no approval wait."
+"reviewed by an admin before it goes live. Subscribers can list without limit"
+" and publish instantly — no approval wait."
 msgstr ""
 "Konta grátis bele lista produtu to'o %(free_limit)s, no ida-idak revee husi "
 "admin antes publika. Subskritór bele lista sem limite no publika kedas — la "
@@ -4273,8 +4285,8 @@ msgstr "Listajen la limitadu — ativu to'o %(date)s."
 #: .\templates\olretail\seller_subscription.html:36
 #, python-format
 msgid ""
-"Expires in %(days)s day(s) — renew below to avoid losing the ability to post "
-"new products."
+"Expires in %(days)s day(s) — renew below to avoid losing the ability to post"
+" new products."
 msgstr ""
 "Sei remata iha loron %(days)s — renova iha okos atu labele lakon kapasidade "
 "hakerek produtu foun."
@@ -4284,7 +4296,7 @@ msgid "Expired"
 msgstr "Remata ona"
 
 # ── Seller dashboard ───────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\seller_subscription.html:42
 msgid "listings"
 msgstr "Anúnsiu sira"
@@ -4292,8 +4304,8 @@ msgstr "Anúnsiu sira"
 #: .\templates\olretail\seller_subscription.html:46
 #, python-format
 msgid ""
-"Over the free limit of %(limit)s — your existing listings stay live, but you "
-"can't add new ones until you renew."
+"Over the free limit of %(limit)s — your existing listings stay live, but you"
+" can't add new ones until you renew."
 msgstr ""
 "Liu husi limite grátis %(limit)s — ita-nia listajen existente kontinua "
 "ativu, maibé ita la bele aumenta foun to'o ita renova."
@@ -4321,7 +4333,7 @@ msgid "Your reference"
 msgstr "Ita-boot nia referénsia"
 
 # ── Subscription renewal/extension logic (added 2026-07-15) ────────────
-#
+# 
 #: .\templates\olretail\seller_subscription.html:89
 #, python-format
 msgid ""
@@ -4370,8 +4382,8 @@ msgid ""
 "This document must be reviewed by a qualified lawyer before being relied on "
 "as a binding legal document."
 msgstr ""
-"Dokumentu ida ne'e tenke haree hikas no reviza husi advogadu kualifikadu ida "
-"antes uza hanesan dokumentu legal ne'ebé iha forsa."
+"Dokumentu ida ne'e tenke haree hikas no reviza husi advogadu kualifikadu ida"
+" antes uza hanesan dokumentu legal ne'ebé iha forsa."
 
 #: .\templates\olretail\terms_of_service.html:28
 msgid "1. What TimorMart Is"
@@ -4382,8 +4394,8 @@ msgid ""
 "TimorMart is an online <strong>marketplace</strong> platform that connects "
 "independent buyers, sellers, and delivery couriers across Timor-Leste."
 msgstr ""
-"TimorMart mak plataforma <strong>marketplace online</strong> ida ne'ebé liga "
-"sosa-na'in (buyer), fa'an-na'in (seller), no entregadór (courier) "
+"TimorMart mak plataforma <strong>marketplace online</strong> ida ne'ebé liga"
+" sosa-na'in (buyer), fa'an-na'in (seller), no entregadór (courier) "
 "independente sira iha Timor-Leste tomak."
 
 #: .\templates\olretail\terms_of_service.html:33
@@ -4415,8 +4427,8 @@ msgstr "Buyer no Seller iha konta ida deit."
 
 #: .\templates\olretail\terms_of_service.html:52
 msgid ""
-"You're responsible for the accuracy of the information you provide, and must "
-"keep your username and password secure."
+"You're responsible for the accuracy of the information you provide, and must"
+" keep your username and password secure."
 msgstr ""
 "Ita responsavel ba informasaun hotu ne'ebé ita fornese no tenke rai metin "
 "ita-nia username no password."
@@ -4450,7 +4462,7 @@ msgstr ""
 "aprova dokumentu sira ne'e."
 
 # ── Seller dashboard ───────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\terms_of_service.html:70
 msgid "3. Listings"
 msgstr "3. Lista Produtu"
@@ -4534,7 +4546,8 @@ msgstr "Cash on Delivery (COD)"
 #: .\templates\olretail\terms_of_service.html:104
 msgid ""
 "The buyer pays the courier or seller directly when the product is received."
-msgstr "Buyer selu diretamente ba courier ka seller bainhira simu ona produtu."
+msgstr ""
+"Buyer selu diretamente ba courier ka seller bainhira simu ona produtu."
 
 #: .\templates\olretail\terms_of_service.html:106
 msgid "The buyer pays:"
@@ -4558,7 +4571,8 @@ msgid ""
 "The buyer transfers the full amount to TimorMart's bank account before the "
 "product ships."
 msgstr ""
-"Buyer transfere montante tomak ba konta banku TimorMart antes produtu haruka."
+"Buyer transfere montante tomak ba konta banku TimorMart antes produtu "
+"haruka."
 
 #: .\templates\olretail\terms_of_service.html:119
 msgid "This amount includes:"
@@ -4705,8 +4719,8 @@ msgid ""
 "statement, not by the seller."
 msgstr ""
 "Ba pedidu Bank Transfer, alegasaun buyer katak nia transfere ona osan sei "
-"verifica diretamente husi administrador ho ekstratu banku ofisial TimorMart, "
-"la'ós husi seller."
+"verifica diretamente husi administrador ho ekstratu banku ofisial TimorMart,"
+" la'ós husi seller."
 
 #: .\templates\olretail\terms_of_service.html:199
 msgid "8. Prohibited Conduct"
@@ -4834,7 +4848,7 @@ msgid "Product quality."
 msgstr "Kualidade produtu."
 
 # ── Product form ───────────────────────────────────────────────────────
-#
+# 
 #: .\templates\olretail\terms_of_service.html:250
 msgid "Product safety."
 msgstr "Seguransa produtu."
@@ -4853,8 +4867,8 @@ msgstr "Hahalok entregadór durante entrega."
 
 #: .\templates\olretail\terms_of_service.html:256
 msgid ""
-"TimorMart's liability is limited to the dispute-resolution process described "
-"in this document."
+"TimorMart's liability is limited to the dispute-resolution process described"
+" in this document."
 msgstr ""
 "Responsabilidade TimorMart limita ba prosesu rezolusaun disputa ne'ebé "
 "deskreve iha dokumentu ida ne'e."
@@ -4931,7 +4945,7 @@ msgid "We accept"
 msgstr "Ami simu"
 
 # ── Header info bar, notifications, footer, orders (added 2026-07-15) ──
-#
+# 
 #: .\templates\shared\header.html:169
 msgid "Hotline"
 msgstr "Linha diretu"
@@ -5013,7 +5027,7 @@ msgid "Product pages"
 msgstr "Pájina produtu sira"
 
 # ── Sidebar dummy ads (added 2026-07-15) ────────────────────────────────
-#
+# 
 #: .\templates\shared\popular_category.html:22
 #: .\templates\shared\popular_category.html:33
 #: .\templates\shared\popular_category.html:44
@@ -5068,8 +5082,8 @@ msgstr "Fa'an iha TimorMart"
 #: .\templates\shared\popular_category.html:88
 msgid "Create a free seller account and reach buyers across Timor-Leste."
 msgstr ""
-"Kria konta fa'an-na'in grátis no hetan sosa-na'in sira iha Timor-Leste laran "
-"tomak."
+"Kria konta fa'an-na'in grátis no hetan sosa-na'in sira iha Timor-Leste laran"
+" tomak."
 
 #: .\templates\shared\popular_category.html:92
 msgid "Add a product"

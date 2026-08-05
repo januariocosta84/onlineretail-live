@@ -4,18 +4,23 @@ from .models import Cart, Category, Notification, Wishlist
 
 
 def platform_fee(request):
-    """Commission rate as display-ready percent strings, so templates
+    """Commission rate as a display-ready percent string, so templates
     never hardcode a number that drifts from settings.COMMISSION_RATE
     (e.g. checkout.html, cart.html, order_detail.html, payment.html,
-    seller_balance.html all quote the rate in prose)."""
+    seller_balance.html all quote the rate in prose). This is a fee the
+    *buyer* pays on top of the price on Bank Transfer orders — see
+    _apply_order_delivered in payment_views.py, which credits the seller
+    the full subtotal, and the Terms of Service's "paid by the buyer — it
+    is not deducted from the seller." There used to also be a
+    seller_earn_percent = 100 - rate_percent here, which was simply wrong
+    (implied the platform deducted a cut from the seller); removed rather
+    than fixed in place, since "100%" isn't a meaningful rate to display."""
     rate_percent = settings.COMMISSION_RATE * 100
     # "{:g}" strips a trailing .0 (2.0 -> "2") but keeps real decimals
     # (2.5 -> "2.5") if the rate is ever set to something non-whole.
     commission_rate_percent = f"{rate_percent:g}"
-    seller_earn_percent = f"{100 - rate_percent:g}"
     return {
         "commission_rate_percent": commission_rate_percent,
-        "seller_earn_percent": seller_earn_percent,
     }
 
 
