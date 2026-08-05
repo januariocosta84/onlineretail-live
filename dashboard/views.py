@@ -1128,18 +1128,19 @@ def order_reassign_courier(request, order_id):
 
     order.assigned_courier = courier
     update_fields = ["assigned_courier"]
-    if not order.product.is_restaurant_category:
-        # Every (re)assignment restarts the accept/reject handshake — see
-        # CourierAssignmentStatus. Restaurant orders keep their own
-        # FoodOrderStatus pickup flow and never get this field set at all.
-        if courier:
-            order.courier_assignment_status = CourierAssignmentStatus.AWAITING_RESPONSE
-            order.courier_assigned_at = timezone.now()
-        else:
-            order.courier_assignment_status = ""
-            order.courier_assigned_at = None
-        order.courier_responded_at = None
-        update_fields += ["courier_assignment_status", "courier_assigned_at", "courier_responded_at"]
+    # Every (re)assignment restarts the accept/reject handshake — see
+    # CourierAssignmentStatus. Applies uniformly, restaurant orders
+    # included (they use the same handshake now, just with
+    # confirm_courier_pickup also advancing food_status — see
+    # payment_views.confirm_courier_pickup).
+    if courier:
+        order.courier_assignment_status = CourierAssignmentStatus.AWAITING_RESPONSE
+        order.courier_assigned_at = timezone.now()
+    else:
+        order.courier_assignment_status = ""
+        order.courier_assigned_at = None
+    order.courier_responded_at = None
+    update_fields += ["courier_assignment_status", "courier_assigned_at", "courier_responded_at"]
     order.save(update_fields=update_fields)
     log_action(
         request, "order_courier_reassigned", order.order_number,

@@ -156,6 +156,15 @@
             {% endif %}
 
             {% if is_courier %}
+            {% comment %}
+            The courier no longer self-reports pickup here — the seller
+            confirms it instead (see the "Confirm Pickup" button in the
+            Delivery Tracking card below, same accept/reject/pickup-confirm
+            handshake every other order type uses). Left commented, not
+            deleted, matching this session's convention; the underlying
+            'ready_for_pickup' -> 'picked_up' transition was also removed
+            server-side (_COURIER_FOOD_STATUS_TRANSITIONS), so uncommenting
+            this alone wouldn't be enough to bring it back.
             {% if order.food_status == 'ready_for_pickup' %}
             <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mt-4">
               {% csrf_token %}
@@ -163,7 +172,9 @@
                 <i class="fas fa-box mr-1" aria-hidden="true"></i>{% trans "Confirm Pickup" %}
               </button>
             </form>
-            {% elif order.food_status == 'picked_up' %}
+            {% endif %}
+            {% endcomment %}
+            {% if order.food_status == 'picked_up' %}
             <form method="post" action="{% url 'olretail:courier_update_food_status' order.id %}" class="mt-4">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary btn-sm">

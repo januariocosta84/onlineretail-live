@@ -1552,14 +1552,13 @@ def order_detail(request, order_id):
     if is_seller and order.status == OrderStatus.SHIPPED:
         context['delivery_proof_form'] = DeliveryProofForm()
     elif is_courier and order.status == OrderStatus.SHIPPED and (
-        order.product.is_restaurant_category
-        or order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
+        order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
     ):
-        # Mirrors _courier_can_mark_delivered's gate — a non-food order's
-        # courier only gets the mark-delivered form once the seller has
-        # confirmed physical pickup (see confirm_courier_pickup). Before
-        # that, the Accept/Reject block or the "waiting for pickup" status
-        # tells them what to do instead.
+        # Mirrors _courier_can_mark_delivered's gate — a courier only gets
+        # the mark-delivered form once the seller has confirmed physical
+        # pickup (see confirm_courier_pickup), for every order type
+        # including restaurant. Before that, the Accept/Reject block or
+        # the "waiting for pickup" status tells them what to do instead.
         context['delivery_proof_form'] = DeliveryProofForm()
     if is_admin and order.status == OrderStatus.SHIPPED:
         context['couriers'] = Courier.objects.select_related('user').order_by('user__first_name')
@@ -1813,11 +1812,12 @@ def _courier_can_mark_delivered(user, order):
     owning seller may only self-confirm a self-delivery order (no courier
     assigned) — once a courier is assigned, only that courier can confirm,
     so the seller can't accidentally mark it delivered themselves before
-    the courier actually hands it over. For a non-food order with an
-    assigned courier, that courier can only confirm delivery once the
-    seller has confirmed physical pickup (CourierAssignmentStatus.PICKED_UP
-    — see confirm_courier_pickup); restaurant orders keep using their own
-    FoodOrderStatus pickup flow instead and are unaffected by this gate.
+    the courier actually hands it over. An assigned courier can only
+    confirm delivery once the seller has confirmed physical pickup
+    (CourierAssignmentStatus.PICKED_UP — see confirm_courier_pickup),
+    uniformly for every order type including restaurant orders (which
+    reach PICKED_UP via confirm_courier_pickup too, not their own
+    self-report — see _COURIER_FOOD_STATUS_TRANSITIONS).
     Returns (is_owning_seller, is_assigned_courier)."""
     is_owning_seller = (
         hasattr(user, 'seller')
@@ -1828,10 +1828,7 @@ def _courier_can_mark_delivered(user, order):
         order.assigned_courier_id
         and hasattr(user, 'courier')
         and order.assigned_courier_id == user.courier.id
-        and (
-            order.product.is_restaurant_category
-            or order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
-        )
+        and order.courier_assignment_status == CourierAssignmentStatus.PICKED_UP
     )
     return is_owning_seller, is_assigned_courier
 
@@ -2040,7 +2037,17 @@ def confirm_courier_pickup(request, order_id):
         return redirect('olretail:order_detail', order_id=order.id)
 
     order.courier_assignment_status = CourierAssignmentStatus.PICKED_UP
-    order.save(update_fields=['courier_assignment_status'])
+    update_fields = ['courier_assignment_status']
+    if order.product.is_restaurant_category and order.food_status == FoodOrderStatus.READY_FOR_PICKUP:
+        # Restaurant orders no longer let the courier self-report this
+        # step (see _COURIER_FOOD_STATUS_TRANSITIONS) — the seller
+        # confirming pickup here is what advances the Kitchen & Pickup
+        # Status stepper now, and what unlocks the courier's remaining
+        # "Mark On the Way" action (courier_update_food_status), which
+        # requires food_status == PICKED_UP.
+        order.food_status = FoodOrderStatus.PICKED_UP
+        update_fields.append('food_status')
+    order.save(update_fields=update_fields)
     DeliveryUpdate.objects.create(
         order=order,
         note=_('Picked up by %(courier)s — on the way.') % {'courier': order.assigned_courier.get_name},
@@ -2113,13 +2120,26 @@ def update_food_status(request, order_id):
         order.tracking_number = ship_form.cleaned_data['tracking_number']
         order.assigned_courier = ship_form.cleaned_data['assigned_courier']
         update_fields += ['status', 'shipped_at', 'courier_name', 'tracking_number', 'assigned_courier']
+        if order.assigned_courier_id:
+            # Starts the same accept/reject handshake regular orders get —
+            # see CourierAssignmentStatus. Self-delivery/informal courier
+            # (no assigned_courier account) stays blank, same as elsewhere.
+            order.courier_assignment_status = CourierAssignmentStatus.AWAITING_RESPONSE
+            order.courier_assigned_at = timezone.now()
+            order.courier_responded_at = None
+            update_fields += ['courier_assignment_status', 'courier_assigned_at', 'courier_responded_at']
     order.save(update_fields=update_fields)
     DeliveryUpdate.objects.create(order=order, note=note)
     _notify(order.buyer, note, order=order)
     if next_status == FoodOrderStatus.READY_FOR_PICKUP and order.assigned_courier_id:
+        # Same msgid seller_update_order_status uses for the non-food
+        # assignment notification — reused rather than a new "ready for
+        # collection" string, since the courier now needs to actually
+        # accept/reject this here too, not just show up.
         _notify(
             order.assigned_courier.user,
-            _('Order %(order)s is ready for collection.') % {'order': order.order_number},
+            _('You have been assigned to deliver order %(order)s. Please accept or reject it.')
+            % {'order': order.order_number},
             order=order,
         )
     messages.success(request, _('Order updated.'))
@@ -2127,7 +2147,9 @@ def update_food_status(request, order_id):
 
 
 _COURIER_FOOD_STATUS_TRANSITIONS = {
-    FoodOrderStatus.READY_FOR_PICKUP: (FoodOrderStatus.PICKED_UP, _('Courier picked up the order.')),
+    # Ready for Pickup -> Picked Up is no longer a courier self-report —
+    # the seller confirms it instead (see confirm_courier_pickup), same
+    # accept/reject/pickup-confirm handshake every other order type uses.
     FoodOrderStatus.PICKED_UP: (FoodOrderStatus.ON_THE_WAY, _('Courier is on the way.')),
 }
 
@@ -2135,9 +2157,11 @@ _COURIER_FOOD_STATUS_TRANSITIONS = {
 @courier_required
 @require_POST
 def courier_update_food_status(request, order_id):
-    """Courier advances a food order through Picked Up -> On the Way —
-    final delivery confirmation (with required photo) is the existing
-    mark_delivered, unchanged."""
+    """Courier advances a food order from Picked Up -> On the Way, once
+    the seller has confirmed pickup (see confirm_courier_pickup, which is
+    what actually gets food_status to Picked Up now). Final delivery
+    confirmation (with required photo) is the existing mark_delivered,
+    unchanged."""
     order = get_object_or_404(Order, id=order_id)
 
     if not (order.assigned_courier_id and order.assigned_courier_id == request.user.courier.id):
@@ -2164,7 +2188,12 @@ def courier_deliveries(request):
     courier = request.user.courier
     orders = Order.objects.filter(assigned_courier=courier).select_related('product', 'buyer', 'seller')
     context = {
-        'pending': orders.filter(status=OrderStatus.SHIPPED).order_by('-shipped_at'),
+        # A courier who rejected an assignment shouldn't keep seeing it
+        # here while it awaits reassignment — same exclusion
+        # courier_api.DeliveriesListView already applies for the app.
+        'pending': orders.filter(status=OrderStatus.SHIPPED).exclude(
+            courier_assignment_status=CourierAssignmentStatus.REJECTED
+        ).order_by('-shipped_at'),
         'delivered': orders.filter(status=OrderStatus.DELIVERED).order_by('-delivered_at')[:20],
         'courier': courier,
         'verification_form': CourierVerificationForm(),

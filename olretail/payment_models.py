@@ -83,13 +83,17 @@ class FoodOrderStatus(models.TextChoices):
 
 
 class CourierAssignmentStatus(models.TextChoices):
-    """Accept/reject handshake for a *non-food* order's assigned_courier —
-    layered on top of Order.status the same way FoodOrderStatus is (see
-    above), not a replacement for it. Blank on Order means no handshake
-    applies: self-delivery, a restaurant order (which keeps its own
-    FoodOrderStatus pickup flow untouched), or not shipped yet. Every
-    (re)assignment (seller_update_order_status, dashboard's
-    order_reassign_courier) resets this back to AWAITING_RESPONSE."""
+    """Accept/reject handshake for an order's assigned_courier — layered
+    on top of Order.status (and, for restaurant orders, alongside
+    FoodOrderStatus too) the same way FoodOrderStatus is layered on top of
+    Order.status, not a replacement for either. Applies uniformly to every
+    order type, restaurant included — see confirm_courier_pickup, which
+    is what now advances a restaurant order's food_status to PICKED_UP,
+    not the courier's own report. Blank on Order means no handshake
+    applies: self-delivery, or not shipped yet. Every (re)assignment
+    (seller_update_order_status, update_food_status,
+    dashboard.order_reassign_courier) resets this back to
+    AWAITING_RESPONSE."""
     AWAITING_RESPONSE = 'awaiting_response', _('Awaiting Courier Response')
     ACCEPTED = 'accepted', _('Accepted — Awaiting Pickup')
     PICKED_UP = 'picked_up', _('Picked Up')
