@@ -56,6 +56,8 @@
           {% if not is_finance_only %}
           <a class="list-group-item list-group-item-action {% if section == 'overview' %}active text-white{% endif %}"
              href="{% url 'dashboard:overview' %}"><i class="fas fa-chart-line mr-2" aria-hidden="true"></i>Overview</a>
+          <a class="list-group-item list-group-item-action {% if section == 'launch_health' %}active text-white{% endif %}"
+             href="{% url 'dashboard:launch_health' %}"><i class="fas fa-heartbeat mr-2" aria-hidden="true"></i>Launch health</a>
           <a class="list-group-item list-group-item-action {% if section == 'queue' %}active text-white{% endif %}"
              href="{% url 'dashboard:queue' %}"><i class="fas fa-clipboard-check mr-2" aria-hidden="true"></i>Approval queue</a>
           <a class="list-group-item list-group-item-action {% if section == 'products' %}active text-white{% endif %}"

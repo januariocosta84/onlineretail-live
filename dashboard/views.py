@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import Group, User
 from django.core.paginator import Paginator
-from django.db.models import Count, Exists, OuterRef, Q, Sum
+from django.db.models import Avg, Count, DurationField, Exists, ExpressionWrapper, OuterRef, Q, Sum
 from django.db.models.deletion import ProtectedError
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from django.http import HttpResponse, JsonResponse
@@ -34,6 +34,7 @@ from olretail.models import (
     ProductStatus, RESTAURANT_BUSINESS_CATEGORY_SLUG, Seller, SellerBalance, SellerType, SellerVerificationStatus,
 )
 from olretail.payment_forms import PlatformBankAccountForm
+from olretail.payment_models import COURIER_RESPONSE_TIMEOUT
 from olretail.payouts import create_scheduled_courier_payouts, create_scheduled_payouts
 from olretail.subscription_models import SellerSubscription, SubscriptionRequest, SubscriptionRequestStatus
 
@@ -236,6 +237,92 @@ def overview(request):
             "recent_logs": AuditLog.objects.select_related("admin")[:8],
             "recent_pending": Product.objects.filter(status__in=REVIEW_STATUSES)
             .select_related("seller__user")[:5],
+        },
+    )
+
+
+@admin_required
+def launch_health(request):
+    """Operational health signals worth watching around launch — courier
+    supply/responsiveness, delivery dispute rate, and how fast sellers
+    actually ship once paid. All-time cumulative figures, not a rolling
+    window — meaningful once real orders start flowing, not a permanent
+    KPI page. Nothing here is visible anywhere else in the admin dashboard."""
+    now = timezone.now()
+    overdue_cutoff = now - COURIER_RESPONSE_TIMEOUT
+
+    assigned_orders = Order.objects.filter(assigned_courier__isnull=False)
+    # "Ever accepted" (ACCEPTED or since-advanced-to PICKED_UP) — used only
+    # for the acceptance-rate ratio, distinct from currently_awaiting_pickup
+    # below (orders sitting in ACCEPTED *right now*, i.e. not picked up yet).
+    ever_accepted = assigned_orders.filter(
+        courier_assignment_status__in=[CourierAssignmentStatus.ACCEPTED, CourierAssignmentStatus.PICKED_UP]
+    ).count()
+    rejected = assigned_orders.filter(courier_assignment_status=CourierAssignmentStatus.REJECTED).count()
+    decided = ever_accepted + rejected
+    courier_stats = {
+        "accepted": ever_accepted,
+        "rejected": rejected,
+        "acceptance_rate": round(ever_accepted * 100 / decided) if decided else None,
+        "awaiting_response": assigned_orders.filter(
+            courier_assignment_status=CourierAssignmentStatus.AWAITING_RESPONSE
+        ).count(),
+        "currently_awaiting_pickup": assigned_orders.filter(
+            courier_assignment_status=CourierAssignmentStatus.ACCEPTED
+        ).count(),
+        # Same rule as Order.courier_response_overdue/courier_pickup_overdue
+        # (payment_models.py) — replicated as a queryset filter here instead
+        # of loading every candidate order just to check the property.
+        "overdue_awaiting": assigned_orders.filter(
+            courier_assignment_status=CourierAssignmentStatus.AWAITING_RESPONSE,
+            courier_assigned_at__lt=overdue_cutoff,
+        ).count(),
+        "overdue_pickup": assigned_orders.filter(
+            courier_assignment_status=CourierAssignmentStatus.ACCEPTED,
+            courier_responded_at__lt=overdue_cutoff,
+        ).count(),
+    }
+
+    delivered_count = Order.objects.filter(status=OrderStatus.DELIVERED).count()
+    order_dispute_count = Dispute.objects.filter(reason__in=ORDER_DISPUTE_REASONS).count()
+    dispute_rate = round(order_dispute_count * 100 / delivered_count, 1) if delivered_count else None
+
+    # Paid -> Shipped duration per seller — a slow seller here is the kind
+    # of thing that kills buyer trust fast right after launch, and nothing
+    # else in the dashboard surfaces it.
+    shipped_orders = Order.objects.filter(paid_at__isnull=False, shipped_at__isnull=False).annotate(
+        ship_duration=ExpressionWrapper(F("shipped_at") - F("paid_at"), output_field=DurationField())
+    )
+    slow_seller_rows = list(
+        shipped_orders.values("seller_id")
+        .annotate(avg_duration=Avg("ship_duration"), n=Count("id"))
+        .order_by("-avg_duration")[:10]
+    )
+    seller_names = {
+        s.id: s.get_name
+        for s in Seller.objects.filter(
+            id__in=[row["seller_id"] for row in slow_seller_rows]
+        ).select_related("user")
+    }
+    slow_sellers = [
+        {
+            "name": seller_names.get(row["seller_id"], "—"),
+            "avg_hours": row["avg_duration"].total_seconds() / 3600,
+            "n": row["n"],
+        }
+        for row in slow_seller_rows
+    ]
+
+    return render(
+        request,
+        "dashboard/launch_health.html",
+        {
+            "section": "launch_health",
+            "courier_stats": courier_stats,
+            "delivered_count": delivered_count,
+            "order_dispute_count": order_dispute_count,
+            "dispute_rate": dispute_rate,
+            "slow_sellers": slow_sellers,
         },
     )
 
