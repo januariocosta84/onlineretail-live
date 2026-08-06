@@ -1,0 +1,101 @@
+{% extends "shared/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Pay with TimorPay" %} | TimorMart{% endblock %}
+
+{% block content %}
+<main class="py-5">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="h2 page-header-bar">
+              <i class="fas fa-shield-alt mr-2"></i>{% trans "Pay with TimorPay" %}
+            </h1>
+            <p class="text-muted">
+              {% trans "TimorPay is an independent payment platform — this order is being processed through it as a trial. Send the amount below using the reference code, and it will confirm automatically." %}
+            </p>
+          </div>
+        </div>
+
+        <div class="alert alert-secondary">
+          <strong>{% trans "Transfer details (from TimorPay)" %}:</strong>
+          <table class="table table-sm mb-0 mt-2">
+            <tr>
+              <th style="width: 40%">{% trans "Bank" %}</th>
+              <td>{{ instructions.bank_name|default:"—" }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "Account name" %}</th>
+              <td>{{ instructions.account_name|default:"—" }}</td>
+            </tr>
+            <tr>
+              <th>{% trans "Account number" %}</th>
+              <td><code>{{ instructions.account_number|default:"—" }}</code></td>
+            </tr>
+            <tr>
+              <th>{% trans "Reference (include in the transfer memo)" %}</th>
+              <td><code>{{ instructions.reference_code|default:"—" }}</code></td>
+            </tr>
+            <tr>
+              <th>{% trans "Amount" %}</th>
+              <td><span class="h5 text-primary">${{ instructions.amount|default:payment.amount }} {{ instructions.currency|default:"USD" }}</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-light">
+            <span class="font-weight-bold">{% trans "Orders covered by this payment" %}</span>
+            <span class="text-muted small float-right">TimorPay ID: <code>{{ payment.id }}</code></span>
+          </div>
+          <div class="card-body">
+            <table class="table table-sm mb-0">
+              <thead>
+                <tr><th>{% trans "Order" %}</th><th>{% trans "Product" %}</th><th class="text-right">{% trans "Total" %}</th></tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                <tr>
+                  <td>{{ order.order_number }}</td>
+                  <td>{{ order.product.name }}</td>
+                  <td class="text-right">${{ order.total }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle mr-1"></i>
+          {% trans "TimorPay's own operations team confirms the transfer against its bank statement — you don't need to do anything else here. Once confirmed, TimorPay notifies TimorMart automatically and these orders move to Paid." %}
+        </div>
+
+        {% if debug %}
+        <div class="card border-0 shadow-sm mb-4 border-left-warning">
+          <div class="card-body">
+            <p class="mb-2">
+              <i class="fas fa-flask mr-1"></i>
+              <strong>{% trans "Dev only" %}:</strong>
+              {% trans "simulate TimorPay's ops team confirming the transfer, without leaving this tab." %}
+            </p>
+            <form method="post" action="{% url 'olretail:timorpay_simulate_verification' orders.0.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-warning">
+                <i class="fas fa-check-double mr-1"></i>{% trans "Simulate: confirm payment received" %}
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+
+        <p class="text-center">
+          <a href="{% url 'olretail:buyer_orders' %}">{% trans "View my orders" %} »</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -114,6 +114,14 @@ class PaymentMethod(models.TextChoices):
     BANK_TRANSFER = 'bank_transfer', _('Bank / Mobile Transfer')
     CASH_ON_DELIVERY = 'cash_on_delivery', _('Cash on Delivery')
     SIMULATED_BANK = 'simulated_bank', _('Automated Bank Transfer (Test)')
+    # TimorPay integration (see olretail/timorpay_integration.py) — a
+    # trial/test rail exercising TimorPay, the independent payment platform,
+    # as an alternative to this app's own Stripe/bank-transfer/simulated-bank
+    # gateways. Platform-held like BANK_TRANSFER: the buyer pays into
+    # TimorPay under a dedicated "TimorMart platform" wallet, not a
+    # marketplace seller's own wallet — TimorMart's existing SellerBalance/
+    # Payout machinery is completely untouched and still pays sellers out.
+    TIMORPAY = 'timorpay', _('TimorPay (Trial)')
 
 
 class Order(models.Model):

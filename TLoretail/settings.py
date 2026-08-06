@@ -382,6 +382,19 @@ BANK_SIMULATOR_SHOW_TEST_ACCOUNTS = DEBUG
 MIN_PAYOUT_AMOUNT = 50000  # $500 minimum payout (in cents)
 PAYOUT_SCHEDULE = "monthly"  # 'daily', 'weekly', 'monthly'
 
+# ──────────────────────────────────────────────────────────────────
+# TIMORPAY (trial integration — see olretail/timorpay_integration.py and
+# PaymentMethod.TIMORPAY). TimorPay is a separate Django project/deployment
+# (../timorpay) — these just point this app at wherever it's running.
+# TIMORPAY_API_KEY is a merchant API key issued by that TimorPay instance
+# (Accounts → Merchants → "timormart" → Generate a new live API key), not a
+# secret this app can generate itself. TIMORPAY_WEBHOOK_SECRET is that same
+# merchant's webhook_secret, used to verify inbound webhook signatures.
+# ──────────────────────────────────────────────────────────────────
+TIMORPAY_BASE_URL = os.environ.get("TIMORPAY_BASE_URL", "http://127.0.0.1:8811")
+TIMORPAY_API_KEY = os.environ.get("TIMORPAY_API_KEY", "")
+TIMORPAY_WEBHOOK_SECRET = os.environ.get("TIMORPAY_WEBHOOK_SECRET", "")
+
 # Where sellers send platform subscription payments (monthly/yearly listing
 # plans) — no automated billing, an admin confirms receipt manually.
 PLATFORM_PAYMENT_INSTRUCTIONS = os.environ.get(

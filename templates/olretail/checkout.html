@@ -233,6 +233,10 @@
               <i class="fas fa-flask mr-2"></i>
               <small>{% trans "Test/dev payment rail — enter one of the test account numbers above to trigger a specific outcome." %}</small>
             </div>
+            <div class="alert alert-info alert-sm d-none" role="alert" id="timorpay-note">
+              <i class="fas fa-shield-alt mr-2"></i>
+              <small>{% trans "Trial integration with TimorPay, an independent payment platform — standard platform fee applies, no extra processing fee. The next page shows the transfer details." %}</small>
+            </div>
           </div>
         </div>
       </div>
@@ -250,6 +254,7 @@
   var bankTransferNote = document.getElementById('bank-transfer-note');
   var cashOnDeliveryNote = document.getElementById('cash-on-delivery-note');
   var simulatedBankNote = document.getElementById('simulated-bank-note');
+  var timorpayNote = document.getElementById('timorpay-note');
   var bankAccountNumberGroup = document.getElementById('bank-account-number-group');
   var totalEl = document.getElementById('checkout-total');
   var submitLabel = document.getElementById('submit-label');
@@ -272,17 +277,20 @@
     var isBankTransfer = method === 'bank_transfer';
     var isCashOnDelivery = method === 'cash_on_delivery';
     var isSimulatedBank = method === 'simulated_bank';
+    var isTimorPay = method === 'timorpay';
 
     // Bank Transfer is now platform-held (same commission as Stripe, no
     // card-processing fee) — it shows the platform-fee row like Stripe,
-    // unlike Cash on Delivery which is genuinely fee-free.
+    // unlike Cash on Delivery which is genuinely fee-free. TimorPay is
+    // platform-held the same way (see olretail/timorpay_integration.py).
     stripeFeeRows.classList.toggle('d-none', isCashOnDelivery || isSimulatedBank);
-    // Bank Transfer has no card-processing fee, only the platform fee.
-    cardPaymentFeeRow.classList.toggle('d-none', isBankTransfer);
-    stripeNote.classList.toggle('d-none', isBankTransfer || isCashOnDelivery || isSimulatedBank);
+    // Bank Transfer/TimorPay have no card-processing fee, only the platform fee.
+    cardPaymentFeeRow.classList.toggle('d-none', isBankTransfer || isTimorPay);
+    stripeNote.classList.toggle('d-none', isBankTransfer || isCashOnDelivery || isSimulatedBank || isTimorPay);
     bankTransferNote.classList.toggle('d-none', !isBankTransfer);
     cashOnDeliveryNote.classList.toggle('d-none', !isCashOnDelivery);
     simulatedBankNote.classList.toggle('d-none', !isSimulatedBank);
+    timorpayNote.classList.toggle('d-none', !isTimorPay);
     bankAccountNumberGroup.classList.toggle('d-none', !isSimulatedBank);
 
     var deliveryFee = currentDeliveryFee();
@@ -292,6 +300,7 @@
     var baseTotal = isCashOnDelivery ? cartTotal
       : isBankTransfer ? bankTransferEstimatedTotal
       : isSimulatedBank ? bankEstimatedTotal
+      : isTimorPay ? bankTransferEstimatedTotal
       : estimatedTotal;
     var total = baseTotal + deliveryFee;
     totalEl.textContent = '$' + total.toFixed(2);
@@ -301,6 +310,8 @@
       submitLabel.innerHTML = '<i class="fas fa-money-bill-wave mr-2"></i>{% trans "Place Order" %}';
     } else if (isSimulatedBank) {
       submitLabel.innerHTML = '<i class="fas fa-flask mr-2"></i>{% trans "Submit Bank Transfer" %}';
+    } else if (isTimorPay) {
+      submitLabel.innerHTML = '<i class="fas fa-shield-alt mr-2"></i>{% trans "Continue to TimorPay" %}';
     } else {
       submitLabel.innerHTML = '<i class="fas fa-credit-card mr-2"></i>{% trans "Proceed to Payment" %}';
     }

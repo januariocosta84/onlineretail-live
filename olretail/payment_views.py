@@ -446,6 +446,10 @@ def _process_checkout(request, form, cart_items):
     if payment_method == PaymentMethod.SIMULATED_BANK:
         return _process_simulated_bank_checkout(request, form, cart_items)
 
+    if payment_method == PaymentMethod.TIMORPAY:
+        from .timorpay_integration import process_timorpay_checkout  # local import: keeps the trial integration isolated in its own module
+        return process_timorpay_checkout(request, form, cart_items)
+
     return _process_stripe_checkout(request, form, cart_items)
 
 

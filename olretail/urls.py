@@ -6,6 +6,7 @@ from . import views
 from . import payment_views
 from . import banking_api
 from . import courier_api
+from . import timorpay_integration
 
 app_name = "olretail"
 
@@ -53,6 +54,12 @@ urlpatterns = [
 
     # Bank transfer (buyer → platform)
     path("order/<int:order_id>/mark-sent/", payment_views.mark_payment_sent, name="mark_payment_sent"),
+
+    # TimorPay (trial) — see olretail/timorpay_integration.py
+    path(
+        "order/<int:order_id>/timorpay/simulate-verify/",
+        timorpay_integration.timorpay_simulate_verification, name="timorpay_simulate_verification",
+    ),
 
     # Delivery tracking
     path("order/<int:order_id>/delivery-update/", payment_views.add_delivery_update, name="add_delivery_update"),
@@ -115,6 +122,7 @@ urlpatterns = [
     # Webhook
     path("webhook/stripe/", payment_views.stripe_webhook, name="stripe_webhook"),
     path("webhook/simulated-bank/", payment_views.simulated_bank_webhook, name="simulated_bank_webhook"),
+    path("payments/timorpay/webhook/", timorpay_integration.timorpay_webhook, name="timorpay_webhook"),
 
     # Simulated Bank Gateway — developer REST API (see BANK_SIMULATOR_ARCHITECTURE.md)
     path("api/bank-simulator/v1/payments/", banking_api.create_payment, name="banking_api_create_payment"),
